@@ -1,0 +1,1529 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>GRASP: Зацепление и связность — Coupling and Cohesion - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="grasp-зацепление-и-связность-в-javascript-и-nodejs"><a class="header" href="#grasp-зацепление-и-связность-в-javascript-и-nodejs">GRASP: Зацепление и Связность в JavaScript и Node.js</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>В этой лекции рассматриваются два ключевых принципа GRASP (General Responsibility Assignment Software Patterns) - принципы распределения ответственности:</p>
+<ol>
+<li><strong>Низкое зацепление (Low Coupling)</strong> - минимизация зависимостей между модулями</li>
+<li><strong>Высокая связность (High Cohesion)</strong> - максимизация связности внутри модулей</li>
+</ol>
+<p>Эти принципы помогают создавать гибкую, понятную и легко изменяемую архитектуру приложений на Node.js и JavaScript.</p>
+<hr>
+<h2 id="основные-концепции"><a class="header" href="#основные-концепции">Основные концепции</a></h2>
+<h3 id="что-такое-зацепление-coupling"><a class="header" href="#что-такое-зацепление-coupling">Что такое Зацепление (Coupling)?</a></h3>
+<p><strong>Зацепление (Coupling)</strong> - это степень взаимозависимости между различными модулями, классами или компонентами системы.</p>
+<p><strong>Цель</strong>: Минимизировать зацепление - создать <strong>мало и желательно ослабленных связей между модулями</strong>.</p>
+<p><strong>Признаки сильного зацепления:</strong></p>
+<ul>
+<li>Модуль знает внутреннюю структуру другого модуля</li>
+<li>Модуль знает сигнатуры методов других модулей</li>
+<li>Модуль знает структуру базы данных или внешних API</li>
+<li>Изменение в одном модуле требует изменений в других модулях</li>
+</ul>
+<h3 id="что-такое-связность-cohesion"><a class="header" href="#что-такое-связность-cohesion">Что такое Связность (Cohesion)?</a></h3>
+<p><strong>Связность (Cohesion)</strong> - это степень, с которой элементы внутри одного модуля работают вместе для выполнения единой задачи.</p>
+<p><strong>Цель</strong>: Максимизировать связность - создать <strong>много сильных связей внутри модуля</strong>.</p>
+<p><strong>Признаки высокой связности:</strong></p>
+<ul>
+<li>Все компоненты модуля работают для достижения одной цели</li>
+<li>Методы класса используют общие данные и тесно взаимодействуют</li>
+<li>Функции модуля решают связанные задачи</li>
+<li>Код внутри модуля легко понять как единое целое</li>
+</ul>
+<h3 id="визуальное-представление"><a class="header" href="#визуальное-представление">Визуальное представление</a></h3>
+<pre><code>┌─────────────────────┐        ┌─────────────────────┐
+│     Модуль A        │        │     Модуль B        │
+│  ╔═══════════╗      │ связь  │  ╔═══════════╗      │
+│  ║  высокая  ║      │◄──────►│  ║  высокая  ║      │
+│  ║ связность ║      │ мини-  │  ║ связность ║      │
+│  ║  внутри   ║      │ мальна │  ║  внутри   ║      │
+│  ╚═══════════╝      │        │  ╚═══════════╝      │
+└─────────────────────┘        └─────────────────────┘
+    ХОРОШО: Высокая связность внутри, низкое зацепление между
+</code></pre>
+<hr>
+<h2 id="пример-1-проблема-сильного-зацепления-класс-person"><a class="header" href="#пример-1-проблема-сильного-зацепления-класс-person">Пример 1: Проблема сильного зацепления (класс Person)</a></h2>
+<h3 id="плохой-пример-класс-с-высоким-зацеплением"><a class="header" href="#плохой-пример-класс-с-высоким-зацеплением">Плохой пример: Класс с высоким зацеплением</a></h3>
+<pre><code class="language-javascript">// person.js - ПЛОХОЙ ПРИМЕР с высоким зацеплением
+class Person {
+  constructor() {
+    this.name = '';
+    this.surname = '';
+    this.address = '';
+  }
+
+  // Фабричный метод (Factory Method)
+  static async load(id) {
+    // ❌ ПРОБЛЕМА 1: Зацепление на базу данных
+    // Класс Person знает о существовании модуля db
+    // Класс знает контракт метода db.query()
+    const data = await db.query(
+      'SELECT * FROM Person WHERE id = $1', // ❌ ПРОБЛЕМА 2: Знание структуры БД
+      [id]
+    );
+
+    // ❌ ПРОБЛЕМА 3: Знание структуры объекта из БД
+    // Мы предполагаем, что data имеет поля name, surname, address
+    const person = new Person();
+    person.name = data.name;
+    person.surname = data.surname;
+    person.address = data.address;
+
+    return person;
+  }
+}
+</code></pre>
+<h3 id="анализ-проблем-зацепления"><a class="header" href="#анализ-проблем-зацепления">Анализ проблем зацепления</a></h3>
+<pre><code class="language-javascript">// ЦВЕТОВОЕ КОДИРОВАНИЕ зацеплений:
+// 🔵 СИНИЙ - элементы класса Person (внутренняя связность)
+// 🔴 КРАСНЫЙ - внешние зависимости (зацепление)
+
+class Person {  // 🔵 Собственный класс
+  constructor() {  // 🔵 Собственный конструктор
+    this.name = '';  // 🔵 Собственное поле
+    this.surname = '';  // 🔵 Собственное поле
+    this.address = '';  // 🔵 Собственное поле
+  }
+
+  static async load(id) {
+    // 🔴 db - внешний модуль (зацепление)
+    // 🔴 query - знание метода внешнего модуля (зацепление)
+    // 🔴 Сигнатура: (sql, params) =&gt; Promise (зацепление на контракт)
+    const data = await db.query(
+      'SELECT * FROM Person WHERE id = $1',  // 🔴 Знание SQL и структуры БД
+      [id]
+    );
+
+    const person = new Person();  // 🔵 Работа с собственным классом
+
+    // 🔴 Знание полей объекта из БД (name, surname, address)
+    person.name = data.name;
+    person.surname = data.surname;
+    person.address = data.address;
+
+    return person;
+  }
+}
+</code></pre>
+<h3 id="последствия-сильного-зацепления"><a class="header" href="#последствия-сильного-зацепления">Последствия сильного зацепления</a></h3>
+<p><strong>Проблема 1</strong>: Невозможность тестирования без БД</p>
+<pre><code class="language-javascript">// ❌ Для теста нужна настоящая БД или сложные моки
+test('Person.load should create person', async () =&gt; {
+  // Как протестировать без реальной БД?
+  const person = await Person.load(1);
+  expect(person.name).toBe('John');
+});
+</code></pre>
+<p><strong>Проблема 2</strong>: Невозможность смены БД без изменения класса</p>
+<pre><code class="language-javascript">// ❌ Если меняем PostgreSQL на MongoDB - нужно менять Person
+// ❌ Если меняется структура таблицы - нужно менять Person
+// ❌ Если меняется API доступа к данным - нужно менять Person
+</code></pre>
+<p><strong>Проблема 3</strong>: Класс Person знает слишком много</p>
+<pre><code class="language-javascript">// Класс Person зацеплен на:
+// 1. Модуль db
+// 2. Метод db.query() и его сигнатуру
+// 3. Контракт Promise (async/await)
+// 4. Структуру таблицы Person в БД
+// 5. Названия полей в БД
+</code></pre>
+<hr>
+<h2 id="пример-2-middleware-с-высоким-зацеплением-express"><a class="header" href="#пример-2-middleware-с-высоким-зацеплением-express">Пример 2: Middleware с высоким зацеплением (Express)</a></h2>
+<h3 id="плохой-пример-зацепленные-middleware"><a class="header" href="#плохой-пример-зацепленные-middleware">Плохой пример: Зацепленные middleware</a></h3>
+<h4 id="файл-loggerjs"><a class="header" href="#файл-loggerjs">Файл: logger.js</a></h4>
+<pre><code class="language-javascript">// logger.js - middleware для логирования
+const writeLog = (method, url, referrer, time) =&gt; {
+  // Упрощенная реализация логирования
+  console.log(`${method} ${url} ${referrer} ${time}ms`);
+  // В реальности здесь была бы запись в файлы, БД, ротация логов и т.д.
+};
+
+const logger = (req, res, next) =&gt; {
+  // ✅ Засекаем время начала обработки запроса
+  const start = Date.now();
+
+  // ❌ ПРОБЛЕМА 1: Примешивание свойства к объекту request
+  // Создаем зависимость - другие middleware будут ожидать это поле
+  req.requestTime = start;
+
+  // ❌ ПРОБЛЕМА 2: Подписка на событие объекта response
+  // Логгер "лезет" во внутренности HTTP протокола
+  res.on('finish', () =&gt; {
+    const elapsed = Date.now() - start;
+
+    // ❌ ПРОБЛЕМА 3: Зацепление на структуру headers
+    // Если headers.referer не существует - получим undefined
+    writeLog(
+      req.method,  // Зацепление на req.method
+      req.url,     // Зацепление на req.url
+      req.headers.referer,  // Зацепление на req.headers.referer
+      elapsed
+    );
+  });
+
+  next();  // Передаем управление следующему middleware
+};
+
+module.exports = { logger };
+</code></pre>
+<h4 id="файл-timeoutjs"><a class="header" href="#файл-timeoutjs">Файл: timeout.js</a></h4>
+<pre><code class="language-javascript">// timeout.js - middleware для обработки таймаута
+const timeout = (ms) =&gt; {
+  // Возвращаем middleware с замыканием на ms
+  return (req, res, next) =&gt; {
+    // ❌ ПРОБЛЕМА 1: Зависимость от logger middleware
+    // timeout ожидает, что req.requestTime уже установлен
+    // Без logger этот код сломается!
+    setTimeout(() =&gt; {
+      const elapsed = Date.now() - req.requestTime;  // ❌ req.requestTime может быть undefined!
+
+      // ❌ ПРОБЛЕМА 2: Зацепление на response.headersSent
+      // Нужно знать внутренние детали HTTP протокола
+      if (!res.headersSent) {
+        // Если заголовки еще не отправлены, отправляем таймаут
+        res.status(503).send(`Timeout reached: ${elapsed}ms`);
+      }
+      // ❌ ПРОБЛЕМА 3: Таймаут никогда не очищается
+      // Даже если запрос обработан успешно, setTimeout все равно выполнится
+    }, ms);
+
+    next();
+  };
+};
+
+module.exports = { timeout };
+</code></pre>
+<h4 id="файл-mainjs"><a class="header" href="#файл-mainjs">Файл: main.js</a></h4>
+<pre><code class="language-javascript">// main.js - главный файл приложения
+const express = require('express');
+const { logger } = require('./logger.js');
+const { timeout } = require('./timeout.js');
+
+const app = express();
+
+// ❌ ВАЖНО: Порядок middleware критичен!
+// logger ДОЛЖЕН быть перед timeout, иначе req.requestTime будет undefined
+app.use(logger);      // Должен быть первым!
+app.use(timeout(1000)); // Зависит от logger!
+
+// Роуты
+app.get('/', (req, res) =&gt; {
+  res.send('Hello World');
+});
+
+app.get('/page1', (req, res) =&gt; {
+  // Эта страница будет отдаваться 5 секунд
+  // Таймаут сработает через 1 секунду
+  setTimeout(() =&gt; {
+    res.send('Hello World from page1');
+  }, 5000);
+});
+
+app.listen(8000, () =&gt; {
+  console.log('Server listening on port 8000');
+});
+</code></pre>
+<h3 id="анализ-проблем-зацепления-в-middleware"><a class="header" href="#анализ-проблем-зацепления-в-middleware">Анализ проблем зацепления в middleware</a></h3>
+<h4 id="граф-зависимостей-плохой-пример"><a class="header" href="#граф-зависимостей-плохой-пример">Граф зависимостей (плохой пример)</a></h4>
+<pre><code>┌──────────────┐
+│   logger     │
+│  middleware  │
+└──────┬───────┘
+       │ примешивает
+       │ req.requestTime
+       ▼
+┌──────────────┐
+│   request    │ ◄────────┐
+│   object     │          │ читает
+└──────────────┘          │ req.requestTime
+                          │
+                    ┌─────┴──────┐
+                    │  timeout   │
+                    │ middleware │
+                    └────────────┘
+                          │
+                          │ читает
+                          │ res.headersSent
+                          ▼
+                    ┌──────────────┐
+                    │  response    │
+                    │   object     │
+                    └──────────────┘
+
+❌ ПРОБЛЕМЫ:
+1. timeout зависит от logger (через req.requestTime)
+2. Оба зависят от request/response (через поля и события)
+3. Порядок middleware критичен
+4. Невозможно использовать timeout без logger
+</code></pre>
+<h3 id="последствия-сильного-зацепления-в-middleware"><a class="header" href="#последствия-сильного-зацепления-в-middleware">Последствия сильного зацепления в middleware</a></h3>
+<p><strong>Проблема 1</strong>: Хрупкость при изменении порядка</p>
+<pre><code class="language-javascript">// ❌ Если закомментировать logger - timeout сломается
+// app.use(logger);  // Закомментировали
+app.use(timeout(1000));
+
+// Результат:
+// TypeError: Cannot read property 'requestTime' of undefined
+// потому что req.requestTime не установлен
+</code></pre>
+<p><strong>Проблема 2</strong>: Невозможность повторного использования</p>
+<pre><code class="language-javascript">// ❌ Нельзя использовать timeout в другом проекте без logger
+// ❌ Нельзя заменить logger на другую реализацию без проверки timeout
+</code></pre>
+<p><strong>Проблема 3</strong>: Скрытые зависимости</p>
+<pre><code class="language-javascript">// ❌ Неочевидно из сигнатуры, что timeout зависит от logger
+// Разработчик может не знать, что нужно подключать logger первым
+</code></pre>
+<hr>
+<h2 id="решение-снижение-зацепления"><a class="header" href="#решение-снижение-зацепления">Решение: Снижение зацепления</a></h2>
+<h3 id="хороший-пример-независимые-модули"><a class="header" href="#хороший-пример-независимые-модули">Хороший пример: Независимые модули</a></h3>
+<h4 id="файл-delayjs"><a class="header" href="#файл-delayjs">Файл: delay.js</a></h4>
+<pre><code class="language-javascript">// delay.js - утилита для создания задержки
+// ✅ Не зависит ни от каких внешних модулей
+// ✅ Простой, понятный контракт
+// ✅ Легко тестируется
+
+const delay = (ms) =&gt; {
+  return new Promise((resolve) =&gt; {
+    setTimeout(resolve, ms);
+  });
+};
+
+module.exports = { delay };
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Нет зависимостей от HTTP, request, response</li>
+<li>Универсальная утилита - можно использовать где угодно</li>
+<li>Простой контракт: <code>(ms: number) =&gt; Promise&lt;void&gt;</code></li>
+</ul>
+<h4 id="файл-timeoutjs-улучшенная-версия"><a class="header" href="#файл-timeoutjs-улучшенная-версия">Файл: timeout.js (улучшенная версия)</a></h4>
+<pre><code class="language-javascript">// timeout.js - функция для обработки таймаута
+// ✅ Не знает о request/response
+// ✅ Не знает о HTTP протоколе
+// ✅ Работает только со временем
+
+const { delay } = require('./delay.js');
+
+const timeout = async (ms) =&gt; {
+  // Засекаем начальное время
+  const start = Date.now();
+
+  // Ждем указанное количество миллисекунд
+  await delay(ms);
+
+  // Вычисляем реальное время ожидания
+  const elapsed = Date.now() - start;
+
+  // Возвращаем сообщение о таймауте
+  return `Timeout reached: ${elapsed}ms`;
+};
+
+module.exports = { timeout };
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>✅ Зависит только от <code>delay</code> (нижестоящий уровень абстракции)</li>
+<li>✅ Не зацеплен на HTTP, request, response</li>
+<li>✅ Не использует примеси (mixins)</li>
+<li>✅ Простой контракт: <code>(ms: number) =&gt; Promise&lt;string&gt;</code></li>
+<li>✅ Легко тестируется</li>
+</ul>
+<h4 id="файл-loggerjs-улучшенная-версия"><a class="header" href="#файл-loggerjs-улучшенная-версия">Файл: logger.js (улучшенная версия)</a></h4>
+<pre><code class="language-javascript">// logger.js - функция для логирования
+// ✅ Не знает о request/response
+// ✅ Не знает о HTTP протоколе
+// ✅ Принимает только необходимые данные
+
+const logger = (method, url, referrer, time) =&gt; {
+  // Формируем сообщение лога
+  const message = `${method} ${url} ${referrer || 'undefined'} ${time}ms`;
+
+  // В реальности здесь была бы более сложная логика:
+  // - запись в файлы
+  // - отправка в систему мониторинга
+  // - ротация логов
+  // - форматирование
+  console.log(message);
+};
+
+module.exports = { logger };
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>✅ Не зацеплен на request/response</li>
+<li>✅ Принимает только необходимые параметры</li>
+<li>✅ Простой контракт: <code>(method, url, referrer, time) =&gt; void</code></li>
+<li>✅ Легко тестируется с любыми входными данными</li>
+</ul>
+<h4 id="файл-mainjs-улучшенная-версия"><a class="header" href="#файл-mainjs-улучшенная-версия">Файл: main.js (улучшенная версия)</a></h4>
+<pre><code class="language-javascript">// main.js - главный контроллер приложения
+// Здесь происходит СБОРКА компонентов
+// Здесь высокая СВЯЗНОСТЬ, но низкое ЗАЦЕПЛЕНИЕ модулей
+
+const http = require('http');
+const { logger } = require('./logger.js');
+const { timeout } = require('./timeout.js');
+const { delay } = require('./delay.js');
+
+// Роутинг - маппинг URL на обработчики
+const routing = {
+  '/': async () =&gt; 'Hello World',
+  '/page1': async () =&gt; {
+    await delay(5000);
+    return 'Hello World from page1';
+  },
+  '/other': async () =&gt; 'Other page',
+};
+
+// ✅ Универсальный контроллер
+// Здесь происходит интеграция всех компонентов
+const handler = async (req, res) =&gt; {
+  // 1️⃣ Засекаем время (локальная переменная!)
+  const start = Date.now();
+
+  // 2️⃣ Подписываемся на событие закрытия соединения
+  res.on('finish', () =&gt; {
+    const elapsed = Date.now() - start;
+
+    // ✅ Вызываем logger с явными параметрами
+    // Логгер не зависит от request/response!
+    logger(
+      req.method,
+      req.url,
+      req.headers.referer,
+      elapsed
+    );
+  });
+
+  // 3️⃣ Находим обработчик для URL
+  const route = routing[req.url];
+
+  if (!route) {
+    res.statusCode = 404;
+    res.end('Not found');
+    return;
+  }
+
+  // 4️⃣ Гонка между обработчиком и таймаутом
+  // ✅ Используем Promise.race для элегантной обработки
+  try {
+    const result = await Promise.race([
+      route(),           // Вызываем обработчик маршрута
+      timeout(1000)      // Ждем таймаут 1 секунда
+    ]);
+
+    // 5️⃣ Проверяем, не отправлены ли уже заголовки
+    // (для предотвращения гонки условий)
+    if (!res.headersSent) {
+      res.end(result);
+    }
+  } catch (error) {
+    if (!res.headersSent) {
+      res.statusCode = 500;
+      res.end('Internal Server Error');
+    }
+  }
+};
+
+// Создаем сервер
+const server = http.createServer(handler);
+
+// Запускаем сервер
+server.listen(8000, () =&gt; {
+  console.log('Server started on port 8000');
+});
+
+module.exports = { server };
+</code></pre>
+<h3 id="анализ-улучшений"><a class="header" href="#анализ-улучшений">Анализ улучшений</a></h3>
+<h4 id="граф-зависимостей-хороший-пример"><a class="header" href="#граф-зависимостей-хороший-пример">Граф зависимостей (хороший пример)</a></h4>
+<pre><code>                    ┌──────────────┐
+                    │    delay     │
+                    │   (базовая   │
+                    │  утилита)    │
+                    └──────┬───────┘
+                           │
+                           │ использует
+                           ▼
+                    ┌──────────────┐
+                    │   timeout    │
+                    │  (утилита)   │
+                    └──────────────┘
+
+
+┌──────────────┐
+│    logger    │
+│  (утилита)   │
+└──────────────┘
+
+
+        ▲                    ▲
+        │                    │
+        │   вызывает        │ вызывает
+        │                    │
+        └────────┬───────────┘
+                 │
+           ┌─────┴──────┐
+           │  handler   │ ◄──── request/response
+           │ (контроллер│       знание только здесь
+           │   сборки)  │
+           └────────────┘
+
+✅ ПРЕИМУЩЕСТВА:
+1. timeout НЕ зависит от logger
+2. logger НЕ зависит от request/response
+3. timeout НЕ зависит от HTTP
+4. Порядок не важен - зависимости явные
+5. Каждый модуль можно использовать отдельно
+</code></pre>
+<h3 id="сравнение-до-и-после"><a class="header" href="#сравнение-до-и-после">Сравнение: До и После</a></h3>
+<h4 id="до-middleware-подход-высокое-зацепление"><a class="header" href="#до-middleware-подход-высокое-зацепление">До: Middleware подход (высокое зацепление)</a></h4>
+<pre><code class="language-javascript">// ❌ ПЛОХО: Зацепление через примеси и события
+
+// logger.js
+const logger = (req, res, next) =&gt; {
+  req.requestTime = Date.now();  // ❌ Примесь
+  res.on('finish', () =&gt; {       // ❌ Знание о событиях
+    // ...логика
+  });
+  next();
+};
+
+// timeout.js
+const timeout = (ms) =&gt; (req, res, next) =&gt; {
+  setTimeout(() =&gt; {
+    const elapsed = Date.now() - req.requestTime;  // ❌ Зависимость от logger
+    if (!res.headersSent) {                        // ❌ Знание о HTTP
+      res.status(503).send(`Timeout: ${elapsed}ms`);
+    }
+  }, ms);
+  next();
+};
+
+// main.js
+app.use(logger);        // ❌ Порядок критичен!
+app.use(timeout(1000)); // ❌ Должен быть после logger!
+</code></pre>
+<p><strong>Проблемы:</strong></p>
+<ul>
+<li>❌ timeout зависит от logger через req.requestTime</li>
+<li>❌ Невозможно использовать timeout без logger</li>
+<li>❌ Порядок middleware критичен</li>
+<li>❌ Оба знают о деталях HTTP протокола</li>
+<li>❌ Сложно тестировать отдельно</li>
+</ul>
+<h4 id="после-функциональный-подход-низкое-зацепление"><a class="header" href="#после-функциональный-подход-низкое-зацепление">После: Функциональный подход (низкое зацепление)</a></h4>
+<pre><code class="language-javascript">// ✅ ХОРОШО: Независимые модули с явными зависимостями
+
+// logger.js
+const logger = (method, url, referrer, time) =&gt; {
+  console.log(`${method} ${url} ${referrer} ${time}ms`);
+};
+
+// timeout.js
+const { delay } = require('./delay.js');
+const timeout = async (ms) =&gt; {
+  const start = Date.now();
+  await delay(ms);
+  return `Timeout: ${Date.now() - start}ms`;
+};
+
+// main.js - ТОЛЬКО здесь знание о HTTP
+const handler = async (req, res) =&gt; {
+  const start = Date.now();
+
+  res.on('finish', () =&gt; {
+    logger(req.method, req.url, req.headers.referer, Date.now() - start);
+  });
+
+  const result = await Promise.race([
+    routing[req.url](),
+    timeout(1000)
+  ]);
+
+  res.end(result);
+};
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>✅ logger не зависит от HTTP</li>
+<li>✅ timeout не зависит от logger</li>
+<li>✅ Порядок не важен</li>
+<li>✅ Каждый модуль можно использовать отдельно</li>
+<li>✅ Легко тестировать</li>
+<li>✅ Знание о HTTP только в контроллере</li>
+</ul>
+<hr>
+<h2 id="ключевые-принципы-снижения-зацепления"><a class="header" href="#ключевые-принципы-снижения-зацепления">Ключевые принципы снижения зацепления</a></h2>
+<h3 id="1-избегайте-примесей-mixins"><a class="header" href="#1-избегайте-примесей-mixins">1. Избегайте примесей (Mixins)</a></h3>
+<p><strong>Плохо:</strong></p>
+<pre><code class="language-javascript">// ❌ Примешивание свойств к чужим объектам
+const middleware = (req, res, next) =&gt; {
+  req.customProperty = 'value';  // ❌ Создает скрытую зависимость
+  res.customMethod = () =&gt; {};   // ❌ Другие компоненты могут зависеть от этого
+  next();
+};
+</code></pre>
+<p><strong>Хорошо:</strong></p>
+<pre><code class="language-javascript">// ✅ Используйте локальные переменные или замыкания
+const handler = (req, res) =&gt; {
+  const context = {              // ✅ Локальный контекст
+    customProperty: 'value',
+    customMethod: () =&gt; {}
+  };
+
+  // Работаем с локальными данными
+  processRequest(context, req, res);
+};
+</code></pre>
+<h3 id="2-используйте-явные-зависимости"><a class="header" href="#2-используйте-явные-зависимости">2. Используйте явные зависимости</a></h3>
+<p><strong>Плохо:</strong></p>
+<pre><code class="language-javascript">// ❌ Неявная зависимость через глобальное состояние
+const timeout = (ms) =&gt; (req, res, next) =&gt; {
+  // ❌ Откуда взялся req.requestTime? Неочевидно!
+  const elapsed = Date.now() - req.requestTime;
+  next();
+};
+</code></pre>
+<p><strong>Хорошо:</strong></p>
+<pre><code class="language-javascript">// ✅ Явные параметры
+const timeout = async (ms, startTime) =&gt; {
+  await delay(ms);
+  const elapsed = Date.now() - startTime;
+  return `Timeout: ${elapsed}ms`;
+};
+
+// ✅ Вызов с явными параметрами
+const handler = async (req, res) =&gt; {
+  const start = Date.now();
+  const result = await timeout(1000, start);  // ✅ Понятно, откуда берутся данные
+};
+</code></pre>
+<h3 id="3-разделяйте-ответственности"><a class="header" href="#3-разделяйте-ответственности">3. Разделяйте ответственности</a></h3>
+<p><strong>Плохо:</strong></p>
+<pre><code class="language-javascript">// ❌ Класс Person знает о БД, HTTP, валидации
+class Person {
+  async save() {
+    await db.query('INSERT ...', [this.name]);  // ❌ Знание о БД
+  }
+
+  async loadFromRequest(req) {
+    this.name = req.body.name;                   // ❌ Знание о HTTP
+  }
+
+  validate() {
+    if (!this.name) throw new Error('...');     // ❌ Смешанные обязанности
+  }
+}
+</code></pre>
+<p><strong>Хорошо:</strong></p>
+<pre><code class="language-javascript">// ✅ Разделение на слои
+class Person {
+  constructor(name, surname, address) {
+    this.name = name;
+    this.surname = surname;
+    this.address = address;
+  }
+}
+
+// ✅ Репозиторий - работа с БД
+class PersonRepository {
+  async save(person) {
+    await db.query('INSERT ...', [person.name]);
+  }
+}
+
+// ✅ Контроллер - работа с HTTP
+class PersonController {
+  async create(req, res) {
+    const person = new Person(req.body.name, req.body.surname, req.body.address);
+    await personRepository.save(person);
+    res.json(person);
+  }
+}
+
+// ✅ Валидатор - проверка данных
+class PersonValidator {
+  validate(person) {
+    if (!person.name) throw new Error('Name is required');
+  }
+}
+</code></pre>
+<h3 id="4-программируйте-на-интерфейсы-а-не-реализации"><a class="header" href="#4-программируйте-на-интерфейсы-а-не-реализации">4. Программируйте на интерфейсы, а не реализации</a></h3>
+<p><strong>Плохо:</strong></p>
+<pre><code class="language-javascript">// ❌ Зацепление на конкретную реализацию
+class UserService {
+  constructor() {
+    this.db = new PostgreSQLDatabase();  // ❌ Жесткая зависимость
+  }
+
+  async getUser(id) {
+    return this.db.query('SELECT * FROM users WHERE id = $1', [id]);
+  }
+}
+</code></pre>
+<p><strong>Хорошо:</strong></p>
+<pre><code class="language-javascript">// ✅ Зависимость от абстракции (интерфейса)
+class UserService {
+  constructor(database) {  // ✅ Внедрение зависимости
+    this.db = database;
+  }
+
+  async getUser(id) {
+    // ✅ Работаем через интерфейс, не важна конкретная реализация
+    return this.db.findById('users', id);
+  }
+}
+
+// Использование:
+const postgresDb = new PostgreSQLDatabase();
+const mongoDb = new MongoDatabase();
+
+const service1 = new UserService(postgresDb);  // ✅ Можем использовать PostgreSQL
+const service2 = new UserService(mongoDb);     // ✅ Или MongoDB - сервис не меняется
+</code></pre>
+<hr>
+<h2 id="связность-внутри-модулей"><a class="header" href="#связность-внутри-модулей">Связность внутри модулей</a></h2>
+<h3 id="высокая-связность-в-контроллере"><a class="header" href="#высокая-связность-в-контроллере">Высокая связность в контроллере</a></h3>
+<pre><code class="language-javascript">// main.js - контроллер с высокой связностью
+// ✅ Все элементы работают вместе для обработки HTTP запросов
+
+const handler = async (req, res) =&gt; {
+  // Все переменные и функции тесно связаны
+  const start = Date.now();           // ⭐ Связано с логированием
+
+  res.on('finish', () =&gt; {            // ⭐ Связано с start и logger
+    const elapsed = Date.now() - start;
+    logger(req.method, req.url, req.headers.referer, elapsed);
+  });
+
+  const route = routing[req.url];     // ⭐ Связано с req и result
+
+  const result = await Promise.race([ // ⭐ Связано с route и timeout
+    route(),
+    timeout(1000)
+  ]);
+
+  if (!res.headersSent) {             // ⭐ Связано с result и res
+    res.end(result);
+  }
+};
+</code></pre>
+<p><strong>Характеристики высокой связности:</strong></p>
+<ul>
+<li>✅ Все переменные используются вместе для единой цели</li>
+<li>✅ Логика легко понятна как единое целое</li>
+<li>✅ Изменение одной части требует понимания других частей</li>
+<li>✅ Все элементы необходимы для выполнения задачи</li>
+</ul>
+<h3 id="пример-низкой-связности-антипаттерн"><a class="header" href="#пример-низкой-связности-антипаттерн">Пример низкой связности (антипаттерн)</a></h3>
+<pre><code class="language-javascript">// ❌ ПЛОХО: Низкая связность - несвязанные обязанности
+class Utils {
+  // Функции не связаны между собой
+
+  formatDate(date) {
+    return date.toISOString();
+  }
+
+  calculateTotal(items) {
+    return items.reduce((sum, item) =&gt; sum + item.price, 0);
+  }
+
+  sendEmail(to, subject, body) {
+    // ... отправка email
+  }
+
+  parseJSON(str) {
+    return JSON.parse(str);
+  }
+}
+
+// ❌ Проблема: класс Utils объединяет несвязанные функции
+// Лучше разделить на отдельные модули: DateUtils, CartUtils, EmailService, JSONParser
+</code></pre>
+<hr>
+<h2 id="слои-и-зацепление"><a class="header" href="#слои-и-зацепление">Слои и зацепление</a></h2>
+<h3 id="допустимое-зацепление-на-нижестоящие-слои"><a class="header" href="#допустимое-зацепление-на-нижестоящие-слои">Допустимое зацепление на нижестоящие слои</a></h3>
+<pre><code class="language-javascript">// ✅ НОРМАЛЬНО: Зацепление на нижестоящие абстракции
+
+// Слой 1: Базовые утилиты (foundation layer)
+const delay = (ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms));
+
+// Слой 2: Бизнес-утилиты (utility layer)
+// ✅ Зависит от delay - это НОРМАЛЬНО
+const timeout = async (ms) =&gt; {
+  const start = Date.now();
+  await delay(ms);  // ✅ Зависимость от нижестоящего слоя
+  return `Timeout: ${Date.now() - start}ms`;
+};
+
+// Слой 3: Контроллеры (application layer)
+// ✅ Зависит от timeout и logger - это НОРМАЛЬНО
+const handler = async (req, res) =&gt; {
+  const result = await Promise.race([
+    processRequest(req),
+    timeout(1000)  // ✅ Зависимость от нижестоящего слоя
+  ]);
+
+  logger(...);  // ✅ Зависимость от нижестоящего слоя
+  res.end(result);
+};
+</code></pre>
+<p><strong>Правило:</strong> Зацепление на нижестоящие слои абстракции - это нормально и необходимо.</p>
+<h3 id="архитектура-слоев"><a class="header" href="#архитектура-слоев">Архитектура слоев</a></h3>
+<pre><code>┌─────────────────────────────────────┐
+│   Application Layer (Контроллеры)   │
+│   - HTTP handlers                   │
+│   - Бизнес-логика                   │
+└──────────────┬──────────────────────┘
+               │ ✅ может зависеть
+               ▼
+┌─────────────────────────────────────┐
+│   Business Layer (Сервисы)          │
+│   - UserService                     │
+│   - OrderService                    │
+└──────────────┬──────────────────────┘
+               │ ✅ может зависеть
+               ▼
+┌─────────────────────────────────────┐
+│   Data Layer (Репозитории)          │
+│   - UserRepository                  │
+│   - Database access                 │
+└──────────────┬──────────────────────┘
+               │ ✅ может зависеть
+               ▼
+┌─────────────────────────────────────┐
+│   Foundation Layer (Утилиты)        │
+│   - delay, logger, timeout          │
+│   - Встроенные модули Node.js       │
+└─────────────────────────────────────┘
+
+❌ ЗАПРЕЩЕНО: Зависимость вверх (Foundation → Application)
+✅ РАЗРЕШЕНО: Зависимость вниз (Application → Foundation)
+</code></pre>
+<hr>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="1-контрольный-список-для-снижения-зацепления"><a class="header" href="#1-контрольный-список-для-снижения-зацепления">1. Контрольный список для снижения зацепления</a></h3>
+<p>При написании нового модуля проверьте:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Модуль не использует глобальные переменные</li>
+<li><input disabled="" type="checkbox"> Все зависимости явно переданы через параметры или конструктор</li>
+<li><input disabled="" type="checkbox"> Модуль не примешивает свойства к чужим объектам</li>
+<li><input disabled="" type="checkbox"> Модуль не подписывается на события чужих объектов (если это не его прямая обязанность)</li>
+<li><input disabled="" type="checkbox"> Модуль не знает о структуре базы данных</li>
+<li><input disabled="" type="checkbox"> Модуль не знает о деталях HTTP протокола (если это не контроллер)</li>
+<li><input disabled="" type="checkbox"> Модуль можно протестировать изолированно</li>
+<li><input disabled="" type="checkbox"> Модуль можно использовать в другом проекте</li>
+</ul>
+<h3 id="2-контрольный-список-для-повышения-связности"><a class="header" href="#2-контрольный-список-для-повышения-связности">2. Контрольный список для повышения связности</a></h3>
+<p>При рефакторинге проверьте:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Все методы класса используют общие поля</li>
+<li><input disabled="" type="checkbox"> Все функции модуля решают одну задачу</li>
+<li><input disabled="" type="checkbox"> Название модуля отражает единую цель</li>
+<li><input disabled="" type="checkbox"> Невозможно разделить модуль на независимые части</li>
+<li><input disabled="" type="checkbox"> Все публичные методы нужны для работы модуля</li>
+<li><input disabled="" type="checkbox"> Нет методов, которые “не вписываются” в общую концепцию</li>
+</ul>
+<h3 id="3-признаки-проблем-с-зацеплением"><a class="header" href="#3-признаки-проблем-с-зацеплением">3. Признаки проблем с зацеплением</a></h3>
+<p><strong>Вопросы для самопроверки:</strong></p>
+<ol>
+<li>
+<p><strong>Можно ли использовать модуль отдельно?</strong></p>
+<ul>
+<li>❌ Нет → высокое зацепление</li>
+<li>✅ Да → нормальное зацепление</li>
+</ul>
+</li>
+<li>
+<p><strong>Нужны ли моки для тестирования?</strong></p>
+<ul>
+<li>❌ Нужны сложные моки для многих зависимостей → высокое зацепление</li>
+<li>✅ Моки простые или не нужны → низкое зацепление</li>
+</ul>
+</li>
+<li>
+<p><strong>Изменение в одном модуле требует изменений в других?</strong></p>
+<ul>
+<li>❌ Да → высокое зацепление</li>
+<li>✅ Нет → низкое зацепление</li>
+</ul>
+</li>
+<li>
+<p><strong>Есть ли скрытые зависимости?</strong></p>
+<ul>
+<li>❌ Есть (примеси, глобальные переменные) → высокое зацепление</li>
+<li>✅ Все зависимости явные → низкое зацепление</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-признаки-проблем-со-связностью"><a class="header" href="#4-признаки-проблем-со-связностью">4. Признаки проблем со связностью</a></h3>
+<p><strong>Вопросы для самопроверки:</strong></p>
+<ol>
+<li>
+<p><strong>У класса/модуля одна ответственность?</strong></p>
+<ul>
+<li>❌ Несколько несвязанных обязанностей → низкая связность</li>
+<li>✅ Одна четкая обязанность → высокая связность</li>
+</ul>
+</li>
+<li>
+<p><strong>Все методы используют общие данные?</strong></p>
+<ul>
+<li>❌ Некоторые методы независимы → низкая связность</li>
+<li>✅ Все методы работают с общим состоянием → высокая связность</li>
+</ul>
+</li>
+<li>
+<p><strong>Можно ли описать модуль одним предложением?</strong></p>
+<ul>
+<li>❌ Нужно несколько предложений → низкая связность</li>
+<li>✅ Одно четкое описание → высокая связность</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="паттерны-для-управления-зацеплением"><a class="header" href="#паттерны-для-управления-зацеплением">Паттерны для управления зацеплением</a></h2>
+<h3 id="1-dependency-injection-внедрение-зависимостей"><a class="header" href="#1-dependency-injection-внедрение-зависимостей">1. Dependency Injection (Внедрение зависимостей)</a></h3>
+<pre><code class="language-javascript">// ❌ ПЛОХО: Жесткая зависимость
+class UserService {
+  constructor() {
+    this.logger = new FileLogger();  // ❌ Нельзя изменить
+  }
+}
+
+// ✅ ХОРОШО: Внедрение зависимости
+class UserService {
+  constructor(logger) {  // ✅ Гибкость
+    this.logger = logger;
+  }
+}
+
+// Использование:
+const fileLogger = new FileLogger();
+const consoleLogger = new ConsoleLogger();
+
+const service1 = new UserService(fileLogger);
+const service2 = new UserService(consoleLogger);
+</code></pre>
+<h3 id="2-interface-segregation-разделение-интерфейсов"><a class="header" href="#2-interface-segregation-разделение-интерфейсов">2. Interface Segregation (Разделение интерфейсов)</a></h3>
+<pre><code class="language-javascript">// ❌ ПЛОХО: Толстый интерфейс
+class Database {
+  query(sql, params) { }
+  transaction(callback) { }
+  backup() { }
+  optimize() { }
+  migrate() { }
+}
+
+// Клиент зависит от всего интерфейса
+class UserRepository {
+  constructor(db) {
+    this.db = db;  // ❌ Знает о backup, optimize, migrate
+  }
+
+  async find(id) {
+    return this.db.query('SELECT ...', [id]);  // Использует только query
+  }
+}
+
+// ✅ ХОРОШО: Тонкие интерфейсы
+class QueryExecutor {
+  query(sql, params) { }
+}
+
+class TransactionManager {
+  transaction(callback) { }
+}
+
+class DatabaseAdmin {
+  backup() { }
+  optimize() { }
+  migrate() { }
+}
+
+// Клиент зависит только от нужного интерфейса
+class UserRepository {
+  constructor(queryExecutor) {  // ✅ Знает только о query
+    this.db = queryExecutor;
+  }
+
+  async find(id) {
+    return this.db.query('SELECT ...', [id]);
+  }
+}
+</code></pre>
+<h3 id="3-factory-pattern-фабричный-паттерн"><a class="header" href="#3-factory-pattern-фабричный-паттерн">3. Factory Pattern (Фабричный паттерн)</a></h3>
+<pre><code class="language-javascript">// ✅ Фабрика инкапсулирует создание зависимостей
+class ServiceFactory {
+  static createUserService(config) {
+    const logger = config.production
+      ? new FileLogger()
+      : new ConsoleLogger();
+
+    const db = config.production
+      ? new PostgreSQLDatabase()
+      : new InMemoryDatabase();
+
+    const repository = new UserRepository(db);
+    const service = new UserService(repository, logger);
+
+    return service;
+  }
+}
+
+// Использование:
+const service = ServiceFactory.createUserService({ production: true });
+</code></pre>
+<hr>
+<h2 id="рефакторинг-пошаговое-снижение-зацепления"><a class="header" href="#рефакторинг-пошаговое-снижение-зацепления">Рефакторинг: Пошаговое снижение зацепления</a></h2>
+<h3 id="шаг-1-идентификация-зацеплений"><a class="header" href="#шаг-1-идентификация-зацеплений">Шаг 1: Идентификация зацеплений</a></h3>
+<pre><code class="language-javascript">// Исходный код с проблемами
+class OrderService {
+  async createOrder(req) {
+    // ❌ Зацепление 1: HTTP (req)
+    const userId = req.session.userId;
+
+    // ❌ Зацепление 2: База данных
+    const user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+
+    // ❌ Зацепление 3: Email сервис
+    await sendEmail(user.email, 'Order created', '...');
+
+    // ❌ Зацепление 4: Логгер
+    console.log(`Order created for user ${userId}`);
+
+    return { success: true };
+  }
+}
+</code></pre>
+<h3 id="шаг-2-извлечение-зависимостей"><a class="header" href="#шаг-2-извлечение-зависимостей">Шаг 2: Извлечение зависимостей</a></h3>
+<pre><code class="language-javascript">// Выделяем интерфейсы
+class OrderService {
+  constructor(userRepository, emailService, logger) {
+    this.userRepository = userRepository;
+    this.emailService = emailService;
+    this.logger = logger;
+  }
+
+  async createOrder(userId) {  // ✅ Не зависит от req
+    const user = await this.userRepository.findById(userId);
+    await this.emailService.send(user.email, 'Order created', '...');
+    this.logger.log(`Order created for user ${userId}`);
+
+    return { success: true };
+  }
+}
+</code></pre>
+<h3 id="шаг-3-создание-тонких-интерфейсов"><a class="header" href="#шаг-3-создание-тонких-интерфейсов">Шаг 3: Создание тонких интерфейсов</a></h3>
+<pre><code class="language-javascript">// Репозиторий - только работа с данными
+class UserRepository {
+  constructor(database) {
+    this.db = database;
+  }
+
+  async findById(id) {
+    return this.db.query('SELECT * FROM users WHERE id = $1', [id]);
+  }
+}
+
+// Email сервис - только отправка писем
+class EmailService {
+  async send(to, subject, body) {
+    // Логика отправки
+  }
+}
+
+// Логгер - только логирование
+class Logger {
+  log(message) {
+    console.log(message);
+  }
+}
+</code></pre>
+<h3 id="шаг-4-сборка-в-контроллере"><a class="header" href="#шаг-4-сборка-в-контроллере">Шаг 4: Сборка в контроллере</a></h3>
+<pre><code class="language-javascript">// Контроллер - точка сборки зависимостей
+class OrderController {
+  constructor(orderService) {
+    this.orderService = orderService;
+  }
+
+  async create(req, res) {
+    // ✅ Контроллер знает о HTTP
+    const userId = req.session.userId;
+
+    // ✅ Сервис не знает о HTTP
+    const result = await this.orderService.createOrder(userId);
+
+    res.json(result);
+  }
+}
+
+// Инициализация (composition root)
+const db = new PostgreSQLDatabase();
+const userRepository = new UserRepository(db);
+const emailService = new EmailService();
+const logger = new Logger();
+
+const orderService = new OrderService(userRepository, emailService, logger);
+const orderController = new OrderController(orderService);
+</code></pre>
+<hr>
+<h2 id="тестирование-преимущества-низкого-зацепления"><a class="header" href="#тестирование-преимущества-низкого-зацепления">Тестирование: Преимущества низкого зацепления</a></h2>
+<h3 id="до-рефакторинга-высокое-зацепление"><a class="header" href="#до-рефакторинга-высокое-зацепление">До рефакторинга (высокое зацепление)</a></h3>
+<pre><code class="language-javascript">// ❌ Сложно тестировать из-за зацепления
+class OrderService {
+  async createOrder(req) {
+    const userId = req.session.userId;  // Нужен mock для req
+    const user = await db.query('...');  // Нужна БД или сложный mock
+    await sendEmail(...);                 // Нужен mock для email
+    console.log(...);                     // Нельзя проверить логи
+  }
+}
+
+// ❌ Тест требует много моков
+test('createOrder', async () =&gt; {
+  // Сложная подготовка моков
+  const mockReq = {
+    session: { userId: 1 }
+  };
+
+  global.db = {
+    query: jest.fn().mockResolvedValue({ email: 'test@test.com' })
+  };
+
+  global.sendEmail = jest.fn();
+
+  const service = new OrderService();
+  await service.createOrder(mockReq);
+
+  // Проверки
+});
+</code></pre>
+<h3 id="после-рефакторинга-низкое-зацепление"><a class="header" href="#после-рефакторинга-низкое-зацепление">После рефакторинга (низкое зацепление)</a></h3>
+<pre><code class="language-javascript">// ✅ Легко тестировать благодаря DI
+class OrderService {
+  constructor(userRepository, emailService, logger) {
+    this.userRepository = userRepository;
+    this.emailService = emailService;
+    this.logger = logger;
+  }
+
+  async createOrder(userId) {
+    const user = await this.userRepository.findById(userId);
+    await this.emailService.send(user.email, '...');
+    this.logger.log(`Order created for user ${userId}`);
+  }
+}
+
+// ✅ Простые моки
+test('createOrder', async () =&gt; {
+  // Простые моки
+  const mockUserRepo = {
+    findById: jest.fn().mockResolvedValue({ email: 'test@test.com' })
+  };
+
+  const mockEmailService = {
+    send: jest.fn()
+  };
+
+  const mockLogger = {
+    log: jest.fn()
+  };
+
+  // Создаем сервис с моками
+  const service = new OrderService(mockUserRepo, mockEmailService, mockLogger);
+
+  // Тест
+  await service.createOrder(1);
+
+  // Простые проверки
+  expect(mockUserRepo.findById).toHaveBeenCalledWith(1);
+  expect(mockEmailService.send).toHaveBeenCalledWith('test@test.com', expect.any(String));
+  expect(mockLogger.log).toHaveBeenCalled();
+});
+</code></pre>
+<hr>
+<h2 id="выводы"><a class="header" href="#выводы">Выводы</a></h2>
+<h3 id="ключевые-takeaways"><a class="header" href="#ключевые-takeaways">Ключевые takeaways</a></h3>
+<ol>
+<li>
+<p><strong>Зацепление (Coupling) vs Связность (Cohesion)</strong></p>
+<ul>
+<li>Зацепление - зависимости МЕЖДУ модулями (минимизируем)</li>
+<li>Связность - связи ВНУТРИ модуля (максимизируем)</li>
+</ul>
+</li>
+<li>
+<p><strong>Признаки высокого зацепления (плохо):</strong></p>
+<ul>
+<li>Модуль знает внутреннюю структуру других модулей</li>
+<li>Использование примесей (mixins) для передачи данных</li>
+<li>Скрытые зависимости через глобальное состояние</li>
+<li>Невозможность использовать модуль отдельно</li>
+<li>Сложное тестирование из-за множества зависимостей</li>
+</ul>
+</li>
+<li>
+<p><strong>Признаки высокой связности (хорошо):</strong></p>
+<ul>
+<li>Все элементы модуля работают для одной цели</li>
+<li>Методы используют общее состояние</li>
+<li>Модуль можно описать одним предложением</li>
+<li>Невозможно разделить модуль без потери функциональности</li>
+</ul>
+</li>
+<li>
+<p><strong>Техники снижения зацепления:</strong></p>
+<ul>
+<li>Dependency Injection - внедрение зависимостей</li>
+<li>Программирование на интерфейсы</li>
+<li>Разделение ответственностей (SRP)</li>
+<li>Использование слоев абстракции</li>
+<li>Явные параметры вместо глобального состояния</li>
+</ul>
+</li>
+<li>
+<p><strong>Promise.race для элегантной обработки таймаутов:</strong></p>
+<pre><code class="language-javascript">const result = await Promise.race([
+  actualWork(),
+  timeout(1000)
+]);
+</code></pre>
+</li>
+<li>
+<p><strong>Контроллер - точка сборки:</strong></p>
+<ul>
+<li>Контроллер имеет право на высокое знание о зависимостях</li>
+<li>В контроллере происходит интеграция компонентов</li>
+<li>Высокая связность в контроллере - это нормально</li>
+<li>Контроллер знает о протоколе (HTTP), модули - нет</li>
+</ul>
+</li>
+<li>
+<p><strong>Зацепление на нижестоящие слои - допустимо:</strong></p>
+<ul>
+<li>timeout может зависеть от delay</li>
+<li>Контроллер может зависеть от сервисов</li>
+<li>Сервисы могут зависеть от утилит</li>
+<li>Но НЕ наоборот!</li>
+</ul>
+</li>
+<li>
+<p><strong>Middleware - источник зацепления:</strong></p>
+<ul>
+<li>Middleware часто создают скрытые зависимости</li>
+<li>Порядок middleware становится критичным</li>
+<li>Лучше использовать явные функции и контроллер</li>
+</ul>
+</li>
+</ol>
+<h3 id="практический-чеклист"><a class="header" href="#практический-чеклист">Практический чеклист</a></h3>
+<p><strong>При написании нового модуля:</strong></p>
+<ul>
+<li>✅ Все зависимости передаются явно (параметры/конструктор)</li>
+<li>✅ Модуль не использует глобальное состояние</li>
+<li>✅ Модуль не знает о деталях других модулей</li>
+<li>✅ Модуль можно протестировать изолированно</li>
+<li>✅ Модуль имеет одну четкую ответственность</li>
+</ul>
+<p><strong>При рефакторинге:</strong></p>
+<ul>
+<li>✅ Выявите все зацепления (используйте цветовое кодирование)</li>
+<li>✅ Извлеките зависимости в параметры</li>
+<li>✅ Создайте тонкие интерфейсы</li>
+<li>✅ Используйте слои абстракции</li>
+<li>✅ Соберите все в контроллере</li>
+</ul>
+<p><strong>Помните:</strong></p>
+<blockquote>
+<p>“Зацепление между модулями должно быть минимальным и осуществляться только через четкие интерфейсы. Связность внутри модуля должна быть максимальной - все элементы работают вместе для достижения единой цели.”</p>
+</blockquote>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="связанные-паттерны-grasp"><a class="header" href="#связанные-паттерны-grasp">Связанные паттерны GRASP</a></h3>
+<ul>
+<li><strong>Pure Fabrication (Чистая выдумка)</strong> - создание классов для снижения зацепления</li>
+<li><strong>Indirection (Посредник)</strong> - добавление промежуточного слоя</li>
+<li><strong>Protected Variations (Защита от изменений)</strong> - использование интерфейсов</li>
+</ul>
+<h3 id="рекомендуемые-лекции"><a class="header" href="#рекомендуемые-лекции">Рекомендуемые лекции</a></h3>
+<ol>
+<li>“Pure Fabrication в JavaScript” - продолжение темы снижения зацепления</li>
+<li>“API на Node.js” - как правильно парсить параметры и строить роутинг</li>
+<li>“HTTP сервер на Node.js” - глубокое понимание протокола</li>
+</ol>
+<h3 id="репозиторий-с-примерами"><a class="header" href="#репозиторий-с-примерами">Репозиторий с примерами</a></h3>
+<p>Все примеры кода из этой лекции доступны в репозитории:</p>
+<ul>
+<li><strong>Плохой пример</strong>: <code>/examples/coupling-bad</code> (Express с middleware)</li>
+<li><strong>Хороший пример</strong>: <code>/examples/coupling-good</code> (чистые функции и контроллер)</li>
+</ul>
+<h3 id="для-самостоятельного-изучения"><a class="header" href="#для-самостоятельного-изучения">Для самостоятельного изучения</a></h3>
+<p><strong>Задание 1</strong>: Рефакторинг класса Person</p>
+<ul>
+<li>Возьмите пример с классом Person из начала лекции</li>
+<li>Примените принцип Pure Fabrication</li>
+<li>Создайте отдельный PersonRepository для работы с БД</li>
+</ul>
+<p><strong>Задание 2</strong>: Анализ собственного кода</p>
+<ul>
+<li>Выберите один из ваших модулей</li>
+<li>Выделите цветом внутренние связи (синий) и зацепления (красный)</li>
+<li>Определите возможности для рефакторинга</li>
+</ul>
+<p><strong>Задание 3</strong>: Создание независимых утилит</p>
+<ul>
+<li>Напишите 3-5 независимых утилит по аналогии с delay</li>
+<li>Убедитесь, что они не зависят от внешних модулей</li>
+<li>Покройте их тестами без моков</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week5/composite-pattern-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week5/solid-lsp-principle-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week5/composite-pattern-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week5/solid-lsp-principle-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

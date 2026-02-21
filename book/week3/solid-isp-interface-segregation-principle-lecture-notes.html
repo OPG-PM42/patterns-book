@@ -1,0 +1,672 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SOLID - Interface Segregation Principle (ISP) - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="solid-isp--принцип-разделения-интерфейсов-interface-segregation-principle-для-javascript"><a class="header" href="#solid-isp--принцип-разделения-интерфейсов-interface-segregation-principle-для-javascript">SOLID: ISP — Принцип разделения интерфейсов (Interface Segregation Principle) для JavaScript</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Принцип разделения интерфейсов (Interface Segregation Principle, ISP) — один из пяти принципов SOLID, сформулированный Робертом Мартином. Этот принцип гласит, что <strong>клиенты не должны быть заставлены зависеть от интерфейсов, которые они не используют</strong>. Другими словами, лучше иметь несколько узкоспециализированных интерфейсов, чем один универсальный.</p>
+<hr>
+<h2 id="основная-формулировка-принципа"><a class="header" href="#основная-формулировка-принципа">Основная формулировка принципа</a></h2>
+<blockquote>
+<p><strong>“Клиенты не должны быть заставлены использовать большие интерфейсы и более широкие интерфейсы, чем им нужно”</strong></p>
+<p>— Роберт Мартин</p>
+</blockquote>
+<h3 id="что-такое-клиенты"><a class="header" href="#что-такое-клиенты">Что такое “клиенты”?</a></h3>
+<p><strong>Клиенты</strong> — это тот код, который использует наши абстракции и классы. Клиентский код должен быть связан не с конкретным классом, а с интерфейсом, чтобы конкретную реализацию можно было легко заменить.</p>
+<hr>
+<h2 id="суть-принципа"><a class="header" href="#суть-принципа">Суть принципа</a></h2>
+<h3 id="основные-идеи"><a class="header" href="#основные-идеи">Основные идеи</a></h3>
+<ol>
+<li><strong>Разделение интерфейсов</strong> — нужно разделить интерфейс класса на несколько более узких интерфейсов</li>
+<li><strong>Использование через интерфейсы</strong> — клиентский код должен работать с интерфейсами, а не с классами напрямую</li>
+<li><strong>Минимальная зависимость</strong> — в интерфейсе не должно быть больше свойств и методов, чем необходимо клиенту</li>
+</ol>
+<h3 id="поиск-баланса"><a class="header" href="#поиск-баланса">Поиск баланса</a></h3>
+<p>При разделении интерфейсов важно <strong>найти баланс</strong>:</p>
+<ul>
+<li>Не нужно создавать интерфейс для каждого свойства</li>
+<li>Не нужно плодить огромное количество интерфейсов</li>
+<li>Интуитивно определяйте разумное количество интерфейсов</li>
+<li>Это приходит с практикой и опытом</li>
+</ul>
+<p><strong>Важно</strong>: Когда класс имплементирует множество интерфейсов, нужно следить за согласованностью типов во всех интерфейсах. Это дополнительная работа, но она окупается гибкостью кода.</p>
+<hr>
+<h2 id="преимущества-isp"><a class="header" href="#преимущества-isp">Преимущества ISP</a></h2>
+<h3 id="1-снижение-зацепления-coupling"><a class="header" href="#1-снижение-зацепления-coupling">1. Снижение зацепления (coupling)</a></h3>
+<p>ISP снижает зацепление в коде, делая его более модульным и независимым.</p>
+<h3 id="2-повышение-гибкости"><a class="header" href="#2-повышение-гибкости">2. Повышение гибкости</a></h3>
+<p>Код становится более гибким за счёт возможности подмены реализаций.</p>
+<h3 id="3-открытие-дверей-для-паттернов"><a class="header" href="#3-открытие-дверей-для-паттернов">3. Открытие дверей для паттернов</a></h3>
+<p>Принцип открывает возможности для:</p>
+<ul>
+<li><strong>Внедрения зависимостей</strong> (Dependency Injection)</li>
+<li><strong>Паттерна Стратегия</strong> (Strategy Pattern)</li>
+<li><strong>Паттерна Открытый конструктор</strong> (Revealing Constructor Pattern)</li>
+</ul>
+<h3 id="4-структурная-типизация-в-javascript"><a class="header" href="#4-структурная-типизация-в-javascript">4. Структурная типизация в JavaScript</a></h3>
+<p>В JavaScript и TypeScript действует <strong>структурная типизация</strong> (duck typing):</p>
+<ul>
+<li>Не обязательно явно писать <code>implements</code> в коде</li>
+<li>Если объект имеет нужные методы и поля, совпадающие по сигнатуре с интерфейсом, то он может быть использован вместо этого интерфейса</li>
+<li>Это позволяет гибко подменять реализации</li>
+</ul>
+<h3 id="5-снижение-зависимости-от-конкретных-классов"><a class="header" href="#5-снижение-зависимости-от-конкретных-классов">5. Снижение зависимости от конкретных классов</a></h3>
+<p>Вместо того чтобы:</p>
+<ul>
+<li>Использовать <code>require</code> для загрузки конкретных классов</li>
+<li>Создавать инстансы конкретных классов внутри кода</li>
+</ul>
+<p>Мы получаем зависимости <strong>извне</strong>, что снижает зацепление во всём программном коде.</p>
+<hr>
+<h2 id="практический-пример-система-отправки-email"><a class="header" href="#практический-пример-система-отправки-email">Практический пример: Система отправки email</a></h2>
+<h3 id="проблема-нарушение-srp-и-isp"><a class="header" href="#проблема-нарушение-srp-и-isp">Проблема: Нарушение SRP и ISP</a></h3>
+<p>Рассмотрим класс <code>Message</code>, который нарушает как принцип единственной ответственности (SRP), так и принцип разделения интерфейсов (ISP):</p>
+<pre><code class="language-javascript">// ❌ Плохой пример - всё в одном классе
+class Message {
+  constructor(text) {
+    this.text = text;
+  }
+
+  attach(file) {
+    // Прикрепление файла
+  }
+
+  send() {
+    // Отправка сообщения
+  }
+
+  logWarning(message) {
+    // Логирование предупреждений
+  }
+}
+</code></pre>
+<p><strong>Проблемы этого подхода</strong>:</p>
+<ol>
+<li>Класс имеет слишком много ответственностей (работа с сообщениями, вложениями, отправкой, логированием)</li>
+<li>Клиенты вынуждены зависеть от всех методов, даже если используют только некоторые</li>
+<li>Нарушается принцип единственной ответственности (SRP)</li>
+</ol>
+<hr>
+<h2 id="решение-применение-isp"><a class="header" href="#решение-применение-isp">Решение: Применение ISP</a></h2>
+<h3 id="шаг-1-декомпозиция-на-интерфейсы"><a class="header" href="#шаг-1-декомпозиция-на-интерфейсы">Шаг 1: Декомпозиция на интерфейсы</a></h3>
+<p>Разделим функциональность на минимум <strong>три отдельных компонента</strong>:</p>
+<ol>
+<li><strong>Работа с сообщениями</strong> (messages)</li>
+<li><strong>Работа с вложениями</strong> (attachments)</li>
+<li><strong>Отправка</strong> (sending)</li>
+<li><strong>Логирование</strong> (отдельная ответственность, должна быть вынесена)</li>
+</ol>
+<h3 id="шаг-2-определение-интерфейсов"><a class="header" href="#шаг-2-определение-интерфейсов">Шаг 2: Определение интерфейсов</a></h3>
+<p>Создадим несколько узких интерфейсов:</p>
+<pre><code class="language-typescript">// types.d.ts - файл с определениями типов
+
+// Интерфейс для файла (базовый)
+interface IFile {
+  fileName: string;
+}
+
+// Интерфейс для данных с readable stream
+interface IData extends IFile {
+  readable: NodeJS.ReadableStream;
+}
+
+// Интерфейс для вложения
+interface IAttachment extends IFile {
+  readable: NodeJS.ReadableStream;
+}
+</code></pre>
+<p><strong>Важное наблюдение</strong>: Интерфейсы <code>IFile</code>, <code>IData</code> и <code>IAttachment</code> похожи, но служат разным целям:</p>
+<ul>
+<li><code>IFile</code> — базовый интерфейс для работы с файлами</li>
+<li><code>IData</code> — для работы с потоками данных</li>
+<li><code>IAttachment</code> — для работы с вложениями</li>
+</ul>
+<p>Благодаря структурной типизации в JavaScript/TypeScript, <strong>не обязательно явно указывать наследование</strong> между интерфейсами (хотя можно было написать <code>IAttachment extends IFile</code>).</p>
+<h3 id="шаг-3-интерфейс-для-сообщения"><a class="header" href="#шаг-3-интерфейс-для-сообщения">Шаг 3: Интерфейс для сообщения</a></h3>
+<pre><code class="language-typescript">// Интерфейс для сообщения
+interface IMessage {
+  from: string;
+  to: string;
+  text: string;
+  files: IFile[];  // Ссылается на интерфейс, не на класс!
+
+  attach(file: IAttachment): Promise&lt;void&gt;;  // Асинхронный метод
+}
+</code></pre>
+<p><strong>Ключевые моменты</strong>:</p>
+<ul>
+<li><code>files</code> — это массив <code>IFile[]</code>, а не конкретных классов</li>
+<li><code>attach</code> принимает <code>IAttachment</code>, что позволяет передавать любую реализацию</li>
+<li>Метод <code>attach</code> возвращает <code>Promise&lt;void&gt;</code>, так как операция асинхронная</li>
+</ul>
+<h3 id="шаг-4-вспомогательная-функция"><a class="header" href="#шаг-4-вспомогательная-функция">Шаг 4: Вспомогательная функция</a></h3>
+<pre><code class="language-typescript">// Функция отправки (вынесена отдельно)
+function send(message: IMessage): void {
+  // Логика отправки
+}
+
+// Вспомогательная функция для проверки
+function canAttach(files: IFile[]): boolean {
+  // Проверяет, существует ли массив файлов
+  // Все файлы в массиве должны имплементировать IFile
+  return Array.isArray(files) &amp;&amp;
+         files.every(file =&gt; 'fileName' in file);
+}
+</code></pre>
+<hr>
+<h2 id="реализация-классов"><a class="header" href="#реализация-классов">Реализация классов</a></h2>
+<h3 id="класс-attachment"><a class="header" href="#класс-attachment">Класс Attachment</a></h3>
+<pre><code class="language-javascript">// attachment.js
+class Attachment {
+  constructor(fileName, readable) {
+    this.fileName = fileName;
+    this.readable = readable;
+  }
+}
+
+module.exports = { Attachment };
+</code></pre>
+<p><strong>Важно</strong>: Класс <code>Attachment</code> имплементирует интерфейс <code>IAttachment</code>, но явно это не указывается в JavaScript. TypeScript проверит соответствие автоматически, если указать:</p>
+<pre><code class="language-typescript">class Attachment implements IAttachment {
+  fileName: string;
+  readable: NodeJS.ReadableStream;
+
+  constructor(fileName: string, readable: NodeJS.ReadableStream) {
+    this.fileName = fileName;
+    this.readable = readable;
+  }
+}
+</code></pre>
+<h3 id="класс-message"><a class="header" href="#класс-message">Класс Message</a></h3>
+<pre><code class="language-javascript">// message.js
+class Message {
+  constructor(from, to, text) {
+    this.from = from;
+    this.to = to;
+    this.text = text;
+    this.files = [];  // Массив IFile[]
+  }
+
+  async attach(file) {  // file: IAttachment
+    // file может быть экземпляром любого класса,
+    // который имплементирует IAttachment
+    this.files.push(file);
+  }
+}
+
+module.exports = { Message };
+</code></pre>
+<p><strong>Ключевое наблюдение</strong>: Класс <code>Message</code> <strong>не знает</strong> о конкретном классе <code>Attachment</code>. Он знает только об интерфейсе <code>IAttachment</code>. Это позволяет передавать в <code>attach()</code> любую реализацию, совместимую с интерфейсом.</p>
+<hr>
+<h2 id="использование-в-клиентском-коде"><a class="header" href="#использование-в-клиентском-коде">Использование в клиентском коде</a></h2>
+<pre><code class="language-javascript">// usage.js
+const { console } = require('./logger');
+const { Attachment, Message, send, canAttach } = require('./delivery');
+
+// Создаём сообщение
+const message = new Message(
+  'marcus@aurelius.com',      // from
+  'lucius@verus.com',         // to
+  'What do we have in common?'  // text
+);
+
+// Создаём вложение
+const attachment = new Attachment(
+  'photo.jpg',
+  someReadableStream
+);
+
+// Прикрепляем файл к сообщению
+await message.attach(attachment);
+
+// Отправляем сообщение
+send(message);
+</code></pre>
+<hr>
+<h2 id="гибкость-через-интерфейсы"><a class="header" href="#гибкость-через-интерфейсы">Гибкость через интерфейсы</a></h2>
+<h3 id="работа-с-разными-реализациями"><a class="header" href="#работа-с-разными-реализациями">Работа с разными реализациями</a></h3>
+<p>Благодаря ISP мы можем работать с разными типами объектов через один интерфейс:</p>
+<pre><code class="language-javascript">// Три разных источника данных
+const file1 = message.files[0];  // Экземпляр класса Attachment
+
+const file2 = new Attachment('document.pdf', anotherStream);
+
+const file3 = {
+  fileName: 'unknown.txt'  // Простой объект, совместимый с IFile
+};
+
+// Все три объекта можно использовать через интерфейс IFile
+const files = [file1, file2, file3];
+
+// Проверяем, можно ли прикрепить все файлы
+if (canAttach(files)) {
+  console.log('All files are valid');
+}
+</code></pre>
+<p><strong>Почему это работает?</strong></p>
+<p>Функция <code>canAttach</code> ожидает массив <code>IFile[]</code>. Все три объекта (<code>file1</code>, <code>file2</code>, <code>file3</code>) удовлетворяют интерфейсу <code>IFile</code> (имеют поле <code>fileName</code>), поэтому их можно передать в функцию.</p>
+<h3 id="альтернативные-реализации-attachment"><a class="header" href="#альтернативные-реализации-attachment">Альтернативные реализации Attachment</a></h3>
+<p>Благодаря разделению через интерфейсы, мы можем создать разные реализации вложений:</p>
+<pre><code class="language-javascript">// Вложение из файловой системы
+class FileSystemAttachment implements IAttachment {
+  constructor(filePath) {
+    this.fileName = path.basename(filePath);
+    this.readable = fs.createReadStream(filePath);
+  }
+}
+
+// Вложение из базы данных
+class DatabaseAttachment implements IAttachment {
+  constructor(fileName, blobId) {
+    this.fileName = fileName;
+    this.readable = database.getBlobStream(blobId);
+  }
+}
+
+// Вложение из памяти
+class MemoryAttachment implements IAttachment {
+  constructor(fileName, buffer) {
+    this.fileName = fileName;
+    this.readable = bufferToStream(buffer);
+  }
+}
+</code></pre>
+<p>Все эти классы можно использовать взаимозаменяемо, так как они имплементируют один интерфейс <code>IAttachment</code>.</p>
+<hr>
+<h2 id="изоляция-классов-через-интерфейсы"><a class="header" href="#изоляция-классов-через-интерфейсы">Изоляция классов через интерфейсы</a></h2>
+<h3 id="преимущества-изоляции"><a class="header" href="#преимущества-изоляции">Преимущества изоляции</a></h3>
+<p>Классы <strong>не знают друг о друге напрямую</strong>:</p>
+<ul>
+<li><code>Message</code> не знает о классе <code>Attachment</code></li>
+<li><code>Message</code> знает только об интерфейсе <code>IAttachment</code></li>
+<li>Это позволяет размещать классы в разных модулях</li>
+<li>Можно подставлять любые реализации, совместимые по контракту</li>
+</ul>
+<h3 id="пример-структуры-модулей"><a class="header" href="#пример-структуры-модулей">Пример структуры модулей</a></h3>
+<pre><code>project/
+├── types.d.ts          # Определения интерфейсов
+├── message.js          # Класс Message
+├── attachment.js       # Класс Attachment
+├── send.js             # Функция send
+└── usage.js            # Клиентский код
+</code></pre>
+<p>Хотя в примере из лекции все классы находятся в одном файле, в реальном проекте их можно разнести по отдельным модулям.</p>
+<hr>
+<h2 id="isp-в-javascript-без-typescript"><a class="header" href="#isp-в-javascript-без-typescript">ISP в JavaScript без TypeScript</a></h2>
+<h3 id="можно-ли-использовать-isp-без-явных-интерфейсов"><a class="header" href="#можно-ли-использовать-isp-без-явных-интерфейсов">Можно ли использовать ISP без явных интерфейсов?</a></h3>
+<p><strong>Да!</strong> Принцип разделения интерфейсов можно применять в чистом JavaScript, даже если в языке нет встроенной поддержки интерфейсов.</p>
+<h3 id="подход-через-dts-файлы"><a class="header" href="#подход-через-dts-файлы">Подход через DTS-файлы</a></h3>
+<p>В примере из лекции используется <strong>гибридный подход</strong>:</p>
+<ol>
+<li>Код написан на <strong>чистом JavaScript</strong> (<code>.js</code> файлы)</li>
+<li>Рядом лежат <strong>файлы деклараций типов</strong> (<code>.d.ts</code> файлы)</li>
+<li>TypeScript настроен на проверку JS-файлов на соответствие типам</li>
+</ol>
+<p><strong>Преимущества этого подхода</strong>:</p>
+<ul>
+<li>Код выполняется как обычный JavaScript</li>
+<li>TypeScript проверяет корректность типов на этапе разработки</li>
+<li>Не нужна компиляция TypeScript в runtime</li>
+<li>Разделены типы и реализация</li>
+</ul>
+<h3 id="настройка-проверки-типов"><a class="header" href="#настройка-проверки-типов">Настройка проверки типов</a></h3>
+<pre><code class="language-json">// tsconfig.json
+{
+  "compilerOptions": {
+    "checkJs": true,           // Проверять JS-файлы
+    "allowJs": true,           // Разрешить JS-файлы
+    "noEmit": true,            // Не генерировать выходные файлы
+    "strict": true
+  }
+}
+</code></pre>
+<h3 id="концептуальное-использование-интерфейсов"><a class="header" href="#концептуальное-использование-интерфейсов">Концептуальное использование интерфейсов</a></h3>
+<p>Даже без явных интерфейсов, код можно писать <strong>так, как будто они есть</strong>:</p>
+<ul>
+<li>Представляйте себе контракты интерфейсов мысленно</li>
+<li>Проектируйте классы так, чтобы они зависели от абстракций, а не от конкретики</li>
+<li>Используйте duck typing для полиморфизма</li>
+</ul>
+<pre><code class="language-javascript">// Код работает и без типов благодаря duck typing
+const message = new Message('from', 'to', 'text');
+const file = { fileName: 'test.txt' };  // Подходит под "интерфейс" IFile
+message.files.push(file);  // Работает!
+</code></pre>
+<hr>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="1-назначение-интерфейсов-в-isp"><a class="header" href="#1-назначение-интерфейсов-в-isp">1. Назначение интерфейсов в ISP</a></h3>
+<p>Интерфейсы нужны для:</p>
+<ul>
+<li><strong>Наглядности</strong> — явно показывают контракты</li>
+<li><strong>Проверки</strong> — автоматическая проверка соответствия типов</li>
+<li><strong>Документации</strong> — служат документацией к коду</li>
+</ul>
+<h3 id="2-интерфейсы-vs-классы"><a class="header" href="#2-интерфейсы-vs-классы">2. Интерфейсы vs Классы</a></h3>
+<p><strong>Всегда ссылайтесь на интерфейсы, а не на классы</strong>:</p>
+<pre><code class="language-typescript">// ❌ Плохо - зависимость от конкретного класса
+class EmailSender {
+  private attachment: Attachment;  // Привязка к классу
+}
+
+// ✅ Хорошо - зависимость от интерфейса
+class EmailSender {
+  private attachment: IAttachment;  // Привязка к интерфейсу
+}
+</code></pre>
+<h3 id="3-применимость-в-любом-языке"><a class="header" href="#3-применимость-в-любом-языке">3. Применимость в любом языке</a></h3>
+<p>Принцип ISP применим даже в языках без встроенной поддержки интерфейсов:</p>
+<ul>
+<li>JavaScript (с TypeScript или без)</li>
+<li>Python (через ABC или duck typing)</li>
+<li>Ruby (через duck typing)</li>
+</ul>
+<h3 id="4-баланс-между-гибкостью-и-сложностью"><a class="header" href="#4-баланс-между-гибкостью-и-сложностью">4. Баланс между гибкостью и сложностью</a></h3>
+<p>ISP требует:</p>
+<ul>
+<li><strong>Больше кода</strong> — дополнительные интерфейсы и проверки</li>
+<li><strong>Больше работы</strong> — согласование типов при изменениях</li>
+<li><strong>Но даёт</strong> — гибкость, тестируемость, возможность подмены реализаций</li>
+</ul>
+<p><strong>Важно</strong>: Этот дополнительный код (типы, интерфейсы) <strong>не исполняется в runtime</strong>, поэтому не влияет на производительность.</p>
+<hr>
+<h2 id="связь-isp-с-другими-принципами-solid"><a class="header" href="#связь-isp-с-другими-принципами-solid">Связь ISP с другими принципами SOLID</a></h2>
+<h3 id="single-responsibility-principle-srp"><a class="header" href="#single-responsibility-principle-srp">Single Responsibility Principle (SRP)</a></h3>
+<p>ISP дополняет SRP:</p>
+<ul>
+<li>SRP требует разделения классов по ответственностям</li>
+<li>ISP требует разделения интерфейсов для каждой ответственности</li>
+</ul>
+<h3 id="dependency-inversion-principle-dip"><a class="header" href="#dependency-inversion-principle-dip">Dependency Inversion Principle (DIP)</a></h3>
+<p>ISP создаёт основу для DIP:</p>
+<ul>
+<li>ISP предоставляет абстракции (интерфейсы)</li>
+<li>DIP требует зависимости от абстракций, а не от конкретики</li>
+<li>Вместе они снижают зацепление в коде</li>
+</ul>
+<h3 id="openclosed-principle-ocp"><a class="header" href="#openclosed-principle-ocp">Open/Closed Principle (OCP)</a></h3>
+<p>ISP помогает соблюдать OCP:</p>
+<ul>
+<li>Новые реализации можно добавлять без изменения существующего кода</li>
+<li>Достаточно реализовать нужный интерфейс</li>
+</ul>
+<hr>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="1-начинайте-с-простого"><a class="header" href="#1-начинайте-с-простого">1. Начинайте с простого</a></h3>
+<p>Не создавайте сразу много интерфейсов. Добавляйте их по мере необходимости.</p>
+<h3 id="2-группируйте-связанные-методы"><a class="header" href="#2-группируйте-связанные-методы">2. Группируйте связанные методы</a></h3>
+<p>Объединяйте в один интерфейс методы, которые логически связаны и часто используются вместе.</p>
+<h3 id="3-используйте-префиксы"><a class="header" href="#3-используйте-префиксы">3. Используйте префиксы</a></h3>
+<p>Называйте интерфейсы с префиксом <code>I</code> (например, <code>IMessage</code>, <code>IFile</code>) для ясности.</p>
+<h3 id="4-проверяйте-на-практике"><a class="header" href="#4-проверяйте-на-практике">4. Проверяйте на практике</a></h3>
+<p>Лучший способ научиться балансировать количество интерфейсов — практика и рефакторинг реального кода.</p>
+<h3 id="5-используйте-инструменты"><a class="header" href="#5-используйте-инструменты">5. Используйте инструменты</a></h3>
+<ul>
+<li><strong>TypeScript</strong> — для проверки типов</li>
+<li><strong>ESLint</strong> — для соблюдения code style</li>
+<li><strong>Автоматические тесты</strong> — для проверки корректности подмены реализаций</li>
+</ul>
+<hr>
+<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
+<p><strong>Принцип разделения интерфейсов (ISP)</strong> — мощный инструмент для создания гибкого, слабо связанного кода:</p>
+<ul>
+<li>✅ Разделяйте большие интерфейсы на маленькие, узкоспециализированные</li>
+<li>✅ Клиенты должны зависеть только от тех методов, которые они используют</li>
+<li>✅ Ссылайтесь на интерфейсы, а не на конкретные классы</li>
+<li>✅ Используйте структурную типизацию JavaScript/TypeScript для гибкости</li>
+<li>✅ ISP применим даже без явной поддержки интерфейсов в языке</li>
+<li>✅ Находите баланс между количеством интерфейсов и сложностью</li>
+</ul>
+<p><strong>Главный принцип</strong>: Код должен зависеть от абстракций (интерфейсов), а не от деталей реализации (конкретных классов). Это делает систему гибкой, тестируемой и готовой к изменениям.</p>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<ul>
+<li>Исходный код примера доступен по ссылке под видео лекции</li>
+<li>Рекомендуется изучить остальные принципы SOLID для полного понимания</li>
+<li>Практикуйтесь в рефакторинге существующего кода с применением ISP</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week3/grasp-information-expert-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week3/object-pool-factory-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week3/grasp-information-expert-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week3/object-pool-factory-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

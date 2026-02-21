@@ -1,0 +1,826 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Flyweight - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="паттерн-легковес-flyweight-из-банды-четырёх"><a class="header" href="#паттерн-легковес-flyweight-из-банды-четырёх">Паттерн Легковес (Flyweight) из Банды Четырёх</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Паттерн <strong>Flyweight (Легковес)</strong> — это структурный паттерн проектирования из Банды Четырёх (GoF), основная задача которого — <strong>экономия памяти</strong> путём разделения объектов на две части: общую (разделяемую) и уникальную. Этот паттерн особенно полезен при создании большого количества однотипных объектов.</p>
+<p><strong>Ключевая идея</strong>: Разделить абстракцию на два класса — один хранит данные, одинаковые для множества экземпляров (внутреннее состояние), а другой хранит уникальные данные (внешнее состояние).</p>
+<h2 id="основные-концепции"><a class="header" href="#основные-концепции">Основные концепции</a></h2>
+<h3 id="принцип-работы"><a class="header" href="#принцип-работы">Принцип работы</a></h3>
+<p>Экономия памяти достигается за счёт:</p>
+<ul>
+<li><strong>Повышения сложности программы</strong> — требуется дополнительная логика для управления разделяемыми объектами</li>
+<li><strong>Использования процессорных ресурсов</strong> — необходимы дополнительные вычисления для связывания объектов</li>
+</ul>
+<h3 id="компромисс"><a class="header" href="#компромисс">Компромисс</a></h3>
+<p><strong>Выигрыш</strong>: Значительная экономия памяти при большом количестве однотипных объектов</p>
+<p><strong>Цена</strong>: Увеличение сложности кода и небольшое увеличение нагрузки на процессор</p>
+<hr>
+<h2 id="классическая-реализация-паттерна-flyweight"><a class="header" href="#классическая-реализация-паттерна-flyweight">Классическая реализация паттерна Flyweight</a></h2>
+<h3 id="пример-система-таймеров"><a class="header" href="#пример-система-таймеров">Пример: Система таймеров</a></h3>
+<p>Таймер — это идеальный пример для демонстрации паттерна Flyweight, потому что:</p>
+<ol>
+<li>Каждый таймер выделяет память</li>
+<li>Каждый таймер связан с системным ресурсом (handle или ID)</li>
+<li>Платформа (браузер или Node.js) предоставляет ограниченное количество таймеров</li>
+</ol>
+<h3 id="структура-классической-реализации"><a class="header" href="#структура-классической-реализации">Структура классической реализации</a></h3>
+<h4 id="класс-timer-тяжёлый-объект"><a class="header" href="#класс-timer-тяжёлый-объект">Класс Timer (Тяжёлый объект)</a></h4>
+<p>Этот класс оборачивает системный <code>setInterval</code> и представляет собой тяжеловесную часть паттерна.</p>
+<pre><code class="language-javascript">class Timer {
+  constructor(interval, removeTimer) {
+    // Сохраняем интервал
+    this.interval = interval;
+
+    // Коллекция слушателей (listeners) для данного таймера
+    this.listeners = new Set();
+
+    // Callback для удаления таймера из коллекции
+    this.removeTimer = removeTimer;
+
+    // Создаём системный таймер (платформенный)
+    this.instance = setInterval(() =&gt; {
+      // При срабатывании таймера вызываем все зарегистрированные listeners
+      for (const listener of this.listeners) {
+        listener();
+      }
+    }, interval);
+  }
+
+  // Метод для добавления listener'а
+  add(callback) {
+    this.listeners.add(callback);
+  }
+
+  // Метод для удаления listener'а
+  remove(callback) {
+    this.listeners.delete(callback);
+
+    // Если больше нет слушателей, удаляем системный таймер
+    if (this.listeners.size === 0) {
+      clearInterval(this.instance);
+      // Удаляем таймер из кэша фабрики
+      this.removeTimer();
+    }
+  }
+}
+</code></pre>
+<p><strong>Важные поля класса Timer</strong>:</p>
+<ul>
+<li><code>interval</code> — интервал срабатывания (одинаковый для всех, кто использует этот таймер)</li>
+<li><code>listeners</code> — коллекция (Set) всех callback’ов, которые должны вызываться</li>
+<li><code>removeTimer</code> — callback для удаления таймера из фабрики</li>
+<li><code>instance</code> — ссылка на системный таймер (в Node.js это объект, в браузере — Number)</li>
+</ul>
+<h4 id="класс-timerfactory-фабрика-с-кэшем"><a class="header" href="#класс-timerfactory-фабрика-с-кэшем">Класс TimerFactory (Фабрика с кэшем)</a></h4>
+<p>Фабрика управляет коллекцией таймеров и реализует паттерн Flyweight.</p>
+<pre><code class="language-javascript">class TimerFactory {
+  // Статическая коллекция таймеров
+  // Ключ: интервал (число), Значение: экземпляр Timer
+  static timers = new Map();
+
+  // Статический метод для получения таймера
+  static getTimer(interval) {
+    // Создаём функцию для удаления таймера из кэша
+    const removeTimer = () =&gt; {
+      TimerFactory.timers.delete(interval);
+    };
+
+    // Проверяем, есть ли таймер с таким интервалом в кэше
+    let timer = TimerFactory.timers.get(interval);
+
+    if (timer) {
+      // Если таймер уже существует, возвращаем его
+      return timer;
+    }
+
+    // Если таймера нет, создаём новый
+    timer = new Timer(interval, removeTimer);
+
+    // Добавляем в кэш
+    TimerFactory.timers.set(interval, timer);
+
+    // Возвращаем созданный таймер
+    return timer;
+  }
+}
+</code></pre>
+<p><strong>Как работает фабрика</strong>:</p>
+<ol>
+<li>Метод <code>getTimer()</code> проверяет кэш таймеров по ключу <code>interval</code></li>
+<li>Если таймер с таким интервалом уже существует — возвращает его</li>
+<li>Если нет — создаёт новый, сохраняет в кэш и возвращает</li>
+<li>Функция <code>removeTimer</code> позволяет таймеру удалить себя из кэша, когда все listeners удалены</li>
+</ol>
+<h4 id="класс-interval-лёгкий-объект"><a class="header" href="#класс-interval-лёгкий-объект">Класс Interval (Лёгкий объект)</a></h4>
+<p>Это клиентская обёртка, которая предоставляет удобный интерфейс для работы с таймерами.</p>
+<pre><code class="language-javascript">class Interval {
+  constructor(interval, callback) {
+    // Сохраняем callback (уникальный для каждого экземпляра)
+    this.callback = callback;
+
+    // Получаем таймер из фабрики (разделяемый ресурс)
+    this.timer = TimerFactory.getTimer(interval);
+
+    // Регистрируем наш callback в таймере
+    this.timer.add(this.callback);
+  }
+
+  // Метод для остановки интервала
+  stop() {
+    // Удаляем наш callback из таймера
+    this.timer.remove(this.callback);
+  }
+}
+</code></pre>
+<p><strong>Поля класса Interval</strong>:</p>
+<ul>
+<li><code>callback</code> — уникальный для каждого экземпляра (внешнее состояние)</li>
+<li><code>timer</code> — ссылка на разделяемый Timer (внутреннее состояние)</li>
+</ul>
+<h3 id="использование-классической-реализации"><a class="header" href="#использование-классической-реализации">Использование классической реализации</a></h3>
+<pre><code class="language-javascript">// Создаём множество интервалов
+const intervals = [];
+
+// Создаём 1 миллион таймеров с интервалом 1000ms
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(new Interval(1000, () =&gt; {
+    // Какая-то логика
+  }));
+}
+
+// Создаём ещё 1 миллион таймеров с интервалом 2000ms
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(new Interval(2000, () =&gt; {
+    // Какая-то логика
+  }));
+}
+
+// Итого: 2 миллиона Interval объектов
+// Но только 2 системных таймера!
+</code></pre>
+<p><strong>Важное наблюдение</strong>: Без паттерна Flyweight создание 2 миллионов <code>setInterval</code> вызовов:</p>
+<ul>
+<li>Займёт огромное количество памяти</li>
+<li>Может привести к исчерпанию системных ресурсов</li>
+<li>Будет очень медленным</li>
+</ul>
+<p>С паттерном Flyweight:</p>
+<ul>
+<li>Создаются только 2 системных таймера (для 1000ms и 2000ms)</li>
+<li>Экономия памяти и ресурсов в сотни тысяч раз</li>
+<li>Быстрое выполнение</li>
+</ul>
+<hr>
+<h2 id="оптимизированная-реализация-для-javascript"><a class="header" href="#оптимизированная-реализация-для-javascript">Оптимизированная реализация для JavaScript</a></h2>
+<p>В JavaScript можно упростить классическую реализацию, объединив логику в одном классе.</p>
+<h3 id="вариант-1-один-класс-с-условной-инициализацией"><a class="header" href="#вариант-1-один-класс-с-условной-инициализацией">Вариант 1: Один класс с условной инициализацией</a></h3>
+<pre><code class="language-javascript">class Interval {
+  // Статическая коллекция таймеров (кэш)
+  static timers = new Map();
+
+  constructor(interval, callback) {
+    // Сохраняем callback
+    this.callback = callback;
+
+    // Проверяем, есть ли таймер в кэше
+    const cached = Interval.timers.get(interval);
+
+    if (!cached) {
+      // Если нет — инициализируем полновесный объект
+      this.interval = interval;
+      this.listeners = new Set();
+
+      this.instance = setInterval(() =&gt; {
+        for (const listener of this.listeners) {
+          listener();
+        }
+      }, interval);
+
+      // Добавляем в кэш
+      Interval.timers.set(interval, this);
+    } else {
+      // Если есть — возвращаем легковесный объект
+      // У него будет только поле callback
+    }
+
+    // В любом случае, получаем таймер (либо cached, либо this)
+    const timer = cached || this;
+
+    // Добавляем callback в коллекцию listeners
+    timer.listeners.add(callback);
+  }
+
+  remove(callback) {
+    // Находим таймер по callback (через прототип)
+    const timer = this.instance ? this : Interval.timers.get(this.interval);
+
+    timer.listeners.delete(callback);
+
+    if (timer.listeners.size === 0) {
+      clearInterval(timer.instance);
+      Interval.timers.delete(timer.interval);
+    }
+  }
+}
+</code></pre>
+<p><strong>Особенности этой реализации</strong>:</p>
+<ul>
+<li>Объединяет Timer и TimerFactory в один класс</li>
+<li>Создаёт два типа объектов: <strong>тяжёлые</strong> (с полями <code>interval</code>, <code>listeners</code>, <code>instance</code>) и <strong>лёгкие</strong> (только с <code>callback</code>)</li>
+<li><strong>Компромисс</strong>: Объект становится полиморфным, но не деоптимизируется в современных движках JavaScript</li>
+</ul>
+<h3 id="вариант-2-использование-цепочки-прототипов"><a class="header" href="#вариант-2-использование-цепочки-прототипов">Вариант 2: Использование цепочки прототипов</a></h3>
+<p>Эта реализация использует <code>Object.setPrototypeOf()</code> для создания связи между лёгкими и тяжёлыми объектами.</p>
+<pre><code class="language-javascript">class Interval {
+  static timers = new Map();
+
+  constructor(interval, callback) {
+    // Всегда сохраняем callback
+    this.callback = callback;
+
+    // Ищем существующий таймер
+    const timer = Interval.timers.get(interval);
+
+    if (timer) {
+      // Если таймер найден, связываем текущий объект с ним через прототип
+      Object.setPrototypeOf(this, timer);
+    } else {
+      // Если таймера нет, инициализируем полновесный объект
+      this.interval = interval;
+      this.listeners = new Set();
+
+      this.instance = setInterval(() =&gt; {
+        for (const listener of this.listeners) {
+          listener();
+        }
+      }, interval);
+
+      // Добавляем в кэш
+      Interval.timers.set(interval, this);
+    }
+
+    // Добавляем callback в listeners
+    // Благодаря прототипу, this.listeners найдётся в цепочке
+    this.listeners.add(callback);
+  }
+
+  remove() {
+    // Удаляем callback из listeners
+    this.listeners.delete(this.callback);
+
+    // Если listeners пуст, очищаем таймер
+    if (this.listeners.size === 0) {
+      clearInterval(this.instance);
+      Interval.timers.delete(this.interval);
+    }
+  }
+}
+</code></pre>
+<p><strong>Как работает цепочка прототипов</strong>:</p>
+<ol>
+<li><strong>Лёгкий объект</strong> создаётся с одним полем <code>callback</code></li>
+<li>Его прототип указывает на <strong>тяжёлый объект</strong> с полями <code>interval</code>, <code>listeners</code>, <code>instance</code></li>
+<li>При обращении к <code>this.listeners</code> JavaScript ищет это свойство в цепочке прототипов и находит его в тяжёлом объекте</li>
+<li>Все лёгкие объекты с одинаковым интервалом ссылаются на один тяжёлый объект</li>
+</ol>
+<p><strong>Визуализация</strong>:</p>
+<pre><code>Лёгкий объект 1       Лёгкий объект 2       Лёгкий объект 3
+{                     {                     {
+  callback: fn1       callback: fn2         callback: fn3
+}                     }                     }
+  |                     |                     |
+  |                     |                     |
+  +---------------------+---------------------+
+                        |
+                        v
+            Тяжёлый объект (в кэше)
+            {
+              interval: 1000,
+              listeners: Set([fn1, fn2, fn3]),
+              instance: &lt;системный таймер&gt;
+            }
+</code></pre>
+<p><strong>Преимущества этого подхода</strong>:</p>
+<ul>
+<li>Не нужно передавать ссылку на callback в метод <code>remove()</code></li>
+<li>Каждый объект знает свой callback через свойство <code>this.callback</code></li>
+<li>Чистый API: <code>interval.remove()</code> вместо <code>interval.remove(callback)</code></li>
+</ul>
+<hr>
+<h2 id="сравнение-производительности"><a class="header" href="#сравнение-производительности">Сравнение производительности</a></h2>
+<h3 id="без-паттерна-flyweight"><a class="header" href="#без-паттерна-flyweight">Без паттерна Flyweight</a></h3>
+<pre><code class="language-javascript">const intervals = [];
+
+// Создаём 2 миллиона setInterval
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(setInterval(() =&gt; {}, 1000));
+}
+
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(setInterval(() =&gt; {}, 2000));
+}
+
+// Проблемы:
+// - Огромное потребление памяти
+// - Возможное исчерпание системных ресурсов
+// - Медленное выполнение
+</code></pre>
+<h3 id="с-паттерном-flyweight"><a class="header" href="#с-паттерном-flyweight">С паттерном Flyweight</a></h3>
+<pre><code class="language-javascript">const intervals = [];
+
+// Создаём 2 миллиона Interval объектов
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(new Interval(1000, () =&gt; {}));
+}
+
+for (let i = 0; i &lt; 1000000; i++) {
+  intervals.push(new Interval(2000, () =&gt; {}));
+}
+
+// Преимущества:
+// - Только 2 системных таймера
+// - Минимальное потребление памяти (только callback'и)
+// - Быстрое выполнение
+</code></pre>
+<h3 id="измерение-использования-памяти"><a class="header" href="#измерение-использования-памяти">Измерение использования памяти</a></h3>
+<p>Вы можете измерить использование памяти в Node.js:</p>
+<pre><code class="language-javascript">// Получаем использование памяти
+const memoryBefore = process.memoryUsage();
+
+// ... создаём объекты ...
+
+const memoryAfter = process.memoryUsage();
+
+console.log('Heap используется:',
+  (memoryAfter.heapUsed - memoryBefore.heapUsed) / 1024 / 1024, 'MB');
+</code></pre>
+<hr>
+<h2 id="архитектурные-аспекты"><a class="header" href="#архитектурные-аспекты">Архитектурные аспекты</a></h2>
+<h3 id="разделение-состояния"><a class="header" href="#разделение-состояния">Разделение состояния</a></h3>
+<p><strong>Внутреннее состояние (Intrinsic State)</strong>:</p>
+<ul>
+<li>Одинаковое для множества объектов</li>
+<li>Хранится в разделяемом (тяжёлом) объекте</li>
+<li>В нашем примере: <code>interval</code>, <code>listeners</code>, <code>instance</code></li>
+</ul>
+<p><strong>Внешнее состояние (Extrinsic State)</strong>:</p>
+<ul>
+<li>Уникальное для каждого объекта</li>
+<li>Хранится в лёгком объекте или передаётся как параметр</li>
+<li>В нашем примере: <code>callback</code></li>
+</ul>
+<h3 id="роль-фабрики"><a class="header" href="#роль-фабрики">Роль фабрики</a></h3>
+<p>Фабрика (Factory) в паттерне Flyweight:</p>
+<ol>
+<li><strong>Кэширует</strong> тяжёлые объекты</li>
+<li><strong>Возвращает</strong> существующий объект или создаёт новый</li>
+<li><strong>Управляет</strong> жизненным циклом разделяемых объектов</li>
+</ol>
+<p>В классической реализации фабрика — отдельный класс. В JavaScript можно использовать:</p>
+<ul>
+<li>Статические методы класса</li>
+<li>Функции в модуле (closure)</li>
+<li>Отдельный объект-контейнер</li>
+</ul>
+<h3 id="управление-памятью"><a class="header" href="#управление-памятью">Управление памятью</a></h3>
+<p><strong>Важный момент</strong>: Таймер удаляется из кэша, когда у него не осталось слушателей.</p>
+<pre><code class="language-javascript">// Когда последний listener удаляется:
+if (this.listeners.size === 0) {
+  clearInterval(this.instance);  // Очищаем системный таймер
+  Interval.timers.delete(interval);  // Удаляем из кэша
+}
+</code></pre>
+<p>Это предотвращает утечки памяти и освобождает системные ресурсы.</p>
+<hr>
+<h2 id="когда-использовать-паттерн-flyweight"><a class="header" href="#когда-использовать-паттерн-flyweight">Когда использовать паттерн Flyweight</a></h2>
+<h3 id="подходящие-сценарии"><a class="header" href="#подходящие-сценарии">Подходящие сценарии</a></h3>
+<p>Используйте Flyweight, когда:</p>
+<ol>
+<li><strong>Приложение создаёт огромное количество объектов</strong> (сотни тысяч или миллионы)</li>
+<li><strong>Большая часть состояния объектов может быть вынесена наружу</strong> (превращена в внешнее состояние)</li>
+<li><strong>Множество объектов можно заменить небольшим количеством разделяемых объектов</strong></li>
+<li><strong>Идентичность объектов не важна</strong> (объекты взаимозаменяемы)</li>
+</ol>
+<h3 id="примеры-применения"><a class="header" href="#примеры-применения">Примеры применения</a></h3>
+<p><strong>1. Графические редакторы</strong></p>
+<ul>
+<li>Символы в текстовом редакторе</li>
+<li>Частицы в графических эффектах</li>
+<li>Спрайты в играх</li>
+</ul>
+<pre><code class="language-javascript">// Пример: Символы в редакторе
+class Character {
+  constructor(char, font, size) {
+    this.char = char;  // Внутреннее состояние
+    this.font = font;  // Внутреннее состояние
+    this.size = size;  // Внутреннее состояние
+  }
+
+  display(position, color) {
+    // position и color — внешнее состояние
+    console.log(`Отображаем ${this.char} в ${position} цветом ${color}`);
+  }
+}
+
+class CharacterFactory {
+  static characters = new Map();
+
+  static getCharacter(char, font, size) {
+    const key = `${char}-${font}-${size}`;
+    if (!this.characters.has(key)) {
+      this.characters.set(key, new Character(char, font, size));
+    }
+    return this.characters.get(key);
+  }
+}
+</code></pre>
+<p><strong>2. Пулы соединений</strong></p>
+<ul>
+<li>Database connection pools</li>
+<li>HTTP connection pools</li>
+<li>WebSocket connections</li>
+</ul>
+<p><strong>3. Кэширование</strong></p>
+<ul>
+<li>Кэш часто используемых объектов</li>
+<li>Мемоизация вычислений</li>
+</ul>
+<h3 id="неподходящие-сценарии"><a class="header" href="#неподходящие-сценарии">Неподходящие сценарии</a></h3>
+<p><strong>Не используйте Flyweight, если</strong>:</p>
+<ul>
+<li>Мало объектов (производительность не критична)</li>
+<li>Все объекты уникальны (нет разделяемого состояния)</li>
+<li>Требуется изменяемое внутреннее состояние</li>
+</ul>
+<hr>
+<h2 id="связь-с-другими-паттернами"><a class="header" href="#связь-с-другими-паттернами">Связь с другими паттернами</a></h2>
+<h3 id="flyweight-и-singleton"><a class="header" href="#flyweight-и-singleton">Flyweight и Singleton</a></h3>
+<p><strong>Сходства</strong>:</p>
+<ul>
+<li>Оба ограничивают количество экземпляров</li>
+<li>Оба используют разделяемые объекты</li>
+</ul>
+<p><strong>Различия</strong>:</p>
+<ul>
+<li>Singleton: один экземпляр на всё приложение</li>
+<li>Flyweight: несколько экземпляров, но меньше, чем могло бы быть</li>
+</ul>
+<h3 id="flyweight-и-factory"><a class="header" href="#flyweight-и-factory">Flyweight и Factory</a></h3>
+<p>Flyweight <strong>почти всегда</strong> использует Factory для:</p>
+<ul>
+<li>Управления кэшем объектов</li>
+<li>Принятия решения: создать новый или вернуть существующий</li>
+</ul>
+<h3 id="flyweight-и-proxy"><a class="header" href="#flyweight-и-proxy">Flyweight и Proxy</a></h3>
+<p><strong>Сходства</strong>:</p>
+<ul>
+<li>Оба добавляют уровень косвенности</li>
+<li>Оба могут экономить ресурсы</li>
+</ul>
+<p><strong>Различия</strong>:</p>
+<ul>
+<li>Proxy: заменяет один объект на другой</li>
+<li>Flyweight: разделяет один объект между многими клиентами</li>
+</ul>
+<hr>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="суть-паттерна"><a class="header" href="#суть-паттерна">Суть паттерна</a></h3>
+<p>Паттерн Flyweight позволяет:</p>
+<ol>
+<li><strong>Экономить память</strong> путём разделения объектов на лёгкие и тяжёлые части</li>
+<li><strong>Переиспользовать</strong> тяжёлые объекты между множеством лёгких</li>
+<li><strong>Сохранять</strong> удобный интерфейс для клиентского кода</li>
+</ol>
+<h3 id="основные-компоненты"><a class="header" href="#основные-компоненты">Основные компоненты</a></h3>
+<ol>
+<li><strong>Flyweight (Легковес)</strong> — разделяемый объект с внутренним состоянием</li>
+<li><strong>Unshared Concrete Flyweight</strong> — объект с внешним состоянием</li>
+<li><strong>Flyweight Factory</strong> — управляет созданием и кэшированием</li>
+</ol>
+<h3 id="реализация-в-javascript"><a class="header" href="#реализация-в-javascript">Реализация в JavaScript</a></h3>
+<p>В JavaScript паттерн можно реализовать:</p>
+<ul>
+<li><strong>Классически</strong> (отдельные классы для Flyweight и Factory)</li>
+<li><strong>Упрощённо</strong> (один класс с условной инициализацией)</li>
+<li><strong>Через прототипы</strong> (использование цепочки прототипов)</li>
+</ul>
+<h3 id="производительность"><a class="header" href="#производительность">Производительность</a></h3>
+<p><strong>Экономия памяти</strong>: В примере с таймерами:</p>
+<ul>
+<li>Без Flyweight: 2 000 000 системных таймеров</li>
+<li>С Flyweight: 2 системных таймера</li>
+<li><strong>Экономия: в 1 000 000 раз!</strong></li>
+</ul>
+<p><strong>Цена</strong>: Небольшое увеличение сложности кода и процессорного времени</p>
+<hr>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="проектирование"><a class="header" href="#проектирование">Проектирование</a></h3>
+<ol>
+<li><strong>Определите, что разделяемо</strong>: Найдите общее состояние у множества объектов</li>
+<li><strong>Вынесите уникальное состояние наружу</strong>: Превратите его в параметры методов</li>
+<li><strong>Создайте фабрику</strong>: Для управления кэшем разделяемых объектов</li>
+<li><strong>Продумайте очистку</strong>: Освобождайте ресурсы, когда они больше не нужны</li>
+</ol>
+<h3 id="оптимизация"><a class="header" href="#оптимизация">Оптимизация</a></h3>
+<ol>
+<li><strong>Используйте Map для кэша</strong>: Быстрый поиск по ключу</li>
+<li><strong>Очищайте кэш</strong>: Удаляйте неиспользуемые объекты</li>
+<li><strong>Измеряйте</strong>: Проверяйте реальную экономию памяти</li>
+<li><strong>Не переусложняйте</strong>: Применяйте паттерн только при реальной необходимости</li>
+</ol>
+<h3 id="отладка"><a class="header" href="#отладка">Отладка</a></h3>
+<pre><code class="language-javascript">// Добавьте методы для диагностики
+class Interval {
+  static getStats() {
+    return {
+      cachedTimers: Interval.timers.size,
+      intervals: Array.from(Interval.timers.keys())
+    };
+  }
+}
+
+// Использование
+console.log(Interval.getStats());
+// { cachedTimers: 2, intervals: [1000, 2000] }
+</code></pre>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="классификация-паттерна"><a class="header" href="#классификация-паттерна">Классификация паттерна</a></h3>
+<ul>
+<li><strong>Тип</strong>: Структурный паттерн</li>
+<li><strong>Уровень</strong>: Объектный</li>
+<li><strong>Цель</strong>: Экономия памяти через разделение состояния</li>
+</ul>
+<h3 id="альтернативные-названия"><a class="header" href="#альтернативные-названия">Альтернативные названия</a></h3>
+<ul>
+<li>Приспособленец</li>
+<li>Легковес</li>
+<li>Flyweight</li>
+</ul>
+<h3 id="история"><a class="header" href="#история">История</a></h3>
+<p>Паттерн Flyweight был впервые описан в книге “Design Patterns: Elements of Reusable Object-Oriented Software” (Банда Четырёх, 1994).</p>
+<h3 id="связанные-концепции"><a class="header" href="#связанные-концепции">Связанные концепции</a></h3>
+<ul>
+<li><strong>Object Pool</strong> — похожая идея переиспользования объектов</li>
+<li><strong>Lazy Initialization</strong> — создание объектов по требованию</li>
+<li><strong>Copy-on-Write</strong> — разделение данных до момента изменения</li>
+</ul>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>Паттерн Flyweight — мощный инструмент оптимизации памяти, особенно актуальный при работе с большим количеством однотипных объектов. В JavaScript его можно реализовать различными способами, от классической ООП структуры до использования прототипного наследования.</p>
+<p><strong>Помните</strong>:</p>
+<ul>
+<li>Flyweight решает проблему избыточного потребления памяти</li>
+<li>Он эффективен только при большом количестве объектов</li>
+<li>Современные движки JavaScript хорошо оптимизируют такие паттерны</li>
+<li>Всегда измеряйте реальную эффективность применения паттерна</li>
+</ul>
+<p>Паттерн Flyweight демонстрирует классический компромисс в программировании: вы обмениваете <strong>простоту</strong> на <strong>эффективность</strong>. Используйте его разумно, и он принесёт значительную пользу вашему приложению.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week3/singleton-pattern-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week3/revealing-constructor-pattern-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week3/singleton-pattern-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week3/revealing-constructor-pattern-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

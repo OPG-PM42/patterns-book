@@ -1,0 +1,1845 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Паттерны GoF - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="паттерны-gof-и-архитектура-сервера-в-nodejs-академический-конспект"><a class="header" href="#паттерны-gof-и-архитектура-сервера-в-nodejs-академический-конспект">Паттерны GoF и архитектура сервера в Node.js: Академический конспект</a></h1>
+<h2 id="метаданные"><a class="header" href="#метаданные">Метаданные</a></h2>
+<ul>
+<li><strong>Источник</strong>: Лекция “Структура классов сервера и GoF паттерны в Node.js”</li>
+<li><strong>Дата обработки</strong>: 2025-12-06</li>
+<li><strong>Уровень</strong>: Продвинутый курс по Node.js архитектуре</li>
+</ul>
+<hr>
+<h2 id="содержание"><a class="header" href="#содержание">Содержание</a></h2>
+<ol>
+<li><a href="#введение">Введение</a></li>
+<li><a href="#архитектурные-компоненты-и-их-взаимосвязи">Архитектурные компоненты и их взаимосвязи</a></li>
+<li><a href="#gof-паттерны-в-nodejs">GoF паттерны в Node.js</a>
+<ul>
+<li><a href="#1-strategy-стратегия">Strategy (Стратегия)</a></li>
+<li><a href="#2-proxy-прокси">Proxy (Прокси)</a></li>
+<li><a href="#3-facade-фасад">Facade (Фасад)</a></li>
+<li><a href="#4-chain-of-responsibility-цепочка-ответственности">Chain of Responsibility (Цепочка ответственности)</a></li>
+<li><a href="#5-singleton-синглтон">Singleton (Синглтон)</a></li>
+</ul>
+</li>
+<li><a href="#javascript-специфичные-паттерны">JavaScript-специфичные паттерны</a>
+<ul>
+<li><a href="#eventemitter-vs-publisher-subscriber">EventEmitter vs Publisher-Subscriber</a></li>
+<li><a href="#hooks-как-альтернатива-middleware">Hooks как альтернатива Middleware</a></li>
+</ul>
+</li>
+<li><a href="#принципы-проектирования-архитектуры">Принципы проектирования архитектуры</a></li>
+<li><a href="#управление-состоянием-и-изоляция-контекстов">Управление состоянием и изоляция контекстов</a></li>
+<li><a href="#заключение">Заключение</a></li>
+</ol>
+<hr>
+<h2 id="введение"><a class="header" href="#введение">Введение</a></h2>
+<p>Данный конспект представляет собой академический анализ применения паттернов проектирования из книги “Design Patterns: Elements of Reusable Object-Oriented Software” (Gang of Four, GoF) в контексте разработки серверных приложений на Node.js.</p>
+<h3 id="почему-gof-паттерны-выглядят-иначе-в-javascript"><a class="header" href="#почему-gof-паттерны-выглядят-иначе-в-javascript">Почему GoF паттерны выглядят иначе в JavaScript?</a></h3>
+<p>JavaScript является <strong>мультипарадигменным языком</strong>, что принципиально отличает его от классических объектно-ориентированных языков (Java, C++, C#), для которых изначально были созданы паттерны GoF. Ключевые отличия:</p>
+<ol>
+<li><strong>Функции первого класса</strong> (first-class functions) - функции могут передаваться как значения, храниться в переменных, возвращаться из других функций</li>
+<li><strong>Прототипное наследование</strong> вместо классического</li>
+<li><strong>Динамическая типизация</strong></li>
+<li><strong>Замыкания</strong> (closures) как механизм инкапсуляции</li>
+<li><strong>Асинхронная природа</strong> платформы Node.js</li>
+</ol>
+<p>Эти особенности приводят к тому, что некоторые классические паттерны:</p>
+<ul>
+<li>Упрощаются до неузнаваемости</li>
+<li>Заменяются идиоматичными JavaScript-конструкциями</li>
+<li>Получают альтернативные реализации, более подходящие для языка</li>
+</ul>
+<h3 id="цели-архитектуры-rpc-сервера"><a class="header" href="#цели-архитектуры-rpc-сервера">Цели архитектуры RPC-сервера</a></h3>
+<p>Рассматриваемая архитектура решает следующие задачи:</p>
+<ol>
+<li><strong>Интероперабельность протоколов</strong> - поддержка HTTP и WebSocket через единый интерфейс</li>
+<li><strong>Изоляция системного слоя</strong> - бизнес-логика не должна видеть детали сетевых протоколов</li>
+<li><strong>Управление контекстами</strong> - разделение трех видов состояния (RPC-вызов, клиент, сессия)</li>
+<li><strong>Безопасность</strong> - предотвращение race conditions и monkey-patching</li>
+<li><strong>Персистентность</strong> - сохранение состояния сессий</li>
+<li><strong>Масштабируемость</strong> - возможность добавления аутентификации, авторизации, RBAC</li>
+</ol>
+<hr>
+<h2 id="архитектурные-компоненты-и-их-взаимосвязи"><a class="header" href="#архитектурные-компоненты-и-их-взаимосвязи">Архитектурные компоненты и их взаимосвязи</a></h2>
+<h3 id="двухслойная-архитектура"><a class="header" href="#двухслойная-архитектура">Двухслойная архитектура</a></h3>
+<p>Архитектура четко разделена на два слоя с различными уровнями доступа:</p>
+<h4 id="system-layer-системный-слой"><a class="header" href="#system-layer-системный-слой">System Layer (Системный слой)</a></h4>
+<p>Компоненты, недоступные из бизнес-логики:</p>
+<ul>
+<li><strong>Server</strong> - центральный координатор, управляет коллекциями сессий и клиентов</li>
+<li><strong>Transport</strong> - абстракция над сетевыми протоколами (HTTP/WebSocket)</li>
+<li><strong>Connection</strong> - WebSocket соединение</li>
+<li><strong>Request</strong> - HTTP запрос</li>
+<li><strong>Response</strong> - HTTP ответ</li>
+</ul>
+<p><strong>Почему эти компоненты изолированы?</strong></p>
+<ol>
+<li><strong>Предотвращение утечки абстракций</strong> - бизнес-логика не должна зависеть от конкретного протокола</li>
+<li><strong>Безопасность</strong> - прямой доступ к request/response может привести к race conditions</li>
+<li><strong>Тестируемость</strong> - бизнес-логику можно тестировать без поднятия реального сервера</li>
+<li><strong>Гибкость</strong> - можно менять транспортный протокол без изменения бизнес-логики</li>
+</ol>
+<h4 id="userland-пользовательский-слой"><a class="header" href="#userland-пользовательский-слой">Userland (Пользовательский слой)</a></h4>
+<p>Компоненты, доступные из бизнес-логики:</p>
+<ul>
+<li><strong>Context</strong> - контекст RPC-вызова</li>
+<li><strong>Client</strong> - представление клиентского соединения</li>
+<li><strong>Session</strong> - пользовательская сессия</li>
+</ul>
+<h3 id="структура-классов-и-их-отношения"><a class="header" href="#структура-классов-и-их-отношения">Структура классов и их отношения</a></h3>
+<pre><code>Server (Singleton)
+├── sessions: Map&lt;string, Session&gt;  // Глобальная коллекция сессий
+├── clients: Set&lt;Client&gt;             // Клиенты текущего порта
+├── http: HttpServer                 // HTTP сервер
+└── ws: WebSocketServer              // WebSocket сервер
+
+Transport (Strategy pattern)
+├── HttpTransport
+│   ├── request: IncomingMessage
+│   └── response: ServerResponse
+└── WebSocketTransport
+    ├── request: IncomingMessage
+    └── connection: WebSocket
+
+Client (Facade pattern)
+├── #transport: Transport            // Приватное поле (скрыто от userland)
+├── state: Object                    // Состояние клиента
+└── createSession(): Session
+
+Session (Proxy pattern)
+├── token: string                    // Уникальный идентификатор
+├── state: Proxy                     // Проксируемое состояние
+└── context: Context
+
+Context
+├── client: Client
+├── session: Session | null
+└── uuid: string                     // UUID вызова
+</code></pre>
+<h3 id="поток-данных-при-rpc-вызове"><a class="header" href="#поток-данных-при-rpc-вызове">Поток данных при RPC-вызове</a></h3>
+<ol>
+<li>Запрос приходит на <strong>Server</strong> (HTTP или WebSocket)</li>
+<li><strong>Server</strong> создает соответствующий <strong>Transport</strong> (Strategy)</li>
+<li><strong>Transport</strong> оборачивается <strong>Client</strong> (Facade)</li>
+<li>Создается <strong>Context</strong> с ссылками на Client и Session</li>
+<li>Вызывается endpoint бизнес-логики с <strong>Context</strong> как единственным параметром</li>
+<li>Бизнес-логика работает с Context, не зная о деталях протокола</li>
+<li>Ответ отправляется через Transport, абстрагированный Client</li>
+</ol>
+<hr>
+<h2 id="gof-паттерны-в-nodejs"><a class="header" href="#gof-паттерны-в-nodejs">GoF паттерны в Node.js</a></h2>
+<h3 id="1-strategy-стратегия"><a class="header" href="#1-strategy-стратегия">1. Strategy (Стратегия)</a></h3>
+<h4 id="академическое-определение"><a class="header" href="#академическое-определение">Академическое определение</a></h4>
+<p><strong>Strategy</strong> (Стратегия) - поведенческий паттерн проектирования, который определяет семейство алгоритмов, инкапсулирует каждый из них и делает их взаимозаменяемыми. Стратегия позволяет изменять алгоритмы независимо от клиентов, которые ими пользуются.</p>
+<p><strong>Классические компоненты паттерна:</strong></p>
+<ul>
+<li><strong>Strategy</strong> - общий интерфейс для всех алгоритмов</li>
+<li><strong>ConcreteStrategy</strong> - конкретные реализации алгоритмов</li>
+<li><strong>Context</strong> - использует Strategy для выполнения операций</li>
+</ul>
+<h4 id="применение-в-архитектуре-transport"><a class="header" href="#применение-в-архитектуре-transport">Применение в архитектуре: Transport</a></h4>
+<p>В данной архитектуре паттерн Strategy применяется для абстрагирования от конкретного транспортного протокола.</p>
+<p><strong>Иерархия классов:</strong></p>
+<pre><code class="language-javascript">// Базовый класс Transport - определяет интерфейс
+class Transport {
+  constructor(request) {
+    this.request = request;
+  }
+
+  // Абстрактный метод - должен быть реализован в наследниках
+  write(data) {
+    throw new Error('Method write() must be implemented');
+  }
+
+  // Общий метод для всех стратегий
+  send(data, code = 200, encoding = 'json') {
+    // Использует write(), которого еще нет в базовом классе
+    // Полагается на реализацию в ConcreteStrategy
+    this.write(data);
+  }
+
+  error(code, message) {
+    this.send({ error: { code, message } });
+  }
+}
+
+// ConcreteStrategy 1: HTTP транспорт
+class HttpTransport extends Transport {
+  constructor(request, response) {
+    super(request);
+    this.response = response;
+  }
+
+  write(data) {
+    // Специфичная для HTTP реализация
+    this.response.writeHead(200, { 'Content-Type': 'application/json' });
+    this.response.end(JSON.stringify(data));
+  }
+}
+
+// ConcreteStrategy 2: WebSocket транспорт
+class WebSocketTransport extends Transport {
+  constructor(request, connection) {
+    super(request);
+    this.connection = connection;
+  }
+
+  write(data) {
+    // Специфичная для WebSocket реализация
+    // Нет HTTP кода, нет заголовков - только данные
+    this.connection.send(JSON.stringify(data));
+  }
+}
+</code></pre>
+<h4 id="почему-именно-так-в-nodejs"><a class="header" href="#почему-именно-так-в-nodejs">Почему именно так в Node.js?</a></h4>
+<p><strong>1. Динамический выбор стратегии</strong></p>
+<p>В Node.js выбор стратегии происходит во время выполнения, основываясь на типе входящего соединения:</p>
+<pre><code class="language-javascript">// В server.js
+const createTransport = (request, responseOrConnection) =&gt; {
+  // Проверяем, было ли HTTP соединение апгрейднуто до WebSocket
+  if (request.headers.upgrade === 'websocket') {
+    return new WebSocketTransport(request, responseOrConnection);
+  }
+  return new HttpTransport(request, responseOrConnection);
+};
+</code></pre>
+<p><strong>2. Единый интерфейс для различающейся машинерии</strong></p>
+<p>HTTP и WebSocket принципиально различаются:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>HTTP</th><th>WebSocket</th></tr>
+</thead>
+<tbody>
+<tr><td>Тип соединения</td><td>Request-Response (одноразовое)</td><td>Persistent (постоянное)</td></tr>
+<tr><td>Направление</td><td>Однонаправленное</td><td>Двунаправленное</td></tr>
+<tr><td>Заголовки</td><td>Требуются (Content-Type, status code)</td><td>Не используются</td></tr>
+<tr><td>Состояние</td><td>Stateless</td><td>Stateful</td></tr>
+<tr><td>Объекты Node.js</td><td>IncomingMessage + ServerResponse</td><td>WebSocket</td></tr>
+</tbody>
+</table>
+</div>
+<p>Паттерн Strategy позволяет скрыть эти различия за единым интерфейсом <code>send()</code>, <code>write()</code>, <code>error()</code>.</p>
+<h4 id="какую-проблему-решает"><a class="header" href="#какую-проблему-решает">Какую проблему решает?</a></h4>
+<p><strong>Проблема</strong>: Бизнес-логика RPC-сервера не должна знать, по какому протоколу пришел запрос.</p>
+<p><strong>Решение</strong>:</p>
+<ul>
+<li>Все транспорты имеют одинаковый интерфейс</li>
+<li>Клиентский код работает с абстрактным Transport</li>
+<li>Конкретная реализация выбирается при создании соединения</li>
+<li>Добавление новых протоколов (например, gRPC) требует только создания нового ConcreteStrategy</li>
+</ul>
+<p><strong>Преимущества в Node.js контексте:</strong></p>
+<ol>
+<li><strong>Упрощение бизнес-логики</strong> - endpoint’ы не содержат if/else для проверки типа протокола</li>
+<li><strong>Открыт для расширения</strong> - новые протоколы добавляются без изменения существующего кода</li>
+<li><strong>Закрыт для модификации</strong> - базовый Transport и клиентский код не меняются</li>
+<li><strong>Тестируемость</strong> - можно создавать mock-транспорты для тестирования</li>
+</ol>
+<hr>
+<h3 id="2-proxy-прокси"><a class="header" href="#2-proxy-прокси">2. Proxy (Прокси)</a></h3>
+<h4 id="академическое-определение-1"><a class="header" href="#академическое-определение-1">Академическое определение</a></h4>
+<p><strong>Proxy</strong> (Прокси, Заместитель) - структурный паттерн проектирования, который предоставляет объект-заместитель вместо реального служебного объекта. Прокси контролирует доступ к оригинальному объекту, позволяя выполнить дополнительную логику до или после передачи вызова оригиналу.</p>
+<p><strong>Типы Proxy:</strong></p>
+<ul>
+<li><strong>Remote Proxy</strong> - представляет объект в другом адресном пространстве</li>
+<li><strong>Virtual Proxy</strong> - отложенная инициализация тяжелых объектов</li>
+<li><strong>Protection Proxy</strong> - контроль прав доступа</li>
+<li><strong>Smart Reference</strong> - дополнительная логика при обращении к объекту</li>
+</ul>
+<h4 id="применение-в-архитектуре-session-state"><a class="header" href="#применение-в-архитектуре-session-state">Применение в архитектуре: Session State</a></h4>
+<p>В данной архитектуре используется <strong>Smart Reference Proxy</strong> для перехвата операций чтения и записи свойств состояния сессии.</p>
+<p><strong>Реализация в Метакоме (принцип применим к Node.js проекту):</strong></p>
+<pre><code class="language-javascript">// Создание Proxy для перехвата доступа к состоянию
+const createProxy = (state, save) =&gt; {
+  return new Proxy(state, {
+    // Перехват чтения свойств
+    get(target, property) {
+      return target[property];
+    },
+
+    // Перехват записи свойств
+    set(target, property, value) {
+      target[property] = value;
+      // Важно! При каждом изменении вызываем save()
+      save();
+      return true;
+    },
+
+    // Перехват удаления свойств
+    deleteProperty(target, property) {
+      delete target[property];
+      save();
+      return true;
+    }
+  });
+};
+
+// Класс Session использует Proxy
+class Session {
+  constructor(token, data, saveCallback) {
+    this.token = token;
+    // Вместо прямого доступа к state, используем Proxy
+    this.state = createProxy(data, () =&gt; {
+      saveCallback(this.token, this.state);
+    });
+  }
+}
+</code></pre>
+<h4 id="почему-именно-так-в-nodejs-1"><a class="header" href="#почему-именно-так-в-nodejs-1">Почему именно так в Node.js?</a></h4>
+<p><strong>1. JavaScript Proxy API</strong></p>
+<p>JavaScript предоставляет встроенный механизм <strong>Proxy</strong> (ES6), который является мощным метапрограммированием:</p>
+<pre><code class="language-javascript">const handler = {
+  get(target, property, receiver) { /* перехват чтения */ },
+  set(target, property, value, receiver) { /* перехват записи */ },
+  deleteProperty(target, property) { /* перехват удаления */ },
+  has(target, property) { /* перехват 'in' оператора */ },
+  // ... еще 10+ ловушек (traps)
+};
+
+const proxy = new Proxy(target, handler);
+</code></pre>
+<p><strong>2. Преимущества над классическим Proxy паттерном</strong></p>
+<p>В классических ООП языках Proxy требует:</p>
+<ul>
+<li>Создания интерфейса для объекта</li>
+<li>Реализации всех методов интерфейса в Proxy</li>
+<li>Явного делегирования вызовов</li>
+</ul>
+<p>JavaScript Proxy:</p>
+<ul>
+<li><strong>Прозрачный</strong> - выглядит как обычный объект</li>
+<li><strong>Универсальный</strong> - перехватывает все операции, включая динамически добавляемые свойства</li>
+<li><strong>Минимальный код</strong> - не нужно явно делегировать каждый метод</li>
+</ul>
+<h4 id="какую-проблему-решает-1"><a class="header" href="#какую-проблему-решает-1">Какую проблему решает?</a></h4>
+<p><strong>Проблема</strong>: Необходимо отслеживать изменения состояния сессии для сохранения в persistent storage (Redis, PostgreSQL).</p>
+<p><strong>Наивное решение (неправильное):</strong></p>
+<pre><code class="language-javascript">// Плохо: требует явного вызова save()
+session.state.username = 'alice';
+session.state.role = 'admin';
+session.save(); // Легко забыть!
+</code></pre>
+<p><strong>Решение с Proxy:</strong></p>
+<pre><code class="language-javascript">// Хорошо: save() вызывается автоматически
+session.state.username = 'alice';  // Автоматический save()
+session.state.role = 'admin';       // Автоматический save()
+</code></pre>
+<p><strong>Дополнительные возможности:</strong></p>
+<ol>
+<li><strong>Вычисление дельты изменений</strong></li>
+</ol>
+<pre><code class="language-javascript">const createProxy = (state, save) =&gt; {
+  const changes = new Set();
+
+  return new Proxy(state, {
+    set(target, property, value) {
+      if (target[property] !== value) {
+        changes.add(property);
+        target[property] = value;
+        save(changes); // Передаем только измененные поля
+      }
+      return true;
+    }
+  });
+};
+</code></pre>
+<ol start="2">
+<li><strong>Валидация данных</strong></li>
+</ol>
+<pre><code class="language-javascript">set(target, property, value) {
+  // Можем добавить валидацию
+  if (property === 'age' &amp;&amp; typeof value !== 'number') {
+    throw new TypeError('Age must be a number');
+  }
+  target[property] = value;
+  save();
+  return true;
+}
+</code></pre>
+<ol start="3">
+<li><strong>Логирование доступа</strong></li>
+</ol>
+<pre><code class="language-javascript">get(target, property) {
+  console.log(`Reading property: ${property}`);
+  return target[property];
+}
+</code></pre>
+<h4 id="архитектурное-значение"><a class="header" href="#архитектурное-значение">Архитектурное значение</a></h4>
+<p>Proxy в контексте сессий обеспечивает:</p>
+<ol>
+<li><strong>Автоматическая персистентность</strong> - состояние сохраняется без явных вызовов</li>
+<li><strong>Прозрачность</strong> - код бизнес-логики не знает о механизме сохранения</li>
+<li><strong>Производительность</strong> - можно оптимизировать, сохраняя только измененные поля</li>
+<li><strong>Отложенная запись</strong> - можно дебаунсить save() для уменьшения нагрузки на БД</li>
+</ol>
+<p><strong>Примечание</strong>: В текущей учебной реализации Node.js проекта Proxy еще не используется, но в production (Метаком) он активно применяется именно таким образом.</p>
+<hr>
+<h3 id="3-facade-фасад"><a class="header" href="#3-facade-фасад">3. Facade (Фасад)</a></h3>
+<h4 id="академическое-определение-2"><a class="header" href="#академическое-определение-2">Академическое определение</a></h4>
+<p><strong>Facade</strong> (Фасад) - структурный паттерн проектирования, который предоставляет упрощенный интерфейс к сложной подсистеме, содержащей множество взаимосвязанных классов и объектов.</p>
+<p><strong>Назначение паттерна:</strong></p>
+<ul>
+<li>Упрощение сложного интерфейса</li>
+<li>Уменьшение зависимостей клиента от внутренних классов подсистемы</li>
+<li>Создание единой точки входа в подсистему</li>
+</ul>
+<h4 id="применение-в-архитектуре-client"><a class="header" href="#применение-в-архитектуре-client">Применение в архитектуре: Client</a></h4>
+<p>Класс <strong>Client</strong> является фасадом, который скрывает сложную машинерию сетевых протоколов от бизнес-логики.</p>
+<p><strong>Что скрывает Client:</strong></p>
+<pre><code class="language-javascript">class Client {
+  // Приватное поле (# синтаксис TypeScript/ES2022)
+  #transport;
+
+  constructor(transport) {
+    // Скрываем внутренности:
+    // - IncomingMessage (Node.js HTTP)
+    // - ServerResponse (Node.js HTTP)
+    // - WebSocket (ws библиотека)
+    this.#transport = transport;
+
+    // Публичный интерфейс - только то, что нужно userland
+    this.state = {};
+  }
+
+  // Публичные методы фасада
+  createSession(token, data) {
+    const session = new Session(token, data);
+    return session;
+  }
+
+  // Скрытый метод для внутреннего использования
+  send(data) {
+    this.#transport.send(data);
+  }
+
+  // Деструктор для очистки ресурсов
+  finalization() {
+    // Очистка ссылок на сессии, tokens
+    this.state = null;
+  }
+}
+</code></pre>
+<h4 id="почему-именно-так-в-nodejs-2"><a class="header" href="#почему-именно-так-в-nodejs-2">Почему именно так в Node.js?</a></h4>
+<p><strong>1. Приватные поля (#syntax)</strong></p>
+<p>JavaScript/TypeScript поддерживают приватные поля через <code>#</code> синтаксис (ES2022):</p>
+<pre><code class="language-javascript">class Client {
+  #transport;  // Истинно приватное поле
+
+  // Нельзя обратиться извне:
+  // client.#transport  // SyntaxError
+}
+</code></pre>
+<p><strong>Альтернативы до ES2022:</strong></p>
+<ul>
+<li>Замыкания (closures)</li>
+<li>WeakMap для хранения приватных данных</li>
+<li>Соглашение о именовании (_privateField)</li>
+</ul>
+<p><strong>2. Композиция вместо наследования</strong></p>
+<p>Фасад в Node.js часто реализуется через композицию:</p>
+<pre><code class="language-javascript">// Client содержит Transport, но не наследует от него
+class Client {
+  #transport;  // Композиция
+
+  // Делегирует только необходимые операции
+  send(data) {
+    return this.#transport.send(data);
+  }
+}
+</code></pre>
+<p><strong>Почему не наследование?</strong></p>
+<pre><code class="language-javascript">// Плохо: публикует весь интерфейс Transport
+class Client extends Transport {
+  // Проблема: весь интерфейс Transport доступен
+  // client.write(), client.response, client.connection
+}
+</code></pre>
+<h4 id="какую-проблему-решает-2"><a class="header" href="#какую-проблему-решает-2">Какую проблему решает?</a></h4>
+<p><strong>Проблема</strong>: Бизнес-логика не должна иметь доступ к низкоуровневым деталям HTTP/WebSocket.</p>
+<p><strong>Опасности прямого доступа:</strong></p>
+<ol>
+<li><strong>Race Conditions</strong></li>
+</ol>
+<pre><code class="language-javascript">// Плохо: прямой доступ к response
+async function endpoint(context) {
+  const { response } = context;  // Опасно!
+
+  await processData();
+  response.end('OK');  // Первый ответ
+
+  await anotherOperation();
+  response.end('DONE');  // Ошибка! response уже завершен
+}
+</code></pre>
+<ol start="2">
+<li><strong>Monkey Patching</strong></li>
+</ol>
+<pre><code class="language-javascript">// Плохо: изменение поведения протокола
+context.response.writeHead = () =&gt; {
+  // Сломанная логика
+};
+</code></pre>
+<ol start="3">
+<li><strong>Зависимость от фреймворка</strong></li>
+</ol>
+<pre><code class="language-javascript">// Плохо: бизнес-логика знает о Node.js HTTP API
+if (context.request.headers['content-type'] === 'application/json') {
+  // Логика завязана на Node.js IncomingMessage
+}
+</code></pre>
+<p><strong>Решение с Facade (Client):</strong></p>
+<pre><code class="language-javascript">// Хорошо: бизнес-логика работает с абстракцией
+async function endpoint(context) {
+  const { client } = context;
+
+  // Простой, безопасный интерфейс
+  await client.send({ status: 'processing' });
+
+  // Нет прямого доступа к request/response
+  // Нет возможности для race conditions
+}
+</code></pre>
+<h4 id="архитектурное-значение-1"><a class="header" href="#архитектурное-значение-1">Архитектурное значение</a></h4>
+<p>Facade (Client) обеспечивает:</p>
+<ol>
+<li><strong>Инкапсуляция</strong> - детали протокола скрыты</li>
+<li><strong>Стабильный интерфейс</strong> - изменения в Transport не влияют на бизнес-логику</li>
+<li><strong>Безопасность</strong> - невозможно напрямую манипулировать сокетами</li>
+<li><strong>Тестируемость</strong> - Client можно легко замокировать</li>
+</ol>
+<p><strong>Примечание о визуализации:</strong></p>
+<p>В схеме архитектуры пунктирные зеленые стрелки показывают приватные поля (#):</p>
+<ul>
+<li>Client → Transport (приватная ссылка)</li>
+<li>Transport → Connection/Response/Request (приватные ссылки)</li>
+</ul>
+<p>Бизнес-логика видит только Client, но не то, что за ним скрыто.</p>
+<hr>
+<h3 id="4-chain-of-responsibility-цепочка-ответственности"><a class="header" href="#4-chain-of-responsibility-цепочка-ответственности">4. Chain of Responsibility (Цепочка ответственности)</a></h3>
+<h4 id="академическое-определение-3"><a class="header" href="#академическое-определение-3">Академическое определение</a></h4>
+<p><strong>Chain of Responsibility</strong> (Цепочка обязанностей, Цепочка ответственности) - поведенческий паттерн проектирования, который позволяет передавать запросы последовательно по цепочке обработчиков. Каждый обработчик решает, может ли он обработать запрос, и стоит ли передавать запрос дальше по цепочке.</p>
+<p><strong>Ключевые характеристики классического паттерна:</strong></p>
+<ol>
+<li><strong>Один обработчик</strong> - только один элемент цепочки должен обработать запрос</li>
+<li><strong>Прекращение цепочки</strong> - обработка останавливается, когда найден подходящий обработчик</li>
+<li><strong>Слабая связанность</strong> - отправитель не знает, какой обработчик обработает запрос</li>
+</ol>
+<p><strong>Классическая реализация:</strong></p>
+<pre><code class="language-javascript">class Handler {
+  setNext(handler) {
+    this.next = handler;
+    return handler;
+  }
+
+  handle(request) {
+    if (this.canHandle(request)) {
+      return this.process(request);
+    }
+    if (this.next) {
+      return this.next.handle(request);  // Передача дальше
+    }
+    return null;  // Никто не обработал
+  }
+}
+</code></pre>
+<h4 id="проблемы-адаптации-для-httpnodejs-middleware"><a class="header" href="#проблемы-адаптации-для-httpnodejs-middleware">Проблемы адаптации для HTTP/Node.js: Middleware</a></h4>
+<p>В Node.js/Express экосистеме широко распространен паттерн <strong>Middleware</strong>, который является <strong>нарушенной реализацией</strong> Chain of Responsibility.</p>
+<p><strong>Что такое Middleware?</strong></p>
+<pre><code class="language-javascript">// Express/Connect middleware
+app.use((req, res, next) =&gt; {
+  // Некоторая обработка
+  console.log('Middleware 1');
+  next();  // Передача следующему
+});
+
+app.use((req, res, next) =&gt; {
+  console.log('Middleware 2');
+  next();
+});
+
+app.use((req, res, next) =&gt; {
+  console.log('Middleware 3');
+  res.send('Done');
+});
+</code></pre>
+<h4 id="почему-middleware---это-сломанный-chain-of-responsibility"><a class="header" href="#почему-middleware---это-сломанный-chain-of-responsibility">Почему Middleware - это “сломанный” Chain of Responsibility?</a></h4>
+<p><strong>Проблема 1: Все обрабатывают запрос, а не один</strong></p>
+<pre><code class="language-javascript">// Chain of Responsibility: ОДИН обработчик
+handler1.handle(request);  // Если обработал, цепочка прерывается
+// ИЛИ
+handler2.handle(request);  // Выполнится только если handler1 не обработал
+
+// Middleware: ВСЕ обработчики
+middleware1(req, res, next);  // Выполняется
+middleware2(req, res, next);  // Выполняется
+middleware3(req, res, next);  // Выполняется тоже
+</code></pre>
+<p><strong>Проблема 2: Race Conditions</strong></p>
+<pre><code class="language-javascript">// Плохо: несколько middleware могут отправить ответ
+app.use((req, res, next) =&gt; {
+  res.send('Response 1');  // Первый ответ
+  next();  // Продолжаем выполнение!
+});
+
+app.use((req, res, next) =&gt; {
+  res.send('Response 2');  // Ошибка! Заголовки уже отправлены
+});
+</code></pre>
+<p><strong>Проблема 3: Неявная ответственность</strong></p>
+<pre><code class="language-javascript">app.use(parseCookies);       // Меняет req.cookies
+app.use(checkSession);       // Меняет req.session
+app.use(checkPermissions);   // Меняет req.user
+app.use(handleRequest);      // Использует все вышеперечисленное
+
+// Кто ответственен за какое состояние? Неясно!
+</code></pre>
+<p><strong>Проблема 4: Мутация общего состояния</strong></p>
+<pre><code class="language-javascript">app.use((req, res, next) =&gt; {
+  req.customField = 'value1';
+  next();
+});
+
+app.use((req, res, next) =&gt; {
+  req.customField = 'value2';  // Перезаписали!
+  next();
+});
+</code></pre>
+<h4 id="решение-в-данной-архитектуре-map-based-routing"><a class="header" href="#решение-в-данной-архитектуре-map-based-routing">Решение в данной архитектуре: Map-based Routing</a></h4>
+<p>Вместо Chain of Responsibility или Middleware, используется <strong>прямой роутинг</strong> через коллекцию:</p>
+<pre><code class="language-javascript">// Роутинг через Map (или Object)
+const routes = new Map();
+
+// Регистрация endpoints
+routes.set('user.login', async (context) =&gt; {
+  // Обработка login
+});
+
+routes.set('user.logout', async (context) =&gt; {
+  // Обработка logout
+});
+
+// Вызов конкретного endpoint
+const handler = routes.get(methodName);
+if (handler) {
+  await handler(context);  // Только один обработчик!
+} else {
+  throw new Error('Method not found');
+}
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ol>
+<li><strong>Явная ответственность</strong> - один endpoint отвечает за один метод</li>
+<li><strong>Нет race conditions</strong> - только один обработчик вызывается</li>
+<li><strong>Нет мутации общего состояния</strong> - каждый endpoint изолирован</li>
+<li><strong>Производительность</strong> - O(1) поиск обработчика вместо O(n)</li>
+</ol>
+<h4 id="альтернатива-middleware-hooks-fastify"><a class="header" href="#альтернатива-middleware-hooks-fastify">Альтернатива Middleware: Hooks (Fastify)</a></h4>
+<p><strong>Hooks</strong> - это событийная модель, которая безопаснее Middleware:</p>
+<pre><code class="language-javascript">// Fastify hooks
+fastify.addHook('onRequest', async (request, reply) =&gt; {
+  // Выполняется перед обработкой запроса
+  // Не может отправить ответ (reply недоступен)
+});
+
+fastify.addHook('preHandler', async (request, reply) =&gt; {
+  // Выполняется перед handler
+  // Может прервать выполнение через reply.send()
+});
+
+fastify.addHook('onSend', async (request, reply, payload) =&gt; {
+  // Выполняется перед отправкой ответа
+  // Может модифицировать payload
+  return modifiedPayload;
+});
+
+fastify.get('/route', async (request, reply) =&gt; {
+  // Основной handler - единственный ответственный за ответ
+  return { data: 'value' };
+});
+</code></pre>
+<p><strong>Почему Hooks лучше Middleware?</strong></p>
+<ol>
+<li><strong>Четкие фазы</strong> - каждый hook срабатывает на определенной стадии lifecycle</li>
+<li><strong>Явная ответственность</strong> - основной handler ответственен за ответ</li>
+<li><strong>Нет race conditions</strong> - hooks не могут случайно отправить несколько ответов</li>
+<li><strong>Изоляция</strong> - hooks для разных маршрутов не влияют друг на друга</li>
+</ol>
+<h4 id="рекомендации-для-архитектуры"><a class="header" href="#рекомендации-для-архитектуры">Рекомендации для архитектуры</a></h4>
+<p>Для добавления cross-cutting concerns (логирование, аутентификация, валидация):</p>
+<p><strong>Используйте Hooks, не Middleware:</strong></p>
+<pre><code class="language-javascript">// Хорошо: Hook для проверки аутентификации
+server.addHook('preHandler', async (context) =&gt; {
+  if (!context.session) {
+    throw new Error('Not authenticated');
+  }
+});
+
+// Основной handler
+async function endpoint(context) {
+  // Аутентификация уже проверена
+  return { data: 'secure data' };
+}
+</code></pre>
+<p><strong>Или используйте декораторы/обертки:</strong></p>
+<pre><code class="language-javascript">// Декоратор для проверки прав
+const requireAuth = (handler) =&gt; {
+  return async (context) =&gt; {
+    if (!context.session) {
+      throw new Error('Not authenticated');
+    }
+    return handler(context);
+  };
+};
+
+// Применение
+routes.set('user.profile', requireAuth(async (context) =&gt; {
+  return { profile: context.session.user };
+}));
+</code></pre>
+<hr>
+<h3 id="5-singleton-синглтон"><a class="header" href="#5-singleton-синглтон">5. Singleton (Синглтон)</a></h3>
+<h4 id="академическое-определение-4"><a class="header" href="#академическое-определение-4">Академическое определение</a></h4>
+<p><strong>Singleton</strong> (Одиночка) - порождающий паттерн проектирования, который гарантирует, что у класса есть только один экземпляр, и предоставляет глобальную точку доступа к этому экземпляру.</p>
+<h4 id="применение-в-архитектуре-server"><a class="header" href="#применение-в-архитектуре-server">Применение в архитектуре: Server</a></h4>
+<p>Класс <strong>Server</strong> функционирует как синглтон в контексте одного процесса Node.js:</p>
+<pre><code class="language-javascript">class Server {
+  constructor(config) {
+    this.config = config;
+    this.sessions = new Map();      // Глобальная коллекция сессий
+    this.clients = new Set();       // Клиенты текущего сервера
+    this.routes = new Map();        // Роутинг
+  }
+
+  listen(port) {
+    // Один сервер слушает один порт
+    this.http = http.createServer(/* ... */);
+    this.ws = new WebSocketServer(/* ... */);
+
+    this.http.listen(port);
+  }
+}
+
+// В приложении
+const server = new Server(config);
+server.listen(8000);
+</code></pre>
+<h4 id="почему-почти-синглтон"><a class="header" href="#почему-почти-синглтон">Почему “почти” синглтон?</a></h4>
+<p><strong>Формально не синглтон:</strong></p>
+<ul>
+<li>Можно создать несколько экземпляров <code>new Server()</code></li>
+<li>Нет принудительного ограничения на создание</li>
+</ul>
+<p><strong>Практически синглтон:</strong></p>
+<ul>
+<li>Один сервер = один порт</li>
+<li>Глобальные коллекции сессий и клиентов</li>
+<li>Обычно одно приложение = один экземпляр Server</li>
+</ul>
+<p><strong>Модуль Node.js как синглтон:</strong></p>
+<pre><code class="language-javascript">// server.js
+class Server { /* ... */ }
+
+// Экспорт единственного экземпляра
+module.exports = new Server(config);
+
+// При импорте получаем тот же экземпляр
+const server = require('./server');  // Всегда один и тот же объект
+</code></pre>
+<p>Node.js кеширует модули - <code>require()</code> для одного модуля возвращает один и тот же экспортированный объект.</p>
+<hr>
+<h2 id="javascript-специфичные-паттерны"><a class="header" href="#javascript-специфичные-паттерны">JavaScript-специфичные паттерны</a></h2>
+<h3 id="eventemitter-vs-publisher-subscriber"><a class="header" href="#eventemitter-vs-publisher-subscriber">EventEmitter vs Publisher-Subscriber</a></h3>
+<h4 id="классический-publisher-subscriber-gof"><a class="header" href="#классический-publisher-subscriber-gof">Классический Publisher-Subscriber (GoF)</a></h4>
+<p><strong>Publisher-Subscriber</strong> (Издатель-Подписчик, Observer) - поведенческий паттерн, который определяет зависимость “один-ко-многим” между объектами таким образом, что при изменении состояния одного объекта все зависящие от него оповещаются автоматически.</p>
+<p><strong>Классическая реализация в ООП:</strong></p>
+<pre><code class="language-java">// Java пример
+interface Subscriber {
+  void update(Event event);  // Все подписчики должны иметь этот метод
+}
+
+class Publisher {
+  private List&lt;Subscriber&gt; subscribers = new ArrayList&lt;&gt;();
+
+  public void subscribe(Subscriber subscriber) {
+    subscribers.add(subscriber);
+  }
+
+  public void notify(Event event) {
+    for (Subscriber subscriber : subscribers) {
+      subscriber.update(event);  // Вызываем известный метод
+    }
+  }
+}
+
+class ConcreteSubscriber implements Subscriber {
+  public void update(Event event) {
+    // Обработка события
+  }
+}
+</code></pre>
+<p><strong>Проблемы в JavaScript:</strong></p>
+<ol>
+<li><strong>Необходимость интерфейса</strong> - все подписчики должны реализовать <code>update()</code></li>
+<li><strong>Избыточность</strong> - передаем ссылку на весь объект, а нужна только функция</li>
+<li><strong>Негибкость</strong> - фиксированное имя метода (<code>update</code>)</li>
+</ol>
+<h4 id="eventemitter-в-nodejs"><a class="header" href="#eventemitter-в-nodejs">EventEmitter в Node.js</a></h4>
+<p>Node.js предоставляет встроенный класс <strong>EventEmitter</strong>, который является идиоматичной JavaScript-реализацией Publisher-Subscriber.</p>
+<p><strong>Почему EventEmitter лучше для JavaScript?</strong></p>
+<p><strong>1. Функции первого класса</strong></p>
+<pre><code class="language-javascript">const EventEmitter = require('events');
+
+class Server extends EventEmitter {
+  handleConnection(client) {
+    // Уведомляем подписчиков
+    this.emit('connection', client);
+  }
+}
+
+const server = new Server();
+
+// Подписчики передают функции, не объекты!
+server.on('connection', (client) =&gt; {
+  console.log('Client connected');
+});
+
+server.on('connection', (client) =&gt; {
+  console.log('Another handler for same event');
+});
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li><strong>Не нужен интерфейс</strong> - подписчик = любая функция</li>
+<li><strong>Множественные подписчики</strong> - несколько функций на одно событие</li>
+<li><strong>Различные события</strong> - не ограничены одним методом <code>update()</code></li>
+</ul>
+<p><strong>2. Отсутствие необходимости в наследовании подписчиков</strong></p>
+<pre><code class="language-javascript">// Классический Publisher-Subscriber требует:
+class MySubscriber implements Subscriber { /* ... */ }
+
+// EventEmitter - любая функция:
+const handler = (data) =&gt; console.log(data);
+server.on('data', handler);
+
+// Или даже анонимная:
+server.on('data', (data) =&gt; console.log(data));
+</code></pre>
+<p><strong>3. Именованные события</strong></p>
+<pre><code class="language-javascript">server.on('connection', handleConnection);
+server.on('close', handleClose);
+server.on('error', handleError);
+server.on('data', handleData);
+
+// В классическом Publisher-Subscriber:
+// Все события идут через один метод update()
+// Требуется switch/if для различения типов
+</code></pre>
+<p><strong>4. Встроенная функциональность</strong></p>
+<pre><code class="language-javascript">// Подписка на одно срабатывание
+server.once('ready', () =&gt; {
+  console.log('Server ready');
+});
+
+// Отписка
+server.off('connection', handler);
+
+// Удаление всех подписчиков
+server.removeAllListeners('connection');
+
+// Получение списка подписчиков
+const listeners = server.listeners('connection');
+
+// Установка максимума подписчиков (memory leak warning)
+server.setMaxListeners(20);
+</code></pre>
+<h4 id="использование-в-архитектуре"><a class="header" href="#использование-в-архитектуре">Использование в архитектуре</a></h4>
+<p><strong>Client с EventEmitter:</strong></p>
+<pre><code class="language-javascript">const EventEmitter = require('events');
+
+class Client extends EventEmitter {
+  constructor(transport) {
+    super();  // Инициализация EventEmitter
+    this.#transport = transport;
+
+    // Подписываемся на события транспорта
+    this.#transport.on('data', (data) =&gt; {
+      this.emit('message', data);  // Пробрасываем событие
+    });
+
+    this.#transport.on('close', () =&gt; {
+      this.emit('disconnect');
+    });
+  }
+
+  send(data) {
+    this.#transport.send(data);
+  }
+}
+
+// Использование
+const client = new Client(transport);
+
+client.on('message', (data) =&gt; {
+  console.log('Received:', data);
+});
+
+client.on('disconnect', () =&gt; {
+  console.log('Client disconnected');
+});
+</code></pre>
+<h4 id="сравнительная-таблица"><a class="header" href="#сравнительная-таблица">Сравнительная таблица</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>Publisher-Subscriber (классический)</th><th>EventEmitter (Node.js)</th></tr>
+</thead>
+<tbody>
+<tr><td>Подписчик</td><td>Объект с методом <code>update()</code></td><td>Любая функция</td></tr>
+<tr><td>Интерфейс</td><td>Требуется</td><td>Не требуется</td></tr>
+<tr><td>Типы событий</td><td>Обычно один тип (или enum)</td><td>Именованные строки</td></tr>
+<tr><td>Язык</td><td>Типичен для Java, C#, C++</td><td>Идиоматичен для JavaScript</td></tr>
+<tr><td>Отписка</td><td>Вручную удаление из списка</td><td><code>off()</code>, <code>removeListener()</code></td></tr>
+<tr><td>Одноразовые подписки</td><td>Требуют дополнительной логики</td><td><code>once()</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h3 id="hooks-как-альтернатива-middleware"><a class="header" href="#hooks-как-альтернатива-middleware">Hooks как альтернатива Middleware</a></h3>
+<h4 id="проблема-паттерна-middleware"><a class="header" href="#проблема-паттерна-middleware">Проблема паттерна Middleware</a></h4>
+<p>Как обсуждалось ранее, Middleware имеет фундаментальные проблемы:</p>
+<ol>
+<li>Все обработчики выполняются, а не один</li>
+<li>Возможны race conditions при отправке ответа</li>
+<li>Мутация общего состояния (request/response)</li>
+<li>Неявная ответственность</li>
+</ol>
+<h4 id="паттерн-hook"><a class="header" href="#паттерн-hook">Паттерн Hook</a></h4>
+<p><strong>Hook</strong> (Перехватчик, Крючок) - паттерн, при котором в определенных точках жизненного цикла объекта вызываются зарегистрированные обработчики событий.</p>
+<p><strong>Отличия от Middleware:</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>Middleware</th><th>Hooks</th></tr>
+</thead>
+<tbody>
+<tr><td>Концепция</td><td>Цепочка обработчиков</td><td>События жизненного цикла</td></tr>
+<tr><td>Ответственность</td><td>Все обрабатывают</td><td>Каждый hook - свою фазу</td></tr>
+<tr><td>Ответ клиенту</td><td>Любой middleware может отправить</td><td>Только основной handler</td></tr>
+<tr><td>Порядок</td><td>Важен</td><td>Определен жизненным циклом</td></tr>
+<tr><td>Изоляция</td><td>Общий request/response</td><td>Четкие границы</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="реализация-hooks-в-fastify"><a class="header" href="#реализация-hooks-в-fastify">Реализация Hooks в Fastify</a></h4>
+<pre><code class="language-javascript">const fastify = require('fastify')();
+
+// Хуки жизненного цикла запроса в Fastify
+fastify.addHook('onRequest', async (request, reply) =&gt; {
+  // Фаза 1: Запрос получен, но еще не обработан
+  console.log('Request received');
+  // reply еще нельзя использовать для отправки ответа
+});
+
+fastify.addHook('preParsing', async (request, reply) =&gt; {
+  // Фаза 2: Перед парсингом тела запроса
+  // Можно модифицировать поток данных
+});
+
+fastify.addHook('preValidation', async (request, reply) =&gt; {
+  // Фаза 3: Перед валидацией
+  // Тело уже распарсено, но не валидировано
+});
+
+fastify.addHook('preHandler', async (request, reply) =&gt; {
+  // Фаза 4: Перед основным handler
+  // Проверка аутентификации, прав доступа
+
+  if (!request.session) {
+    reply.code(401).send({ error: 'Unauthorized' });
+    // Основной handler НЕ выполнится
+  }
+});
+
+// Основной handler - ЕДИНСТВЕННЫЙ ответственный за бизнес-логику
+fastify.get('/api/data', async (request, reply) =&gt; {
+  return { data: 'value' };
+});
+
+fastify.addHook('onSend', async (request, reply, payload) =&gt; {
+  // Фаза 5: Перед отправкой ответа
+  // Можно модифицировать payload
+  const modified = { timestamp: Date.now(), ...payload };
+  return modified;
+});
+
+fastify.addHook('onResponse', async (request, reply) =&gt; {
+  // Фаза 6: После отправки ответа
+  // Логирование, метрики
+  console.log(`Response sent in ${reply.getResponseTime()}ms`);
+});
+
+fastify.addHook('onError', async (request, reply, error) =&gt; {
+  // Обработка ошибок
+  console.error('Error occurred:', error);
+});
+</code></pre>
+<h4 id="жизненный-цикл-запроса-с-hooks"><a class="header" href="#жизненный-цикл-запроса-с-hooks">Жизненный цикл запроса с Hooks</a></h4>
+<pre><code>Incoming Request
+      ↓
+┌─────────────┐
+│ onRequest   │ ← Логирование, установка request ID
+└─────────────┘
+      ↓
+┌─────────────┐
+│ preParsing  │ ← Декомпрессия, трансформация потока
+└─────────────┘
+      ↓
+  [Парсинг тела]
+      ↓
+┌─────────────────┐
+│ preValidation   │ ← Добавление данных для валидации
+└─────────────────┘
+      ↓
+  [Валидация схемы]
+      ↓
+┌─────────────┐
+│ preHandler  │ ← Аутентификация, авторизация
+└─────────────┘
+      ↓
+┌─────────────┐
+│   Handler   │ ← ОСНОВНАЯ БИЗНЕС-ЛОГИКА (единственная ответственность)
+└─────────────┘
+      ↓
+┌─────────────┐
+│   onSend    │ ← Сериализация, сжатие
+└─────────────┘
+      ↓
+┌─────────────┐
+│ onResponse  │ ← Метрики, очистка ресурсов
+└─────────────┘
+      ↓
+  Response Sent
+
+(в любой момент может произойти)
+      ↓
+┌─────────────┐
+│   onError   │ ← Обработка ошибок
+└─────────────┘
+</code></pre>
+<h4 id="преимущества-hooks"><a class="header" href="#преимущества-hooks">Преимущества Hooks</a></h4>
+<p><strong>1. Четкая ответственность</strong></p>
+<pre><code class="language-javascript">// Каждый hook знает свою роль
+fastify.addHook('preHandler', checkAuth);      // Только аутентификация
+fastify.addHook('preHandler', checkRBAC);      // Только авторизация
+fastify.addHook('onSend', compressResponse);   // Только сжатие
+
+// Handler знает только бизнес-логику
+fastify.get('/user/:id', getUserHandler);      // Только получение пользователя
+</code></pre>
+<p><strong>2. Нет race conditions</strong></p>
+<pre><code class="language-javascript">// Невозможно отправить несколько ответов
+fastify.addHook('preHandler', async (request, reply) =&gt; {
+  if (condition) {
+    reply.send('Early response');
+    // Основной handler НЕ выполнится - Fastify это контролирует
+  }
+});
+</code></pre>
+<p><strong>3. Scope hooks (локальные хуки)</strong></p>
+<pre><code class="language-javascript">// Глобальный hook - для всех маршрутов
+fastify.addHook('onRequest', globalLogger);
+
+// Hook только для конкретного маршрута
+fastify.get('/admin', {
+  onRequest: [checkAdmin]  // Только для этого маршрута
+}, adminHandler);
+
+// Hook для группы маршрутов (плагин)
+fastify.register(async (fastify) =&gt; {
+  // Хуки здесь применяются только к маршрутам в этом плагине
+  fastify.addHook('preHandler', requireAuth);
+
+  fastify.get('/profile', profileHandler);
+  fastify.get('/settings', settingsHandler);
+});
+</code></pre>
+<p><strong>4. Тестируемость</strong></p>
+<pre><code class="language-javascript">// Хуки можно тестировать независимо
+test('checkAuth hook', async (t) =&gt; {
+  const request = mockRequest({ session: null });
+  const reply = mockReply();
+
+  await checkAuth(request, reply);
+
+  t.equal(reply.statusCode, 401);
+});
+
+// Handler тестируется без хуков
+test('getUserHandler', async (t) =&gt; {
+  const request = mockRequest({ params: { id: '123' } });
+  const result = await getUserHandler(request);
+
+  t.equal(result.id, '123');
+});
+</code></pre>
+<h4 id="реализация-простого-hook-системы-для-nodejs-проекта"><a class="header" href="#реализация-простого-hook-системы-для-nodejs-проекта">Реализация простого Hook системы для Node.js проекта</a></h4>
+<pre><code class="language-javascript">// Простая реализация hook системы
+class HookSystem {
+  constructor() {
+    this.hooks = new Map();
+  }
+
+  addHook(name, handler) {
+    if (!this.hooks.has(name)) {
+      this.hooks.set(name, []);
+    }
+    this.hooks.get(name).push(handler);
+  }
+
+  async executeHooks(name, ...args) {
+    const handlers = this.hooks.get(name) || [];
+    for (const handler of handlers) {
+      await handler(...args);
+    }
+  }
+}
+
+// Использование в сервере
+class Server extends HookSystem {
+  constructor() {
+    super();
+  }
+
+  async handleRequest(context) {
+    // Lifecycle с hooks
+    await this.executeHooks('onRequest', context);
+    await this.executeHooks('preHandler', context);
+
+    // Основной handler
+    const result = await this.routes.get(context.method)(context);
+
+    await this.executeHooks('onSend', context, result);
+
+    return result;
+  }
+}
+
+// Регистрация hooks
+server.addHook('preHandler', async (context) =&gt; {
+  if (!context.session) {
+    throw new Error('Not authenticated');
+  }
+});
+
+server.addHook('onSend', async (context, result) =&gt; {
+  console.log('Sending response:', result);
+});
+</code></pre>
+<hr>
+<h2 id="принципы-проектирования-архитектуры"><a class="header" href="#принципы-проектирования-архитектуры">Принципы проектирования архитектуры</a></h2>
+<h3 id="1-separation-of-concerns-разделение-ответственности"><a class="header" href="#1-separation-of-concerns-разделение-ответственности">1. Separation of Concerns (Разделение ответственности)</a></h3>
+<p><strong>Принцип</strong>: Различные аспекты функциональности должны быть изолированы в отдельных компонентах.</p>
+<p><strong>Применение в архитектуре:</strong></p>
+<pre><code>System Layer (протоколы)     ┃ Userland (бизнес-логика)
+                              ┃
+Server                        ┃
+Transport (HTTP/WebSocket)    ┃ Context
+Request, Response, Connection ┃ Client
+                              ┃ Session
+</code></pre>
+<p><strong>Почему важно:</strong></p>
+<ul>
+<li>Бизнес-логика не знает о HTTP/WebSocket</li>
+<li>Смена протокола не требует изменения бизнес-логики</li>
+<li>Можно тестировать бизнес-логику без сети</li>
+</ul>
+<h3 id="2-dependency-inversion-principle-принцип-инверсии-зависимостей"><a class="header" href="#2-dependency-inversion-principle-принцип-инверсии-зависимостей">2. Dependency Inversion Principle (Принцип инверсии зависимостей)</a></h3>
+<p><strong>Принцип</strong>: Модули верхнего уровня не должны зависеть от модулей нижнего уровня. Оба должны зависеть от абстракций.</p>
+<p><strong>Применение:</strong></p>
+<pre><code class="language-javascript">// Плохо: прямая зависимость от конкретной реализации
+class Handler {
+  constructor() {
+    this.transport = new HttpTransport();  // Жесткая зависимость
+  }
+}
+
+// Хорошо: зависимость от абстракции
+class Handler {
+  constructor(transport) {  // Transport - абстракция
+    this.transport = transport;  // Может быть HTTP или WebSocket
+  }
+}
+</code></pre>
+<h3 id="3-principle-of-least-privilege-принцип-минимальных-привилегий"><a class="header" href="#3-principle-of-least-privilege-принцип-минимальных-привилегий">3. Principle of Least Privilege (Принцип минимальных привилегий)</a></h3>
+<p><strong>Принцип</strong>: Код должен иметь доступ только к тому, что ему необходимо для работы.</p>
+<p><strong>Применение:</strong></p>
+<pre><code class="language-javascript">// Бизнес-логика получает только Context
+async function endpoint(context) {
+  // Доступно:
+  // - context.client (ограниченный интерфейс)
+  // - context.session (состояние пользователя)
+
+  // Недоступно:
+  // - transport (скрыт за приватным полем)
+  // - request/response (не передаются)
+  // - connection (изолирован)
+}
+</code></pre>
+<h3 id="4-fail-safe-defaults-безопасные-значения-по-умолчанию"><a class="header" href="#4-fail-safe-defaults-безопасные-значения-по-умолчанию">4. Fail-Safe Defaults (Безопасные значения по умолчанию)</a></h3>
+<p><strong>Принцип</strong>: По умолчанию система должна быть в безопасном состоянии.</p>
+<p><strong>Применение:</strong></p>
+<pre><code class="language-javascript">// HTTP transport всегда возвращает 200 и JSON по умолчанию
+send(data, code = 200, encoding = 'json') {
+  // Безопасные дефолты
+}
+
+// Сессия может быть null (незалогиненный пользователь)
+class Context {
+  constructor(client, session = null) {
+    this.client = client;
+    this.session = session;  // null по умолчанию - безопасно
+  }
+}
+</code></pre>
+<h3 id="5-single-responsibility-principle-принцип-единственной-ответственности"><a class="header" href="#5-single-responsibility-principle-принцип-единственной-ответственности">5. Single Responsibility Principle (Принцип единственной ответственности)</a></h3>
+<p><strong>Принцип</strong>: Каждый класс должен иметь одну причину для изменения.</p>
+<p><strong>Применение:</strong></p>
+<ul>
+<li><strong>Server</strong> - управление соединениями и роутинг</li>
+<li><strong>Transport</strong> - отправка/получение данных по протоколу</li>
+<li><strong>Client</strong> - фасад для взаимодействия с userland</li>
+<li><strong>Session</strong> - управление состоянием пользователя</li>
+<li><strong>Context</strong> - контейнер данных для RPC вызова</li>
+</ul>
+<h3 id="6-openclosed-principle-принцип-открытостизакрытости"><a class="header" href="#6-openclosed-principle-принцип-открытостизакрытости">6. Open/Closed Principle (Принцип открытости/закрытости)</a></h3>
+<p><strong>Принцип</strong>: Классы должны быть открыты для расширения, но закрыты для модификации.</p>
+<p><strong>Применение:</strong></p>
+<pre><code class="language-javascript">// Добавление нового транспорта не требует изменения существующих классов
+class GrpcTransport extends Transport {
+  write(data) {
+    // Специфичная для gRPC реализация
+  }
+}
+
+// Server и Client работают с любым Transport
+</code></pre>
+<hr>
+<h2 id="управление-состоянием-и-изоляция-контекстов"><a class="header" href="#управление-состоянием-и-изоляция-контекстов">Управление состоянием и изоляция контекстов</a></h2>
+<h3 id="три-типа-состояния"><a class="header" href="#три-типа-состояния">Три типа состояния</a></h3>
+<h4 id="1-state-rpc-вызова-context-state"><a class="header" href="#1-state-rpc-вызова-context-state">1. State RPC-вызова (Context State)</a></h4>
+<p><strong>Характеристики:</strong></p>
+<ul>
+<li><strong>Время жизни</strong>: От начала вызова до получения ответа</li>
+<li><strong>Область видимости</strong>: Только текущий вызов</li>
+<li><strong>Персистентность</strong>: Не сохраняется</li>
+<li><strong>Изоляция</strong>: Полная - каждый вызов имеет свой контекст</li>
+</ul>
+<p><strong>Назначение:</strong></p>
+<ul>
+<li>Хранение параметров вызова</li>
+<li>Временные данные обработки</li>
+<li>UUID для трейсинга</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-javascript">class Context {
+  constructor(client, session) {
+    this.uuid = randomUUID();  // Уникальный для каждого вызова
+    this.client = client;
+    this.session = session;
+    this.timestamp = Date.now();
+    // Временное состояние, уничтожается после ответа
+  }
+}
+
+// Каждый вызов создает новый контекст
+const context1 = new Context(client, session);
+await endpoint(context1);
+// context1 больше не нужен
+
+const context2 = new Context(client, session);
+await endpoint(context2);
+// context2 независим от context1
+</code></pre>
+<h4 id="2-state-клиента-client-state"><a class="header" href="#2-state-клиента-client-state">2. State клиента (Client State)</a></h4>
+<p><strong>Характеристики:</strong></p>
+<ul>
+<li><strong>Время жизни</strong>: От подключения до отключения клиента</li>
+<li><strong>Область видимости</strong>: Все RPC вызовы от данного соединения</li>
+<li><strong>Персистентность</strong>: Не сохраняется (пропадает при отключении)</li>
+<li><strong>Изоляция</strong>: Между клиентами</li>
+</ul>
+<p><strong>Назначение:</strong></p>
+<ul>
+<li>Временные данные соединения</li>
+<li>Счетчики, метрики текущего соединения</li>
+<li>Кеш для оптимизации</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-javascript">class Client {
+  constructor(transport) {
+    this.state = {
+      connectedAt: Date.now(),
+      requestCount: 0,
+      lastActivity: Date.now()
+    };
+  }
+
+  async handleRequest(context) {
+    this.state.requestCount++;
+    this.state.lastActivity = Date.now();
+    // State доступен между вызовами
+  }
+}
+</code></pre>
+<p><strong>Use case:</strong></p>
+<pre><code class="language-javascript">// Ограничение rate limit на основе Client State
+async function rateLimit(context) {
+  const { client } = context;
+
+  if (!client.state.rateLimitWindow) {
+    client.state.rateLimitWindow = Date.now();
+    client.state.requestsInWindow = 0;
+  }
+
+  const elapsed = Date.now() - client.state.rateLimitWindow;
+
+  if (elapsed &gt; 60000) {
+    // Сброс окна каждую минуту
+    client.state.rateLimitWindow = Date.now();
+    client.state.requestsInWindow = 0;
+  }
+
+  if (client.state.requestsInWindow &gt;= 100) {
+    throw new Error('Rate limit exceeded');
+  }
+
+  client.state.requestsInWindow++;
+}
+</code></pre>
+<h4 id="3-state-сессии-session-state"><a class="header" href="#3-state-сессии-session-state">3. State сессии (Session State)</a></h4>
+<p><strong>Характеристики:</strong></p>
+<ul>
+<li><strong>Время жизни</strong>: От создания сессии до её истечения (expiration)</li>
+<li><strong>Область видимости</strong>: Все соединения пользователя (может подключиться с разных устройств)</li>
+<li><strong>Персистентность</strong>: Сохраняется в БД (Redis, PostgreSQL)</li>
+<li><strong>Изоляция</strong>: Между пользователями</li>
+</ul>
+<p><strong>Назначение:</strong></p>
+<ul>
+<li>Данные аутентификации</li>
+<li>Пользовательские настройки</li>
+<li>Корзина покупок</li>
+<li>Прогресс работы</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-javascript">class Session {
+  constructor(token, data) {
+    this.token = token;  // Уникальный токен сессии
+    this.state = data;   // Персистентное состояние
+    this.createdAt = Date.now();
+  }
+
+  // State может содержать:
+  // {
+  //   userId: '123',
+  //   username: 'alice',
+  //   roles: ['user', 'moderator'],
+  //   preferences: { theme: 'dark' },
+  //   cart: [{ productId: 'abc', quantity: 2 }]
+  // }
+}
+</code></pre>
+<p><strong>Персистентность с Proxy (как обсуждалось ранее):</strong></p>
+<pre><code class="language-javascript">// При изменении state автоматически сохраняется в БД
+session.state.cart.push({ productId: 'xyz', quantity: 1 });
+// Proxy перехватывает изменение и вызывает save()
+</code></pre>
+<h3 id="сравнительная-таблица-1"><a class="header" href="#сравнительная-таблица-1">Сравнительная таблица</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>Context State</th><th>Client State</th><th>Session State</th></tr>
+</thead>
+<tbody>
+<tr><td>Время жизни</td><td>Вызов</td><td>Соединение</td><td>До expiration</td></tr>
+<tr><td>Персистентность</td><td>Нет</td><td>Нет</td><td>Да (БД)</td></tr>
+<tr><td>Общий между вызовами</td><td>Нет</td><td>Да (одно соединение)</td><td>Да (все соединения)</td></tr>
+<tr><td>Пример данных</td><td>UUID, timestamp</td><td>Request count, cache</td><td>User data, cart</td></tr>
+<tr><td>Уничтожается при</td><td>Ответ отправлен</td><td>Отключение</td><td>Logout/Expiration</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="изоляция-контекстов"><a class="header" href="#изоляция-контекстов">Изоляция контекстов</a></h3>
+<p><strong>Проблема</strong>: В многопользовательском сервере критически важно, чтобы один пользователь не мог получить доступ к данным другого.</p>
+<p><strong>Решение в архитектуре:</strong></p>
+<p><strong>1. Каждый запрос создает новый Context</strong></p>
+<pre><code class="language-javascript">// В server.js
+async function handleRPC(methodName, params, client, session) {
+  // Создаем НОВЫЙ контекст для каждого вызова
+  const context = new Context(client, session);
+
+  try {
+    const handler = routes.get(methodName);
+    const result = await handler(context);  // Передаем только context
+    return result;
+  } finally {
+    // context уничтожается после вызова
+    // Garbage collector освободит память
+  }
+}
+</code></pre>
+<p><strong>2. Сессии хранятся в Map по токену</strong></p>
+<pre><code class="language-javascript">// Глобальная коллекция сессий
+const sessions = new Map();
+
+// Каждая сессия изолирована по токену
+sessions.set('token-alice', aliceSession);
+sessions.set('token-bob', bobSession);
+
+// Получение сессии по токену из запроса
+const token = extractTokenFromRequest(request);
+const session = sessions.get(token);  // Только своя сессия
+</code></pre>
+<p><strong>3. Клиенты хранятся в Set</strong></p>
+<pre><code class="language-javascript">// Коллекция клиентов
+const clients = new Set();
+
+clients.add(clientAlice);
+clients.add(clientBob);
+
+// Каждый клиент независим
+// clientAlice не может получить доступ к clientBob
+</code></pre>
+<p><strong>4. Бизнес-логика не имеет глобального доступа</strong></p>
+<pre><code class="language-javascript">// Плохо: глобальный доступ к коллекциям
+async function badEndpoint() {
+  const allSessions = server.sessions;  // Опасно!
+  // Может получить доступ к чужим сессиям
+}
+
+// Хорошо: только свой контекст
+async function goodEndpoint(context) {
+  const mySession = context.session;  // Только своя сессия
+  const myClient = context.client;    // Только свой клиент
+  // Изолировано
+}
+</code></pre>
+<h3 id="предотвращение-утечек-состояния"><a class="header" href="#предотвращение-утечек-состояния">Предотвращение утечек состояния</a></h3>
+<p><strong>1. Замыкания для приватного доступа</strong></p>
+<pre><code class="language-javascript">// В server.js
+function createServer(config) {
+  const sessions = new Map();  // Приватная коллекция в замыкании
+  const clients = new Set();
+
+  class Server {
+    // Методы имеют доступ через замыкание
+    getSession(token) {
+      return sessions.get(token);
+    }
+
+    addClient(client) {
+      clients.add(client);
+    }
+  }
+
+  return new Server();
+}
+
+// sessions и clients недоступны извне
+</code></pre>
+<p><strong>2. Приватные поля (#)</strong></p>
+<pre><code class="language-javascript">class Client {
+  #transport;  // Недоступен извне
+
+  constructor(transport) {
+    this.#transport = transport;
+  }
+
+  // Публичный интерфейс безопасен
+  send(data) {
+    this.#transport.send(data);
+  }
+}
+
+// client.#transport  // SyntaxError!
+</code></pre>
+<p><strong>3. Freezing и Sealing объектов</strong></p>
+<pre><code class="language-javascript">// Предотвращение модификации конфигурации
+const config = Object.freeze({
+  port: 8000,
+  host: 'localhost'
+});
+
+config.port = 9000;  // Ошибка в strict mode, игнорируется в sloppy
+console.log(config.port);  // 8000
+</code></pre>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<h3 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h3>
+<h4 id="1-javascript---не-классический-ооп"><a class="header" href="#1-javascript---не-классический-ооп">1. JavaScript - не классический ООП</a></h4>
+<p>Паттерны GoF созданы для статически типизированных классических ООП языков. В JavaScript:</p>
+<ul>
+<li><strong>Функции первого класса</strong> упрощают Observer → EventEmitter</li>
+<li><strong>Замыкания</strong> заменяют приватные поля классов</li>
+<li><strong>Прототипное наследование</strong> более гибкое</li>
+<li><strong>Динамическая типизация</strong> позволяет обойтись без интерфейсов</li>
+<li><strong>Proxy API</strong> делает паттерн Proxy тривиальным</li>
+</ul>
+<h4 id="2-не-все-gof-паттерны-полезны-в-nodejs"><a class="header" href="#2-не-все-gof-паттерны-полезны-в-nodejs">2. Не все GoF паттерны полезны в Node.js</a></h4>
+<p><strong>Полезные паттерны:</strong></p>
+<ul>
+<li><strong>Strategy</strong> - для абстракций (Transport)</li>
+<li><strong>Facade</strong> - для скрытия сложности (Client)</li>
+<li><strong>Proxy</strong> - для перехвата доступа (Session state)</li>
+<li><strong>Singleton</strong> - для глобальных сервисов (Server)</li>
+</ul>
+<p><strong>Проблемные паттерны:</strong></p>
+<ul>
+<li><strong>Chain of Responsibility</strong> → используйте Map-routing или Hooks</li>
+<li><strong>Publisher-Subscriber</strong> → используйте EventEmitter</li>
+<li><strong>Middleware</strong> → используйте Hooks (Fastify)</li>
+</ul>
+<h4 id="3-архитектурные-принципы-важнее-паттернов"><a class="header" href="#3-архитектурные-принципы-важнее-паттернов">3. Архитектурные принципы важнее паттернов</a></h4>
+<p>Паттерны - это средство, а не цель. Важнее:</p>
+<ol>
+<li><strong>Separation of Concerns</strong> - System Layer vs Userland</li>
+<li><strong>Dependency Inversion</strong> - зависимости от абстракций</li>
+<li><strong>Single Responsibility</strong> - один класс, одна роль</li>
+<li><strong>Principle of Least Privilege</strong> - минимальный доступ</li>
+<li><strong>Изоляция</strong> - контексты не должны пересекаться</li>
+</ol>
+<h4 id="4-управление-состоянием---критично-для-безопасности"><a class="header" href="#4-управление-состоянием---критично-для-безопасности">4. Управление состоянием - критично для безопасности</a></h4>
+<p>Три типа state (Context, Client, Session) должны быть четко разделены:</p>
+<ul>
+<li><strong>Context</strong> - временный, одноразовый</li>
+<li><strong>Client</strong> - на время соединения</li>
+<li><strong>Session</strong> - персистентный, между соединениями</li>
+</ul>
+<p>Изоляция обеспечивается через:</p>
+<ul>
+<li>Новый Context для каждого вызова</li>
+<li>Map/Set для хранения сессий/клиентов по ключам</li>
+<li>Приватные поля и замыкания</li>
+<li>Передача только необходимого контекста</li>
+</ul>
+<h4 id="5-javascript-идиоматичные-подходы"><a class="header" href="#5-javascript-идиоматичные-подходы">5. JavaScript-идиоматичные подходы</a></h4>
+<p>Вместо слепого следования GoF:</p>
+<ul>
+<li><strong>EventEmitter</strong> вместо Publisher-Subscriber</li>
+<li><strong>Hooks</strong> вместо Chain of Responsibility</li>
+<li><strong>Map-routing</strong> вместо Middleware</li>
+<li><strong>Proxy API</strong> для метапрограммирования</li>
+<li><strong>Замыкания</strong> для инкапсуляции</li>
+</ul>
+<h3 id="следующие-шаги"><a class="header" href="#следующие-шаги">Следующие шаги</a></h3>
+<p>Следующие темы для изучения в контексте данной архитектуры:</p>
+<ol>
+<li>
+<p><strong>Аутентификация и идентификация</strong></p>
+<ul>
+<li>Создание и валидация токенов</li>
+<li>Безопасное хранение паролей (bcrypt, scrypt)</li>
+<li>Session management</li>
+</ul>
+</li>
+<li>
+<p><strong>Role-Based Access Control (RBAC)</strong></p>
+<ul>
+<li>Роли и права</li>
+<li>Проверка прав доступа к endpoints</li>
+<li>Композиция прав из нескольких ролей</li>
+</ul>
+</li>
+<li>
+<p><strong>Revealing Constructor Pattern</strong></p>
+<ul>
+<li>Для работы с Streams</li>
+<li>Контролируемое раскрытие функциональности</li>
+</ul>
+</li>
+<li>
+<p><strong>CORS и Security Headers</strong></p>
+<ul>
+<li>Реализация CORS вручную</li>
+<li>Безопасные заголовки HTTP</li>
+</ul>
+</li>
+<li>
+<p><strong>Streams и backpressure</strong></p>
+<ul>
+<li>Обработка больших файлов</li>
+<li>Управление потоками данных</li>
+</ul>
+</li>
+</ol>
+<h3 id="рекомендуемая-литература"><a class="header" href="#рекомендуемая-литература">Рекомендуемая литература</a></h3>
+<p><strong>Книги:</strong></p>
+<ul>
+<li>“Design Patterns: Elements of Reusable Object-Oriented Software” (GoF) - для понимания классических паттернов</li>
+<li>“JavaScript Patterns” by Stoyan Stefanov - паттерны специфичные для JavaScript</li>
+<li>“Node.js Design Patterns” by Mario Casciaro - паттерны для Node.js</li>
+</ul>
+<p><strong>Документация:</strong></p>
+<ul>
+<li><a href="https://nodejs.org/api/events.html">Node.js Events API</a> - EventEmitter</li>
+<li><a href="https://nodejs.org/api/http.html">Node.js HTTP API</a> - HTTP сервер</li>
+<li><a href="https://www.fastify.io/docs/latest/Reference/Hooks/">Fastify Hooks</a> - lifecycle hooks</li>
+</ul>
+<p><strong>Кодовая база:</strong></p>
+<ul>
+<li><a href="https://github.com/metarhia/metacom">Metarhia/Metaсom</a> - production реализация</li>
+<li>Текущий проект - учебная реализация</li>
+</ul>
+<hr>
+<p><strong>Автор конспекта</strong>: Академический анализ лекции
+<strong>Дата</strong>: 2025-12-06
+<strong>Версия</strong>: 1.0</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week1/grasp-principles-part2-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week1/monomorphism_polymorphism_explained.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week1/grasp-principles-part2-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week1/monomorphism_polymorphism_explained.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

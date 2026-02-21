@@ -1,0 +1,881 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SOLID: Liskov substitution principle (LSP) — Принцип подстановки Барбары Лисков - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="принцип-подстановки-барбары-лисков-liskov-substitution-principle--lsp"><a class="header" href="#принцип-подстановки-барбары-лисков-liskov-substitution-principle--lsp">Принцип подстановки Барбары Лисков (Liskov Substitution Principle — LSP)</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Принцип подстановки Барбары Лисков — это третий принцип SOLID, который связан с теорией типов и описывает правила корректного наследования и использования подтипов. Этот принцип обеспечивает возможность заменять объекты базового типа на объекты производного типа без изменения корректности программы.</p>
+<hr>
+<h2 id="формулировка-принципа"><a class="header" href="#формулировка-принципа">Формулировка принципа</a></h2>
+<h3 id="оригинальная-формулировка-барбары-лисков"><a class="header" href="#оригинальная-формулировка-барбары-лисков">Оригинальная формулировка Барбары Лисков</a></h3>
+<p>Если у нас есть <strong>Q(x)</strong> — свойство, которое истинно относительно объекта <strong>x</strong>, который является экземпляром типа <strong>T</strong>, то <strong>Q(y)</strong> также должно быть истинным для объекта <strong>y</strong>, который является экземпляром типа <strong>S</strong>, где <strong>S</strong> является подтипом <strong>T</strong>.</p>
+<p>Математическая запись:</p>
+<pre><code>Q(x), где x: T
+Q(y), где y: S, и S &lt;: T (S является подтипом T)
+</code></pre>
+<p><strong>Примечание</strong>: Эта формулировка достаточно абстрактная и требует нескольких прочтений для полного понимания.</p>
+<h3 id="формулировка-роберта-мартина"><a class="header" href="#формулировка-роберта-мартина">Формулировка Роберта Мартина</a></h3>
+<p>Более понятная формулировка от Роберта Мартина гласит:</p>
+<blockquote>
+<p><strong>Функции, которые используют базовый тип, должны иметь возможность использовать подтипы этого базового типа, не зная об этом.</strong></p>
+</blockquote>
+<p>Это означает, что если функция принимает аргумент типа T, то мы можем передать любой подтип этого типа T, и функция должна корректно работать.</p>
+<hr>
+<h2 id="области-применения-lsp"><a class="header" href="#области-применения-lsp">Области применения LSP</a></h2>
+<p>Принцип подстановки применяется не только к аргументам функций, но и к:</p>
+<h3 id="1-аргументы-функций"><a class="header" href="#1-аргументы-функций">1. Аргументы функций</a></h3>
+<p>Если функция принимает параметр типа T, она должна корректно работать с любым подтипом T.</p>
+<h3 id="2-свойства-объектов"><a class="header" href="#2-свойства-объектов">2. Свойства объектов</a></h3>
+<p>Если свойство класса имеет тип T, то в это свойство можно присвоить любое значение, являющееся подтипом T.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-javascript">// Если у нас есть свойство типа Stream
+let stream;
+
+// Мы можем присвоить ему WritableStream (наследник Stream)
+stream = new WritableStream();
+
+// Или любой другой наследник Stream
+</code></pre>
+<h3 id="3-элементы-коллекций"><a class="header" href="#3-элементы-коллекций">3. Элементы коллекций</a></h3>
+<p>Коллекция геометрических фигур может содержать различные подтипы фигур.</p>
+<p><strong>Правильно:</strong></p>
+<pre><code class="language-javascript">// Коллекция геометрических фигур
+const figures = [];
+figures.push(new Square());
+figures.push(new Triangle());
+figures.push(new Rhombus());
+</code></pre>
+<p><strong>Неправильно:</strong></p>
+<pre><code class="language-javascript">// Нельзя добавлять несовместимые типы
+figures.push(new Socket());  // Сокет - не геометрическая фигура
+figures.push(new Button());  // Кнопка - не геометрическая фигура
+</code></pre>
+<hr>
+<h2 id="связь-с-другими-принципами"><a class="header" href="#связь-с-другими-принципами">Связь с другими принципами</a></h2>
+<h3 id="lsp-и-openclosed-principle"><a class="header" href="#lsp-и-openclosed-principle">LSP и Open/Closed Principle</a></h3>
+<p>Принцип подстановки тесно связан с <strong>принципом открытости/закрытости</strong> (Open/Closed):</p>
+<ul>
+<li>Когда мы хотим подставлять подтипы, мы приходим к необходимости расширять функциональность, не изменяя базовый код</li>
+<li>Подтип <strong>может только расширять</strong> функциональность базового типа</li>
+<li>Подтип <strong>не должен удалять или изменять</strong> поведение класса-предка</li>
+</ul>
+<h3 id="lsp-и-контрактное-программирование"><a class="header" href="#lsp-и-контрактное-программирование">LSP и контрактное программирование</a></h3>
+<p>Принцип подстановки подводит нас к <strong>контрактному программированию</strong>:</p>
+<ul>
+<li>Потребитель опирается на <strong>интерфейс</strong> (контракт)</li>
+<li>Потребитель не должен проверять конкретный тип объекта</li>
+<li>Все подтипы должны соблюдать контракт базового типа</li>
+</ul>
+<p><strong>Примеры контрактов в JavaScript:</strong></p>
+<ul>
+<li><strong>Iterable</strong> — объекты с методом <code>Symbol.iterator</code></li>
+<li><strong>Thenable</strong> — объекты с методом <code>then</code></li>
+<li><strong>Serializable</strong> — объекты с возможностью сериализации</li>
+<li><strong>EventEmitter</strong> — объекты с методами <code>on</code>, <code>emit</code></li>
+</ul>
+<hr>
+<h2 id="примеры-в-javascript"><a class="header" href="#примеры-в-javascript">Примеры в JavaScript</a></h2>
+<h3 id="пример-1-функции-и-асинхронные-функции"><a class="header" href="#пример-1-функции-и-асинхронные-функции">Пример 1: Функции и асинхронные функции</a></h3>
+<pre><code class="language-javascript">// Обычная функция
+function regularFunction() {
+  console.log('Regular function');
+}
+
+// Асинхронная функция
+async function asyncFunction() {
+  console.log('Async function');
+}
+
+// Проверка наследования
+console.log(regularFunction.__proto__);        // Function
+console.log(asyncFunction.__proto__);          // AsyncFunction
+console.log(asyncFunction.__proto__.__proto__); // Function
+
+// Цепочка прототипов:
+// asyncFunction -&gt; AsyncFunction -&gt; Function -&gt; Object
+
+// setTimeout ожидает Function
+setTimeout(regularFunction, 1000);  // ✓ Работает
+
+// AsyncFunction является наследником Function
+setTimeout(asyncFunction, 1000);    // ✓ Работает (LSP соблюдается)
+
+// Object не является наследником Function
+setTimeout({}, 1000);                // ✗ Не работает (нет метода call)
+</code></pre>
+<p><strong>Важно</strong>: В этом примере <code>AsyncFunction</code> является подтипом <code>Function</code>, поэтому принцип подстановки соблюдается.</p>
+<hr>
+<h3 id="пример-2-прямоугольник-и-квадрат-правильная-реализация"><a class="header" href="#пример-2-прямоугольник-и-квадрат-правильная-реализация">Пример 2: Прямоугольник и квадрат (правильная реализация)</a></h3>
+<pre><code class="language-javascript">// Базовый класс - прямоугольник
+class Rect {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+
+  get area() {
+    return this.width * this.height;
+  }
+}
+
+// Наследник - квадрат
+class Square extends Rect {
+  constructor(side) {
+    super(side, side); // Вызываем конструктор родителя
+    this.#side = side;
+  }
+
+  #side;
+
+  // Переопределяем геттеры для width и height
+  get width() {
+    return this.#side;
+  }
+
+  get height() {
+    return this.#side;
+  }
+
+  // Переопределяем сеттеры - оба устанавливают side
+  set width(value) {
+    this.#side = value;
+  }
+
+  set height(value) {
+    this.#side = value;
+  }
+}
+
+// Функция, работающая с Rect
+function useRect(rect) {
+  rect.width = 10;
+  console.log('Area:', rect.area);
+}
+
+// Использование
+const r1 = new Rect(10, 5);
+const r2 = new Square(10);
+
+useRect(r1); // Area: 50
+useRect(r2); // Area: 100
+
+// ✓ LSP соблюдается - функция работает с обоими типами
+</code></pre>
+<p><strong>Ключевой момент</strong>: Мы не пишем проверки типа (<code>instanceof</code>), функция опирается на общий интерфейс.</p>
+<p><strong>Антипаттерн</strong> (нарушение LSP):</p>
+<pre><code class="language-javascript">// ✗ Плохо - проверка типа нарушает LSP
+function useRect(rect) {
+  if (rect instanceof Square) {
+    // Особая логика для Square
+  } else if (rect instanceof Rect) {
+    // Логика для Rect
+  }
+
+  // Это приводит к "лапше" при появлении новых подтипов
+}
+</code></pre>
+<p><strong>Правило</strong>: Если вы видите проверки <code>instanceof</code> в коде, задумайтесь — не нарушен ли принцип подстановки?</p>
+<hr>
+<h3 id="пример-3-банковский-счет-правильное-расширение"><a class="header" href="#пример-3-банковский-счет-правильное-расширение">Пример 3: Банковский счет (правильное расширение)</a></h3>
+<pre><code class="language-javascript">// Базовый класс - банковский счет
+class Account extends EventEmitter {
+  constructor(username, balance) {
+    super();
+    this.username = username;
+    this.balance = balance;
+  }
+
+  withdraw(amount) {
+    this.balance -= amount;
+    this.emit('withdraw', { username: this.username, amount, balance: this.balance });
+  }
+}
+
+// Подтип - пользовательский счет (правильная реализация)
+class UserAccount extends Account {
+  withdraw(amount) {
+    // Сначала вызываем базовое поведение
+    super.withdraw(amount);
+
+    // Затем РАСШИРЯЕМ функциональность
+    if (this.balance &lt; 0) {
+      this.emit('debt', Math.abs(this.balance));
+    }
+  }
+}
+
+// Использование
+const account = new UserAccount('Marcus Aurelius', 100);
+
+account.on('debt', (amount) =&gt; {
+  console.log('Debt:', amount);
+});
+
+account.on('withdraw', ({ username, amount, balance }) =&gt; {
+  console.log(`${username} withdrew ${amount}, balance: ${balance}`);
+});
+
+account.withdraw(50);  // Balance: 50
+account.withdraw(70);  // Balance: -20, Debt: 20
+account.withdraw(-10); // Balance: -10 (начисление)
+
+// ✓ LSP соблюдается - поведение расширено, но не изменено
+</code></pre>
+<p><strong>Результат выполнения:</strong></p>
+<pre><code>Marcus Aurelius withdrew 50, balance: 50
+Marcus Aurelius withdrew 70, balance: -20
+Debt: 20
+Marcus Aurelius withdrew -10, balance: -10
+</code></pre>
+<hr>
+<h3 id="пример-4-нарушение-lsp"><a class="header" href="#пример-4-нарушение-lsp">Пример 4: Нарушение LSP</a></h3>
+<pre><code class="language-javascript">// ✗ ПЛОХО - нарушение принципа подстановки
+class BrokenUserAccount extends Account {
+  withdraw(amount) {
+    // Проверка блокирует дальнейшие операции
+    if (this.balance &lt;= 0) {
+      return; // Ничего не делаем!
+    }
+
+    super.withdraw(amount);
+  }
+}
+
+// Использование
+const account = new BrokenUserAccount('Marcus Aurelius', 100);
+
+account.on('withdraw', ({ username, amount, balance }) =&gt; {
+  console.log(`${username} withdrew ${amount}, balance: ${balance}`);
+});
+
+account.withdraw(50);  // Balance: 50 ✓
+account.withdraw(70);  // Balance: -20 ✓
+account.withdraw(-10); // НЕ ВЫПОЛНИТСЯ! ✗
+
+// ✗ LSP нарушен - поведение полностью изменилось
+</code></pre>
+<p><strong>Проблема</strong>: После того, как баланс стал отрицательным, метод <code>withdraw</code> перестает работать <strong>полностью</strong> — невозможно ни снять, ни пополнить счет. Это нарушает ожидаемое поведение базового класса.</p>
+<p><strong>Результат:</strong></p>
+<pre><code>Marcus Aurelius withdrew 50, balance: 50
+Marcus Aurelius withdrew 70, balance: -20
+// Третья операция не выполнилась!
+</code></pre>
+<hr>
+<h3 id="пример-5-cancellablepromise"><a class="header" href="#пример-5-cancellablepromise">Пример 5: CancellablePromise</a></h3>
+<pre><code class="language-javascript">// Расширяем Promise новой функциональностью
+class CancellablePromise extends Promise {
+  #cancelled = false;
+
+  cancel() {
+    this.#cancelled = true;
+  }
+
+  then(onResolve, onReject) {
+    // Переопределяем then с проверкой отмены
+    return super.then(
+      (value) =&gt; {
+        if (this.#cancelled) return;
+        return onResolve(value);
+      },
+      (error) =&gt; {
+        if (this.#cancelled) return;
+        return onReject(error);
+      }
+    );
+  }
+}
+
+// Использование
+const promise = new CancellablePromise((resolve) =&gt; {
+  setTimeout(() =&gt; {
+    resolve('Done!');
+  }, 10);
+});
+
+promise.then(console.log); // Работает как обычный Promise
+
+// Можно использовать везде, где требуется Promise
+await promise; // ✓ Работает
+
+// ✓ LSP соблюдается - можем использовать везде, где нужен Promise
+</code></pre>
+<p><strong>Важно</strong>:</p>
+<ul>
+<li><code>CancellablePromise</code> <strong>расширяет</strong> функциональность, добавляя метод <code>cancel()</code></li>
+<li>Он <strong>не ломает</strong> контракт Thenable (наличие метода <code>then</code>)</li>
+<li>Его можно использовать с <code>await</code> и во всех местах, где ожидается Promise</li>
+</ul>
+<hr>
+<h2 id="контракты-в-javascript"><a class="header" href="#контракты-в-javascript">Контракты в JavaScript</a></h2>
+<h3 id="контракт-thenable"><a class="header" href="#контракт-thenable">Контракт Thenable</a></h3>
+<p>Любой объект с методом <code>then</code> может использоваться с <code>await</code>:</p>
+<pre><code class="language-javascript">// Создаем собственный thenable объект
+const thenable = () =&gt; ({
+  then: (onResolve) =&gt; {
+    onResolve(5); // Сразу резолвим с значением 5
+  }
+});
+
+// Использование с async/await
+const value = await thenable();
+console.log(value); // 5
+
+// ✓ Контракт Thenable соблюден
+</code></pre>
+<p><strong>Объяснение</strong>: Оператор <code>await</code> завязан на контракт Thenable, а не на конкретный тип Promise. Поэтому любой объект, реализующий этот контракт, будет работать.</p>
+<hr>
+<h3 id="контракт-iterable"><a class="header" href="#контракт-iterable">Контракт Iterable</a></h3>
+<p>Любой объект с методом <code>Symbol.iterator</code> можно использовать в циклах <code>for...of</code>:</p>
+<pre><code class="language-javascript">// Реализуем контракт Iterable
+const iterable = {
+  [Symbol.iterator]() {
+    let i = 0;
+    return {
+      next() {
+        if (i &lt; 3) {
+          return { value: i++, done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+};
+
+// Использование
+for (const item of iterable) {
+  console.log(item); // 0, 1, 2
+}
+
+// Spread оператор тоже работает
+const arr = [...iterable]; // [0, 1, 2]
+
+// ✓ Контракт Iterable соблюден
+</code></pre>
+<p><strong>Важно</strong>: Цикл <code>for...of</code> — это не цикл по массиву, а цикл по итерируемому объекту. Массив просто реализует контракт Iterable.</p>
+<hr>
+<h3 id="array-like-объекты"><a class="header" href="#array-like-объекты">Array-like объекты</a></h3>
+<p>Объекты, похожие на массивы, но не являющиеся массивами:</p>
+<pre><code class="language-javascript">// NodeList из DOM
+const divs = document.querySelectorAll('div');
+console.log(divs); // NodeList - array-like объект
+
+// Конвертация в обычный массив
+const divsArray = Array.from(divs);
+
+// Или через spread (использует Iterable контракт)
+const divsArray2 = [...divs];
+</code></pre>
+<p><strong>Создание собственного array-like объекта:</strong></p>
+<pre><code class="language-javascript">// Array-like с контрактом длины и индексов
+const arrayLike1 = {
+  0: 'a',
+  1: 'b',
+  2: 'c',
+  length: 3
+};
+
+// Работает обход через индексы
+for (let i = 0; i &lt; arrayLike1.length; i++) {
+  console.log(arrayLike1[i]); // a, b, c
+}
+
+// Array.from работает
+const arr1 = Array.from(arrayLike1); // ['a', 'b', 'c']
+
+// ✗ for...of НЕ работает (нет Symbol.iterator)
+// for (const item of arrayLike1) {} // TypeError!
+</code></pre>
+<p><strong>Array-like с контрактом Iterable:</strong></p>
+<pre><code class="language-javascript">// Array-like с Symbol.iterator
+const arrayLike2 = {
+  0: 'a',
+  1: 'b',
+  2: 'c',
+  length: 3,
+
+  [Symbol.iterator]() {
+    let i = 0;
+    return {
+      next: () =&gt; {
+        if (i &lt; this.length) {
+          return { value: this[i++], done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+};
+
+// Теперь for...of работает
+for (const item of arrayLike2) {
+  console.log(item); // a, b, c
+}
+
+// Spread оператор работает
+const arr2 = [...arrayLike2]; // ['a', 'b', 'c']
+
+// Array.from тоже работает
+const arr3 = Array.from(arrayLike2); // ['a', 'b', 'c']
+</code></pre>
+<p><strong>Вывод</strong>:</p>
+<ul>
+<li><code>Array.from</code> опирается на контракт “длина + индексы” ИЛИ Iterable</li>
+<li><code>for...of</code> и <code>...spread</code> опирается на контракт Iterable (<code>Symbol.iterator</code>)</li>
+<li>Разные операции могут требовать разные контракты</li>
+</ul>
+<hr>
+<h2 id="обобщенное-программирование-и-lsp-typescript"><a class="header" href="#обобщенное-программирование-и-lsp-typescript">Обобщенное программирование и LSP (TypeScript)</a></h2>
+<pre><code class="language-typescript">// Определяем интерфейс
+interface Dated {
+  year: number;
+}
+
+// Функция, работающая с Dated объектами
+function later&lt;T extends Dated&gt;(a: T, b: T): T {
+  return a.year &gt; b.year ? a : b;
+}
+
+// Типы, реализующие Dated
+interface Person extends Dated {
+  name: string;
+  year: number; // год рождения
+}
+
+interface Book extends Dated {
+  title: string;
+  author: string;
+  year: number; // год публикации
+}
+
+// Создаем объекты
+const marcus: Person = {
+  name: 'Marcus Aurelius',
+  year: 121
+};
+
+const seneca: Person = {
+  name: 'Lucius Seneca',
+  year: -4
+};
+
+const meditations: Book = {
+  title: 'Meditations',
+  author: 'Marcus Aurelius',
+  year: 170
+};
+
+const discourse: Book = {
+  title: 'Discourse on the Method',
+  author: 'René Descartes',
+  year: 1637
+};
+
+// Использование функции later
+console.log(later(meditations, discourse));  // discourse (1637 &gt; 170)
+console.log(later(marcus, seneca));          // marcus (121 &gt; -4)
+
+// ✓ Можно даже сравнивать разные типы!
+console.log(later(marcus, meditations));     // meditations (170 &gt; 121)
+
+// ✓ LSP соблюдается через интерфейс Dated
+</code></pre>
+<p><strong>Объяснение</strong>:</p>
+<ul>
+<li>Дженерик <code>&lt;T extends Dated&gt;</code> означает, что T должен реализовывать интерфейс Dated</li>
+<li>Функция <code>later</code> может принимать <strong>любой</strong> подтип Dated</li>
+<li>Контракт (наличие поля <code>year: number</code>) обеспечивает корректную работу</li>
+</ul>
+<hr>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="1-основное-правило-lsp"><a class="header" href="#1-основное-правило-lsp">1. Основное правило LSP</a></h3>
+<p><strong>Подтипы должны быть заменяемы на базовые типы без изменения корректности программы.</strong></p>
+<h3 id="2-что-можно-делать-в-подтипах"><a class="header" href="#2-что-можно-делать-в-подтипах">2. Что можно делать в подтипах</a></h3>
+<p>✓ <strong>Расширять</strong> функциональность базового типа
+✓ <strong>Добавлять</strong> новые методы и свойства
+✓ <strong>Уточнять</strong> поведение через переопределение с вызовом <code>super</code></p>
+<h3 id="3-что-нельзя-делать-в-подтипах"><a class="header" href="#3-что-нельзя-делать-в-подтипах">3. Что НЕЛЬЗЯ делать в подтипах</a></h3>
+<p>✗ <strong>Удалять</strong> или блокировать методы базового типа
+✗ <strong>Изменять</strong> ожидаемое поведение базовых методов
+✗ <strong>Нарушать</strong> контракт базового типа</p>
+<h3 id="4-признаки-нарушения-lsp"><a class="header" href="#4-признаки-нарушения-lsp">4. Признаки нарушения LSP</a></h3>
+<pre><code class="language-javascript">// ✗ Плохо - проверка типов
+if (obj instanceof SpecificType) {
+  // специальная логика
+}
+
+// ✗ Плохо - множественные проверки
+switch (obj.constructor.name) {
+  case 'TypeA': /* ... */ break;
+  case 'TypeB': /* ... */ break;
+}
+</code></pre>
+<p>Если вы пишете такой код, скорее всего LSP нарушен.</p>
+<h3 id="5-контрактное-программирование"><a class="header" href="#5-контрактное-программирование">5. Контрактное программирование</a></h3>
+<p>В JavaScript контракты важнее наследования:</p>
+<ul>
+<li><strong>Iterable</strong> — <code>Symbol.iterator</code></li>
+<li><strong>Thenable</strong> — метод <code>then</code></li>
+<li><strong>Array-like</strong> — <code>length</code> + числовые индексы</li>
+<li><strong>EventEmitter</strong> — методы <code>on</code>, <code>emit</code></li>
+</ul>
+<p>Объект, реализующий контракт, может использоваться везде, где этот контракт ожидается, даже без наследования.</p>
+<h3 id="6-lsp-и-полиморфизм"><a class="header" href="#6-lsp-и-полиморфизм">6. LSP и полиморфизм</a></h3>
+<p>LSP обеспечивает <strong>полиморфизм</strong>:</p>
+<pre><code class="language-javascript">// Одна функция работает с разными типами
+function processShape(shape) {
+  console.log('Area:', shape.area);
+  console.log('Perimeter:', shape.perimeter);
+}
+
+processShape(new Rectangle(10, 5));
+processShape(new Circle(7));
+processShape(new Triangle(3, 4, 5));
+
+// ✓ Все типы соблюдают контракт Shape
+</code></pre>
+<hr>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="1-опирайтесь-на-интерфейсы-а-не-на-типы"><a class="header" href="#1-опирайтесь-на-интерфейсы-а-не-на-типы">1. Опирайтесь на интерфейсы, а не на типы</a></h3>
+<pre><code class="language-javascript">// ✓ Хорошо
+function process(iterable) {
+  for (const item of iterable) {
+    // ...
+  }
+}
+
+// ✗ Плохо
+function process(array) {
+  if (!Array.isArray(array)) {
+    throw new Error('Expected array');
+  }
+  // ...
+}
+</code></pre>
+<h3 id="2-используйте-композицию-вместо-изменения-поведения"><a class="header" href="#2-используйте-композицию-вместо-изменения-поведения">2. Используйте композицию вместо изменения поведения</a></h3>
+<pre><code class="language-javascript">// ✓ Хорошо - композиция
+class ValidatedAccount {
+  constructor(account) {
+    this.account = account;
+  }
+
+  withdraw(amount) {
+    if (this.account.balance &lt; amount) {
+      throw new Error('Insufficient funds');
+    }
+    return this.account.withdraw(amount);
+  }
+}
+
+// ✗ Плохо - изменение поведения наследника
+class BrokenAccount extends Account {
+  withdraw(amount) {
+    if (this.balance &lt; amount) {
+      return; // Ломает контракт!
+    }
+    super.withdraw(amount);
+  }
+}
+</code></pre>
+<h3 id="3-документируйте-контракты"><a class="header" href="#3-документируйте-контракты">3. Документируйте контракты</a></h3>
+<pre><code class="language-javascript">/**
+ * Интерфейс Shape
+ * @interface
+ * @property {number} area - Площадь фигуры
+ * @property {number} perimeter - Периметр фигуры
+ */
+
+/**
+ * Обрабатывает геометрическую фигуру
+ * @param {Shape} shape - Объект, реализующий интерфейс Shape
+ */
+function processShape(shape) {
+  // ...
+}
+</code></pre>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>Принцип подстановки Барбары Лисков — это не просто абстрактная теория типов, а практическое руководство по созданию гибких и расширяемых систем.</p>
+<p><strong>Основная идея</strong>: Код должен работать с абстракциями (интерфейсами, контрактами), а не с конкретными реализациями. Это позволяет:</p>
+<ul>
+<li>Безопасно добавлять новые типы без изменения существующего кода</li>
+<li>Избегать условной логики с проверками типов</li>
+<li>Создавать переиспользуемые компоненты</li>
+<li>Обеспечивать предсказуемое поведение системы</li>
+</ul>
+<p><strong>Помните</strong>: Если функция опирается на контракт, а не на конкретный тип, она автоматически становится более гибкой и поддерживает LSP.</p>
+<p><strong>Цитата Роберта Мартина</strong>:</p>
+<blockquote>
+<p>“Функции, которые используют базовый тип, должны иметь возможность использовать подтипы этого базового типа, не зная об этом.”</p>
+</blockquote>
+<p>Эта простая формулировка открывает путь к созданию элегантного, расширяемого и поддерживаемого кода.</p>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="связанные-принципы-solid"><a class="header" href="#связанные-принципы-solid">Связанные принципы SOLID</a></h3>
+<ul>
+<li><strong>S</strong> — Single Responsibility Principle (Принцип единственной ответственности)</li>
+<li><strong>O</strong> — Open/Closed Principle (Принцип открытости/закрытости)</li>
+<li><strong>L</strong> — <strong>Liskov Substitution Principle</strong> (Принцип подстановки Лисков) ← Эта тема</li>
+<li><strong>I</strong> — Interface Segregation Principle (Принцип разделения интерфейсов)</li>
+<li><strong>D</strong> — Dependency Inversion Principle (Принцип инверсии зависимостей)</li>
+</ul>
+<h3 id="ключевые-термины"><a class="header" href="#ключевые-термины">Ключевые термины</a></h3>
+<ul>
+<li><strong>Подтип (Subtype)</strong> — тип, наследующий или реализующий другой тип</li>
+<li><strong>Контракт (Contract)</strong> — набор ожидаемых свойств и методов</li>
+<li><strong>Полиморфизм (Polymorphism)</strong> — возможность работы с разными типами через общий интерфейс</li>
+<li><strong>Ковариантность (Covariance)</strong> — сохранение отношения наследования при передаче типов</li>
+<li><strong>Контравариантность (Contravariance)</strong> — обращение отношения наследования</li>
+</ul>
+<h3 id="паттерны-использующие-lsp"><a class="header" href="#паттерны-использующие-lsp">Паттерны, использующие LSP</a></h3>
+<ul>
+<li><strong>Strategy</strong> — подменяемые алгоритмы</li>
+<li><strong>Template Method</strong> — расширение поведения через наследование</li>
+<li><strong>Decorator</strong> — расширение функциональности без изменения интерфейса</li>
+<li><strong>Adapter</strong> — адаптация интерфейса к ожидаемому контракту</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week5/grasp-coupling-cohesion-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week5/adapter-pattern-qa-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week5/grasp-coupling-cohesion-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week5/adapter-pattern-qa-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

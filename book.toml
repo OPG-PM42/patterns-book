@@ -1,0 +1,5 @@
+[book]
+authors = ["meta"]
+language = "en"
+src = "src"
+title = "Patterns"

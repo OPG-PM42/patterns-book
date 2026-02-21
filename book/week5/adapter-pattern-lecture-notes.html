@@ -1,0 +1,1469 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Adapter - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="паттерн-adapter-адаптер-из-gof-для-javascript-и-typescript"><a class="header" href="#паттерн-adapter-адаптер-из-gof-для-javascript-и-typescript">Паттерн Adapter (Адаптер) из GoF для JavaScript и TypeScript</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Паттерн <strong>Adapter</strong> (Адаптер) — один из самых распространённых и важных паттернов проектирования из книги “Gang of Four”. Он решает фундаментальную задачу преобразования одного контракта (интерфейса) в другой, позволяя совместно работать несовместимым абстракциям.</p>
+<h2 id="назначение-паттерна"><a class="header" href="#назначение-паттерна">Назначение паттерна</a></h2>
+<p>Паттерн Adapter используется для:</p>
+<ul>
+<li><strong>Скрытия одного контракта внутри</strong> и <strong>выдачи другого контракта наружу</strong></li>
+<li>Стыковки двух абстракций с разными интерфейсами</li>
+<li>Преобразования несовместимых контрактов для их взаимодействия</li>
+<li>Развязывания кода и повышения гибкости системы</li>
+</ul>
+<p><strong>Ключевая идея</strong>: Адаптер боксирует (оборачивает) одну абстракцию в “коробочку” и предоставляет другой интерфейс для работы с ней.</p>
+<h2 id="теоретические-основы"><a class="header" href="#теоретические-основы">Теоретические основы</a></h2>
+<h3 id="что-может-быть-адаптировано"><a class="header" href="#что-может-быть-адаптировано">Что может быть адаптировано?</a></h3>
+<p>В JavaScript/TypeScript адаптировать можно любую абстракцию:</p>
+<ul>
+<li>Функции и процедуры</li>
+<li>Классы и прототипы</li>
+<li>Модули и компоненты</li>
+<li>Функторы и функциональные объекты</li>
+<li>Автоматы и стримы</li>
+<li>Любые другие абстракции</li>
+</ul>
+<h3 id="альтернативные-названия"><a class="header" href="#альтернативные-названия">Альтернативные названия</a></h3>
+<p>Паттерн Adapter также может называться:</p>
+<ul>
+<li><strong>Wrapper</strong> (Обёртка)</li>
+<li><strong>Boxing</strong> (Боксирование)</li>
+</ul>
+<h3 id="способы-реализации"><a class="header" href="#способы-реализации">Способы реализации</a></h3>
+<p>Адаптер может быть реализован тремя основными способами:</p>
+<ol>
+<li><strong>Наследование (Extends)</strong> — адаптер расширяет существующий класс</li>
+<li><strong>Композиция</strong> — адаптер создаёт экземпляр внутри себя</li>
+<li><strong>Агрегация</strong> — адаптер получает экземпляр извне</li>
+</ol>
+<h2 id="способы-реализации-адаптера"><a class="header" href="#способы-реализации-адаптера">Способы реализации адаптера</a></h2>
+<h3 id="1-наследование-extends"><a class="header" href="#1-наследование-extends">1. Наследование (Extends)</a></h3>
+<p>При использовании наследования адаптер одновременно реализует оба интерфейса.</p>
+<h4 id="пример-array-to-queue-adapter-с-наследованием"><a class="header" href="#пример-array-to-queue-adapter-с-наследованием">Пример: Array to Queue Adapter с наследованием</a></h4>
+<pre><code class="language-javascript">// Адаптер преобразует интерфейс Array в интерфейс Queue
+class ArrayToQueueAdapter extends Array {
+  // Queue интерфейс: enqueue, dequeue, count
+
+  enqueue(item) {
+    // Используем push из Array
+    this.push(item);
+  }
+
+  dequeue() {
+    // Используем shift из Array (удаляет первый элемент)
+    return this.shift();
+  }
+
+  get count() {
+    // Используем length из Array
+    return this.length;
+  }
+}
+
+// Использование
+const queue = new ArrayToQueueAdapter();
+queue.enqueue('first');
+queue.enqueue('second');
+queue.enqueue('third');
+
+console.log(queue.dequeue()); // 'first'
+console.log(queue.count);      // 2
+</code></pre>
+<p><strong>Важное замечание о терминологии:</strong></p>
+<ul>
+<li>В ООП это называется <strong>расширение</strong> (extends)</li>
+<li>В теории типов это называется <strong>сужение</strong></li>
+<li>При extends область определения типа/класса всегда <strong>сужается</strong></li>
+<li>Array используется повсеместно, ArrayToQueueAdapter — реже, следовательно его область применения уже</li>
+</ul>
+<h3 id="2-агрегация"><a class="header" href="#2-агрегация">2. Агрегация</a></h3>
+<p>При агрегации адаптер получает объект извне и сохраняет его внутри.</p>
+<h4 id="пример-array-to-queue-adapter-с-агрегацией"><a class="header" href="#пример-array-to-queue-adapter-с-агрегацией">Пример: Array to Queue Adapter с агрегацией</a></h4>
+<pre><code class="language-javascript">class ArrayToQueueAdapter {
+  #array;
+
+  constructor(array) {
+    // Получаем массив извне
+    this.#array = array;
+  }
+
+  enqueue(item) {
+    this.#array.push(item);
+  }
+
+  dequeue() {
+    return this.#array.shift();
+  }
+
+  get count() {
+    return this.#array.length;
+  }
+}
+
+// Использование
+const arr = []; // Создаём массив снаружи
+const queue = new ArrayToQueueAdapter(arr); // Передаём в адаптер
+
+queue.enqueue('first');
+queue.enqueue('second');
+console.log(queue.count); // 2
+</code></pre>
+<h3 id="3-функциональная-реализация-без-классов"><a class="header" href="#3-функциональная-реализация-без-классов">3. Функциональная реализация (без классов)</a></h3>
+<p>Адаптер можно реализовать без использования классов, применяя замыкания.</p>
+<h4 id="пример-array-to-queue-adapter-как-функция"><a class="header" href="#пример-array-to-queue-adapter-как-функция">Пример: Array to Queue Adapter как функция</a></h4>
+<pre><code class="language-javascript">// Функциональная реализация адаптера
+const arrayToQueueAdapter = (array) =&gt; {
+  // Возвращаем объект с методами Queue интерфейса
+  return {
+    enqueue(item) {
+      array.push(item);
+    },
+
+    dequeue() {
+      return array.shift();
+    },
+
+    get count() {
+      return array.length;
+    }
+  };
+};
+
+// Использование
+const arr = [];
+const queue = arrayToQueueAdapter(arr);
+
+queue.enqueue('first');
+queue.enqueue('second');
+console.log(queue.count); // 2
+console.log(queue.dequeue()); // 'first'
+</code></pre>
+<p><strong>Преимущества функциональной реализации:</strong></p>
+<ul>
+<li>Объекты всегда имеют одинаковый интерфейс</li>
+<li>Одинаковая последовательность создания полей и методов</li>
+<li>Отличная оптимизация в V8 благодаря стабильной “форме объекта”</li>
+<li>Нет накладных расходов на классы и наследование</li>
+</ul>
+<h2 id="практические-примеры-из-реального-кода"><a class="header" href="#практические-примеры-из-реального-кода">Практические примеры из реального кода</a></h2>
+<h3 id="пример-1-hashmapfs--адаптер-файловой-системы-к-интерфейсу-map"><a class="header" href="#пример-1-hashmapfs--адаптер-файловой-системы-к-интерфейсу-map">Пример 1: HashMapFS — Адаптер файловой системы к интерфейсу Map</a></h3>
+<p>Этот пример показывает, как можно скрыть работу с файловой системой за интерфейсом стандартного Map.</p>
+<pre><code class="language-javascript">class HashMapFS {
+  #fs;
+  #path;
+
+  constructor(fs, path) {
+    // Агрегация: получаем FS интерфейс извне
+    this.#fs = fs;
+    this.#path = path;
+  }
+
+  // Реализуем интерфейс Map
+  set(key, value) {
+    const filepath = `${this.#path}/${key}`;
+    this.#fs.writeFileSync(filepath, JSON.stringify(value));
+  }
+
+  get(key) {
+    const filepath = `${this.#path}/${key}`;
+    try {
+      const data = this.#fs.readFileSync(filepath, 'utf8');
+      return JSON.parse(data);
+    } catch (err) {
+      return undefined;
+    }
+  }
+
+  has(key) {
+    const filepath = `${this.#path}/${key}`;
+    try {
+      this.#fs.accessSync(filepath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  delete(key) {
+    const filepath = `${this.#path}/${key}`;
+    try {
+      this.#fs.unlinkSync(filepath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  get size() {
+    const files = this.#fs.readdirSync(this.#path);
+    return files.length;
+  }
+
+  keys() {
+    return this.#fs.readdirSync(this.#path);
+  }
+
+  clear() {
+    const files = this.#fs.readdirSync(this.#path);
+    for (const file of files) {
+      this.#fs.unlinkSync(`${this.#path}/${file}`);
+    }
+  }
+}
+
+// Использование
+import fs from 'fs';
+
+const hashMap = new HashMapFS(fs, './data');
+
+hashMap.set('user1', { name: 'Alice', age: 30 });
+hashMap.set('user2', { name: 'Bob', age: 25 });
+
+console.log(hashMap.get('user1')); // { name: 'Alice', age: 30 }
+console.log(hashMap.has('user2')); // true
+console.log(hashMap.size);          // 2
+</code></pre>
+<p><strong>Преимущества такого подхода:</strong></p>
+<ol>
+<li><strong>Развязка кода</strong> — модуль, использующий Map, не знает о Node.js и файловой системе</li>
+<li><strong>Взаимозаменяемость</strong> — можно легко заменить реализацию:
+<ul>
+<li><code>HashMapMemory</code> — хранение в памяти</li>
+<li><code>HashMapRedis</code> — хранение в Redis</li>
+<li><code>HashMapMongo</code> — хранение в MongoDB</li>
+<li><code>HashMapS3</code> — хранение в Amazon S3</li>
+</ul>
+</li>
+<li><strong>Переносимость</strong> — код работает в разных окружениях (Node.js, Lambda, браузер)</li>
+<li><strong>Тестируемость</strong> — можно передать mock объект вместо настоящего fs</li>
+</ol>
+<h3 id="пример-2-promisify--классический-адаптер-контрактов"><a class="header" href="#пример-2-promisify--классический-адаптер-контрактов">Пример 2: Promisify — Классический адаптер контрактов</a></h3>
+<p><code>promisify</code> — один из самых известных адаптеров в JavaScript, преобразующий callback-контракт в Promise-контракт.</p>
+<h4 id="базовая-реализация-promisify"><a class="header" href="#базовая-реализация-promisify">Базовая реализация promisify</a></h4>
+<pre><code class="language-javascript">// Простейшая версия promisify
+const promisify = (fn) =&gt; {
+  return (...args) =&gt; {
+    return new Promise((resolve, reject) =&gt; {
+      // Создаём callback для передачи в функцию
+      const callback = (err, data) =&gt; {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      };
+
+      // Вызываем исходную функцию с callback
+      fn(...args, callback);
+    });
+  };
+};
+
+// Использование
+import fs from 'fs';
+
+const readFile = promisify(fs.readFile);
+
+// Теперь можем использовать async/await
+async function loadConfig() {
+  try {
+    const data = await readFile('./config.json', 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Ошибка чтения файла:', err);
+  }
+}
+</code></pre>
+<h4 id="promisify-с-timeout"><a class="header" href="#promisify-с-timeout">Promisify с timeout</a></h4>
+<p>Расширенная версия с поддержкой таймаута:</p>
+<pre><code class="language-javascript">const promisifyWithTimeout = (fn) =&gt; {
+  return (...args) =&gt; {
+    // Создаём Promise с доступом к resolve/reject
+    let resolve, reject;
+    const promise = new Promise((res, rej) =&gt; {
+      resolve = res;
+      reject = rej;
+    });
+
+    // Состояние промиса
+    let pending = true;
+    let timer = null;
+
+    // Извлекаем options из последнего аргумента
+    const lastArg = args[args.length - 1];
+    const options = typeof lastArg === 'object' ? lastArg : {};
+    const timeout = options.timeout;
+
+    // Устанавливаем таймер, если указан timeout
+    if (timeout) {
+      timer = setTimeout(() =&gt; {
+        if (!pending) return;
+
+        pending = false;
+        timer = null;
+        reject(new Error('Timed out'));
+      }, timeout);
+    }
+
+    // Создаём callback
+    const callback = (err, data) =&gt; {
+      if (!pending) return; // Промис уже разрешён
+
+      // Отменяем таймер
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+
+      pending = false;
+
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    };
+
+    // Вызываем исходную функцию
+    fn(...args, callback);
+
+    return promise;
+  };
+};
+
+// Использование с timeout
+const readFile = promisifyWithTimeout(fs.readFile);
+
+try {
+  // Файл должен быть прочитан за 1000 мс
+  const data = await readFile('./large-file.txt', 'utf8', { timeout: 1000 });
+  console.log(data);
+} catch (err) {
+  console.error(err.message); // "Timed out" если превышен timeout
+}
+</code></pre>
+<h4 id="promisify-с-раздельными-options"><a class="header" href="#promisify-с-раздельными-options">Promisify с раздельными options</a></h4>
+<p>Более сложная версия, где options промисификации передаются отдельно:</p>
+<pre><code class="language-javascript">const promisifyAdvanced = (fn, options = {}) =&gt; {
+  return (...args) =&gt; {
+    let resolve, reject;
+    const promise = new Promise((res, rej) =&gt; {
+      resolve = res;
+      reject = rej;
+    });
+
+    let pending = true;
+    let timer = null;
+
+    const { timeout } = options;
+
+    if (timeout) {
+      timer = setTimeout(() =&gt; {
+        if (!pending) return;
+        pending = false;
+        timer = null;
+        reject(new Error('Timed out'));
+      }, timeout);
+    }
+
+    const callback = (err, data) =&gt; {
+      if (!pending) return;
+
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+
+      pending = false;
+
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    };
+
+    fn(...args, callback);
+
+    return promise;
+  };
+};
+
+// Использование
+const read = promisifyAdvanced(fs.readFile);
+
+// Вызываем с параметрами для readFile и отдельно с timeout
+const data = await read('./file.txt', 'utf8', { timeout: 1000 });
+</code></pre>
+<h4 id="promisify-с-abortcontroller"><a class="header" href="#promisify-с-abortcontroller">Promisify с AbortController</a></h4>
+<p>Современная версия с поддержкой отмены через AbortSignal:</p>
+<pre><code class="language-javascript">const promisifyWithAbort = (fn) =&gt; {
+  return (...args) =&gt; {
+    const lastArg = args[args.length - 1];
+    const options = typeof lastArg === 'object' ? lastArg : {};
+    const signal = options.signal;
+
+    return new Promise((resolve, reject) =&gt; {
+      // Проверяем, не отменён ли уже сигнал
+      if (signal?.aborted) {
+        reject(new Error('Operation aborted'));
+        return;
+      }
+
+      // Подписываемся на событие отмены
+      const abortHandler = () =&gt; {
+        reject(new Error('Operation aborted'));
+      };
+
+      signal?.addEventListener('abort', abortHandler);
+
+      const callback = (err, data) =&gt; {
+        // Отписываемся от события
+        signal?.removeEventListener('abort', abortHandler);
+
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      };
+
+      fn(...args, callback);
+    });
+  };
+};
+
+// Использование с AbortController
+const read = promisifyWithAbort(fs.readFile);
+
+// Вариант 1: Сигнал уже отменён
+const ac1 = new AbortController();
+ac1.abort(); // Сразу отменяем
+
+try {
+  await read('./file.txt', 'utf8', { signal: ac1.signal });
+} catch (err) {
+  console.error(err.message); // "Operation aborted"
+}
+
+// Вариант 2: Отмена через timeout
+const ac2 = AbortController.timeout(1000); // AbortSignal с таймаутом
+
+try {
+  await read('./large-file.txt', 'utf8', { signal: ac2.signal });
+} catch (err) {
+  console.error(err.message); // "Operation aborted" если файл читается &gt; 1 сек
+}
+</code></pre>
+<h3 id="пример-3-адаптер-setinterval-к-asynciterator"><a class="header" href="#пример-3-адаптер-setinterval-к-asynciterator">Пример 3: Адаптер setInterval к AsyncIterator</a></h3>
+<p>Преобразование таймера в асинхронный итератор для использования с <code>for await...of</code>.</p>
+<pre><code class="language-javascript">class Timer {
+  #interval;
+  #queue = [];
+  #waiting = null;
+
+  constructor(interval) {
+    this.#interval = interval;
+
+    // Запускаем таймер
+    const timerId = setInterval(() =&gt; {
+      const timestamp = Date.now();
+
+      // Если есть ожидающий Promise, разрешаем его
+      if (this.#waiting) {
+        this.#waiting.resolve({ value: timestamp, done: false });
+        this.#waiting = null;
+      } else {
+        // Иначе добавляем в очередь
+        this.#queue.push(timestamp);
+      }
+    }, interval);
+
+    // Сохраняем timerId для очистки
+    this.#timerId = timerId;
+  }
+
+  // Реализация async iterator протокола
+  async next() {
+    // Если в очереди есть значения, возвращаем первое
+    if (this.#queue.length &gt; 0) {
+      return { value: this.#queue.shift(), done: false };
+    }
+
+    // Иначе создаём Promise и ждём следующего тика
+    return new Promise((resolve) =&gt; {
+      this.#waiting = { resolve };
+    });
+  }
+
+  // Symbol.asyncIterator делает объект асинхронно итерируемым
+  [Symbol.asyncIterator]() {
+    return this;
+  }
+
+  // Метод для остановки таймера
+  stop() {
+    clearInterval(this.#timerId);
+    if (this.#waiting) {
+      this.#waiting.resolve({ done: true });
+    }
+  }
+}
+
+// Использование
+const timer = new Timer(1000); // Тик каждую секунду
+
+// Проходим по таймеру циклом
+for await (const timestamp of timer) {
+  console.log('Tick:', new Date(timestamp).toISOString());
+
+  // Останавливаем через 5 секунд
+  if (timestamp &gt; Date.now() - 5000) {
+    timer.stop();
+    break;
+  }
+}
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Возможность использовать <code>for await...of</code> для работы с таймерами</li>
+<li>Совместимость со Stream Composition API</li>
+<li>Единообразный интерфейс для работы с асинхронными данными</li>
+</ul>
+<h3 id="пример-4-адаптер-setinterval-к-eventtarget"><a class="header" href="#пример-4-адаптер-setinterval-к-eventtarget">Пример 4: Адаптер setInterval к EventTarget</a></h3>
+<p>Преобразование таймера в EventTarget для работы с событиями.</p>
+<pre><code class="language-javascript">class TimerEventTarget extends EventTarget {
+  #interval;
+  #timerId;
+
+  constructor(interval) {
+    super();
+    this.#interval = interval;
+  }
+
+  start() {
+    this.#timerId = setInterval(() =&gt; {
+      // Создаём и отправляем событие
+      const event = new CustomEvent('tick', {
+        detail: { timestamp: Date.now() }
+      });
+      this.dispatchEvent(event);
+    }, this.#interval);
+  }
+
+  stop() {
+    clearInterval(this.#timerId);
+  }
+}
+
+// Использование
+const timer = new TimerEventTarget(1000);
+
+timer.addEventListener('tick', (event) =&gt; {
+  console.log('Tick:', event.detail.timestamp);
+});
+
+timer.start();
+
+// Останавливаем через 5 секунд
+setTimeout(() =&gt; timer.stop(), 5000);
+</code></pre>
+<h3 id="пример-5-eventtarget-to-asynciterator"><a class="header" href="#пример-5-eventtarget-to-asynciterator">Пример 5: EventTarget to AsyncIterator</a></h3>
+<p>Преобразование EventTarget в асинхронный итератор.</p>
+<pre><code class="language-javascript">class TargetIterator {
+  #target;
+  #eventName;
+  #queue = [];
+  #waiting = null;
+
+  constructor(target, eventName) {
+    this.#target = target;
+    this.#eventName = eventName;
+
+    // Подписываемся на события
+    this.#target.addEventListener(eventName, (event) =&gt; {
+      if (this.#waiting) {
+        // Если есть ожидающий next(), разрешаем промис
+        this.#waiting.resolve({ value: event, done: false });
+        this.#waiting = null;
+      } else {
+        // Добавляем событие в очередь
+        this.#queue.push(event);
+      }
+    });
+  }
+
+  async next() {
+    // Если в очереди есть события, возвращаем первое
+    if (this.#queue.length &gt; 0) {
+      return { value: this.#queue.shift(), done: false };
+    }
+
+    // Создаём Promise и ждём следующего события
+    return new Promise((resolve) =&gt; {
+      this.#waiting = { resolve };
+    });
+  }
+
+  [Symbol.asyncIterator]() {
+    return this;
+  }
+}
+
+// Использование
+const eventTarget = new EventTarget();
+
+// Создаём асинхронный итератор для событий 'tick'
+const iterator = new TargetIterator(eventTarget, 'tick');
+
+// Отправляем события через setInterval
+setInterval(() =&gt; {
+  const event = new CustomEvent('tick', {
+    detail: { timestamp: Date.now() }
+  });
+  eventTarget.dispatchEvent(event);
+}, 1000);
+
+// Обрабатываем события через for await...of
+for await (const event of iterator) {
+  console.log('Received event:', event.detail.timestamp);
+}
+</code></pre>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Преобразование событийной модели в асинхронную итерацию</li>
+<li>Удобная работа с потоками событий</li>
+<li>Возможность использования async/await синтаксиса</li>
+</ul>
+<h2 id="комбинирование-паттернов"><a class="header" href="#комбинирование-паттернов">Комбинирование паттернов</a></h2>
+<p>Адаптер часто используется в комбинации с другими паттернами:</p>
+<h3 id="adapter--revealing-constructor"><a class="header" href="#adapter--revealing-constructor">Adapter + Revealing Constructor</a></h3>
+<pre><code class="language-javascript">class ReadableStreamAdapter {
+  #stream;
+
+  constructor(readFunction) {
+    // Revealing Constructor Pattern
+    // readFunction инжектится в конструктор
+    this.#stream = new ReadableStream({
+      async start(controller) {
+        try {
+          const data = await readFunction();
+          controller.enqueue(data);
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      }
+    });
+  }
+
+  // Адаптируем к AsyncIterator
+  async *[Symbol.asyncIterator]() {
+    const reader = this.#stream.getReader();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        yield value;
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+}
+</code></pre>
+<h3 id="adapter--strategy"><a class="header" href="#adapter--strategy">Adapter + Strategy</a></h3>
+<pre><code class="language-javascript">// Паттерн Strategy для выбора реализации Map
+const mapStrategies = {
+  memory: () =&gt; new Map(),
+
+  fs: (fs, path) =&gt; new HashMapFS(fs, path),
+
+  redis: (client) =&gt; ({
+    async set(key, value) {
+      await client.set(key, JSON.stringify(value));
+    },
+    async get(key) {
+      const data = await client.get(key);
+      return data ? JSON.parse(data) : undefined;
+    },
+    // ... другие методы Map
+  }),
+
+  s3: (s3Client, bucket) =&gt; ({
+    async set(key, value) {
+      await s3Client.putObject({
+        Bucket: bucket,
+        Key: key,
+        Body: JSON.stringify(value)
+      });
+    },
+    // ... другие методы Map
+  })
+};
+
+// Фабрика с паттерном Strategy
+function createHashMap(strategy, ...args) {
+  const factory = mapStrategies[strategy];
+  if (!factory) {
+    throw new Error(`Unknown strategy: ${strategy}`);
+  }
+  return factory(...args);
+}
+
+// Использование
+import fs from 'fs';
+
+// Выбираем стратегию в runtime
+const config = process.env.MAP_STORAGE || 'memory';
+
+const hashMap = createHashMap(config, fs, './data');
+// Код работает одинаково независимо от стратегии
+hashMap.set('key', 'value');
+</code></pre>
+<h2 id="преимущества-использования-адаптера"><a class="header" href="#преимущества-использования-адаптера">Преимущества использования адаптера</a></h2>
+<h3 id="1-развязка-кода-decoupling"><a class="header" href="#1-развязка-кода-decoupling">1. Развязка кода (Decoupling)</a></h3>
+<pre><code class="language-javascript">// БЕЗ адаптера - код привязан к конкретной реализации
+class UserService {
+  saveUser(user) {
+    // Жёстко привязаны к файловой системе Node.js
+    fs.writeFileSync(`./users/${user.id}.json`, JSON.stringify(user));
+  }
+
+  loadUser(id) {
+    return JSON.parse(fs.readFileSync(`./users/${id}.json`, 'utf8'));
+  }
+}
+
+// С адаптером - код работает с абстракцией
+class UserService {
+  #storage;
+
+  constructor(storage) {
+    this.#storage = storage; // Любая реализация Map интерфейса
+  }
+
+  saveUser(user) {
+    this.#storage.set(user.id, user);
+  }
+
+  loadUser(id) {
+    return this.#storage.get(id);
+  }
+}
+
+// Можем легко менять реализацию
+const service1 = new UserService(new Map()); // В памяти
+const service2 = new UserService(new HashMapFS(fs, './users')); // В файлах
+const service3 = new UserService(new HashMapRedis(redis)); // В Redis
+</code></pre>
+<h3 id="2-переносимость-между-окружениями"><a class="header" href="#2-переносимость-между-окружениями">2. Переносимость между окружениями</a></h3>
+<pre><code class="language-javascript">// Один и тот же код работает везде
+class DataProcessor {
+  #cache;
+
+  constructor(cache) {
+    this.#cache = cache;
+  }
+
+  async process(data) {
+    // Одинаковый код для разных окружений
+    const cached = await this.#cache.get(data.id);
+    if (cached) return cached;
+
+    const result = await this.heavyComputation(data);
+    await this.#cache.set(data.id, result);
+    return result;
+  }
+}
+
+// В Node.js
+const processor1 = new DataProcessor(new HashMapFS(fs, './cache'));
+
+// В AWS Lambda
+const processor2 = new DataProcessor(new HashMapS3(s3, 'my-bucket'));
+
+// В браузере
+const processor3 = new DataProcessor(new Map());
+</code></pre>
+<h3 id="3-упрощение-тестирования"><a class="header" href="#3-упрощение-тестирования">3. Упрощение тестирования</a></h3>
+<pre><code class="language-javascript">// Mock реализация для тестов
+class HashMapMock {
+  #data = new Map();
+  #calls = [];
+
+  set(key, value) {
+    this.#calls.push({ method: 'set', key, value });
+    this.#data.set(key, value);
+  }
+
+  get(key) {
+    this.#calls.push({ method: 'get', key });
+    return this.#data.get(key);
+  }
+
+  getCalls() {
+    return this.#calls;
+  }
+}
+
+// В тестах
+describe('UserService', () =&gt; {
+  it('should save user', () =&gt; {
+    const storage = new HashMapMock();
+    const service = new UserService(storage);
+
+    service.saveUser({ id: 1, name: 'Alice' });
+
+    const calls = storage.getCalls();
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toEqual({
+      method: 'set',
+      key: 1,
+      value: { id: 1, name: 'Alice' }
+    });
+  });
+});
+</code></pre>
+<h3 id="4-скрытие-сложности"><a class="header" href="#4-скрытие-сложности">4. Скрытие сложности</a></h3>
+<pre><code class="language-javascript">// Вся сложность работы с EventTarget скрыта в адаптере
+class EventProcessor {
+  async processEvents(eventSource) {
+    // Простой и понятный код бизнес-логики
+    for await (const event of eventSource) {
+      await this.handleEvent(event);
+    }
+  }
+
+  async handleEvent(event) {
+    // Обработка события
+    console.log('Processing:', event.type);
+  }
+}
+
+// Использование
+const target = new EventTarget();
+const iterator = new TargetIterator(target, 'data');
+
+const processor = new EventProcessor();
+processor.processEvents(iterator);
+// Бизнес-логика не знает про EventTarget, addEventListener и т.д.
+</code></pre>
+<h2 id="терминология-и-концепции"><a class="header" href="#терминология-и-концепции">Терминология и концепции</a></h2>
+<h3 id="композиция-vs-агрегация"><a class="header" href="#композиция-vs-агрегация">Композиция vs Агрегация</a></h3>
+<p><strong>Композиция</strong> — адаптер создаёт объект внутри себя:</p>
+<pre><code class="language-javascript">class ArrayQueueComposition {
+  #array;
+
+  constructor() {
+    // Создаём массив ВНУТРИ
+    this.#array = [];
+  }
+
+  enqueue(item) {
+    this.#array.push(item);
+  }
+}
+</code></pre>
+<p><strong>Агрегация</strong> — адаптер получает объект извне:</p>
+<pre><code class="language-javascript">class ArrayQueueAggregation {
+  #array;
+
+  constructor(array) {
+    // Получаем массив СНАРУЖИ
+    this.#array = array;
+  }
+
+  enqueue(item) {
+    this.#array.push(item);
+  }
+}
+</code></pre>
+<h3 id="boxing-боксирование"><a class="header" href="#boxing-боксирование">Boxing (Боксирование)</a></h3>
+<p>Термин “boxing” означает помещение объекта в “коробку” (wrapper):</p>
+<pre><code class="language-javascript">// Боксируем примитивное значение
+const boxed = { value: 42 };
+
+// Боксируем функцию в объект
+const boxedFunction = {
+  execute: () =&gt; console.log('Hello')
+};
+
+// Боксируем класс в функцию
+const boxedClass = () =&gt; {
+  const instance = new SomeClass();
+  return {
+    method: () =&gt; instance.method()
+  };
+};
+</code></pre>
+<h3 id="extends--расширение-или-сужение"><a class="header" href="#extends--расширение-или-сужение">Extends — расширение или сужение?</a></h3>
+<p><strong>Важная концепция из теории типов:</strong></p>
+<pre><code class="language-typescript">// В ООП говорят "расширение"
+class ExtendedArray extends Array {
+  // Добавляем новые методы
+  sum() {
+    return this.reduce((a, b) =&gt; a + b, 0);
+  }
+}
+
+// Но в теории типов это "сужение"!
+// Array может содержать любые элементы
+// ExtendedArray — более специализированный тип
+
+// Множество всех возможных Array &gt; множество всех возможных ExtendedArray
+// Следовательно, тип СУЖАЕТСЯ
+</code></pre>
+<h2 id="хранение-состояния-в-адаптерах"><a class="header" href="#хранение-состояния-в-адаптерах">Хранение состояния в адаптерах</a></h2>
+<p>Существует множество способов хранения состояния:</p>
+<h3 id="1-замыкания"><a class="header" href="#1-замыкания">1. Замыкания</a></h3>
+<pre><code class="language-javascript">function createAdapter() {
+  // Состояние в замыкании
+  let state = { count: 0 };
+
+  return {
+    increment() {
+      state.count++;
+    },
+    getCount() {
+      return state.count;
+    }
+  };
+}
+</code></pre>
+<h3 id="2-приватные-поля-private-fields"><a class="header" href="#2-приватные-поля-private-fields">2. Приватные поля (Private Fields)</a></h3>
+<pre><code class="language-javascript">class Adapter {
+  // Приватные поля
+  #state = { count: 0 };
+
+  increment() {
+    this.#state.count++;
+  }
+
+  getCount() {
+    return this.#state.count;
+  }
+}
+</code></pre>
+<h3 id="3-публичные-поля"><a class="header" href="#3-публичные-поля">3. Публичные поля</a></h3>
+<pre><code class="language-javascript">class Adapter {
+  // Публичные поля
+  state = { count: 0 };
+
+  increment() {
+    this.state.count++;
+  }
+}
+</code></pre>
+<h3 id="4-символы-symbols"><a class="header" href="#4-символы-symbols">4. Символы (Symbols)</a></h3>
+<pre><code class="language-javascript">const stateSymbol = Symbol('state');
+
+class Adapter {
+  constructor() {
+    // Состояние в символе
+    this[stateSymbol] = { count: 0 };
+  }
+
+  increment() {
+    this[stateSymbol].count++;
+  }
+}
+</code></pre>
+<h3 id="5-weakmap"><a class="header" href="#5-weakmap">5. WeakMap</a></h3>
+<pre><code class="language-javascript">const states = new WeakMap();
+
+class Adapter {
+  constructor() {
+    // Состояние в WeakMap
+    states.set(this, { count: 0 });
+  }
+
+  increment() {
+    const state = states.get(this);
+    state.count++;
+  }
+}
+</code></pre>
+<h2 id="стандартные-vs-кастомные-интерфейсы"><a class="header" href="#стандартные-vs-кастомные-интерфейсы">Стандартные vs Кастомные интерфейсы</a></h2>
+<h3 id="предпочитайте-стандартные-интерфейсы"><a class="header" href="#предпочитайте-стандартные-интерфейсы">Предпочитайте стандартные интерфейсы</a></h3>
+<p><strong>Хорошо</strong> — использование стандартных интерфейсов:</p>
+<pre><code class="language-javascript">// Iterable — стандартный интерфейс
+class MyCollection {
+  *[Symbol.iterator]() {
+    yield 1;
+    yield 2;
+    yield 3;
+  }
+}
+
+// Можно использовать с for...of
+for (const item of new MyCollection()) {
+  console.log(item);
+}
+</code></pre>
+<p><strong>Плохо</strong> — изобретение велосипеда:</p>
+<pre><code class="language-javascript">// Кастомный интерфейс итерации
+class MyCollection {
+  forEach(callback) {
+    callback(1);
+    callback(2);
+    callback(3);
+  }
+}
+
+// Нельзя использовать со стандартными конструкциями
+const collection = new MyCollection();
+collection.forEach(item =&gt; console.log(item)); // Работает
+// for (const item of collection) {} // НЕ работает!
+</code></pre>
+<h3 id="примеры-стандартных-интерфейсов"><a class="header" href="#примеры-стандартных-интерфейсов">Примеры стандартных интерфейсов</a></h3>
+<ol>
+<li><strong>Iterable / Iterator</strong> — синхронная итерация</li>
+<li><strong>AsyncIterable / AsyncIterator</strong> — асинхронная итерация</li>
+<li><strong>Promise / Thenable</strong> — асинхронные операции</li>
+<li><strong>EventTarget</strong> — событийная модель</li>
+<li><strong>ReadableStream / WritableStream</strong> — потоковая обработка</li>
+<li><strong>Map / Set</strong> — коллекции</li>
+<li><strong>AbortSignal</strong> — отмена операций</li>
+</ol>
+<h2 id="исторический-контекст"><a class="header" href="#исторический-контекст">Исторический контекст</a></h2>
+<h3 id="эволюция-асинхронных-контрактов-в-javascript"><a class="header" href="#эволюция-асинхронных-контрактов-в-javascript">Эволюция асинхронных контрактов в JavaScript</a></h3>
+<pre><code class="language-javascript">// 1. Callbacks (первое поколение)
+fs.readFile('./file.txt', 'utf8', (err, data) =&gt; {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(data);
+  }
+});
+
+// 2. Promises (второе поколение)
+readFile('./file.txt', 'utf8')
+  .then(data =&gt; console.log(data))
+  .catch(err =&gt; console.error(err));
+
+// 3. Async/Await (третье поколение)
+try {
+  const data = await readFile('./file.txt', 'utf8');
+  console.log(data);
+} catch (err) {
+  console.error(err);
+}
+
+// 4. Async Iterators (четвёртое поколение)
+for await (const chunk of readableStream) {
+  console.log(chunk);
+}
+
+// Адаптеры позволяют переходить между этими поколениями!
+</code></pre>
+<h3 id="другие-асинхронные-абстракции"><a class="header" href="#другие-асинхронные-абстракции">Другие асинхронные абстракции</a></h3>
+<ul>
+<li><strong>Deferreds</strong> — предшественники Promise (использовались в jQuery)</li>
+<li><strong>Observables</strong> — реактивное программирование (RxJS)</li>
+<li><strong>Async Generators</strong> — комбинация async/await и generators</li>
+<li><strong>Disposables</strong> — управление ресурсами</li>
+</ul>
+<h2 id="распространённость-паттерна"><a class="header" href="#распространённость-паттерна">Распространённость паттерна</a></h2>
+<p>Adapter — один из <strong>самых распространённых паттернов</strong> в JavaScript по следующим причинам:</p>
+<ol>
+<li><strong>Постоянные несовпадения контрактов</strong> в экосистеме JavaScript</li>
+<li><strong>Эволюция языка</strong> — новые контракты появляются, старые остаются</li>
+<li><strong>Множество окружений</strong> — браузер, Node.js, Deno, Bun</li>
+<li><strong>Интеграция библиотек</strong> — разные библиотеки используют разные интерфейсы</li>
+<li><strong>Межплатформенность</strong> — один код для разных платформ</li>
+</ol>
+<h3 id="примеры-повсеместного-использования"><a class="header" href="#примеры-повсеместного-использования">Примеры повсеместного использования</a></h3>
+<pre><code class="language-javascript">// В Node.js
+util.promisify()      // Callback → Promise
+stream.pipeline()     // Стыковка стримов
+Buffer.from()         // Различные форматы → Buffer
+
+// В браузерах
+fetch()               // XMLHttpRequest → Promise
+new Response()        // Stream → Response
+new FormData()        // Объект → FormData
+
+// Библиотеки
+axios                 // Адаптер для XHR и fetch
+bluebird.promisify()  // Callback → Promise
+lodash.wrap()         // Функция → обёрнутая функция
+</code></pre>
+<h2 id="взаимодействие-с-другими-языками"><a class="header" href="#взаимодействие-с-другими-языками">Взаимодействие с другими языками</a></h2>
+<p>Знание паттернов и терминологии позволяет общаться с разработчиками из других экосистем:</p>
+<ul>
+<li><strong>Java</strong> — интерфейсы, адаптеры классов</li>
+<li><strong>C#</strong> — расширения, делегаты, адаптеры</li>
+<li><strong>C++</strong> — шаблоны адаптеров, proxy</li>
+<li><strong>Python</strong> — декораторы, wrapper</li>
+<li><strong>PHP</strong> — trait, adapter</li>
+<li><strong>Kotlin</strong> — extension functions</li>
+<li><strong>Go</strong> — interface{}, type embedding</li>
+</ul>
+<p><strong>Важно:</strong> Терминология помогает создать общий язык для обсуждения архитектуры и дизайна.</p>
+<h2 id="оптимизация-и-производительность"><a class="header" href="#оптимизация-и-производительность">Оптимизация и производительность</a></h2>
+<h3 id="v8-оптимизации-для-функциональных-адаптеров"><a class="header" href="#v8-оптимизации-для-функциональных-адаптеров">V8 оптимизации для функциональных адаптеров</a></h3>
+<pre><code class="language-javascript">// Этот код ОЧЕНЬ эффективен для V8
+function createAdapter(data) {
+  // Всегда возвращаем объект с одинаковой структурой
+  return {
+    get() { return data; },
+    set(value) { data = value; },
+    transform(fn) { return fn(data); }
+  };
+}
+
+// V8 создаёт "hidden class" (форму объекта)
+// Все объекты имеют одинаковую форму
+// Оптимизации inline caching работают максимально эффективно
+
+const adapter1 = createAdapter(10);
+const adapter2 = createAdapter(20);
+const adapter3 = createAdapter(30);
+
+// Все три объекта имеют ОДИНАКОВУЮ внутреннюю структуру
+// V8 может применить агрессивную оптимизацию
+</code></pre>
+<h3 id="антипаттерны-вызывающие-деоптимизацию"><a class="header" href="#антипаттерны-вызывающие-деоптимизацию">Антипаттерны, вызывающие деоптимизацию</a></h3>
+<pre><code class="language-javascript">// ПЛОХО - динамическое добавление свойств
+function createBadAdapter(data) {
+  const obj = { get() { return data; } };
+
+  // Изменяем структуру после создания
+  if (typeof data === 'string') {
+    obj.length = () =&gt; data.length; // Деоптимизация!
+  }
+
+  return obj;
+}
+</code></pre>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="когда-использовать-adapter"><a class="header" href="#когда-использовать-adapter">Когда использовать Adapter</a></h3>
+<p>✅ <strong>Используйте адаптер когда:</strong></p>
+<ul>
+<li>Нужно состыковать два несовместимых интерфейса</li>
+<li>Хотите скрыть детали реализации за стандартным интерфейсом</li>
+<li>Требуется поддержка нескольких реализаций одного интерфейса</li>
+<li>Необходимо изолировать зависимости от конкретных библиотек/платформ</li>
+<li>Нужно сделать код более тестируемым</li>
+</ul>
+<p>❌ <strong>НЕ используйте адаптер когда:</strong></p>
+<ul>
+<li>Интерфейсы уже совместимы</li>
+<li>Добавление адаптера создаёт избыточную сложность</li>
+<li>Можно просто изменить исходный код</li>
+</ul>
+<h3 id="золотые-правила"><a class="header" href="#золотые-правила">Золотые правила</a></h3>
+<ol>
+<li><strong>Скрывайте сложность за адаптерами</strong> — бизнес-логика должна быть чистой</li>
+<li><strong>Используйте стандартные интерфейсы</strong> — Iterable, Promise, EventTarget и т.д.</li>
+<li><strong>Комбинируйте с другими паттернами</strong> — Strategy, Factory, Revealing Constructor</li>
+<li><strong>Думайте о тестируемости</strong> — адаптер должен легко мокироваться</li>
+<li><strong>Помните о производительности</strong> — стабильная структура объектов = быстрый код</li>
+</ol>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="чек-лист-при-проектировании-адаптера"><a class="header" href="#чек-лист-при-проектировании-адаптера">Чек-лист при проектировании адаптера</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Определён чёткий контракт входа (что адаптируем)</li>
+<li><input disabled="" type="checkbox"> Определён чёткий контракт выхода (во что адаптируем)</li>
+<li><input disabled="" type="checkbox"> Выбран способ реализации (extends/composition/aggregation)</li>
+<li><input disabled="" type="checkbox"> Решено где хранить состояние (closure/fields/WeakMap)</li>
+<li><input disabled="" type="checkbox"> Учтена обработка ошибок</li>
+<li><input disabled="" type="checkbox"> Продумана очистка ресурсов (если нужна)</li>
+<li><input disabled="" type="checkbox"> Написаны тесты для всех методов адаптера</li>
+<li><input disabled="" type="checkbox"> Проверена совместимость с целевым интерфейсом</li>
+</ul>
+<h3 id="паттерны-именования"><a class="header" href="#паттерны-именования">Паттерны именования</a></h3>
+<pre><code class="language-javascript">// Хорошие имена адаптеров
+promisify()           // Verb - описывает преобразование
+ArrayToQueue          // SourceToTarget - показывает направление
+HashMapFS             // TargetStorage - цель + реализация
+TargetIterator        // SourceAdapter - что адаптируем
+
+// Плохие имена
+Adapter               // Слишком общее
+Helper                // Непонятное назначение
+Utils                 // Неинформативное
+</code></pre>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="связанные-паттерны"><a class="header" href="#связанные-паттерны">Связанные паттерны</a></h3>
+<ul>
+<li><strong>Facade</strong> — упрощает интерфейс сложной системы</li>
+<li><strong>Proxy</strong> — контролирует доступ к объекту</li>
+<li><strong>Decorator</strong> — добавляет функциональность объекту</li>
+<li><strong>Bridge</strong> — разделяет абстракцию и реализацию</li>
+<li><strong>Strategy</strong> — инкапсулирует семейство алгоритмов</li>
+</ul>
+<h3 id="примеры-из-реальных-проектов"><a class="header" href="#примеры-из-реальных-проектов">Примеры из реальных проектов</a></h3>
+<pre><code class="language-javascript">// Express.js middleware — адаптеры для HTTP
+app.use(express.json());        // Body parser adapter
+app.use(express.static('./'));  // Static files adapter
+
+// Mongoose — адаптер MongoDB к ORM интерфейсу
+const User = mongoose.model('User', schema);
+
+// Sequelize — адаптер SQL к ORM интерфейсу
+const User = sequelize.define('User', { ... });
+
+// Socket.io — адаптер WebSocket к событийной модели
+io.on('connection', socket =&gt; { ... });
+</code></pre>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>Паттерн Adapter — фундаментальный инструмент в арсенале JavaScript/TypeScript разработчика. Он решает одну из самых частых задач — преобразование несовместимых интерфейсов — и делает это элегантно и эффективно.</p>
+<p><strong>Основная ценность адаптера:</strong></p>
+<ul>
+<li>Развязывает код и повышает гибкость</li>
+<li>Скрывает сложность за простым интерфейсом</li>
+<li>Обеспечивает переносимость между платформами</li>
+<li>Улучшает тестируемость кода</li>
+<li>Позволяет использовать стандартные контракты</li>
+</ul>
+<p>Глубокое понимание этого паттерна открывает путь к написанию по-настоящему профессионального, гибкого и поддерживаемого кода.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week5/nodejs-layers-low-coupling-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week5/proxy-pattern-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week5/nodejs-layers-low-coupling-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week5/proxy-pattern-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

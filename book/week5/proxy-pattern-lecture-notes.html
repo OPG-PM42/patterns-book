@@ -1,0 +1,1016 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Proxy - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="паттерн-proxy-прокси--gof-и-встроенный-класс-proxy-в-javascript"><a class="header" href="#паттерн-proxy-прокси--gof-и-встроенный-класс-proxy-в-javascript">Паттерн Proxy (Прокси) — GoF и встроенный класс Proxy в JavaScript</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Паттерн Proxy (Прокси) — это структурный паттерн проектирования из каталога Gang of Four, который позволяет перехватывать управление над абстракцией и оборачивать её. В JavaScript существует встроенный класс <code>Proxy</code>, который решает схожую задачу, но другим способом. Этот паттерн относится к семейству паттернов, включающему Adapter и Facade, которые имеют похожие цели и задачи.</p>
+<h2 id="основные-концепции"><a class="header" href="#основные-концепции">Основные концепции</a></h2>
+<h3 id="суть-паттерна-proxy"><a class="header" href="#суть-паттерна-proxy">Суть паттерна Proxy</a></h3>
+<p><strong>Основная задача</strong> паттерна Proxy — <strong>перехват управления над абстракцией и её обёртка</strong>.</p>
+<p>Можно оборачивать любую абстракцию:</p>
+<ul>
+<li>Функциональную (функторы, функции)</li>
+<li>Объектную (экземпляры классов, объекты)</li>
+<li>Любые другие сущности</li>
+</ul>
+<h3 id="различия-между-gof-proxy-и-встроенным-proxy-в-javascript"><a class="header" href="#различия-между-gof-proxy-и-встроенным-proxy-в-javascript">Различия между GoF Proxy и встроенным Proxy в JavaScript</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>GoF Proxy</th><th>JavaScript Proxy</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Реализация</strong></td><td>Через наследование и делегирование</td><td>Через встроенный механизм перехватчиков</td></tr>
+<tr><td><strong>Производительность</strong></td><td>Более легковесный, меньше накладных расходов</td><td>Больший overhead на производительность</td></tr>
+<tr><td><strong>Гибкость</strong></td><td>Требует явной реализации интерфейса</td><td>Может перехватывать любые операции</td></tr>
+<tr><td><strong>Сложность кода</strong></td><td>Больше кода, сложнее структура</td><td>Компактнее, но с ограничениями</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="преимущества-паттерна-proxy"><a class="header" href="#преимущества-паттерна-proxy">Преимущества паттерна Proxy</a></h2>
+<h3 id="1-добавление-функциональности-без-наследования"><a class="header" href="#1-добавление-функциональности-без-наследования">1. Добавление функциональности без наследования</a></h3>
+<p>Вместо создания наследника класса и увеличения дерева наследования, можно:</p>
+<ul>
+<li>Упростить задачу через композицию</li>
+<li>Избежать создания множества классов</li>
+<li>Применить одну и ту же функциональность к десяткам классов</li>
+</ul>
+<p><strong>Пример проблемы с наследованием:</strong></p>
+<pre><code class="language-javascript">// При наследовании: одна функциональность = один новый класс
+class BaseClass {
+  doSomething() { }
+}
+
+class DerivedWithLogging extends BaseClass {
+  doSomething() {
+    console.log('Logging...');
+    super.doSomething();
+  }
+}
+
+// Нужна та же логика для другого класса? Ещё один наследник!
+class AnotherDerivedWithLogging extends AnotherClass {
+  doSomething() {
+    console.log('Logging...');
+    super.doSomething();
+  }
+}
+</code></pre>
+<p><strong>Решение через Proxy:</strong></p>
+<pre><code class="language-javascript">// Один прокси для многих классов с подходящим интерфейсом
+class LoggingProxy {
+  constructor(target) {
+    this.target = target;
+  }
+
+  doSomething() {
+    console.log('Logging...');
+    return this.target.doSomething();
+  }
+}
+
+// Применяем к любому объекту
+const proxy1 = new LoggingProxy(new BaseClass());
+const proxy2 = new LoggingProxy(new AnotherClass());
+</code></pre>
+<h3 id="2-добавление-кросс-функциональных-возможностей"><a class="header" href="#2-добавление-кросс-функциональных-возможностей">2. Добавление кросс-функциональных возможностей</a></h3>
+<p>Можно добавлять различные эффекты:</p>
+<ul>
+<li><strong>Логирование</strong> (logging)</li>
+<li><strong>Телеметрия</strong> (telemetry)</li>
+<li><strong>Кэширование</strong></li>
+<li><strong>Валидация</strong></li>
+<li><strong>Контроль доступа</strong></li>
+</ul>
+<p>Это работает почти как примесь (mixin), но без фактического примешивания кода.</p>
+<h3 id="3-сокращение-количества-классов"><a class="header" href="#3-сокращение-количества-классов">3. Сокращение количества классов</a></h3>
+<p>При использовании прокси можно обернуть множество объектов, подходящих под определённый интерфейс, без создания отдельного класса для каждого варианта.</p>
+<h2 id="недостатки-паттерна-proxy"><a class="header" href="#недостатки-паттерна-proxy">Недостатки паттерна Proxy</a></h2>
+<h3 id="1-накладные-расходы-на-производительность"><a class="header" href="#1-накладные-расходы-на-производительность">1. Накладные расходы на производительность</a></h3>
+<p><strong>Для встроенного JavaScript Proxy:</strong></p>
+<ul>
+<li>Очень большой penalty по производительности</li>
+<li>Дополнительные ресурсы памяти</li>
+<li>Дополнительные процессорные ресурсы</li>
+<li>Все вызовы оборачиваются</li>
+</ul>
+<p><strong>Для GoF Proxy:</strong></p>
+<ul>
+<li>Меньше накладных расходов</li>
+<li>Более легковесный</li>
+<li>Но всё равно есть overhead</li>
+</ul>
+<h3 id="2-усложнение-кода"><a class="header" href="#2-усложнение-кода">2. Усложнение кода</a></h3>
+<ul>
+<li>Код становится больше</li>
+<li>Структура становится сложнее</li>
+<li>Появляются дополнительные уровни абстракции</li>
+</ul>
+<h2 id="встроенный-класс-proxy-в-javascript"><a class="header" href="#встроенный-класс-proxy-в-javascript">Встроенный класс Proxy в JavaScript</a></h2>
+<h3 id="основы-использования"><a class="header" href="#основы-использования">Основы использования</a></h3>
+<p>JavaScript предоставляет встроенный класс <code>Proxy</code>, который позволяет перехватывать операции над объектами.</p>
+<h4 id="пример-базовое-использование-proxy"><a class="header" href="#пример-базовое-использование-proxy">Пример: базовое использование Proxy</a></h4>
+<pre><code class="language-javascript">const target = {
+  name: 'John',
+  age: 30
+};
+
+const handler = {
+  get(target, property) {
+    console.log(`Получение свойства: ${property}`);
+    return target[property];
+  },
+
+  set(target, property, value) {
+    console.log(`Установка свойства: ${property} = ${value}`);
+    target[property] = value;
+    return true;
+  }
+};
+
+const proxy = new Proxy(target, handler);
+
+console.log(proxy.name); // Логирует: "Получение свойства: name"
+                         // Выводит: "John"
+proxy.age = 31;          // Логирует: "Установка свойства: age = 31"
+</code></pre>
+<h3 id="доступные-перехватчики-traps"><a class="header" href="#доступные-перехватчики-traps">Доступные перехватчики (traps)</a></h3>
+<p>Класс <code>Proxy</code> поддерживает множество перехватчиков:</p>
+<ul>
+<li><code>get(target, property, receiver)</code> — чтение свойства</li>
+<li><code>set(target, property, value, receiver)</code> — запись свойства</li>
+<li><code>has(target, property)</code> — оператор <code>in</code></li>
+<li><code>deleteProperty(target, property)</code> — оператор <code>delete</code></li>
+<li><code>apply(target, thisArg, argumentsList)</code> — вызов функции</li>
+<li><code>construct(target, argumentsList, newTarget)</code> — оператор <code>new</code></li>
+<li><code>getPrototypeOf(target)</code> — получение прототипа</li>
+<li><code>setPrototypeOf(target, prototype)</code> — установка прототипа</li>
+<li><code>isExtensible(target)</code> — проверка расширяемости</li>
+<li><code>preventExtensions(target)</code> — запрет расширения</li>
+<li><code>getOwnPropertyDescriptor(target, property)</code> — получение дескриптора</li>
+<li><code>defineProperty(target, property, descriptor)</code> — определение свойства</li>
+<li><code>ownKeys(target)</code> — получение списка ключей</li>
+</ul>
+<h4 id="пример-перехват-вызова-функции"><a class="header" href="#пример-перехват-вызова-функции">Пример: перехват вызова функции</a></h4>
+<pre><code class="language-javascript">function sum(a, b) {
+  return a + b;
+}
+
+const handler = {
+  apply(target, thisArg, argumentsList) {
+    console.log(`Вызов функции с аргументами: ${argumentsList}`);
+    const result = target.apply(thisArg, argumentsList);
+    console.log(`Результат: ${result}`);
+    return result;
+  }
+};
+
+const proxySum = new Proxy(sum, handler);
+
+proxySum(5, 3);
+// Логирует: "Вызов функции с аргументами: 5,3"
+// Логирует: "Результат: 8"
+// Возвращает: 8
+</code></pre>
+<h2 id="паттерн-proxy-из-gang-of-four"><a class="header" href="#паттерн-proxy-из-gang-of-four">Паттерн Proxy из Gang of Four</a></h2>
+<h3 id="структура-паттерна"><a class="header" href="#структура-паттерна">Структура паттерна</a></h3>
+<p>GoF Proxy реализуется через <strong>делегирование</strong> — класс-прокси реализует тот же интерфейс, что и оборачиваемый класс, и делегирует ему вызовы.</p>
+<h4 id="базовый-пример-структуры"><a class="header" href="#базовый-пример-структуры">Базовый пример структуры</a></h4>
+<pre><code class="language-javascript">// Интерфейс (в TypeScript)
+interface IService {
+  operation(a: number, b: number): { result: number; message: string };
+}
+
+// Реальный класс
+class RealService implements IService {
+  operation(a: number, b: number) {
+    return {
+      result: a + b,
+      message: 'Operation completed'
+    };
+  }
+}
+
+// Прокси класс
+class ServiceProxy implements IService {
+  private realService: RealService;
+
+  constructor(realService: RealService) {
+    this.realService = realService;
+  }
+
+  operation(a: number, b: number) {
+    // Здесь можно добавить дополнительную логику
+    console.log(`Вызов operation с аргументами: ${a}, ${b}`);
+
+    // Делегирование реальному объекту
+    const result = this.realService.operation(a, b);
+
+    console.log(`Результат: ${result.result}`);
+    return result;
+  }
+}
+
+// Использование
+const service = new RealService();
+const proxy = new ServiceProxy(service);
+
+proxy.operation(5, 3);
+// Логирует: "Вызов operation с аргументами: 5, 3"
+// Логирует: "Результат: 8"
+// Возвращает: { result: 8, message: 'Operation completed' }
+</code></pre>
+<h3 id="ключевые-элементы-реализации"><a class="header" href="#ключевые-элементы-реализации">Ключевые элементы реализации</a></h3>
+<ol>
+<li><strong>Общий интерфейс</strong> — и прокси, и реальный объект реализуют один интерфейс</li>
+<li><strong>Инкапсуляция объекта</strong> — прокси хранит ссылку на реальный объект (в приватном свойстве)</li>
+<li><strong>Делегирование</strong> — прокси вызывает методы реального объекта</li>
+<li><strong>Дополнительная логика</strong> — прокси может добавлять функциональность до и после делегирования</li>
+</ol>
+<h2 id="практические-примеры"><a class="header" href="#практические-примеры">Практические примеры</a></h2>
+<h3 id="пример-1-config-с-ленивой-загрузкой"><a class="header" href="#пример-1-config-с-ленивой-загрузкой">Пример 1: Config с ленивой загрузкой</a></h3>
+<h4 id="реальный-класс-config"><a class="header" href="#реальный-класс-config">Реальный класс Config</a></h4>
+<pre><code class="language-javascript">// config.js
+const fs = require('fs');
+
+class Config {
+  constructor(filePath) {
+    // Загрузка файла в конструкторе
+    const fileContent = require(filePath);
+    this.data = this.parseConfig(fileContent);
+  }
+
+  parseConfig(content) {
+    // Парсинг конфигурации
+    return content;
+  }
+
+  read(key) {
+    return this.data[key];
+  }
+}
+
+module.exports = Config;
+</code></pre>
+<h4 id="прокси-с-ленивой-загрузкой"><a class="header" href="#прокси-с-ленивой-загрузкой">Прокси с ленивой загрузкой</a></h4>
+<pre><code class="language-javascript">// config-proxy.js
+const Config = require('./config');
+
+class ConfigProxy {
+  constructor(filePath) {
+    this.filePath = filePath;
+    this.config = null; // Ленивая инициализация
+  }
+
+  read(key) {
+    // Создаём экземпляр только при первом обращении
+    if (!this.config) {
+      console.log('Загрузка конфигурации...');
+      this.config = new Config(this.filePath);
+    }
+
+    // Логирование обращения к конфигурации
+    console.log(`Чтение ключа: ${key}`);
+
+    return this.config.read(key);
+  }
+}
+
+module.exports = ConfigProxy;
+</code></pre>
+<h4 id="использование"><a class="header" href="#использование">Использование</a></h4>
+<pre><code class="language-javascript">const ConfigProxy = require('./config-proxy');
+
+const config = new ConfigProxy('./config.json');
+
+// Конфигурация ещё не загружена
+console.log('Config proxy создан');
+
+// При первом обращении загружается файл
+const dbHost = config.read('database.host');
+// Логирует: "Загрузка конфигурации..."
+// Логирует: "Чтение ключа: database.host"
+
+// При повторном обращении файл не перезагружается
+const dbPort = config.read('database.port');
+// Логирует: "Чтение ключа: database.port"
+</code></pre>
+<p><strong>Преимущества этого подхода:</strong></p>
+<ul>
+<li>Файл загружается только когда действительно нужен</li>
+<li>Можно добавить логирование без изменения класса Config</li>
+<li>Можно добавить дополнительный парсинг данных</li>
+<li>Можно кэшировать результаты</li>
+</ul>
+<h3 id="пример-2-прокси-для-файловых-потоков-с-статистикой"><a class="header" href="#пример-2-прокси-для-файловых-потоков-с-статистикой">Пример 2: Прокси для файловых потоков с статистикой</a></h3>
+<p>Это более сложный и реалистичный пример, показывающий мощь паттерна Proxy.</p>
+<h4 id="задача"><a class="header" href="#задача">Задача</a></h4>
+<p>Необходимо собирать статистику по работе с файловыми потоками:</p>
+<ul>
+<li>Количество байт, прочитанных из файлов</li>
+<li>Количество чанков данных</li>
+<li>Количество различных событий</li>
+</ul>
+<h4 id="решение-через-наследование-и-замыкание-модуля"><a class="header" href="#решение-через-наследование-и-замыкание-модуля">Решение через наследование и замыкание модуля</a></h4>
+<pre><code class="language-javascript">// fs-proxy.js
+const fs = require('fs');
+
+// Замыкание модуля — statistics будет локальным синглтоном
+const statistics = {
+  bytes: 0,
+  chunks: 0,
+  events: new Map() // Храним количество каждого типа события
+};
+
+// Наследуем от fs.ReadStream
+class StatReadStream extends fs.ReadStream {
+  emit(eventName, ...args) {
+    // Собираем статистику перед вызовом родительского метода
+
+    if (eventName === 'data') {
+      const chunk = args[0];
+      statistics.bytes += chunk.length;
+      statistics.chunks++;
+    }
+
+    // Увеличиваем счётчик для этого типа события
+    const count = statistics.events.get(eventName) || 0;
+    statistics.events.set(eventName, count + 1);
+
+    // Делегируем вызов родительскому классу (EventEmitter)
+    return super.emit(eventName, ...args);
+  }
+}
+
+// Фабрика для создания потоков
+function createReadStream(path, options) {
+  return new StatReadStream(path, options);
+}
+
+// Функция для получения статистики
+function getStatistics() {
+  // Возвращаем клон, чтобы никто не мог изменить статистику снаружи
+  return {
+    bytes: statistics.bytes,
+    chunks: statistics.chunks,
+    events: new Map(statistics.events)
+  };
+}
+
+// Экспортируем всё из fs, кроме createReadStream
+module.exports = {
+  ...fs,
+  createReadStream,
+  getStatistics
+};
+</code></pre>
+<h4 id="использование-fs-proxy"><a class="header" href="#использование-fs-proxy">Использование fs-proxy</a></h4>
+<pre><code class="language-javascript">// app.js
+// Вместо const fs = require('fs');
+const fs = require('./fs-proxy');
+
+// Создаём поток для чтения файла
+const stream = fs.createReadStream('./large-file.txt');
+
+stream.on('data', (chunk) =&gt; {
+  console.log(`Получен чанк размером ${chunk.length} байт`);
+});
+
+stream.on('end', () =&gt; {
+  console.log('Чтение завершено');
+
+  // Получаем статистику
+  const stats = fs.getStatistics();
+  console.log('Статистика:');
+  console.log(`  Байт прочитано: ${stats.bytes}`);
+  console.log(`  Чанков получено: ${stats.chunks}`);
+  console.log(`  События:`);
+
+  stats.events.forEach((count, eventName) =&gt; {
+    console.log(`    ${eventName}: ${count}`);
+  });
+});
+
+// Другие методы fs работают как обычно
+const files = fs.readdirSync('./');
+console.log(files);
+
+// Можно даже наследоваться от fs.ReadStream, если нужно
+class CustomStream extends fs.ReadStream {
+  // Ваша кастомная логика
+}
+</code></pre>
+<h4 id="что-делает-этот-прокси"><a class="header" href="#что-делает-этот-прокси">Что делает этот прокси?</a></h4>
+<ol>
+<li><strong>Переопределяет только нужное</strong> — только <code>createReadStream</code>, остальной API fs остаётся неизменным</li>
+<li><strong>Использует наследование</strong> — <code>StatReadStream</code> наследуется от <code>fs.ReadStream</code></li>
+<li><strong>Применяет делегирование</strong> — вызывает <code>super.emit()</code> для делегирования родительскому классу</li>
+<li><strong>Использует замыкание модуля</strong> — <code>statistics</code> является локальным синглтоном модуля</li>
+<li><strong>Защищает данные</strong> — <code>getStatistics()</code> возвращает клон через структурное клонирование</li>
+<li><strong>Прозрачен для пользователей</strong> — код, использующий <code>fs</code>, почти не меняется</li>
+</ol>
+<h3 id="объяснение-замыкания-модуля"><a class="header" href="#объяснение-замыкания-модуля">Объяснение замыкания модуля</a></h3>
+<pre><code class="language-javascript">// Каждый модуль в Node.js обернут в функцию:
+(function(exports, require, module, __filename, __dirname) {
+
+  // Эта переменная попадает в замыкание всех функций модуля
+  const statistics = {
+    bytes: 0,
+    chunks: 0,
+    events: new Map()
+  };
+
+  class StatReadStream extends fs.ReadStream {
+    emit(eventName, ...args) {
+      // Имеет доступ к statistics через замыкание
+      statistics.bytes += chunk.length;
+      return super.emit(eventName, ...args);
+    }
+  }
+
+  function getStatistics() {
+    // Также имеет доступ к statistics
+    return { ...statistics };
+  }
+
+  // Если не экспортировать statistics, он остаётся приватным
+  module.exports = {
+    createReadStream,
+    getStatistics
+    // statistics НЕ экспортируется!
+  };
+
+})(/* параметры от Node.js */);
+</code></pre>
+<p><strong>Ключевые моменты:</strong></p>
+<ul>
+<li>Переменные на уровне модуля становятся локальными синглтонами</li>
+<li>Они доступны всем функциям и классам модуля через замыкание</li>
+<li>Если не экспортировать, они остаются приватными</li>
+<li>Это альтернатива статическим полям класса</li>
+</ul>
+<h2 id="сравнение-подходов"><a class="header" href="#сравнение-подходов">Сравнение подходов</a></h2>
+<h3 id="фасад-vs-прокси"><a class="header" href="#фасад-vs-прокси">Фасад vs Прокси</a></h3>
+<p>В примере с <code>fs-proxy</code> мы создали что-то похожее на <strong>Facade</strong> (Фасад):</p>
+<ul>
+<li>Обернули модуль <code>fs</code> в упрощённую обёртку</li>
+<li>Переопределили только часть функциональности</li>
+<li>Остальной API остался доступным</li>
+</ul>
+<p><strong>Отличия от чистого Proxy:</strong></p>
+<ul>
+<li>Proxy обычно один-к-одному повторяет интерфейс</li>
+<li>Фасад может упрощать или объединять интерфейсы</li>
+<li>В данном случае мы добавили новый метод <code>getStatistics()</code></li>
+</ul>
+<h3 id="производительность-gof-proxy-vs-javascript-proxy"><a class="header" href="#производительность-gof-proxy-vs-javascript-proxy">Производительность: GoF Proxy vs JavaScript Proxy</a></h3>
+<pre><code class="language-javascript">// GOF Proxy - более эффективен
+class ServiceProxy {
+  constructor(service) {
+    this.service = service;
+  }
+
+  operation() {
+    // Минимальный overhead
+    return this.service.operation();
+  }
+}
+
+// JavaScript Proxy - менее эффективен
+const serviceProxy = new Proxy(service, {
+  get(target, property) {
+    // Больший overhead на каждое обращение
+    return target[property];
+  }
+});
+</code></pre>
+<p><strong>Результаты бенчмарков (примерно):</strong></p>
+<ul>
+<li>GoF Proxy: ~5-10% overhead</li>
+<li>JavaScript Proxy: ~50-200% overhead</li>
+</ul>
+<p><strong>Когда использовать каждый подход:</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Критерий</th><th>GoF Proxy</th><th>JavaScript Proxy</th></tr>
+</thead>
+<tbody>
+<tr><td>Производительность важна</td><td>✅ Да</td><td>❌ Нет</td></tr>
+<tr><td>Нужна максимальная гибкость</td><td>❌ Нет</td><td>✅ Да</td></tr>
+<tr><td>Известен конкретный интерфейс</td><td>✅ Да</td><td>— Не важно</td></tr>
+<tr><td>Динамическое поведение</td><td>❌ Сложнее</td><td>✅ Легко</td></tr>
+<tr><td>Production код</td><td>✅ Предпочтительно</td><td>⚠️ С осторожностью</td></tr>
+<tr><td>Прототипирование/отладка</td><td>— Можно</td><td>✅ Удобно</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="дополнительные-примеры-использования-proxy"><a class="header" href="#дополнительные-примеры-использования-proxy">Дополнительные примеры использования Proxy</a></h2>
+<h3 id="пример-3-валидация-данных"><a class="header" href="#пример-3-валидация-данных">Пример 3: Валидация данных</a></h3>
+<pre><code class="language-javascript">function createValidatedUser(userData) {
+  return new Proxy(userData, {
+    set(target, property, value) {
+      if (property === 'age') {
+        if (typeof value !== 'number' || value &lt; 0 || value &gt; 150) {
+          throw new TypeError('Возраст должен быть числом от 0 до 150');
+        }
+      }
+
+      if (property === 'email') {
+        if (!value.includes('@')) {
+          throw new TypeError('Email должен содержать @');
+        }
+      }
+
+      target[property] = value;
+      return true;
+    }
+  });
+}
+
+const user = createValidatedUser({
+  name: 'John',
+  age: 30,
+  email: 'john@example.com'
+});
+
+user.age = 25; // OK
+user.age = -5; // Ошибка: Возраст должен быть числом от 0 до 150
+user.email = 'invalid'; // Ошибка: Email должен содержать @
+</code></pre>
+<h3 id="пример-4-кэширование-результатов"><a class="header" href="#пример-4-кэширование-результатов">Пример 4: Кэширование результатов</a></h3>
+<pre><code class="language-javascript">class ExpensiveCalculator {
+  calculate(n) {
+    console.log(`Вычисление для ${n}...`);
+    // Долгая операция
+    let result = 0;
+    for (let i = 0; i &lt;= n; i++) {
+      result += i;
+    }
+    return result;
+  }
+}
+
+class CachingProxy {
+  constructor(calculator) {
+    this.calculator = calculator;
+    this.cache = new Map();
+  }
+
+  calculate(n) {
+    if (this.cache.has(n)) {
+      console.log(`Возврат из кэша для ${n}`);
+      return this.cache.get(n);
+    }
+
+    const result = this.calculator.calculate(n);
+    this.cache.set(n, result);
+    return result;
+  }
+}
+
+const calculator = new ExpensiveCalculator();
+const proxy = new CachingProxy(calculator);
+
+console.log(proxy.calculate(1000)); // Вычисление для 1000...
+console.log(proxy.calculate(1000)); // Возврат из кэша для 1000
+console.log(proxy.calculate(2000)); // Вычисление для 2000...
+</code></pre>
+<h3 id="пример-5-контроль-доступа"><a class="header" href="#пример-5-контроль-доступа">Пример 5: Контроль доступа</a></h3>
+<pre><code class="language-javascript">class SecureDatabase {
+  constructor() {
+    this.data = {
+      users: ['Alice', 'Bob'],
+      admin: ['SuperUser']
+    };
+  }
+
+  getData(table) {
+    return this.data[table];
+  }
+}
+
+class AccessControlProxy {
+  constructor(database, userRole) {
+    this.database = database;
+    this.userRole = userRole;
+  }
+
+  getData(table) {
+    // Проверка прав доступа
+    if (table === 'admin' &amp;&amp; this.userRole !== 'admin') {
+      throw new Error('Доступ запрещён: требуются права администратора');
+    }
+
+    console.log(`Доступ разрешён для роли ${this.userRole} к таблице ${table}`);
+    return this.database.getData(table);
+  }
+}
+
+const db = new SecureDatabase();
+
+const userProxy = new AccessControlProxy(db, 'user');
+console.log(userProxy.getData('users')); // OK: ['Alice', 'Bob']
+console.log(userProxy.getData('admin')); // Ошибка: Доступ запрещён
+
+const adminProxy = new AccessControlProxy(db, 'admin');
+console.log(adminProxy.getData('admin')); // OK: ['SuperUser']
+</code></pre>
+<h2 id="паттерны-связанные-с-proxy"><a class="header" href="#паттерны-связанные-с-proxy">Паттерны, связанные с Proxy</a></h2>
+<h3 id="proxy-vs-adapter"><a class="header" href="#proxy-vs-adapter">Proxy vs Adapter</a></h3>
+<p><strong>Adapter</strong> (Адаптер):</p>
+<ul>
+<li>Преобразует интерфейс одного класса в интерфейс другого</li>
+<li>Делает совместимыми несовместимые интерфейсы</li>
+<li>Изменяет сигнатуры методов</li>
+</ul>
+<p><strong>Proxy</strong>:</p>
+<ul>
+<li>Сохраняет тот же интерфейс</li>
+<li>Добавляет дополнительное поведение</li>
+<li>Не изменяет сигнатуры</li>
+</ul>
+<pre><code class="language-javascript">// Adapter - изменяет интерфейс
+class OldAPI {
+  getUser(id) {
+    return { userId: id, userName: 'John' };
+  }
+}
+
+class NewAPIAdapter {
+  constructor(oldAPI) {
+    this.oldAPI = oldAPI;
+  }
+
+  // Новый интерфейс: fetchUserById вместо getUser
+  fetchUserById(id) {
+    const oldFormat = this.oldAPI.getUser(id);
+    // Преобразование формата
+    return {
+      id: oldFormat.userId,
+      name: oldFormat.userName
+    };
+  }
+}
+
+// Proxy - сохраняет интерфейс
+class UserAPIProxy {
+  constructor(api) {
+    this.api = api;
+  }
+
+  // Тот же метод getUser
+  getUser(id) {
+    console.log(`Запрос пользователя ${id}`);
+    return this.api.getUser(id);
+  }
+}
+</code></pre>
+<h3 id="proxy-vs-decorator"><a class="header" href="#proxy-vs-decorator">Proxy vs Decorator</a></h3>
+<p><strong>Decorator</strong> (Декоратор):</p>
+<ul>
+<li>Динамически добавляет новые обязанности объекту</li>
+<li>Можно комбинировать несколько декораторов</li>
+<li>Обычно добавляет новую функциональность</li>
+</ul>
+<p><strong>Proxy</strong>:</p>
+<ul>
+<li>Контролирует доступ к объекту</li>
+<li>Обычно один прокси на объект</li>
+<li>Фокус на управлении доступом</li>
+</ul>
+<p>Эти паттерны очень похожи, и граница между ними размыта.</p>
+<h3 id="proxy-vs-facade"><a class="header" href="#proxy-vs-facade">Proxy vs Facade</a></h3>
+<p><strong>Facade</strong> (Фасад):</p>
+<ul>
+<li>Предоставляет упрощённый интерфейс к сложной подсистеме</li>
+<li>Может объединять несколько классов</li>
+<li>Упрощает использование</li>
+</ul>
+<p><strong>Proxy</strong>:</p>
+<ul>
+<li>Работает с одним объектом</li>
+<li>Сохраняет тот же интерфейс</li>
+<li>Не упрощает, а контролирует</li>
+</ul>
+<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
+<h3 id="ключевые-концепции"><a class="header" href="#ключевые-концепции">Ключевые концепции</a></h3>
+<ol>
+<li><strong>Паттерн Proxy</strong> позволяет перехватывать управление над объектом и добавлять дополнительную функциональность</li>
+<li><strong>JavaScript Proxy</strong> и <strong>GoF Proxy</strong> решают одну задачу разными способами</li>
+<li><strong>Делегирование</strong> — ключевая техника реализации GoF Proxy</li>
+<li><strong>Замыкание модуля</strong> — полезная техника для хранения приватного состояния</li>
+</ol>
+<h3 id="когда-использовать-proxy"><a class="header" href="#когда-использовать-proxy">Когда использовать Proxy</a></h3>
+<p><strong>Используйте паттерн Proxy, когда:</strong></p>
+<ul>
+<li>✅ Нужно добавить функциональность без наследования</li>
+<li>✅ Требуется ленивая инициализация</li>
+<li>✅ Необходимо кэширование результатов</li>
+<li>✅ Нужен контроль доступа</li>
+<li>✅ Требуется логирование или мониторинг</li>
+<li>✅ Важна производительность (используйте GoF Proxy)</li>
+</ul>
+<p><strong>Избегайте паттерна Proxy, когда:</strong></p>
+<ul>
+<li>❌ Overhead на производительность неприемлем</li>
+<li>❌ Код становится слишком сложным</li>
+<li>❌ Простое наследование решает задачу лучше</li>
+</ul>
+<h3 id="выбор-между-подходами"><a class="header" href="#выбор-между-подходами">Выбор между подходами</a></h3>
+<pre><code class="language-javascript">// JavaScript Proxy - для максимальной гибкости
+const proxy = new Proxy(obj, {
+  get(target, property) { /* ... */ },
+  set(target, property, value) { /* ... */ },
+  // ... много других перехватчиков
+});
+
+// GoF Proxy - для производительности и ясности
+class OptimizedProxy {
+  constructor(obj) {
+    this.obj = obj;
+  }
+
+  method() {
+    // Контролируемое делегирование
+    return this.obj.method();
+  }
+}
+</code></pre>
+<h3 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h3>
+<ol>
+<li><strong>Для production кода</strong> отдавайте предпочтение GoF Proxy</li>
+<li><strong>Для отладки и прототипирования</strong> используйте JavaScript Proxy</li>
+<li><strong>Комбинируйте</strong> с замыканием модуля для приватного состояния</li>
+<li><strong>Используйте TypeScript</strong> для явного определения интерфейсов</li>
+<li><strong>Документируйте</strong> добавленную прокси функциональность</li>
+<li><strong>Измеряйте</strong> влияние на производительность</li>
+</ol>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="связанные-паттерны"><a class="header" href="#связанные-паттерны">Связанные паттерны</a></h3>
+<ul>
+<li><strong>Adapter</strong> — преобразование интерфейсов</li>
+<li><strong>Decorator</strong> — динамическое добавление функциональности</li>
+<li><strong>Facade</strong> — упрощение сложных подсистем</li>
+</ul>
+<h3 id="связанные-концепции"><a class="header" href="#связанные-концепции">Связанные концепции</a></h3>
+<ul>
+<li><strong>Делегирование</strong> — передача вызовов другому объекту</li>
+<li><strong>Замыкание</strong> — сохранение приватного состояния</li>
+<li><strong>Композиция</strong> — альтернатива наследованию</li>
+</ul>
+<h3 id="применение-в-реальных-проектах"><a class="header" href="#применение-в-реальных-проектах">Применение в реальных проектах</a></h3>
+<ul>
+<li>Фреймворки для реактивности (Vue.js, MobX)</li>
+<li>ORM библиотеки (Sequelize, TypeORM)</li>
+<li>Системы логирования и мониторинга</li>
+<li>Библиотеки для работы с API</li>
+<li>Инструменты для тестирования (моки и стабы)</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week5/adapter-pattern-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week5/facade-pattern-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week5/adapter-pattern-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week5/facade-pattern-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

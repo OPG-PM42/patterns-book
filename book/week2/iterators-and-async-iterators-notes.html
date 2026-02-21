@@ -1,0 +1,1137 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Iterator &amp; AsyncIterator - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="итераторы-и-асинхронные-итераторы-в-javascript"><a class="header" href="#итераторы-и-асинхронные-итераторы-в-javascript">Итераторы и Асинхронные Итераторы в JavaScript</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Эта лекция охватывает фундаментальные концепции итераторов в JavaScript - как синхронных, так и асинхронных. Мы рассмотрим контракты Iterator и Iterable, научимся создавать собственные итераторы различными способами, и поймем, как генераторы упрощают работу с итерируемыми объектами.</p>
+<hr>
+<h2 id="часть-1-синхронные-итераторы"><a class="header" href="#часть-1-синхронные-итераторы">Часть 1: Синхронные Итераторы</a></h2>
+<h3 id="11-контракт-iterator"><a class="header" href="#11-контракт-iterator">1.1 Контракт Iterator</a></h3>
+<p><strong>Iterator</strong> - это контракт (соглашение), который определяет, как объект должен предоставлять последовательный доступ к своим элементам.</p>
+<h4 id="требования-контракта-iterator"><a class="header" href="#требования-контракта-iterator">Требования контракта Iterator:</a></h4>
+<p>Объект является итератором, если у него есть:</p>
+<ul>
+<li><strong>Метод <code>next()</code></strong> - возвращает следующее значение в последовательности</li>
+<li>Метод <code>next()</code> должен возвращать объект со структурой:
+<ul>
+<li><code>value</code> - текущее значение</li>
+<li><code>done</code> - булево значение (<code>true</code> когда итерация завершена, <code>false</code> в противном случае)</li>
+</ul>
+</li>
+</ul>
+<h4 id="пример-1-простейший-iterator-литерал-объекта"><a class="header" href="#пример-1-простейший-iterator-литерал-объекта">Пример 1: Простейший Iterator (литерал объекта)</a></h4>
+<pre><code class="language-javascript">// Создаем простой итератор вручную
+const iterator = {
+  current: 0,
+
+  next() {
+    // Возвращаем объект с value и done
+    if (this.current &lt; 3) {
+      return {
+        value: this.current++,
+        done: false
+      };
+    }
+    return {
+      value: undefined,
+      done: true
+    };
+  }
+};
+
+// Используем итератор
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+</code></pre>
+<p><strong>Ключевой момент</strong>: Когда <code>done: true</code>, значение <code>value</code> должно игнорироваться - итерация завершена.</p>
+<hr>
+<h3 id="12-контракт-iterable"><a class="header" href="#12-контракт-iterable">1.2 Контракт Iterable</a></h3>
+<p><strong>Iterable</strong> - это более сложный контракт, который позволяет объекту быть итерируемым с помощью циклов <code>for...of</code> и spread-оператора.</p>
+<h4 id="требования-контракта-iterable"><a class="header" href="#требования-контракта-iterable">Требования контракта Iterable:</a></h4>
+<p>Объект является итерируемым (iterable), если у него есть:</p>
+<ul>
+<li><strong>Метод с именем <code>Symbol.iterator</code></strong> - специальный символьный ключ</li>
+<li>Этот метод должен возвращать <strong>Iterator</strong> (объект с методом <code>next()</code>)</li>
+</ul>
+<h4 id="пример-2-iterable-объект-литерал"><a class="header" href="#пример-2-iterable-объект-литерал">Пример 2: Iterable объект (литерал)</a></h4>
+<pre><code class="language-javascript">// Создаем iterable объект
+const iterable = {
+  // Метод Symbol.iterator возвращает iterator
+  [Symbol.iterator]() {
+    let current = 0;
+
+    // Возвращаем iterator
+    return {
+      next() {
+        if (current &lt; 3) {
+          return {
+            value: current++,
+            done: false
+          };
+        }
+        return {
+          value: undefined,
+          done: true
+        };
+      }
+    };
+  }
+};
+
+// Способ 1: Получаем iterator вручную
+const iter = iterable[Symbol.iterator]();
+console.log(iter.next()); // { value: 0, done: false }
+console.log(iter.next()); // { value: 1, done: false }
+console.log(iter.next()); // { value: 2, done: false }
+console.log(iter.next()); // { value: undefined, done: true }
+
+// Способ 2: Используем цикл for...of
+for (const value of iterable) {
+  console.log(value); // 0, 1, 2
+}
+
+// Способ 3: Используем spread оператор
+const array = [...iterable];
+console.log(array); // [0, 1, 2]
+</code></pre>
+<p><strong>Важно</strong>:</p>
+<ul>
+<li>Метод <code>Symbol.iterator</code> создает <strong>новый</strong> iterator при каждом вызове</li>
+<li><code>for...of</code> и spread-оператор работают только с <strong>iterable</strong> объектами</li>
+<li>Значения с <code>done: true</code> автоматически игнорируются</li>
+</ul>
+<hr>
+<h3 id="13-iterable-класс-с-замыканиями"><a class="header" href="#13-iterable-класс-с-замыканиями">1.3 Iterable класс с замыканиями</a></h3>
+<p>Литералы объектов неудобны для повторного использования. Давайте создадим класс.</p>
+<h4 id="пример-3-класс-counter-как-iterable"><a class="header" href="#пример-3-класс-counter-как-iterable">Пример 3: Класс Counter как Iterable</a></h4>
+<pre><code class="language-javascript">class Counter {
+  constructor(begin, end, step = 1) {
+    this.begin = begin;
+    this.end = end;
+    this.step = step;
+  }
+
+  // Делаем класс iterable
+  [Symbol.iterator]() {
+    // Сохраняем текущие значения begin и end
+    // на случай, если они изменятся во время итерации
+    let current = this.begin;
+    const end = this.end;
+    const step = this.step;
+
+    // Возвращаем iterator
+    return {
+      next() {
+        if (current &lt; end) {
+          const value = current;
+          current += step;
+          return { value, done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+}
+
+// Использование класса
+const counter = new Counter(0, 3);
+
+// Способ 1: Получаем iterator вручную
+const iterator = counter[Symbol.iterator]();
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+
+// Способ 2: for...of
+for (const num of counter) {
+  console.log(num); // 0, 1, 2
+}
+
+// Способ 3: spread оператор
+const numbers = [...counter];
+console.log(numbers); // [0, 1, 2]
+</code></pre>
+<p><strong>Преимущества класса</strong>:</p>
+<ul>
+<li>Переиспользуемый код</li>
+<li>Возможность наследования</li>
+<li>Инкапсуляция логики</li>
+<li>Параметризация через конструктор</li>
+</ul>
+<p><strong>Техника замыкания</strong>: Мы сохраняем <code>begin</code> и <code>end</code> в локальные переменные функции <code>Symbol.iterator</code>, чтобы защититься от изменений во время итерации.</p>
+<hr>
+<h3 id="14-встроенные-iterable-объекты"><a class="header" href="#14-встроенные-iterable-объекты">1.4 Встроенные Iterable объекты</a></h3>
+<p>Многие встроенные типы JavaScript уже реализуют контракт Iterable.</p>
+<h4 id="пример-4-массивы-как-iterable"><a class="header" href="#пример-4-массивы-как-iterable">Пример 4: Массивы как Iterable</a></h4>
+<pre><code class="language-javascript">const array = [0, 1, 2];
+
+// Массив уже является iterable!
+// У него есть Symbol.iterator
+
+// Способ 1: Получаем iterator вручную
+const iterator = array[Symbol.iterator]();
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+
+// Способ 2: for...of работает!
+for (const item of array) {
+  console.log(item); // 0, 1, 2
+}
+
+// Способ 3: spread оператор работает!
+const copy = [...array];
+console.log(copy); // [0, 1, 2]
+</code></pre>
+<p><strong>Откровение</strong>: Теперь понятно, почему <code>for...of</code> и spread-оператор работают с массивами - они реализуют контракт Iterable через <code>Symbol.iterator</code>!</p>
+<p><strong>Другие встроенные Iterable</strong>:</p>
+<ul>
+<li><code>String</code> - итерация по символам</li>
+<li><code>Set</code> - итерация по значениям</li>
+<li><code>Map</code> - итерация по парам [key, value]</li>
+<li><code>arguments</code> - итерация по аргументам функции</li>
+<li>Typed Arrays (Uint8Array и т.д.)</li>
+</ul>
+<hr>
+<h3 id="15-генераторы---синтаксический-сахар-для-iterable"><a class="header" href="#15-генераторы---синтаксический-сахар-для-iterable">1.5 Генераторы - синтаксический сахар для Iterable</a></h3>
+<p>Создание итераторов вручную требует много кода. <strong>Генераторы</strong> - это специальные функции, которые автоматически создают iterable объекты.</p>
+<h4 id="синтаксис-генератора"><a class="header" href="#синтаксис-генератора">Синтаксис генератора:</a></h4>
+<pre><code class="language-javascript">function* generatorName() {
+  yield value1;
+  yield value2;
+  // ...
+}
+</code></pre>
+<ul>
+<li><code>function*</code> - объявление функции-генератора (со звездочкой)</li>
+<li><code>yield</code> - возвращает значение и приостанавливает выполнение</li>
+<li>Генератор возвращает iterable объект</li>
+</ul>
+<h4 id="пример-5-генератор-вместо-класса"><a class="header" href="#пример-5-генератор-вместо-класса">Пример 5: Генератор вместо класса</a></h4>
+<pre><code class="language-javascript">// Императивный подход с классом (22 строки кода)
+class Counter {
+  constructor(begin, end, step = 1) {
+    this.begin = begin;
+    this.end = end;
+    this.step = step;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.begin;
+    const end = this.end;
+    const step = this.step;
+
+    return {
+      next() {
+        if (current &lt; end) {
+          const value = current;
+          current += step;
+          return { value, done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+}
+
+// VS
+
+// Декларативный подход с генератором (9 строк кода)
+function* counter(begin, end, step = 1) {
+  for (let i = begin; i &lt; end; i += step) {
+    yield i;
+  }
+}
+
+// Использование одинаковое!
+const gen = counter(0, 3);
+
+// Способ 1: Вручную
+console.log(gen.next()); // { value: 0, done: false }
+console.log(gen.next()); // { value: 1, done: false }
+console.log(gen.next()); // { value: 2, done: false }
+console.log(gen.next()); // { value: undefined, done: true }
+
+// Способ 2: for...of
+for (const num of counter(0, 3)) {
+  console.log(num); // 0, 1, 2
+}
+
+// Способ 3: spread
+const numbers = [...counter(0, 3)];
+console.log(numbers); // [0, 1, 2]
+</code></pre>
+<p><strong>Ключевое отличие</strong>:</p>
+<ul>
+<li><strong>Императивный</strong> (класс): мы сами создаем объект, метод <code>next()</code>, управляем состоянием</li>
+<li><strong>Декларативный</strong> (генератор): мы описываем последовательность значений, JavaScript создает итератор автоматически</li>
+</ul>
+<hr>
+<h3 id="16-делегирование-в-генераторах-yield"><a class="header" href="#16-делегирование-в-генераторах-yield">1.6 Делегирование в генераторах (yield*)</a></h3>
+<p>Генераторы могут делегировать итерацию другим iterable объектам с помощью <code>yield*</code>.</p>
+<h4 id="пример-6-делегирование-массиву"><a class="header" href="#пример-6-делегирование-массиву">Пример 6: Делегирование массиву</a></h4>
+<pre><code class="language-javascript">// Генератор, который делегирует итерацию массиву
+function* gen() {
+  yield* [0, 1, 2]; // yield* делегирует массиву
+}
+
+const iterator = gen();
+
+// Способ 1: Вручную
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+
+// Способ 2: for...of
+for (const value of gen()) {
+  console.log(value); // 0, 1, 2
+}
+
+// Способ 3: spread
+const array = [...gen()];
+console.log(array); // [0, 1, 2]
+</code></pre>
+<p><strong>Что делает <code>yield*</code></strong>:</p>
+<ul>
+<li>Берет iterable объект (массив, другой генератор, строку и т.д.)</li>
+<li>Проходит по всем его значениям</li>
+<li>Возвращает каждое значение через <code>yield</code></li>
+<li>Это краткая запись для цикла:
+<pre><code class="language-javascript">// yield* [0, 1, 2] эквивалентно:
+for (const value of [0, 1, 2]) {
+  yield value;
+}
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="часть-2-асинхронные-итераторы"><a class="header" href="#часть-2-асинхронные-итераторы">Часть 2: Асинхронные Итераторы</a></h2>
+<h3 id="21-контракт-async-iterator"><a class="header" href="#21-контракт-async-iterator">2.1 Контракт Async Iterator</a></h3>
+<p><strong>Async Iterator</strong> - это итератор, который работает с асинхронными операциями (Promise).</p>
+<h4 id="требования-контракта-async-iterator"><a class="header" href="#требования-контракта-async-iterator">Требования контракта Async Iterator:</a></h4>
+<p>Объект является async iterator, если у него есть:</p>
+<ul>
+<li><strong>Асинхронный метод <code>next()</code></strong> (объявленный с <code>async</code> или возвращающий Promise)</li>
+<li>Метод возвращает <strong>Promise</strong>, который разрешается объектом с полями:
+<ul>
+<li><code>value</code> - текущее значение</li>
+<li><code>done</code> - булево значение</li>
+</ul>
+</li>
+</ul>
+<h4 id="пример-7-простейший-async-iterator"><a class="header" href="#пример-7-простейший-async-iterator">Пример 7: Простейший Async Iterator</a></h4>
+<pre><code class="language-javascript">// Async Iterator вручную
+const asyncIterator = {
+  current: 0,
+
+  // Асинхронный метод next
+  async next() {
+    if (this.current &lt; 3) {
+      return {
+        value: this.current++,
+        done: false
+      };
+    }
+    return {
+      value: undefined,
+      done: true
+    };
+  }
+};
+
+// Использование
+async function run() {
+  console.log(await asyncIterator.next());
+  // Promise { value: 0, done: false }
+
+  console.log(await asyncIterator.next());
+  // Promise { value: 1, done: false }
+
+  console.log(await asyncIterator.next());
+  // Promise { value: 2, done: false }
+
+  console.log(await asyncIterator.next());
+  // Promise { value: undefined, done: true }
+}
+
+run();
+</code></pre>
+<p><strong>Ключевое отличие от синхронного</strong>: Метод <code>next()</code> возвращает <strong>Promise</strong>, а не обычный объект.</p>
+<hr>
+<h3 id="22-контракт-async-iterable"><a class="header" href="#22-контракт-async-iterable">2.2 Контракт Async Iterable</a></h3>
+<p><strong>Async Iterable</strong> - это объект, который можно итерировать асинхронно.</p>
+<h4 id="требования-контракта-async-iterable"><a class="header" href="#требования-контракта-async-iterable">Требования контракта Async Iterable:</a></h4>
+<p>Объект является async iterable, если у него есть:</p>
+<ul>
+<li><strong>Метод <code>Symbol.asyncIterator</code></strong> - специальный символьный ключ для асинхронной итерации</li>
+<li>Этот метод возвращает <strong>Async Iterator</strong> (объект с async методом <code>next()</code>)</li>
+</ul>
+<h4 id="пример-8-async-iterable-объект"><a class="header" href="#пример-8-async-iterable-объект">Пример 8: Async Iterable объект</a></h4>
+<pre><code class="language-javascript">// Async Iterable объект
+const asyncIterable = {
+  [Symbol.asyncIterator]() {
+    let current = 0;
+
+    // Возвращаем async iterator
+    return {
+      async next() {
+        // Можем делать асинхронные операции здесь
+        // Например, запросы к API, чтение файлов и т.д.
+
+        if (current &lt; 3) {
+          return {
+            value: current++,
+            done: false
+          };
+        }
+        return {
+          value: undefined,
+          done: true
+        };
+      }
+    };
+  }
+};
+
+// Использование
+async function run() {
+  // Способ 1: Вручную
+  const iter = asyncIterable[Symbol.asyncIterator]();
+  console.log(await iter.next()); // { value: 0, done: false }
+  console.log(await iter.next()); // { value: 1, done: false }
+  console.log(await iter.next()); // { value: 2, done: false }
+  console.log(await iter.next()); // { value: undefined, done: true }
+
+  // Способ 2: for await...of (специальный цикл для async iterable)
+  for await (const value of asyncIterable) {
+    console.log(value); // 0, 1, 2
+  }
+}
+
+run();
+</code></pre>
+<p><strong>Важно</strong>:</p>
+<ul>
+<li>Для async iterable используется <code>for await...of</code> (не просто <code>for...of</code>)</li>
+<li>Spread-оператор <strong>НЕ работает</strong> с async iterable</li>
+<li>Каждая итерация ожидает разрешения Promise</li>
+</ul>
+<hr>
+<h3 id="23-async-iterable-класс"><a class="header" href="#23-async-iterable-класс">2.3 Async Iterable класс</a></h3>
+<p>Создадим класс для удобного переиспользования.</p>
+<h4 id="пример-9-класс-asynccounter"><a class="header" href="#пример-9-класс-asynccounter">Пример 9: Класс AsyncCounter</a></h4>
+<pre><code class="language-javascript">class AsyncCounter {
+  constructor(begin, end, step = 1) {
+    this.begin = begin;
+    this.end = end;
+    this.step = step;
+  }
+
+  // Делаем класс async iterable
+  [Symbol.asyncIterator]() {
+    let current = this.begin;
+    const end = this.end;
+    const step = this.step;
+
+    return {
+      async next() {
+        // Здесь могут быть асинхронные операции
+        // Например, await fetch(), await fs.readFile() и т.д.
+
+        if (current &lt; end) {
+          const value = current;
+          current += step;
+          return { value, done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+}
+
+// Использование
+async function run() {
+  const counter = new AsyncCounter(0, 3);
+
+  // Способ 1: Вручную
+  const iterator = counter[Symbol.asyncIterator]();
+  console.log(await iterator.next()); // { value: 0, done: false }
+  console.log(await iterator.next()); // { value: 1, done: false }
+  console.log(await iterator.next()); // { value: 2, done: false }
+
+  // Способ 2: for await...of
+  for await (const num of counter) {
+    console.log(num); // 0, 1, 2
+  }
+
+  // Способ 3: Spread НЕ работает с async iterable!
+  // const arr = [...counter]; // ОШИБКА!
+}
+
+run();
+</code></pre>
+<p><strong>Практическое применение</strong>: Async iterable идеально подходит для:</p>
+<ul>
+<li>Чтения больших файлов по частям</li>
+<li>Получения данных из API с пагинацией</li>
+<li>Обработки потоков данных (streams)</li>
+<li>Любых последовательных асинхронных операций</li>
+</ul>
+<hr>
+<h3 id="24-async-генераторы"><a class="header" href="#24-async-генераторы">2.4 Async генераторы</a></h3>
+<p>Как и с синхронными итераторами, создание async iterable вручную требует много кода. <strong>Async генераторы</strong> решают эту проблему.</p>
+<h4 id="синтаксис-async-генератора"><a class="header" href="#синтаксис-async-генератора">Синтаксис async генератора:</a></h4>
+<pre><code class="language-javascript">async function* asyncGeneratorName() {
+  yield value1;
+  yield value2;
+  // ...
+}
+</code></pre>
+<ul>
+<li><code>async function*</code> - объявление async генератора (async + звездочка)</li>
+<li><code>yield</code> - возвращает значение через Promise</li>
+<li>Возвращает async iterable объект</li>
+</ul>
+<h4 id="пример-10-async-генератор-вместо-класса"><a class="header" href="#пример-10-async-генератор-вместо-класса">Пример 10: Async генератор вместо класса</a></h4>
+<pre><code class="language-javascript">// С классом (много кода)
+class AsyncCounter {
+  constructor(begin, end, step = 1) {
+    this.begin = begin;
+    this.end = end;
+    this.step = step;
+  }
+
+  [Symbol.asyncIterator]() {
+    let current = this.begin;
+    const end = this.end;
+    const step = this.step;
+
+    return {
+      async next() {
+        if (current &lt; end) {
+          const value = current;
+          current += step;
+          return { value, done: false };
+        }
+        return { value: undefined, done: true };
+      }
+    };
+  }
+}
+
+// VS
+
+// С async генератором (компактно!)
+async function* asyncCounter(begin, end, step = 1) {
+  for (let i = begin; i &lt; end; i += step) {
+    // Здесь можно делать await операции
+    // await someAsyncOperation();
+    yield i;
+  }
+}
+
+// Использование одинаковое
+async function run() {
+  // Способ 1: Вручную
+  const gen = asyncCounter(0, 3);
+  console.log(await gen.next()); // { value: 0, done: false }
+  console.log(await gen.next()); // { value: 1, done: false }
+  console.log(await gen.next()); // { value: 2, done: false }
+
+  // Способ 2: for await...of
+  for await (const num of asyncCounter(0, 3)) {
+    console.log(num); // 0, 1, 2
+  }
+
+  // Способ 3: Promise.all для массива
+  const gen2 = asyncCounter(0, 4);
+  const promises = [];
+  for (let i = 0; i &lt; 4; i++) {
+    promises.push(gen2.next());
+  }
+  const results = await Promise.all(promises);
+  console.log(results);
+  // [
+  //   { value: 0, done: false },
+  //   { value: 1, done: false },
+  //   { value: 2, done: false },
+  //   { value: 3, done: false }
+  // ]
+}
+
+run();
+</code></pre>
+<p><strong>Преимущества async генератора</strong>:</p>
+<ul>
+<li>Лаконичный синтаксис</li>
+<li>Естественная работа с <code>await</code> внутри</li>
+<li>Автоматическое создание async iterable</li>
+<li>Декларативный стиль</li>
+</ul>
+<hr>
+<h3 id="25-делегирование-в-async-генераторах-yield"><a class="header" href="#25-делегирование-в-async-генераторах-yield">2.5 Делегирование в async генераторах (yield*)</a></h3>
+<p>Async генераторы тоже поддерживают делегирование через <code>yield*</code>.</p>
+<h4 id="пример-11-async-делегирование-массиву"><a class="header" href="#пример-11-async-делегирование-массиву">Пример 11: Async делегирование массиву</a></h4>
+<pre><code class="language-javascript">// Async генератор с делегированием
+async function* asyncGen() {
+  // yield* работает с любым iterable
+  // значения автоматически оборачиваются в Promise
+  yield* [0, 1, 2];
+}
+
+async function run() {
+  // Способ 1: Вручную
+  const iterator = asyncGen();
+  console.log(await iterator.next()); // { value: 0, done: false }
+  console.log(await iterator.next()); // { value: 1, done: false }
+  console.log(await iterator.next()); // { value: 2, done: false }
+
+  // Способ 2: for await...of
+  for await (const value of asyncGen()) {
+    console.log(value); // 0, 1, 2
+  }
+
+  // Способ 3: Promise.all
+  const gen = asyncGen();
+  const promises = [
+    gen.next(),
+    gen.next(),
+    gen.next()
+  ];
+  const results = await Promise.all(promises);
+  console.log(results);
+}
+
+run();
+</code></pre>
+<p><strong>Что происходит</strong>:</p>
+<ul>
+<li><code>yield* [0, 1, 2]</code> берет обычный массив (синхронный iterable)</li>
+<li>Каждое значение автоматически оборачивается в Promise</li>
+<li>Получается async итерация по синхронным данным</li>
+</ul>
+<hr>
+<h2 id="сравнительная-таблица"><a class="header" href="#сравнительная-таблица">Сравнительная таблица</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Характеристика</th><th>Синхронный Iterator</th><th>Async Iterator</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Метод next()</strong></td><td>Обычная функция</td><td><code>async</code> функция</td></tr>
+<tr><td><strong>Возвращает</strong></td><td><code>{ value, done }</code></td><td><code>Promise&lt;{ value, done }&gt;</code></td></tr>
+<tr><td><strong>Символ</strong></td><td><code>Symbol.iterator</code></td><td><code>Symbol.asyncIterator</code></td></tr>
+<tr><td><strong>Цикл</strong></td><td><code>for...of</code></td><td><code>for await...of</code></td></tr>
+<tr><td><strong>Spread оператор</strong></td><td>✅ Работает</td><td>❌ Не работает</td></tr>
+<tr><td><strong>Генератор</strong></td><td><code>function*</code></td><td><code>async function*</code></td></tr>
+<tr><td><strong>yield</strong></td><td>Возвращает значение</td><td>Возвращает Promise</td></tr>
+<tr><td><strong>Делегирование</strong></td><td><code>yield*</code></td><td><code>yield*</code></td></tr>
+<tr><td><strong>Применение</strong></td><td>Синхронные данные</td><td>Асинхронные операции</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="ключевые-моменты"><a class="header" href="#ключевые-моменты">Ключевые моменты</a></h2>
+<h3 id="контракты"><a class="header" href="#контракты">Контракты</a></h3>
+<ol>
+<li><strong>Iterator</strong> = объект с методом <code>next()</code> → <code>{ value, done }</code></li>
+<li><strong>Iterable</strong> = объект с методом <code>[Symbol.iterator]()</code> → Iterator</li>
+<li><strong>Async Iterator</strong> = объект с <code>async next()</code> → <code>Promise&lt;{ value, done }&gt;</code></li>
+<li><strong>Async Iterable</strong> = объект с <code>[Symbol.asyncIterator]()</code> → Async Iterator</li>
+</ol>
+<h3 id="способы-создания"><a class="header" href="#способы-создания">Способы создания</a></h3>
+<p><strong>Синхронные итераторы:</strong></p>
+<ol>
+<li>Вручную через литералы объектов</li>
+<li>Через классы с <code>[Symbol.iterator]()</code></li>
+<li>Через генераторы <code>function*</code></li>
+</ol>
+<p><strong>Асинхронные итераторы:</strong></p>
+<ol>
+<li>Вручную через литералы с <code>async next()</code></li>
+<li>Через классы с <code>[Symbol.asyncIterator]()</code></li>
+<li>Через async генераторы <code>async function*</code></li>
+</ol>
+<h3 id="использование"><a class="header" href="#использование">Использование</a></h3>
+<p><strong>Синхронные:</strong></p>
+<ul>
+<li><code>iterator.next()</code> - ручное получение</li>
+<li><code>for...of</code> - автоматическая итерация</li>
+<li><code>[...iterable]</code> - spread в массив</li>
+</ul>
+<p><strong>Асинхронные:</strong></p>
+<ul>
+<li><code>await iterator.next()</code> - ручное получение</li>
+<li><code>for await...of</code> - автоматическая итерация</li>
+<li>Spread <strong>не поддерживается</strong></li>
+</ul>
+<hr>
+<h2 id="практические-примеры-применения"><a class="header" href="#практические-примеры-применения">Практические примеры применения</a></h2>
+<h3 id="пример-чтение-больших-файлов-построчно"><a class="header" href="#пример-чтение-больших-файлов-построчно">Пример: Чтение больших файлов построчно</a></h3>
+<pre><code class="language-javascript">// Async генератор для чтения файла построчно
+async function* readLines(filePath) {
+  const fs = require('fs').promises;
+  const fileHandle = await fs.open(filePath, 'r');
+
+  try {
+    let buffer = '';
+    const chunk = Buffer.alloc(1024);
+
+    while (true) {
+      const { bytesRead } = await fileHandle.read(chunk, 0, 1024);
+      if (bytesRead === 0) break;
+
+      buffer += chunk.toString('utf8', 0, bytesRead);
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // Последняя неполная строка
+
+      for (const line of lines) {
+        yield line;
+      }
+    }
+
+    if (buffer.length &gt; 0) {
+      yield buffer;
+    }
+  } finally {
+    await fileHandle.close();
+  }
+}
+
+// Использование
+async function processFile() {
+  for await (const line of readLines('huge-file.txt')) {
+    console.log('Line:', line);
+    // Обрабатываем каждую строку по мере чтения
+    // Не загружаем весь файл в память!
+  }
+}
+</code></pre>
+<h3 id="пример-пагинация-api"><a class="header" href="#пример-пагинация-api">Пример: Пагинация API</a></h3>
+<pre><code class="language-javascript">// Async генератор для получения всех страниц API
+async function* fetchAllPages(baseUrl) {
+  let page = 1;
+
+  while (true) {
+    const response = await fetch(`${baseUrl}?page=${page}`);
+    const data = await response.json();
+
+    // Отдаем текущую страницу
+    yield data.items;
+
+    // Проверяем, есть ли еще страницы
+    if (!data.hasNextPage) break;
+    page++;
+  }
+}
+
+// Использование
+async function loadAllData() {
+  for await (const pageItems of fetchAllPages('/api/users')) {
+    console.log('Page items:', pageItems);
+    // Обрабатываем каждую страницу по мере загрузки
+  }
+}
+</code></pre>
+<h3 id="пример-бесконечная-последовательность"><a class="header" href="#пример-бесконечная-последовательность">Пример: Бесконечная последовательность</a></h3>
+<pre><code class="language-javascript">// Генератор бесконечной последовательности чисел Фибоначчи
+function* fibonacci() {
+  let a = 0, b = 1;
+
+  while (true) {
+    yield a;
+    [a, b] = [b, a + b];
+  }
+}
+
+// Использование с ограничением
+function* take(iterable, limit) {
+  let count = 0;
+  for (const value of iterable) {
+    if (count &gt;= limit) break;
+    yield value;
+    count++;
+  }
+}
+
+// Получаем первые 10 чисел Фибоначчи
+const first10 = [...take(fibonacci(), 10)];
+console.log(first10);
+// [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+</code></pre>
+<hr>
+<h2 id="распространенные-ошибки-и-как-их-избежать"><a class="header" href="#распространенные-ошибки-и-как-их-избежать">Распространенные ошибки и как их избежать</a></h2>
+<h3 id="ошибка-1-попытка-использовать-spread-с-async-iterable"><a class="header" href="#ошибка-1-попытка-использовать-spread-с-async-iterable">Ошибка 1: Попытка использовать spread с async iterable</a></h3>
+<pre><code class="language-javascript">async function* asyncGen() {
+  yield 1;
+  yield 2;
+}
+
+// ❌ ОШИБКА: Spread не работает с async iterable
+// const arr = [...asyncGen()];
+
+// ✅ ПРАВИЛЬНО: Используйте for await...of
+async function collectToArray() {
+  const arr = [];
+  for await (const value of asyncGen()) {
+    arr.push(value);
+  }
+  return arr;
+}
+</code></pre>
+<h3 id="ошибка-2-забыть-await-в-async-генераторе"><a class="header" href="#ошибка-2-забыть-await-в-async-генераторе">Ошибка 2: Забыть await в async генераторе</a></h3>
+<pre><code class="language-javascript">async function* fetchData() {
+  // ❌ ОШИБКА: Забыли await
+  const data = fetch('/api/data'); // Promise!
+  yield data; // Вернет Promise, а не данные
+
+  // ✅ ПРАВИЛЬНО
+  const data2 = await fetch('/api/data');
+  yield data2;
+}
+</code></pre>
+<h3 id="ошибка-3-не-проверять-done-при-ручном-вызове-next"><a class="header" href="#ошибка-3-не-проверять-done-при-ручном-вызове-next">Ошибка 3: Не проверять done при ручном вызове next()</a></h3>
+<pre><code class="language-javascript">const iterator = [1, 2, 3][Symbol.iterator]();
+
+// ❌ ОШИБКА: Не проверяем done
+console.log(iterator.next().value); // 1
+console.log(iterator.next().value); // 2
+console.log(iterator.next().value); // 3
+console.log(iterator.next().value); // undefined (должны были остановиться!)
+
+// ✅ ПРАВИЛЬНО
+let result;
+while (!(result = iterator.next()).done) {
+  console.log(result.value);
+}
+</code></pre>
+<h3 id="ошибка-4-переиспользование-итератора"><a class="header" href="#ошибка-4-переиспользование-итератора">Ошибка 4: Переиспользование итератора</a></h3>
+<pre><code class="language-javascript">function* gen() {
+  yield 1;
+  yield 2;
+}
+
+const iterator = gen();
+
+// Первый проход
+for (const value of iterator) {
+  console.log(value); // 1, 2
+}
+
+// ❌ Второй проход не сработает - итератор исчерпан!
+for (const value of iterator) {
+  console.log(value); // Ничего не выведет
+}
+
+// ✅ ПРАВИЛЬНО: Создавайте новый итератор
+for (const value of gen()) {
+  console.log(value); // 1, 2
+}
+</code></pre>
+<hr>
+<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
+<h3 id="что-мы-изучили"><a class="header" href="#что-мы-изучили">Что мы изучили:</a></h3>
+<ol>
+<li><strong>Контракты Iterator и Iterable</strong> - фундаментальные интерфейсы для итерации</li>
+<li><strong>Ручное создание итераторов</strong> - через литералы и классы</li>
+<li><strong>Генераторы (<code>function*</code>)</strong> - синтаксический сахар для создания iterable</li>
+<li><strong>Async Iterator и Async Iterable</strong> - для асинхронных операций</li>
+<li><strong>Async генераторы (<code>async function*</code>)</strong> - упрощенное создание async iterable</li>
+<li><strong>Делегирование (<code>yield*</code>)</strong> - переиспользование других iterable</li>
+<li><strong><code>for...of</code> и <code>for await...of</code></strong> - циклы для итерации</li>
+<li><strong>Spread оператор</strong> - работает только с синхронными iterable</li>
+</ol>
+<h3 id="почему-это-важно"><a class="header" href="#почему-это-важно">Почему это важно:</a></h3>
+<ul>
+<li><strong>Единый интерфейс</strong> для работы с последовательностями</li>
+<li><strong>Ленивые вычисления</strong> - данные генерируются по требованию</li>
+<li><strong>Память эффективность</strong> - не нужно загружать все данные сразу</li>
+<li><strong>Композиция</strong> - можно комбинировать итераторы</li>
+<li><strong>Асинхронность</strong> - естественная работа с async операциями</li>
+</ul>
+<h3 id="когда-использовать"><a class="header" href="#когда-использовать">Когда использовать:</a></h3>
+<p><strong>Синхронные итераторы:</strong></p>
+<ul>
+<li>Обработка коллекций данных</li>
+<li>Математические последовательности</li>
+<li>Генерация комбинаций/перестановок</li>
+<li>Обход структур данных (деревья, графы)</li>
+</ul>
+<p><strong>Асинхронные итераторы:</strong></p>
+<ul>
+<li>Чтение больших файлов</li>
+<li>Работа с API (пагинация)</li>
+<li>Обработка потоков данных</li>
+<li>Последовательные асинхронные задачи</li>
+</ul>
+<hr>
+<h2 id="дополнительные-материалы-для-изучения"><a class="header" href="#дополнительные-материалы-для-изучения">Дополнительные материалы для изучения</a></h2>
+<h3 id="связанные-темы"><a class="header" href="#связанные-темы">Связанные темы:</a></h3>
+<ol>
+<li><strong>Iterator Helpers</strong> (ES2024) - методы <code>.map()</code>, <code>.filter()</code>, <code>.take()</code> для итераторов</li>
+<li><strong>Observable</strong> - реактивные потоки данных (RxJS)</li>
+<li><strong>Streams API</strong> - работа с потоками данных в браузере</li>
+<li><strong>Node.js Streams</strong> - потоки в Node.js</li>
+<li><strong>Transducers</strong> - композируемые преобразования данных</li>
+</ol>
+<h3 id="спецификации"><a class="header" href="#спецификации">Спецификации:</a></h3>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">Iteration protocols (MDN)</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator">Generators (MDN)</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of">for await…of (MDN)</a></li>
+</ul>
+<hr>
+<p><strong>Конец конспекта лекции</strong></p>
+<p><em>Удачи в изучении итераторов и генераторов! Практикуйтесь на реальных задачах для закрепления материала.</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week2/Thenable-контракт-конспект.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week2/promise-contract-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week2/Thenable-контракт-конспект.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week2/promise-contract-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

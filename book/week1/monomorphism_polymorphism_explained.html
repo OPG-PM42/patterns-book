@@ -1,0 +1,1645 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Мономорфный и полиморфный код, инлайн-кэш, скрытые классы в JavaScript - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="мономорфизм-и-полиморфизм-в-javascript-глубокое-академическое-погружение"><a class="header" href="#мономорфизм-и-полиморфизм-в-javascript-глубокое-академическое-погружение">Мономорфизм и полиморфизм в JavaScript: Глубокое академическое погружение</a></h1>
+<h2 id="цели-обучения"><a class="header" href="#цели-обучения">Цели обучения</a></h2>
+<p>После изучения этого материала вы будете понимать:</p>
+<ol>
+<li><strong>Фундаментальные концепции</strong>: Что такое мономорфный и полиморфный код в контексте JavaScript VM</li>
+<li><strong>Теоретические основы</strong>: Почему эти оптимизации работают с точки зрения архитектуры процессора и теории компиляторов</li>
+<li><strong>Механизмы реализации</strong>: Как работают inline-кэши, скрытые классы и оптимизирующий компилятор</li>
+<li><strong>Практическое применение</strong>: Как писать производительный код, используя эти знания</li>
+<li><strong>Инструменты анализа</strong>: Как профилировать и оптимизировать реальные приложения</li>
+</ol>
+<hr>
+<h2 id="введение-что-происходит-с-мономорфизмом"><a class="header" href="#введение-что-происходит-с-мономорфизмом">Введение: Что происходит с мономорфизмом?</a></h2>
+<p>В докладах и статьях о производительности JavaScript часто подчёркивают важность <strong>мономорфного</strong> кода. Однако они обычно не дают ясного объяснения того, что такое мономорфизм/полиморфизм и почему это важно. Даже в докладах экспертов часто звучит что-то вроде «<strong>ОДИН ТИП — ХОРОШО. ДВА ТИПА — ПЛОХО!!!</strong>».</p>
+<h3 id="терминологическая-путаница"><a class="header" href="#терминологическая-путаница">Терминологическая путаница</a></h3>
+<p>Важно понимать, что слово “полиморфизм” перегружено смыслами:</p>
+<ul>
+<li><strong>В ООП</strong>: Полиморфизм обычно означает субтипизацию и возможность переопределить поведение базового класса</li>
+<li><strong>В функциональном программировании</strong>: Параметрический полиморфизм (generics)</li>
+<li><strong>В контексте производительности JS</strong>: <strong>Полиморфизм в точке вызова</strong> (call-site polymorphism)</li>
+</ul>
+<p>Именно последний тип полиморфизма влияет на производительность JavaScript и является темой этой статьи.</p>
+<hr>
+<h2 id="часть-1-фундаментальные-концепции"><a class="header" href="#часть-1-фундаментальные-концепции">Часть 1: Фундаментальные концепции</a></h2>
+<h3 id="11-динамическая-типизация-и-её-цена"><a class="header" href="#11-динамическая-типизация-и-её-цена">1.1 Динамическая типизация и её цена</a></h3>
+<p>JavaScript является <strong>динамически типизированным</strong> языком. Это означает, что тип значения определяется во время выполнения (runtime), а не во время компиляции.</p>
+<pre><code class="language-javascript">// В JavaScript переменная может хранить значения разных типов
+let x = 42;        // number
+x = "hello";       // string
+x = { foo: 1 };    // object
+</code></pre>
+<p><strong>Теоретическая основа</strong>: В статически типизированных языках (C++, Java, Rust) компилятор знает типы всех переменных на этапе компиляции. Это позволяет:</p>
+<ol>
+<li>Генерировать оптимальный машинный код напрямую</li>
+<li>Вычислять смещения полей структур/объектов на этапе компиляции</li>
+<li>Использовать прямую адресацию памяти</li>
+</ol>
+<p>В динамических языках эта информация недоступна заранее, что приводит к <strong>runtime overhead</strong>.</p>
+<h3 id="12-проблема-динамического-поиска-свойств"><a class="header" href="#12-проблема-динамического-поиска-свойств">1.2 Проблема динамического поиска свойств</a></h3>
+<p>Рассмотрим простую операцию:</p>
+<pre><code class="language-javascript">function getX(o) {
+  return o.x;  // Как VM находит свойство x?
+}
+</code></pre>
+<p><strong>Наивная реализация</strong> (согласно спецификации ECMAScript):</p>
+<pre><code>1. Проверить, есть ли свойство 'x' на самом объекте o
+2. Если нет, проверить прототип объекта o
+3. Если нет, проверить прототип прототипа
+4. Продолжать до Object.prototype
+5. Если не найдено нигде, вернуть undefined
+</code></pre>
+<p><strong>Стоимость наивной реализации</strong>:</p>
+<ul>
+<li><strong>O(n)</strong> сложность, где n — длина цепочки прототипов</li>
+<li>Множественные обращения к памяти</li>
+<li>Невозможность оптимизации компилятором</li>
+<li>Проверка типов и существования на каждом шаге</li>
+</ul>
+<h4 id="диаграмма-наивный-поиск-свойства"><a class="header" href="#диаграмма-наивный-поиск-свойства">Диаграмма: Наивный поиск свойства</a></h4>
+<pre><code>Объект o
+   |
+   v
+[Проверить собственные свойства] --нет--&gt; [Проверить __proto__] --нет--&gt; [Проверить __proto__.__proto__] --&gt; ...
+   |                                          |
+   да                                         да
+   |                                          |
+   v                                          v
+[Вернуть значение]                      [Вернуть значение]
+</code></pre>
+<h3 id="13-принцип-временной-локальности-temporal-locality"><a class="header" href="#13-принцип-временной-локальности-temporal-locality">1.3 Принцип временной локальности (Temporal Locality)</a></h3>
+<p><strong>Теория</strong>: В информатике принцип локальности утверждает, что программы имеют тенденцию обращаться к одним и тем же данным или инструкциям многократно в течение короткого периода времени.</p>
+<p><strong>Применение к JavaScript</strong>:</p>
+<pre><code class="language-javascript">function processArray(arr) {
+  for (let i = 0; i &lt; arr.length; i++) {
+    console.log(arr[i].x);  // Доступ к .x повторяется много раз
+  }
+}
+
+processArray([{x: 1}, {x: 2}, {x: 3}]);  // Все объекты имеют одну структуру
+</code></pre>
+<p><strong>Ключевое наблюдение</strong>: Если операция <code>o.x</code> видела объекты определённой структуры, вероятно, она увидит похожие объекты в будущем.</p>
+<p>Это наблюдение является основой для <strong>inline caching</strong>.</p>
+<hr>
+<h2 id="часть-2-inline-caching--основа-оптимизации"><a class="header" href="#часть-2-inline-caching--основа-оптимизации">Часть 2: Inline Caching — Основа оптимизации</a></h2>
+<h3 id="21-концепция-inline-cache-ic"><a class="header" href="#21-концепция-inline-cache-ic">2.1 Концепция Inline Cache (IC)</a></h3>
+<p><strong>Определение</strong>: Inline Cache — это техника оптимизации, которая кэширует результаты динамического поиска свойств/методов, чтобы избежать повторных дорогостоящих операций поиска.</p>
+<p><strong>Ключевая идея</strong>: Каждая точка доступа к свойству в коде <strong>учится</strong> на объектах, которые она видела, и использует эти знания для оптимизации будущих обращений.</p>
+<h3 id="22-теоретическая-основа-ic"><a class="header" href="#22-теоретическая-основа-ic">2.2 Теоретическая основа IC</a></h3>
+<p>Inline caching основан на нескольких фундаментальных принципах:</p>
+<h4 id="221-мемоизация-memoization"><a class="header" href="#221-мемоизация-memoization">2.2.1 Мемоизация (Memoization)</a></h4>
+<p>IC — это форма мемоизации, где:</p>
+<ul>
+<li><strong>Ключ кэша</strong>: Форма (структура) объекта</li>
+<li><strong>Значение кэша</strong>: Путь к свойству (смещение в памяти или getter-функция)</li>
+</ul>
+<h4 id="222-компромисс-пространствовремя"><a class="header" href="#222-компромисс-пространствовремя">2.2.2 Компромисс пространство/время</a></h4>
+<pre><code>Время поиска БЕЗ кэша: O(n) × количество обращений
+Время поиска С кэшем:   O(1) × количество обращений + O(1) стоимость проверки
+Пространство для кэша:  O(k), где k — количество уникальных форм
+</code></pre>
+<p><strong>Выгода</strong>: Когда количество обращений &gt;&gt; количества уникальных форм</p>
+<h4 id="223-принцип-локальности-и-cpu-cache"><a class="header" href="#223-принцип-локальности-и-cpu-cache">2.2.3 Принцип локальности и CPU cache</a></h4>
+<p>Inline cache улучшает не только логическую производительность, но и использование CPU cache:</p>
+<ul>
+<li><strong>Spatial locality</strong>: Данные кэша находятся рядом с кодом</li>
+<li><strong>Temporal locality</strong>: Горячие пути используют одни и те же кэшированные данные</li>
+<li><strong>Предсказуемость для CPU</strong>: Монотонный паттерн доступа к памяти</li>
+</ul>
+<h3 id="23-как-работает-inline-cache"><a class="header" href="#23-как-работает-inline-cache">2.3 Как работает Inline Cache</a></h3>
+<h4 id="шаг-1-первое-выполнение-uninitialized-ic"><a class="header" href="#шаг-1-первое-выполнение-uninitialized-ic">Шаг 1: Первое выполнение (Uninitialized IC)</a></h4>
+<pre><code class="language-javascript">function f(o) {
+  return o.x;  // IC еще не инициализирован
+}
+
+f({x: 1});  // Первый вызов
+</code></pre>
+<p><strong>Что происходит</strong>:</p>
+<ol>
+<li>VM выполняет полный поиск свойства</li>
+<li>Определяет “форму” объекта (hidden class)</li>
+<li>Вычисляет путь к свойству x</li>
+<li><strong>Сохраняет в кэше</strong>: <code>форма {x: *} → смещение @12</code></li>
+</ol>
+<h4 id="шаг-2-последующие-выполнения-monomorphic-ic"><a class="header" href="#шаг-2-последующие-выполнения-monomorphic-ic">Шаг 2: Последующие выполнения (Monomorphic IC)</a></h4>
+<pre><code class="language-javascript">f({x: 2});  // Второй вызов
+</code></pre>
+<p><strong>Что происходит</strong>:</p>
+<ol>
+<li>Быстрая проверка: <code>форма(o) === кэшированная_форма?</code></li>
+<li>Если да: прямой доступ по смещению (очень быстро!)</li>
+<li>Если нет: переход к медленному пути</li>
+</ol>
+<h4 id="диаграмма-работа-ic"><a class="header" href="#диаграмма-работа-ic">Диаграмма: Работа IC</a></h4>
+<pre><code>┌─────────────────────────────────────────┐
+│  Код: o.x                                │
+└─────────────────┬───────────────────────┘
+                  │
+                  v
+        ┌─────────────────┐
+        │ Проверка кэша    │
+        └────┬────────┬────┘
+             │        │
+      Попадание    Промах
+             │        │
+             v        v
+      ┌──────────┐  ┌─────────────────┐
+      │ Быстрый  │  │ Полный поиск +  │
+      │ доступ   │  │ обновление кэша │
+      │ O(1)     │  │ O(n)            │
+      └──────────┘  └─────────────────┘
+</code></pre>
+<h3 id="24-структура-данных-ic"><a class="header" href="#24-структура-данных-ic">2.4 Структура данных IC</a></h3>
+<p>Каждый IC можно представить как:</p>
+<pre><code class="language-javascript">// Псевдокод структуры IC
+class InlineCache {
+  state: 'uninitialized' | 'monomorphic' | 'polymorphic' | 'megamorphic';
+  entries: Array&lt;{
+    shape: HiddenClass,      // Форма объекта
+    handler: Function | int  // Обработчик или смещение
+  }&gt;;
+  capacity: number;  // Максимальное количество записей
+}
+</code></pre>
+<p><strong>Важно</strong>: IC имеет <strong>фиксированную ёмкость</strong> (обычно 4-5 записей для V8).</p>
+<hr>
+<h2 id="часть-3-скрытые-классы-hidden-classes--shapes--maps"><a class="header" href="#часть-3-скрытые-классы-hidden-classes--shapes--maps">Часть 3: Скрытые классы (Hidden Classes / Shapes / Maps)</a></h2>
+<h3 id="31-концепция-скрытых-классов"><a class="header" href="#31-концепция-скрытых-классов">3.1 Концепция скрытых классов</a></h3>
+<p><strong>Проблема</strong>: JavaScript объекты — это словари (hash maps). Доступ к свойству требует хеш-поиска O(log n) или O(1) с коллизиями.</p>
+<p><strong>Решение</strong>: V8 использует <strong>скрытые классы</strong> (hidden classes), чтобы сделать объекты похожими на объекты в C++/Java.</p>
+<p><strong>Определение</strong>: Скрытый класс (также называемый Shape или Map) — это внутренняя структура данных VM, которая описывает:</p>
+<ol>
+<li>Какие свойства есть у объекта</li>
+<li>В каком порядке они были добавлены</li>
+<li>Где они находятся в памяти (смещения)</li>
+<li>Их атрибуты (writable, enumerable, configurable)</li>
+</ol>
+<h3 id="32-как-создаются-скрытые-классы"><a class="header" href="#32-как-создаются-скрытые-классы">3.2 Как создаются скрытые классы</a></h3>
+<h4 id="пример-эволюция-скрытого-класса"><a class="header" href="#пример-эволюция-скрытого-класса">Пример: Эволюция скрытого класса</a></h4>
+<pre><code class="language-javascript">const obj = {};           // Shape S0: пустой объект
+obj.x = 1;                // Переход: S0 → S1 (добавлено свойство 'x')
+obj.y = 2;                // Переход: S1 → S2 (добавлено свойство 'y')
+</code></pre>
+<h4 id="диаграмма-цепочка-переходов-скрытых-классов"><a class="header" href="#диаграмма-цепочка-переходов-скрытых-классов">Диаграмма: Цепочка переходов скрытых классов</a></h4>
+<pre><code>┌─────────┐    add 'x'    ┌──────────┐    add 'y'    ┌──────────┐
+│ Shape S0│───────────────&gt;│ Shape S1 │───────────────&gt;│ Shape S2 │
+│ {}      │                │ {x: *}   │                │ {x:*, y:*}│
+└─────────┘                └──────────┘                └──────────┘
+                              @offset 0                  @offset 4
+</code></pre>
+<h3 id="33-memory-layout-объектов-с-одним-скрытым-классом"><a class="header" href="#33-memory-layout-объектов-с-одним-скрытым-классом">3.3 Memory Layout объектов с одним скрытым классом</a></h3>
+<p><strong>Ключевое свойство</strong>: Объекты с одинаковым скрытым классом имеют <strong>идентичное расположение свойств в памяти</strong>.</p>
+<pre><code class="language-javascript">const obj1 = {x: 1, y: 2};
+const obj2 = {x: 3, y: 4};
+</code></pre>
+<p><strong>Memory layout</strong>:</p>
+<pre><code>obj1:                          obj2:
+┌──────────────┐              ┌──────────────┐
+│ Hidden Class │───┐          │ Hidden Class │───┐
+│ pointer  ────┼───┼──────────┼─────────────────┤
+├──────────────┤   │          ├──────────────┤   │
+│ x: 1   @0    │   │          │ x: 3   @0    │   │
+├──────────────┤   │          ├──────────────┤   │
+│ y: 2   @4    │   │          │ y: 4   @4    │   │
+└──────────────┘   │          └──────────────┘   │
+                   │                              │
+                   v                              │
+              ┌─────────────┐                     │
+              │  Shape S2   │&lt;────────────────────┘
+              │  {x:@0,y:@4}│
+              └─────────────┘
+</code></pre>
+<p><strong>Преимущество</strong>: IC может использовать одну запись кэша для обоих объектов!</p>
+<h3 id="34-когда-создаются-разные-скрытые-классы"><a class="header" href="#34-когда-создаются-разные-скрытые-классы">3.4 Когда создаются разные скрытые классы</a></h3>
+<h4 id="случай-1-разный-порядок-добавления-свойств"><a class="header" href="#случай-1-разный-порядок-добавления-свойств">Случай 1: Разный порядок добавления свойств</a></h4>
+<pre><code class="language-javascript">const obj1 = {};
+obj1.x = 1;  // S0 → S1
+obj1.y = 2;  // S1 → S2
+
+const obj2 = {};
+obj2.y = 1;  // S0 → S3 (другой путь!)
+obj2.x = 2;  // S3 → S4
+</code></pre>
+<p><strong>Результат</strong>: <code>obj1</code> и <code>obj2</code> имеют <strong>разные</strong> скрытые классы, даже если свойства одинаковые!</p>
+<h4 id="диаграмма-разветвление-скрытых-классов"><a class="header" href="#диаграмма-разветвление-скрытых-классов">Диаграмма: Разветвление скрытых классов</a></h4>
+<pre><code>                 ┌──────────┐
+            ┌────┤ Shape S0 │────┐
+            │    │   {}     │    │
+            │    └──────────┘    │
+         add 'x'              add 'y'
+            │                    │
+            v                    v
+       ┌──────────┐         ┌──────────┐
+       │ Shape S1 │         │ Shape S3 │
+       │  {x: *}  │         │  {y: *}  │
+       └─────┬────┘         └─────┬────┘
+             │                    │
+          add 'y'              add 'x'
+             │                    │
+             v                    v
+       ┌──────────┐         ┌──────────┐
+       │ Shape S2 │         │ Shape S4 │
+       │ {x:*, y:*}│         │ {y:*, x:*}│
+       └──────────┘         └──────────┘
+</code></pre>
+<p><strong>Важно</strong>: S2 ≠ S4, даже если набор свойств одинаковый!</p>
+<h4 id="случай-2-удаление-свойств"><a class="header" href="#случай-2-удаление-свойств">Случай 2: Удаление свойств</a></h4>
+<pre><code class="language-javascript">const obj1 = {x: 1, y: 2};
+const obj2 = {x: 1, y: 2};
+delete obj2.y;  // obj2 переходит в другой скрытый класс!
+</code></pre>
+<p><strong>Рекомендация</strong>: Избегайте <code>delete</code> для свойств объектов в горячих путях. Вместо этого используйте <code>obj.prop = undefined</code> или <code>obj.prop = null</code>.</p>
+<h4 id="случай-3-добавление-свойств-после-создания"><a class="header" href="#случай-3-добавление-свойств-после-создания">Случай 3: Добавление свойств после создания</a></h4>
+<pre><code class="language-javascript">// Хорошо: все объекты имеют одинаковую форму
+const objects = [
+  {x: 1, y: 2},
+  {x: 3, y: 4},
+  {x: 5, y: 6}
+];
+
+// Плохо: объекты имеют разные формы
+const badObjects = [
+  {x: 1},
+  {x: 2, y: 3},
+  {x: 4, y: 5, z: 6}
+];
+</code></pre>
+<hr>
+<h2 id="часть-4-состояния-inline-cache"><a class="header" href="#часть-4-состояния-inline-cache">Часть 4: Состояния Inline Cache</a></h2>
+<h3 id="41-жизненный-цикл-ic-состояния"><a class="header" href="#41-жизненный-цикл-ic-состояния">4.1 Жизненный цикл IC: Состояния</a></h3>
+<p>Каждый IC проходит через несколько состояний в процессе выполнения:</p>
+<pre><code>Uninitialized → Monomorphic → Polymorphic → Megamorphic
+</code></pre>
+<h4 id="диаграмма-машина-состояний-ic"><a class="header" href="#диаграмма-машина-состояний-ic">Диаграмма: Машина состояний IC</a></h4>
+<pre><code>     ┌──────────────────┐
+     │ Uninitialized    │  Начальное состояние
+     │ (не видел объектов)│
+     └────────┬─────────┘
+              │ Увидел объект формы A
+              v
+     ┌──────────────────┐
+     │  Monomorphic     │  Оптимальное состояние
+     │  Видел: [A]      │  ОДИН ТИП - ХОРОШО!
+     └────────┬─────────┘
+              │ Увидел объект формы B (B ≠ A)
+              v
+     ┌──────────────────┐
+     │  Polymorphic     │  Приемлемое состояние
+     │  Видел: [A, B]   │  Несколько типов
+     │         [A,B,C]  │
+     │         [A,B,C,D]│
+     └────────┬─────────┘
+              │ Увидел &gt; 4 разных форм
+              v
+     ┌──────────────────┐
+     │  Megamorphic     │  Худшее состояние
+     │  Видел: много    │  Слишком много типов!
+     └──────────────────┘
+</code></pre>
+<h3 id="42-monomorphic-мономорфное-состояние"><a class="header" href="#42-monomorphic-мономорфное-состояние">4.2 Monomorphic (Мономорфное) состояние</a></h3>
+<p><strong>Определение</strong>: IC видел объекты только <strong>одной</strong> формы.</p>
+<pre><code class="language-javascript">function f(o) {
+  return o.x;  // IC для .x
+}
+
+// Все вызовы с объектами одной формы
+f({x: 1});
+f({x: 2});
+f({x: 3});
+
+// IC остается мономорфным: видел только форму {x: *}
+</code></pre>
+<p><strong>Характеристики производительности</strong>:</p>
+<ul>
+<li><strong>Проверка</strong>: Одна проверка указателя на скрытый класс</li>
+<li><strong>Доступ</strong>: Прямое чтение по смещению</li>
+<li><strong>Стоимость</strong>: ~1-2 CPU цикла (после inline)</li>
+<li><strong>Предсказуемость ветвлений</strong>: Отличная (всегда true)</li>
+</ul>
+<p><strong>Псевдокод сгенерированного кода</strong>:</p>
+<pre><code class="language-cpp">// Мономорфный доступ к o.x
+if (o.hidden_class == cached_shape_A) {
+  return *(o.data + offset_12);  // Прямое чтение
+} else {
+  deoptimize();  // Редкий путь
+}
+</code></pre>
+<h3 id="43-polymorphic-полиморфное-состояние"><a class="header" href="#43-polymorphic-полиморфное-состояние">4.3 Polymorphic (Полиморфное) состояние</a></h3>
+<p><strong>Определение</strong>: IC видел объекты <strong>2-4 разных форм</strong> (в V8).</p>
+<pre><code class="language-javascript">function f(o) {
+  return o.x;  // IC для .x
+}
+
+f({x: 1});           // Форма A: {x: *}
+f({x: 2, y: 3});     // Форма B: {x: *, y: *}
+f({x: 4, y: 5, z: 6}); // Форма C: {x: *, y: *, z: *}
+
+// IC теперь полиморфный степени 3
+</code></pre>
+<p><strong>Характеристики производительности</strong>:</p>
+<ul>
+<li><strong>Проверка</strong>: Линейный поиск по N формам</li>
+<li><strong>Доступ</strong>: Прямое чтение по смещению (после нахождения формы)</li>
+<li><strong>Стоимость</strong>: ~N проверок + доступ</li>
+<li><strong>Предсказуемость ветвлений</strong>: Зависит от распределения типов</li>
+</ul>
+<p><strong>Псевдокод сгенерированного кода</strong>:</p>
+<pre><code class="language-cpp">// Полиморфный доступ к o.x (3 формы)
+if (o.hidden_class == shape_A) {
+  return *(o.data + offset_A);
+} else if (o.hidden_class == shape_B) {
+  return *(o.data + offset_B);
+} else if (o.hidden_class == shape_C) {
+  return *(o.data + offset_C);
+} else {
+  deoptimize();
+}
+</code></pre>
+<h4 id="два-вида-полиморфных-ic-в-v8"><a class="header" href="#два-вида-полиморфных-ic-в-v8">Два вида полиморфных IC в V8</a></h4>
+<h5 id="431-полиморфный-с-одинаковыми-смещениями"><a class="header" href="#431-полиморфный-с-одинаковыми-смещениями">4.3.1 Полиморфный с одинаковыми смещениями</a></h5>
+<p>Если свойство находится на <strong>одном и том же смещении</strong> во всех формах:</p>
+<pre><code class="language-javascript">const obj1 = {x: 1};           // x на смещении @0
+const obj2 = {x: 2, y: 3};     // x на смещении @0
+const obj3 = {x: 4, y: 5, z: 6}; // x на смещении @0
+</code></pre>
+<p><strong>Оптимизация</strong>: V8 может сгенерировать <strong>polymorphic type guard</strong>:</p>
+<pre><code class="language-cpp">// Оптимизированный полиморфный доступ
+if (o.hidden_class == shape_A ||
+    o.hidden_class == shape_B ||
+    o.hidden_class == shape_C) {
+  return *(o.data + offset_0);  // Одно смещение для всех!
+} else {
+  deoptimize();
+}
+</code></pre>
+<p><strong>Преимущество</strong>: Только одно чтение памяти после проверки типа.</p>
+<h5 id="432-полиморфный-с-разными-смещениями"><a class="header" href="#432-полиморфный-с-разными-смещениями">4.3.2 Полиморфный с разными смещениями</a></h5>
+<p>Если свойство на <strong>разных смещениях</strong>:</p>
+<pre><code class="language-javascript">const obj1 = {x: 1};           // x на смещении @0
+const obj2 = {y: 2, x: 3};     // x на смещении @4 (после y)
+const obj3 = {z: 4, y: 5, x: 6}; // x на смещении @8
+</code></pre>
+<p><strong>Генерируется</strong>: Полное дерево решений (как показано выше).</p>
+<p><strong>Недостаток</strong>: Хуже для CPU branch predictor.</p>
+<h3 id="44-megamorphic-мегаморфное-состояние"><a class="header" href="#44-megamorphic-мегаморфное-состояние">4.4 Megamorphic (Мегаморфное) состояние</a></h3>
+<p><strong>Определение</strong>: IC видел объекты <strong>более 4 разных форм</strong> (порог зависит от VM).</p>
+<pre><code class="language-javascript">function f(o) {
+  return o.x;
+}
+
+// Вызовы с множеством разных форм
+f({x: 1});
+f({x: 1, a: 2});
+f({x: 1, b: 2});
+f({x: 1, c: 2});
+f({x: 1, d: 2});
+f({x: 1, e: 2});  // Переход в мегаморфное состояние!
+</code></pre>
+<p><strong>Характеристики производительности</strong>:</p>
+<ul>
+<li><strong>Локальный кэш</strong>: Больше не используется</li>
+<li><strong>Глобальный кэш</strong>: Используется глобальная хеш-таблица (megamorphic stub cache)</li>
+<li><strong>Стоимость</strong>: Hash lookup + возможные коллизии</li>
+<li><strong>Предсказуемость</strong>: Плохая</li>
+</ul>
+<p><strong>Глобальная хеш-таблица</strong>:</p>
+<ul>
+<li>Фиксированный размер (например, 1024 записи)</li>
+<li>Общая для всех мегаморфных IC в программе</li>
+<li>Коллизии приводят к перезаписи</li>
+</ul>
+<p><strong>Псевдокод</strong>:</p>
+<pre><code class="language-cpp">// Мегаморфный доступ
+Shape shape = o.hidden_class;
+Handler handler = global_megamorphic_cache.lookup(shape, "x");
+if (handler != null) {
+  return handler(o);  // Может быть функция или смещение
+} else {
+  // Полный runtime lookup
+  return runtime_get_property(o, "x");
+}
+</code></pre>
+<h3 id="45-сравнение-производительности-состояний"><a class="header" href="#45-сравнение-производительности-состояний">4.5 Сравнение производительности состояний</a></h3>
+<h4 id="таблица-характеристики-производительности"><a class="header" href="#таблица-характеристики-производительности">Таблица: Характеристики производительности</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Состояние</th><th>Проверка</th><th>Доступ</th><th>Относительная скорость</th><th>Branch prediction</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Monomorphic</strong></td><td>1 сравнение</td><td>Прямое</td><td><strong>1.0x</strong> (базовая)</td><td>Отлично</td></tr>
+<tr><td><strong>Polymorphic (2)</strong></td><td>2 сравнения</td><td>Прямое</td><td><strong>0.95x</strong></td><td>Хорошо</td></tr>
+<tr><td><strong>Polymorphic (4)</strong></td><td>4 сравнения</td><td>Прямое</td><td><strong>0.85x</strong></td><td>Приемлемо</td></tr>
+<tr><td><strong>Polymorphic (разные смещения)</strong></td><td>4 сравнения + 4 чтения</td><td>Условное</td><td><strong>0.70x</strong></td><td>Плохо</td></tr>
+<tr><td><strong>Megamorphic</strong></td><td>Hash lookup</td><td>Прямое/вызов</td><td><strong>0.30-0.50x</strong></td><td>Очень плохо</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Примечание</strong>: Точные цифры зависят от паттернов использования, распределения типов и архитектуры CPU.</p>
+<h3 id="46-практический-пример-визуализация-состояний-ic"><a class="header" href="#46-практический-пример-визуализация-состояний-ic">4.6 Практический пример: Визуализация состояний IC</a></h3>
+<pre><code class="language-javascript">// Пример 1: Мономорфный доступ
+function processMonomorphic(objects) {
+  let sum = 0;
+  for (let i = 0; i &lt; objects.length; i++) {
+    sum += objects[i].value;  // IC: Monomorphic
+  }
+  return sum;
+}
+
+// Все объекты одной формы
+const monoObjects = [
+  {value: 1},
+  {value: 2},
+  {value: 3}
+];
+
+// Пример 2: Полиморфный доступ
+function processPolymorphic(objects) {
+  let sum = 0;
+  for (let i = 0; i &lt; objects.length; i++) {
+    sum += objects[i].value;  // IC: Polymorphic (степень 3)
+  }
+  return sum;
+}
+
+// Объекты разных форм
+const polyObjects = [
+  {value: 1},           // Форма A
+  {value: 2, x: 0},     // Форма B
+  {value: 3, y: 0},     // Форма C
+  {value: 1},           // Форма A
+  {value: 2, x: 0},     // Форма B
+];
+
+// Пример 3: Мегаморфный доступ
+function processMegamorphic(objects) {
+  let sum = 0;
+  for (let i = 0; i &lt; objects.length; i++) {
+    sum += objects[i].value;  // IC: Megamorphic
+  }
+  return sum;
+}
+
+// Объекты множества разных форм
+const megaObjects = [
+  {value: 1},
+  {value: 2, a: 0},
+  {value: 3, b: 0},
+  {value: 4, c: 0},
+  {value: 5, d: 0},
+  {value: 6, e: 0},  // Более 4 форм!
+];
+</code></pre>
+<p><strong>Бенчмарк результаты</strong> (относительные):</p>
+<ul>
+<li><code>processMonomorphic</code>: <strong>1.00x</strong> (базовая скорость)</li>
+<li><code>processPolymorphic</code>: <strong>0.85x</strong> (на 15% медленнее)</li>
+<li><code>processMegamorphic</code>: <strong>0.45x</strong> (более чем в 2 раза медленнее)</li>
+</ul>
+<hr>
+<h2 id="часть-5-оптимизирующий-компилятор-и-спекулятивная-оптимизация"><a class="header" href="#часть-5-оптимизирующий-компилятор-и-спекулятивная-оптимизация">Часть 5: Оптимизирующий компилятор и спекулятивная оптимизация</a></h2>
+<h3 id="51-архитектура-многоуровневого-выполнения"><a class="header" href="#51-архитектура-многоуровневого-выполнения">5.1 Архитектура многоуровневого выполнения</a></h3>
+<p>Современные JavaScript VM (V8, SpiderMonkey, JavaScriptCore) используют <strong>многоуровневую архитектуру</strong>:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    JavaScript Source                    │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         v
+              ┌──────────────────────┐
+              │   Parser + AST       │
+              └──────────┬───────────┘
+                         │
+                         v
+              ┌──────────────────────┐
+              │  Ignition Bytecode   │  Уровень 1: Интерпретатор
+              │  (быстрая компиляция)│  - Низкая задержка запуска
+              └──────────┬───────────┘  - Собирает type feedback
+                         │
+                         │ Горячий код (hot)
+                         │
+                         v
+              ┌──────────────────────┐
+              │    TurboFan JIT      │  Уровень 2: Оптимизирующий компилятор
+              │  (медленная компиляция│  - Использует type feedback
+              │   оптимизированный    │  - Генерирует специализированный код
+              │   машинный код)       │  - Может деоптимизировать
+              └───────────────────────┘
+</code></pre>
+<h3 id="52-роль-type-feedback"><a class="header" href="#52-роль-type-feedback">5.2 Роль Type Feedback</a></h3>
+<p><strong>Проблема</strong>: JavaScript не имеет статической типизации, но процессору нужен специализированный код.</p>
+<p><strong>Решение</strong>: Собирать <strong>обратную связь по типам</strong> (type feedback) во время выполнения.</p>
+<p><strong>Источники type feedback</strong>:</p>
+<ol>
+<li><strong>Inline caches</strong>: Какие формы видел каждый доступ к свойству</li>
+<li><strong>Arithmetic ICs</strong>: Какие типы чисел (Smi, HeapNumber) видели арифметические операции</li>
+<li><strong>Call ICs</strong>: Какие функции вызывались в точке вызова</li>
+<li><strong>Comparison ICs</strong>: Какие типы сравнивались</li>
+</ol>
+<h4 id="пример-type-feedback-в-действии"><a class="header" href="#пример-type-feedback-в-действии">Пример: Type Feedback в действии</a></h4>
+<pre><code class="language-javascript">function add(a, b) {
+  return a + b;  // Что такое a и b?
+}
+
+// Фаза 1: Сбор feedback (интерпретатор)
+add(1, 2);        // Feedback: a=Smi, b=Smi → Smi
+add(3, 4);        // Feedback: подтверждено
+add(5, 6);        // Feedback: подтверждено
+
+// Фаза 2: Оптимизация (TurboFan)
+// Компилятор видит feedback: "всегда small integers"
+// Генерирует специализированный код для Smi сложения
+</code></pre>
+<h3 id="53-спекулятивная-оптимизация"><a class="header" href="#53-спекулятивная-оптимизация">5.3 Спекулятивная оптимизация</a></h3>
+<p><strong>Определение</strong>: Оптимизирующий компилятор делает <strong>предположения</strong> (speculations) о типах и поведении кода на основе type feedback.</p>
+<p><strong>Процесс</strong>:</p>
+<ol>
+<li>Анализ type feedback из IC</li>
+<li>Генерация <strong>специализированного</strong> IR (Intermediate Representation)</li>
+<li>Добавление <strong>type guards</strong> для проверки предположений</li>
+<li>Оптимизация IR (устранение избыточности, инлайнинг, и т.д.)</li>
+<li>Генерация машинного кода</li>
+</ol>
+<h4 id="531-пример-оптимизация-мономорфного-доступа"><a class="header" href="#531-пример-оптимизация-мономорфного-доступа">5.3.1 Пример: Оптимизация мономорфного доступа</a></h4>
+<p><strong>Исходный код</strong>:</p>
+<pre><code class="language-javascript">function distance(o) {
+  return Math.sqrt(o.x * o.x + o.y * o.y);
+}
+</code></pre>
+<p><strong>Type feedback</strong> (после прогрева):</p>
+<ul>
+<li><code>o</code> всегда имеет форму <code>{x: number, y: number}</code></li>
+<li><code>o.x</code> всегда на смещении @0</li>
+<li><code>o.y</code> всегда на смещении @8</li>
+</ul>
+<p><strong>Начальный IR</strong> (упрощённый):</p>
+<pre><code>// Неоптимизированный IR
+v0 = Parameter(0)                    // o
+CheckMap v0, Shape{x,y}              // Проверка формы
+v1 = LoadField v0, @0                // o.x
+CheckMap v0, Shape{x,y}              // Проверка формы (избыточная!)
+v2 = LoadField v0, @0                // o.x (избыточная загрузка!)
+v3 = Float64Mul v1, v2               // o.x * o.x
+
+CheckMap v0, Shape{x,y}              // Проверка формы (избыточная!)
+v4 = LoadField v0, @8                // o.y
+CheckMap v0, Shape{x,y}              // Проверка формы (избыточная!)
+v5 = LoadField v0, @8                // o.y (избыточная загрузка!)
+v6 = Float64Mul v4, v5               // o.y * o.y
+
+v7 = Float64Add v3, v6               // o.x * o.x + o.y * o.y
+v8 = CallBuiltin[Math.sqrt], v7     // Math.sqrt(...)
+Return v8
+</code></pre>
+<p><strong>Проблемы</strong>:</p>
+<ul>
+<li>4 избыточные проверки формы</li>
+<li>2 избыточные загрузки</li>
+</ul>
+<p><strong>После оптимизации (GVN - Global Value Numbering)</strong>:</p>
+<pre><code>// Оптимизированный IR
+v0 = Parameter(0)                    // o
+CheckMap v0, Shape{x,y}              // Одна проверка!
+v1 = LoadField v0, @0                // o.x (одна загрузка)
+v3 = Float64Mul v1, v1               // o.x * o.x
+
+v4 = LoadField v0, @8                // o.y (одна загрузка)
+v6 = Float64Mul v4, v4               // o.y * o.y
+
+v7 = Float64Add v3, v6               // o.x * o.x + o.y * o.y
+v8 = CallBuiltin[Math.sqrt], v7     // Math.sqrt(...)
+Return v8
+</code></pre>
+<p><strong>Выигрыш</strong>:</p>
+<ul>
+<li>Устранены 3 проверки формы</li>
+<li>Устранены 2 загрузки полей</li>
+<li>Код более компактный и быстрый</li>
+</ul>
+<h3 id="54-деоптимизация-deoptimization"><a class="header" href="#54-деоптимизация-deoptimization">5.4 Деоптимизация (Deoptimization)</a></h3>
+<p><strong>Проблема</strong>: Что если наши предположения неверны?</p>
+<p><strong>Решение</strong>: <strong>Деоптимизация</strong> — переход обратно к неоптимизированному коду.</p>
+<h4 id="когда-происходит-деоптимизация"><a class="header" href="#когда-происходит-деоптимизация">Когда происходит деоптимизация:</a></h4>
+<ol>
+<li><strong>Type guard failure</strong>: Объект не той формы, что ожидалось</li>
+<li><strong>Integer overflow</strong>: Результат не помещается в Smi</li>
+<li><strong>Array bounds</strong>: Доступ за границами массива</li>
+<li><strong>Prototype chain change</strong>: Изменилась цепочка прототипов</li>
+<li><strong>Global property change</strong>: Изменилось глобальное свойство, на которое полагалась оптимизация</li>
+</ol>
+<h4 id="пример-деоптимизации"><a class="header" href="#пример-деоптимизации">Пример деоптимизации:</a></h4>
+<pre><code class="language-javascript">function process(o) {
+  return o.x + o.y;
+}
+
+// Прогрев: все объекты формы {x: Smi, y: Smi}
+for (let i = 0; i &lt; 10000; i++) {
+  process({x: i, y: i * 2});
+}
+
+// TurboFan оптимизировал для Smi сложения
+
+// Деоптимизация!
+process({x: 1.5, y: 2.5});  // Теперь HeapNumber, не Smi!
+</code></pre>
+<p><strong>Что происходит</strong>:</p>
+<ol>
+<li>Type guard проверяет тип <code>o.x</code> → ожидает Smi, получает HeapNumber</li>
+<li>Деоптимизация: возврат к Ignition bytecode</li>
+<li>Продолжение выполнения в интерпретаторе</li>
+<li>Сбор нового feedback</li>
+<li>Возможная ре-оптимизация с новыми предположениями</li>
+</ol>
+<h4 id="диаграмма-цикл-оптимизациидеоптимизации"><a class="header" href="#диаграмма-цикл-оптимизациидеоптимизации">Диаграмма: Цикл оптимизации/деоптимизации</a></h4>
+<pre><code>┌────────────────┐
+│   Bytecode     │
+│ (Интерпретатор)│
+└───────┬────────┘
+        │
+        │ Hot code
+        │
+        v
+┌────────────────┐
+│  Оптимизация   │
+│  (TurboFan)    │
+└───────┬────────┘
+        │
+        v
+┌────────────────┐     Предположение      ┌────────────────┐
+│ Оптимизированный│────нарушено!──────────&gt;│ Деоптимизация  │
+│  машинный код  │                        └───────┬────────┘
+└────────────────┘                                │
+        ^                                         │
+        │                                         │
+        │        Новый feedback                   │
+        │        + ре-оптимизация                 │
+        └─────────────────────────────────────────┘
+</code></pre>
+<p><strong>Важно</strong>: Частая деоптимизация очень вредна для производительности!</p>
+<h3 id="55-оптимизация-полиморфного-кода"><a class="header" href="#55-оптимизация-полиморфного-кода">5.5 Оптимизация полиморфного кода</a></h3>
+<h4 id="551-полиморфный-доступ-с-деревом-решений"><a class="header" href="#551-полиморфный-доступ-с-деревом-решений">5.5.1 Полиморфный доступ с деревом решений</a></h4>
+<p>Когда IC полиморфен, оптимизатор строит <strong>дерево решений</strong> (decision tree):</p>
+<pre><code class="language-javascript">function get(o) {
+  return o.x;
+}
+
+// IC видел 3 формы: A, B, C
+</code></pre>
+<p><strong>Сгенерированный оптимизированный код</strong>:</p>
+<pre><code class="language-cpp">// Дерево решений для полиморфного доступа
+if (o.map == MapA) {
+  return load_field(o, offsetA);
+} else if (o.map == MapB) {
+  return load_field(o, offsetB);
+} else if (o.map == MapC) {
+  return load_field(o, offsetC);
+} else {
+  deoptimize();  // Увидели новую форму!
+}
+</code></pre>
+<p><strong>Проблемы</strong>:</p>
+<ul>
+<li>Множественные ветвления</li>
+<li>Плохо для CPU branch predictor</li>
+<li>Затрудняет дальнейшие оптимизации</li>
+</ul>
+<h4 id="552-polymorphic-type-guard-оптимизация"><a class="header" href="#552-polymorphic-type-guard-оптимизация">5.5.2 Polymorphic Type Guard (оптимизация)</a></h4>
+<p>Если свойство на <strong>одном смещении</strong> во всех формах:</p>
+<pre><code class="language-cpp">// Оптимизированный полиморфный guard
+if (o.map == MapA || o.map == MapB || o.map == MapC) {
+  return load_field(o, offset);  // Одно смещение!
+} else {
+  deoptimize();
+}
+</code></pre>
+<p><strong>Преимущество</strong>: Меньше обращений к памяти.</p>
+<h4 id="553-влияние-на-последующие-оптимизации"><a class="header" href="#553-влияние-на-последующие-оптимизации">5.5.3 Влияние на последующие оптимизации</a></h4>
+<p><strong>Проблема</strong>: Полиморфные операции затрудняют устранение избыточности.</p>
+<pre><code class="language-javascript">function process(o) {
+  const a = o.x;  // Полиморфный доступ
+  const b = o.x;  // Можем ли устранить эту загрузку?
+  return a + b;
+}
+</code></pre>
+<p><strong>Мономорфный случай</strong>: После первого <code>o.x</code> мы знаем, что <code>o</code> имеет определённую форму. Вторая загрузка избыточна!</p>
+<p><strong>Полиморфный случай</strong>: После первого <code>o.x</code> мы знаем только, что форма — одна из <code>{A, B, C}</code>. Это слишком слабая информация для устранения второй загрузки.</p>
+<h3 id="56-инлайнинг-inlining-и-полиморфизм"><a class="header" href="#56-инлайнинг-inlining-и-полиморфизм">5.6 Инлайнинг (Inlining) и полиморфизм</a></h3>
+<p><strong>Инлайнинг</strong> — одна из важнейших оптимизаций. Он позволяет:</p>
+<ul>
+<li>Устранить overhead вызова функции</li>
+<li>Оптимизировать код функции в контексте вызывающего кода</li>
+<li>Проводить межпроцедурные оптимизации</li>
+</ul>
+<h4 id="мономорфные-вызовы"><a class="header" href="#мономорфные-вызовы">Мономорфные вызовы</a></h4>
+<pre><code class="language-javascript">class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  distance() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
+  }
+}
+
+function processPoints(points) {
+  let sum = 0;
+  for (let p of points) {
+    sum += p.distance();  // Мономорфный вызов
+  }
+  return sum;
+}
+</code></pre>
+<p><strong>Оптимизация</strong>: TurboFan может <strong>заинлайнить</strong> <code>distance()</code>:</p>
+<pre><code class="language-javascript">// Оптимизированный эквивалент (концептуально)
+function processPoints_optimized(points) {
+  let sum = 0;
+  for (let p of points) {
+    // Инлайнинг distance()
+    const temp = Math.sqrt(p.x ** 2 + p.y ** 2);
+    sum += temp;
+  }
+  return sum;
+}
+</code></pre>
+<h4 id="полиморфные-вызовы"><a class="header" href="#полиморфные-вызовы">Полиморфные вызовы</a></h4>
+<pre><code class="language-javascript">function processShapes(shapes) {
+  let sum = 0;
+  for (let s of shapes) {
+    sum += s.area();  // Полиморфный вызов!
+  }
+  return sum;
+}
+
+// shapes содержит Circle, Rectangle, Triangle
+</code></pre>
+<p><strong>Оптимизация</strong>: TurboFan строит дерево решений с инлайнингом:</p>
+<pre><code class="language-cpp">// Концептуальный оптимизированный код
+for (s in shapes) {
+  if (s.map == CircleMap) {
+    // Инлайн Circle.area()
+    sum += PI * s.radius * s.radius;
+  } else if (s.map == RectangleMap) {
+    // Инлайн Rectangle.area()
+    sum += s.width * s.height;
+  } else if (s.map == TriangleMap) {
+    // Инлайн Triangle.area()
+    sum += 0.5 * s.base * s.height;
+  } else {
+    deoptimize();
+  }
+}
+</code></pre>
+<p><strong>Проблема</strong>: Код становится больше, сложнее для CPU cache.</p>
+<hr>
+<h2 id="часть-6-влияние-на-производительность-процессора"><a class="header" href="#часть-6-влияние-на-производительность-процессора">Часть 6: Влияние на производительность процессора</a></h2>
+<h3 id="61-cpu-pipeline-и-branch-prediction"><a class="header" href="#61-cpu-pipeline-и-branch-prediction">6.1 CPU Pipeline и Branch Prediction</a></h3>
+<p>Современные процессоры используют <strong>конвейерную обработку</strong> (pipelining) для параллельного выполнения инструкций.</p>
+<h4 id="упрощённый-cpu-pipeline"><a class="header" href="#упрощённый-cpu-pipeline">Упрощённый CPU Pipeline:</a></h4>
+<pre><code>Fetch → Decode → Execute → Memory → Writeback
+  ↓       ↓        ↓         ↓         ↓
+ inst1   inst1    inst1     inst1     inst1
+ inst2   inst2    inst2     inst2     inst2
+ inst3   inst3    inst3     inst3     inst3
+</code></pre>
+<p><strong>Проблема</strong>: Условные переходы (branches) нарушают pipeline.</p>
+<h4 id="branch-prediction"><a class="header" href="#branch-prediction">Branch Prediction</a></h4>
+<p><strong>Определение</strong>: CPU пытается предсказать, какой путь выберет условный переход.</p>
+<p><strong>Правильное предсказание</strong>: Pipeline продолжает работу.
+<strong>Неправильное предсказание</strong>: Pipeline flush → потеря ~10-20 циклов!</p>
+<h4 id="мономорфный-код-и-cpu"><a class="header" href="#мономорфный-код-и-cpu">Мономорфный код и CPU</a></h4>
+<pre><code class="language-cpp">// Мономорфный: одна проверка, всегда true
+if (o.map == expected_map) {  // Предсказуемо!
+  return load_field(o, offset);
+}
+</code></pre>
+<p><strong>Branch predictor</strong>: Быстро учится, что ветвь всегда true → 99%+ accuracy.</p>
+<h4 id="полиморфный-код-и-cpu"><a class="header" href="#полиморфный-код-и-cpu">Полиморфный код и CPU</a></h4>
+<pre><code class="language-cpp">// Полиморфный: множественные ветвления
+if (o.map == MapA) {       // 40% true
+  return load(o, offset_a);
+} else if (o.map == MapB) { // 35% true
+  return load(o, offset_b);
+} else if (o.map == MapC) { // 25% true
+  return load(o, offset_c);
+}
+</code></pre>
+<p><strong>Branch predictor</strong>: Сложнее предсказать → больше mispredictions → медленнее.</p>
+<h3 id="62-cpu-cache-и-memory-locality"><a class="header" href="#62-cpu-cache-и-memory-locality">6.2 CPU Cache и Memory Locality</a></h3>
+<h4 id="cache-hierarchy"><a class="header" href="#cache-hierarchy">Cache Hierarchy</a></h4>
+<pre><code>┌─────────────────────────────────────┐
+│ CPU Registers (1 cycle)             │
+├─────────────────────────────────────┤
+│ L1 Cache (32-64KB, 3-4 cycles)      │
+├─────────────────────────────────────┤
+│ L2 Cache (256-512KB, 10-20 cycles)  │
+├─────────────────────────────────────┤
+│ L3 Cache (2-16MB, 40-75 cycles)     │
+├─────────────────────────────────────┤
+│ RAM (GB, 100-300 cycles)            │
+└─────────────────────────────────────┘
+</code></pre>
+<h4 id="мономорфный-код--лучшая-локальность"><a class="header" href="#мономорфный-код--лучшая-локальность">Мономорфный код → Лучшая локальность</a></h4>
+<pre><code class="language-javascript">// Мономорфный: все объекты имеют одинаковый layout
+const points = [
+  {x: 1, y: 2},  // Memory layout: [map_ptr, x, y]
+  {x: 3, y: 4},  // Memory layout: [map_ptr, x, y]
+  {x: 5, y: 6},  // Memory layout: [map_ptr, x, y]
+];
+
+// Доступ к .x предсказуем → хорошо для prefetcher
+for (let p of points) {
+  sum += p.x;
+}
+</code></pre>
+<p><strong>CPU prefetcher</strong>: Может предзагружать следующие элементы в cache.</p>
+<h4 id="полиморфный-код--плохая-локальность"><a class="header" href="#полиморфный-код--плохая-локальность">Полиморфный код → Плохая локальность</a></h4>
+<pre><code class="language-javascript">// Полиморфный: разные layouts
+const mixed = [
+  {x: 1},           // Layout: [map_ptr, x]
+  {x: 2, y: 3},     // Layout: [map_ptr, x, y]
+  {y: 4, x: 5},     // Layout: [map_ptr, y, x]  (разный порядок!)
+];
+
+// Доступ к .x непредсказуем → плохо для prefetcher
+for (let obj of mixed) {
+  sum += obj.x;
+}
+</code></pre>
+<p><strong>CPU prefetcher</strong>: Не может эффективно предсказать паттерн → больше cache misses.</p>
+<h3 id="63-instruction-cache-i-cache"><a class="header" href="#63-instruction-cache-i-cache">6.3 Instruction Cache (I-Cache)</a></h3>
+<p><strong>Проблема с полиморфным кодом</strong>: Больше машинного кода.</p>
+<pre><code>Мономорфный:      ~10-20 инструкций
+Полиморфный (4):  ~40-80 инструкций
+Мегаморфный:      ~100+ инструкций + вызов
+</code></pre>
+<p><strong>Влияние на I-cache</strong>:</p>
+<ul>
+<li>Мономорфный код помещается в L1 I-cache</li>
+<li>Полиморфный код может переполнить L1 → L2 cache misses</li>
+<li>Мегаморфный код + множественные функции → еще хуже</li>
+</ul>
+<hr>
+<h2 id="часть-7-практические-рекомендации"><a class="header" href="#часть-7-практические-рекомендации">Часть 7: Практические рекомендации</a></h2>
+<h3 id="71-как-писать-мономорфный-код"><a class="header" href="#71-как-писать-мономорфный-код">7.1 Как писать мономорфный код</a></h3>
+<h4 id="правило-1-используйте-фабричные-функции--классы"><a class="header" href="#правило-1-используйте-фабричные-функции--классы">Правило 1: Используйте фабричные функции / классы</a></h4>
+<p><strong>Плохо</strong>:</p>
+<pre><code class="language-javascript">// Объекты создаются по-разному
+function createPoint1() {
+  const p = {};
+  p.x = 0;
+  p.y = 0;
+  return p;
+}
+
+function createPoint2() {
+  return { x: 0, y: 0 };
+}
+
+// Разные формы!
+const p1 = createPoint1();
+const p2 = createPoint2();
+</code></pre>
+<p><strong>Хорошо</strong>:</p>
+<pre><code class="language-javascript">// Класс гарантирует одинаковую форму
+class Point {
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+// Все точки имеют одну форму!
+const p1 = new Point();
+const p2 = new Point(1, 2);
+</code></pre>
+<h4 id="правило-2-инициализируйте-все-свойства-в-конструкторе"><a class="header" href="#правило-2-инициализируйте-все-свойства-в-конструкторе">Правило 2: Инициализируйте все свойства в конструкторе</a></h4>
+<p><strong>Плохо</strong>:</p>
+<pre><code class="language-javascript">class Entity {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    // health не инициализирован!
+  }
+
+  spawn() {
+    this.health = 100;  // Изменение формы!
+  }
+}
+</code></pre>
+<p><strong>Хорошо</strong>:</p>
+<pre><code class="language-javascript">class Entity {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.health = 0;  // Инициализируем сразу
+  }
+
+  spawn() {
+    this.health = 100;  // Просто изменение значения
+  }
+}
+</code></pre>
+<h4 id="правило-3-инициализируйте-свойства-в-одном-порядке"><a class="header" href="#правило-3-инициализируйте-свойства-в-одном-порядке">Правило 3: Инициализируйте свойства в одном порядке</a></h4>
+<p><strong>Плохо</strong>:</p>
+<pre><code class="language-javascript">function createUser(name, age) {
+  if (age !== undefined) {
+    return { name, age };  // Форма A: {name, age}
+  } else {
+    return { name };        // Форма B: {name}
+  }
+}
+</code></pre>
+<p><strong>Хорошо</strong>:</p>
+<pre><code class="language-javascript">function createUser(name, age = null) {
+  return { name, age };  // Всегда форма {name, age}
+}
+</code></pre>
+<h4 id="правило-4-избегайте-delete"><a class="header" href="#правило-4-избегайте-delete">Правило 4: Избегайте delete</a></h4>
+<p><strong>Плохо</strong>:</p>
+<pre><code class="language-javascript">const obj = { x: 1, y: 2, temp: 3 };
+// ... использование ...
+delete obj.temp;  // Изменение формы!
+</code></pre>
+<p><strong>Хорошо</strong>:</p>
+<pre><code class="language-javascript">const obj = { x: 1, y: 2, temp: 3 };
+// ... использование ...
+obj.temp = null;  // Форма не изменяется
+</code></pre>
+<h4 id="правило-5-используйте-typescriptflow"><a class="header" href="#правило-5-используйте-typescriptflow">Правило 5: Используйте TypeScript/Flow</a></h4>
+<p>TypeScript помогает поддерживать согласованные формы:</p>
+<pre><code class="language-typescript">interface Point {
+  x: number;
+  y: number;
+}
+
+// Компилятор гарантирует, что все Point имеют одну форму
+function process(p: Point) {
+  return p.x + p.y;
+}
+</code></pre>
+<h3 id="72-когда-полиморфизм-приемлем"><a class="header" href="#72-когда-полиморфизм-приемлем">7.2 Когда полиморфизм приемлем</a></h3>
+<p><strong>Важно</strong>: Не весь полиморфизм плох! Следуйте правилу <strong>80/20</strong>:</p>
+<h4 id="полиморфизм-в-холодном-коде--ок"><a class="header" href="#полиморфизм-в-холодном-коде--ок">Полиморфизм в холодном коде — ОК</a></h4>
+<pre><code class="language-javascript">// Выполняется один раз при загрузке
+function initializePlugins(plugins) {
+  for (let plugin of plugins) {
+    plugin.init();  // Полиморфный вызов — ОК!
+  }
+}
+</code></pre>
+<p><strong>Причина</strong>: Не в горячем пути, производительность не критична.</p>
+<h4 id="умеренный-полиморфизм-2-3-типа--обычно-ок"><a class="header" href="#умеренный-полиморфизм-2-3-типа--обычно-ок">Умеренный полиморфизм (2-3 типа) — Обычно ОК</a></h4>
+<pre><code class="language-javascript">// Обработка разных типов событий
+function handleEvent(event) {
+  switch (event.type) {  // 3-4 типа событий
+    case 'click': return handleClick(event);
+    case 'keypress': return handleKeypress(event);
+    case 'scroll': return handleScroll(event);
+  }
+}
+</code></pre>
+<p><strong>Причина</strong>: V8 хорошо оптимизирует полиморфизм степени 2-4.</p>
+<h4 id="абстракция-важнее-производительности"><a class="header" href="#абстракция-важнее-производительности">Абстракция важнее производительности</a></h4>
+<pre><code class="language-javascript">// Хорошая архитектура с полиморфизмом
+interface Shape {
+  area(): number;
+}
+
+class Circle implements Shape { ... }
+class Rectangle implements Shape { ... }
+
+function totalArea(shapes: Shape[]) {
+  return shapes.reduce((sum, s) =&gt; sum + s.area(), 0);
+}
+</code></pre>
+<p><strong>Когда оптимизировать</strong>: Только если профилирование показало bottleneck.</p>
+<h3 id="73-как-обнаружить-проблемы-с-полиморфизмом"><a class="header" href="#73-как-обнаружить-проблемы-с-полиморфизмом">7.3 Как обнаружить проблемы с полиморфизмом</a></h3>
+<h4 id="метод-1-v8-runtime-flags"><a class="header" href="#метод-1-v8-runtime-flags">Метод 1: V8 Runtime Flags</a></h4>
+<pre><code class="language-bash"># Вывести состояние IC
+node --trace-ic your-script.js
+
+# Вывести деоптимизации
+node --trace-deopt your-script.js
+
+# Вывести оптимизации
+node --trace-opt your-script.js
+</code></pre>
+<p><strong>Пример вывода</strong>:</p>
+<pre><code>[LoadIC in ~process at offset 42 (0x...) ((PREMONOMORPHIC|MONOMORPHIC|POLYMORPHIC|MEGAMORPHIC))]
+</code></pre>
+<h4 id="метод-2-chrome-devtools"><a class="header" href="#метод-2-chrome-devtools">Метод 2: Chrome DevTools</a></h4>
+<ol>
+<li>Откройте Chrome DevTools</li>
+<li>Performance tab → Record</li>
+<li>Анализируйте профиль:
+<ul>
+<li>Смотрите на функции с высоким самым временем (self time)</li>
+<li>Проверяйте “Not optimized” в bottom-up view</li>
+</ul>
+</li>
+</ol>
+<h4 id="метод-3-turbolizer-для-экспертов"><a class="header" href="#метод-3-turbolizer-для-экспертов">Метод 3: Turbolizer (для экспертов)</a></h4>
+<p>Turbolizer — инструмент для визуализации IR TurboFan:</p>
+<pre><code class="language-bash"># Генерация trace файла
+node --trace-turbo your-script.js
+
+# Открыть в Turbolizer
+# https://v8.github.io/tools/head/turbolizer/index.html
+</code></pre>
+<p><strong>Что искать</strong>:</p>
+<ul>
+<li>Множественные <code>CheckMaps</code> для одного значения</li>
+<li><code>Generic</code> операции в горячих циклах</li>
+<li>Деревья решений с множественными ветвями</li>
+</ul>
+<h3 id="74-паттерны-оптимизации"><a class="header" href="#74-паттерны-оптимизации">7.4 Паттерны оптимизации</a></h3>
+<h4 id="паттерн-1-мономорфизация-через-разделение"><a class="header" href="#паттерн-1-мономорфизация-через-разделение">Паттерн 1: Мономорфизация через разделение</a></h4>
+<p><strong>Проблема</strong>: Одна функция обрабатывает разные типы.</p>
+<pre><code class="language-javascript">function process(items) {
+  for (let item of items) {
+    console.log(item.value);  // Полиморфный!
+  }
+}
+
+// items содержит TypeA и TypeB
+</code></pre>
+<p><strong>Решение</strong>: Разделите на мономорфные функции.</p>
+<pre><code class="language-javascript">function processTypeA(items) {
+  for (let item of items) {
+    console.log(item.value);  // Мономорфный для TypeA
+  }
+}
+
+function processTypeB(items) {
+  for (let item of items) {
+    console.log(item.value);  // Мономорфный для TypeB
+  }
+}
+
+function process(items) {
+  const typeA = items.filter(isTypeA);
+  const typeB = items.filter(isTypeB);
+  processTypeA(typeA);
+  processTypeB(typeB);
+}
+</code></pre>
+<h4 id="паттерн-2-структуры-данных-по-типам"><a class="header" href="#паттерн-2-структуры-данных-по-типам">Паттерн 2: Структуры данных по типам</a></h4>
+<p><strong>Проблема</strong>: Смешанные типы в одном массиве.</p>
+<pre><code class="language-javascript">const entities = [
+  new Player(),
+  new Enemy(),
+  new Player(),
+  new Bullet(),
+];
+
+// Полиморфная итерация
+for (let e of entities) {
+  e.update();
+}
+</code></pre>
+<p><strong>Решение</strong>: Разделите по типам.</p>
+<pre><code class="language-javascript">const game = {
+  players: [],  // Только Player
+  enemies: [],  // Только Enemy
+  bullets: [],  // Только Bullet
+};
+
+// Мономорфные итерации
+for (let p of game.players) p.update();
+for (let e of game.enemies) e.update();
+for (let b of game.bullets) b.update();
+</code></pre>
+<h4 id="паттерн-3-тегированные-объединения-tagged-unions"><a class="header" href="#паттерн-3-тегированные-объединения-tagged-unions">Паттерн 3: Тегированные объединения (Tagged Unions)</a></h4>
+<p>Для случаев, где нужен полиморфизм:</p>
+<pre><code class="language-javascript">// Вместо разных классов используйте теги
+const shapes = [
+  { type: 'circle', radius: 5 },
+  { type: 'rectangle', width: 10, height: 20 },
+];
+
+function area(shape) {
+  // Мономорфный доступ к .type
+  switch (shape.type) {
+    case 'circle':
+      return Math.PI * shape.radius ** 2;
+    case 'rectangle':
+      return shape.width * shape.height;
+  }
+}
+</code></pre>
+<p><strong>Преимущество</strong>: Все объекты могут иметь базовую форму <code>{type: string, ...}</code>.</p>
+<hr>
+<h2 id="часть-8-расширенные-темы"><a class="header" href="#часть-8-расширенные-темы">Часть 8: Расширенные темы</a></h2>
+<h3 id="81-прототипная-цепочка-и-производительность"><a class="header" href="#81-прототипная-цепочка-и-производительность">8.1 Прототипная цепочка и производительность</a></h3>
+<p><strong>Проблема</strong>: Свойства в прототипе требуют дополнительных проверок.</p>
+<pre><code class="language-javascript">class Base {
+  constructor() {
+    this.x = 0;
+  }
+
+  method() { return this.x; }
+}
+
+class Derived extends Base {
+  constructor() {
+    super();
+    this.y = 0;
+  }
+}
+
+const obj = new Derived();
+obj.method();  // Метод в прототипе Base.prototype
+</code></pre>
+<p><strong>IC должен проверить</strong>:</p>
+<ol>
+<li><code>obj</code> не имеет собственного свойства <code>method</code></li>
+<li><code>Derived.prototype</code> не имеет <code>method</code></li>
+<li><code>Base.prototype</code> имеет <code>method</code></li>
+</ol>
+<p><strong>Оптимизация V8</strong>: Проверка всей цепочки кэшируется в IC.</p>
+<h3 id="82-геттеры-и-сеттеры"><a class="header" href="#82-геттеры-и-сеттеры">8.2 Геттеры и сеттеры</a></h3>
+<p>Геттеры/сеттеры требуют вызовов функций:</p>
+<pre><code class="language-javascript">class Point {
+  constructor(x, y) {
+    this._x = x;
+    this._y = y;
+  }
+
+  get x() { return this._x; }
+  set x(value) { this._x = value; }
+}
+
+const p = new Point(1, 2);
+const x = p.x;  // Вызов getter функции!
+</code></pre>
+<p><strong>Стоимость</strong>: Выше, чем прямой доступ к полю.</p>
+<p><strong>Оптимизация</strong>: TurboFan может инлайнить простые геттеры/сеттеры.</p>
+<h3 id="83-proxy-и-производительность"><a class="header" href="#83-proxy-и-производительность">8.3 Proxy и производительность</a></h3>
+<p><strong>Proxy</strong> — мощный механизм перехвата операций, но очень дорогой:</p>
+<pre><code class="language-javascript">const target = { x: 1, y: 2 };
+const proxy = new Proxy(target, {
+  get(obj, prop) {
+    console.log(`Getting ${prop}`);
+    return obj[prop];
+  }
+});
+
+proxy.x;  // Всегда вызов trap функции!
+</code></pre>
+<p><strong>Проблема</strong>: Proxy операции не могут быть оптимизированы IC.</p>
+<p><strong>Рекомендация</strong>: Избегайте Proxy в горячих путях.</p>
+<h3 id="84-массивы-и-элементы-разных-типов"><a class="header" href="#84-массивы-и-элементы-разных-типов">8.4 Массивы и элементы разных типов</a></h3>
+<p>V8 использует разные внутренние представления для массивов:</p>
+<pre><code class="language-javascript">// PACKED_SMI_ELEMENTS - быстрый
+const arr1 = [1, 2, 3, 4, 5];
+
+// PACKED_DOUBLE_ELEMENTS - быстрый
+const arr2 = [1.1, 2.2, 3.3];
+
+// PACKED_ELEMENTS - медленнее
+const arr3 = [1, 'hello', {}, null];
+
+// HOLEY_ELEMENTS - еще медленнее
+const arr4 = [1, , , 4];  // holes
+</code></pre>
+<p><strong>Рекомендация</strong>: Используйте массивы одного типа.</p>
+<hr>
+<h2 id="часть-9-глоссарий-терминов"><a class="header" href="#часть-9-глоссарий-терминов">Часть 9: Глоссарий терминов</a></h2>
+<h3 id="a-d"><a class="header" href="#a-d">A-D</a></h3>
+<p><strong>Baseline Compiler (Базовый компилятор)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Базовый компилятор, неоптимизирующий компилятор</li>
+<li><strong>Определение</strong>: Компилятор, который быстро генерирует простой машинный код или байткод без оптимизаций. В V8 — Ignition.</li>
+<li><strong>Цель</strong>: Быстрый запуск, низкая задержка компиляции</li>
+</ul>
+<p><strong>Branch Prediction (Предсказание ветвлений)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Предсказание переходов</li>
+<li><strong>Определение</strong>: Механизм CPU, который пытается предсказать результат условных переходов для поддержания pipeline.</li>
+<li><strong>Влияние</strong>: Мономорфный код → высокая точность предсказаний</li>
+</ul>
+<p><strong>Call-site Polymorphism (Полиморфизм в точке вызова)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Полиморфизм в месте вызова</li>
+<li><strong>Определение</strong>: Ситуация, когда одна точка в коде обрабатывает значения разных типов/форм.</li>
+<li><strong>Пример</strong>: <code>function f(o) { return o.x; }</code> вызывается с объектами разных форм</li>
+</ul>
+<p><strong>Deoptimization (Деоптимизация)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Деоптимизация, откат оптимизации</li>
+<li><strong>Определение</strong>: Процесс возврата от оптимизированного кода к неоптимизированному, когда предположения оптимизатора нарушены.</li>
+<li><strong>Причины</strong>: Неожиданный тип, изменение формы, переполнение</li>
+</ul>
+<h3 id="e-h"><a class="header" href="#e-h">E-H</a></h3>
+<p><strong>Feedback Vector (Вектор обратной связи)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Вектор обратной связи по типам</li>
+<li><strong>Определение</strong>: Структура данных, хранящая информацию о типах и формах, наблюдаемых во время выполнения.</li>
+<li><strong>Использование</strong>: Оптимизирующий компилятор читает feedback для специализации кода</li>
+</ul>
+<p><strong>GVN (Global Value Numbering)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Глобальная нумерация значений</li>
+<li><strong>Определение</strong>: Оптимизация компилятора, которая устраняет избыточные вычисления.</li>
+<li><strong>Пример</strong>: Две загрузки <code>o.x</code> → одна загрузка + переиспользование</li>
+</ul>
+<p><strong>Hidden Class / Shape / Map (Скрытый класс / Форма / Карта)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Скрытый класс, форма объекта</li>
+<li><strong>Определение</strong>: Внутренняя структура данных VM, описывающая структуру объекта.</li>
+<li><strong>Содержит</strong>: Список свойств, их смещения, атрибуты</li>
+<li><strong>Аналог</strong>: Класс в C++/Java</li>
+</ul>
+<p><strong>Hot Code / Hot Path (Горячий код / Горячий путь)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Горячий код, часто выполняемый код</li>
+<li><strong>Определение</strong>: Код, который выполняется очень часто (в циклах, частые функции).</li>
+<li><strong>Значение</strong>: Кандидат для оптимизации компилятором</li>
+</ul>
+<h3 id="i-l"><a class="header" href="#i-l">I-L</a></h3>
+<p><strong>Inline Cache (IC)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Встроенный кэш, инлайн-кэш</li>
+<li><strong>Определение</strong>: Механизм кэширования результатов динамических операций (поиск свойств, вызовы).</li>
+<li><strong>Ключ</strong>: Форма объекта</li>
+<li><strong>Значение</strong>: Путь к свойству или обработчик</li>
+</ul>
+<p><strong>Inlining (Инлайнинг, встраивание)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Встраивание, инлайнинг</li>
+<li><strong>Определение</strong>: Оптимизация, при которой код вызываемой функции вставляется непосредственно в место вызова.</li>
+<li><strong>Преимущество</strong>: Устраняет overhead вызова, позволяет межпроцедурные оптимизации</li>
+</ul>
+<p><strong>Intermediate Representation (IR)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Промежуточное представление</li>
+<li><strong>Определение</strong>: Внутреннее представление кода в оптимизирующем компиляторе, более низкоуровневое чем источник.</li>
+<li><strong>Цель</strong>: Удобно для анализа и оптимизации</li>
+</ul>
+<h3 id="m-p"><a class="header" href="#m-p">M-P</a></h3>
+<p><strong>Megamorphic (Мегаморфный)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Мегаморфный, сверхполиморфный</li>
+<li><strong>Определение</strong>: Состояние IC, когда он видел больше типов, чем может локально кэшировать (&gt;4 в V8).</li>
+<li><strong>Производительность</strong>: Худшая среди IC состояний</li>
+<li><strong>Механизм</strong>: Использует глобальную хеш-таблицу</li>
+</ul>
+<p><strong>Monomorphic (Мономорфный)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Мономорфный, однотипный</li>
+<li><strong>Определение</strong>: Состояние IC, когда он видел объекты только одной формы.</li>
+<li><strong>Производительность</strong>: Лучшая, оптимальная</li>
+<li><strong>Лозунг</strong>: “ОДИН ТИП — ХОРОШО”</li>
+</ul>
+<p><strong>Polymorphic (Полиморфный)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Полиморфный, многотипный</li>
+<li><strong>Определение</strong>: Состояние IC, когда он видел объекты 2-4 разных форм.</li>
+<li><strong>Производительность</strong>: Средняя, линейный поиск среди кэшированных форм</li>
+<li><strong>Степень</strong>: Количество различных форм (2, 3, 4)</li>
+</ul>
+<h3 id="s-t"><a class="header" href="#s-t">S-T</a></h3>
+<p><strong>Speculative Optimization (Спекулятивная оптимизация)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Спекулятивная оптимизация, оптимизация на основе предположений</li>
+<li><strong>Определение</strong>: Подход, при котором компилятор делает предположения о типах на основе наблюдений и генерирует специализированный код.</li>
+<li><strong>Защита</strong>: Type guards проверяют предположения в runtime</li>
+</ul>
+<p><strong>Smi (Small Integer)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Малое целое</li>
+<li><strong>Определение</strong>: Внутреннее представление V8 для малых целых чисел (-2^30 до 2^30-1).</li>
+<li><strong>Преимущество</strong>: Хранятся напрямую без аллокации на heap</li>
+</ul>
+<p><strong>Temporal Locality (Временная локальность)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Временная локальность</li>
+<li><strong>Определение</strong>: Принцип, согласно которому недавно использованные данные вероятно будут использованы снова вскоре.</li>
+<li><strong>Применение</strong>: Основа для кэширования</li>
+</ul>
+<p><strong>TurboFan</strong></p>
+<ul>
+<li><strong>Русский</strong>: TurboFan (название компилятора)</li>
+<li><strong>Определение</strong>: Оптимизирующий компилятор в V8.</li>
+<li><strong>Возможности</strong>: Инлайнинг, специализация типов, устранение избыточности, и др.</li>
+</ul>
+<p><strong>Type Feedback (Обратная связь по типам)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Обратная связь по типам, информация о типах</li>
+<li><strong>Определение</strong>: Информация о типах и формах объектов, собираемая во время выполнения.</li>
+<li><strong>Источник</strong>: Inline caches</li>
+<li><strong>Использование</strong>: Оптимизирующий компилятор</li>
+</ul>
+<p><strong>Type Guard / Type Check (Проверка типа)</strong></p>
+<ul>
+<li><strong>Русский</strong>: Защита типа, проверка типа</li>
+<li><strong>Определение</strong>: Инструкция в оптимизированном коде, которая проверяет соответствие значения ожидаемому типу/форме.</li>
+<li><strong>При несовпадении</strong>: Деоптимизация</li>
+</ul>
+<h3 id="u-z"><a class="header" href="#u-z">U-Z</a></h3>
+<p><strong>Uninitialized IC</strong></p>
+<ul>
+<li><strong>Русский</strong>: Неинициализированный IC</li>
+<li><strong>Определение</strong>: Начальное состояние IC, когда он еще не выполнялся.</li>
+<li><strong>Переход</strong>: → Monomorphic после первого выполнения</li>
+</ul>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<h3 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h3>
+<ol>
+<li>
+<p><strong>Мономорфный код — оптимален</strong>: Когда операция видит объекты только одной формы, VM может максимально оптимизировать код.</p>
+</li>
+<li>
+<p><strong>Полиморфизм имеет стоимость</strong>: Каждая дополнительная форма добавляет:</p>
+<ul>
+<li>Проверки типов</li>
+<li>Ветвления (плохо для CPU branch predictor)</li>
+<li>Сложность для оптимизатора</li>
+</ul>
+</li>
+<li>
+<p><strong>Мегаморфный код — избегайте</strong>: Более 4 форм в одной точке → использование медленной глобальной хеш-таблицы.</p>
+</li>
+<li>
+<p><strong>Скрытые классы критичны</strong>: Понимание того, как V8 создает скрытые классы, помогает писать оптимальный код:</p>
+<ul>
+<li>Инициализируйте все свойства</li>
+<li>Используйте одинаковый порядок</li>
+<li>Избегайте <code>delete</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Профилирование &gt; Догадок</strong>: Не оптимизируйте преждевременно. Используйте инструменты профилирования для поиска реальных bottleneck’ов.</p>
+</li>
+<li>
+<p><strong>Архитектура &gt; Микрооптимизации</strong>: Чистый, поддерживаемый код с умеренным полиморфизмом лучше, чем нечитаемые микрооптимизации.</p>
+</li>
+</ol>
+<h3 id="практический-совет"><a class="header" href="#практический-совет">Практический совет</a></h3>
+<p>Следуйте правилу <strong>“Измерь, оптимизируй, проверь”</strong>:</p>
+<ol>
+<li><strong>Измерь</strong>: Профилируйте реальное приложение на реальных данных</li>
+<li><strong>Оптимизируй</strong>: Если нашли bottleneck связанный с полиморфизмом — оптимизируйте</li>
+<li><strong>Проверь</strong>: Убедитесь, что оптимизация действительно помогла</li>
+</ol>
+<h3 id="дальнейшее-изучение"><a class="header" href="#дальнейшее-изучение">Дальнейшее изучение</a></h3>
+<ul>
+<li><strong>V8 Blog</strong>: https://v8.dev/blog</li>
+<li><strong>Vyacheslav Egorov’s Blog</strong>: https://mrale.ph/</li>
+<li><strong>Benedikt Meurer’s Presentations</strong>: Поиск на YouTube</li>
+<li><strong>V8 Source Code</strong>: https://github.com/v8/v8</li>
+</ul>
+<hr>
+<p><strong>Автор</strong>: Расширенная академическая версия на основе статьи Вячеслава Егорова
+<strong>Дата</strong>: 2025
+<strong>Лицензия</strong>: Educational Use</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week1/nodejs-gof-patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week1/monomorphism_ru.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week1/nodejs-gof-patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week1/monomorphism_ru.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

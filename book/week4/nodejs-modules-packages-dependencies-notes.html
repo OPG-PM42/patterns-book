@@ -1,0 +1,1235 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Структура приложений: системы модульности, пакеты и зависимости - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="структура-приложений-nodejs-модули-пакеты-и-зависимости"><a class="header" href="#структура-приложений-nodejs-модули-пакеты-и-зависимости">Структура приложений Node.js: модули, пакеты и зависимости</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Эта лекция охватывает фундаментальные концепции модульной системы Node.js, включая CommonJS и ECMAScript модули, механизмы загрузки и кэширования модулей, работу с пакетами и создание собственной системы модульности. Мы рассмотрим внутреннее устройство модульной системы Node.js и научимся создавать изолированные окружения выполнения (sandboxes).</p>
+<hr>
+<h2 id="основы-модульной-системы-commonjs"><a class="header" href="#основы-модульной-системы-commonjs">Основы модульной системы CommonJS</a></h2>
+<h3 id="структура-типичного-модуля-commonjs"><a class="header" href="#структура-типичного-модуля-commonjs">Структура типичного модуля CommonJS</a></h3>
+<p>В Node.js каждый файл является отдельным модулем. Модули используют специальные идентификаторы для экспорта и импорта функциональности.</p>
+<h4 id="пример-базового-модуля-file1-exportjs"><a class="header" href="#пример-базового-модуля-file1-exportjs">Пример базового модуля (file1-export.js)</a></h4>
+<pre><code class="language-javascript">// Определяем функции и переменные
+const myFunction = () =&gt; {
+  console.log('Функция из модуля');
+};
+
+const MyClass = class {
+  constructor(name) {
+    this.name = name;
+  }
+};
+
+const collection = new Map();
+
+// Экспортируем через module.exports
+module.exports = {
+  myFunction,
+  MyClass,
+  collection
+};
+</code></pre>
+<p><strong>Важно</strong>: Идентификатор <code>module</code> не объявлен в коде явно - он внедряется загрузчиком Node.js через механизм <code>vm.createScript</code>.</p>
+<h3 id="встроенные-идентификаторы-модулей"><a class="header" href="#встроенные-идентификаторы-модулей">Встроенные идентификаторы модулей</a></h3>
+<p>Каждый CommonJS модуль имеет доступ к следующим встроенным идентификаторам:</p>
+<ul>
+<li><code>module</code> - объект текущего модуля</li>
+<li><code>exports</code> - ссылка на <code>module.exports</code></li>
+<li><code>require</code> - функция для загрузки модулей</li>
+<li><code>__filename</code> - абсолютный путь к текущему файлу</li>
+<li><code>__dirname</code> - абсолютный путь к директории файла</li>
+</ul>
+<p>Все эти идентификаторы внедряются извне загрузчиком Node.js.</p>
+<hr>
+<h2 id="загрузка-модулей-через-require"><a class="header" href="#загрузка-модулей-через-require">Загрузка модулей через require</a></h2>
+<h3 id="загрузка-встроенных-модулей-nodejs"><a class="header" href="#загрузка-встроенных-модулей-nodejs">Загрузка встроенных модулей Node.js</a></h3>
+<h4 id="традиционный-способ"><a class="header" href="#традиционный-способ">Традиционный способ</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+const events = require('events');
+const timers = require('timers');
+</code></pre>
+<h4 id="современный-способ-с-nodejs-16"><a class="header" href="#современный-способ-с-nodejs-16">Современный способ (с Node.js 16+)</a></h4>
+<pre><code class="language-javascript">// Использование префикса node: для явного указания встроенного модуля
+const fs = require('node:fs');
+const events = require('node:events');
+const timers = require('node:timers/promises'); // подмодуль с промисами
+</code></pre>
+<p><strong>Преимущества префикса <code>node:</code>:</strong></p>
+<ul>
+<li>Защита от конфликтов с npm-пакетами с такими же именами</li>
+<li>Явное указание, что загружается встроенный модуль Node.js</li>
+<li>Рекомендуется использовать всегда для встроенных модулей</li>
+</ul>
+<h3 id="загрузка-npm-пакетов"><a class="header" href="#загрузка-npm-пакетов">Загрузка npm-пакетов</a></h3>
+<pre><code class="language-javascript">// Загрузка пакета из node_modules
+const WebSocket = require('ws');
+</code></pre>
+<h3 id="загрузка-локальных-модулей"><a class="header" href="#загрузка-локальных-модулей">Загрузка локальных модулей</a></h3>
+<pre><code class="language-javascript">// Относительный путь
+const myModule = require('./file1-export');
+
+// Абсолютный путь
+const myModule = require('/absolute/path/to/module');
+</code></pre>
+<hr>
+<h2 id="функция-require-и-её-свойства"><a class="header" href="#функция-require-и-её-свойства">Функция require и её свойства</a></h2>
+<h3 id="requireresolve"><a class="header" href="#requireresolve">require.resolve()</a></h3>
+<p>Преобразует относительный путь к модулю в абсолютный без загрузки модуля.</p>
+<pre><code class="language-javascript">const modulePath = require.resolve('./file1-export');
+console.log(modulePath); // Выведет абсолютный путь к файлу
+</code></pre>
+<h3 id="requirecache"><a class="header" href="#requirecache">require.cache</a></h3>
+<p>Объект-коллекция всех загруженных и закэшированных модулей.</p>
+<pre><code class="language-javascript">// Просмотр информации о кэшированном модуле
+const modulePath = require.resolve('./file1-export');
+const cachedModule = require.cache[modulePath];
+
+console.log(cachedModule);
+// {
+//   id: '/абсолютный/путь/к/модулю',
+//   path: '/абсолютный/путь/к/директории',
+//   exports: { /* экспортированное содержимое */ },
+//   filename: '/абсолютный/путь/к/модулю',
+//   loaded: true,
+//   children: [ /* зависимости этого модуля */ ],
+//   paths: [ /* пути поиска модулей */ ]
+// }
+</code></pre>
+<hr>
+<h2 id="кэширование-модулей-и-паттерн-singleton"><a class="header" href="#кэширование-модулей-и-паттерн-singleton">Кэширование модулей и паттерн Singleton</a></h2>
+<h3 id="принцип-работы-кэша"><a class="header" href="#принцип-работы-кэша">Принцип работы кэша</a></h3>
+<p><strong>Ключевая особенность</strong>: Когда модуль загружается через <code>require</code>, он загружается только один раз и затем кэшируется. Все последующие вызовы <code>require</code> возвращают один и тот же объект (ссылку).</p>
+<h4 id="демонстрация-синглтона"><a class="header" href="#демонстрация-синглтона">Демонстрация синглтона</a></h4>
+<p><strong>Модуль file1-export.js:</strong></p>
+<pre><code class="language-javascript">const collection = new Map();
+
+module.exports = {
+  collection
+};
+</code></pre>
+<p><strong>Файл 5-singleton.js:</strong></p>
+<pre><code class="language-javascript">const module1 = require('./file1-export');
+
+// Модифицируем коллекцию
+module1.collection.set('key', 'value');
+
+console.log(module1.collection.get('key')); // 'value'
+</code></pre>
+<p><strong>Файл 6-global.js:</strong></p>
+<pre><code class="language-javascript">// Сначала загружаем файл, который модифицирует модуль
+require('./5-singleton');
+
+// Теперь загружаем тот же модуль
+const module2 = require('./file1-export');
+
+console.log(module2.collection.get('key')); // 'value' - изменения сохранились!
+</code></pre>
+<p><strong>Вывод</strong>: <code>module1.collection</code> и <code>module2.collection</code> указывают на один и тот же объект Map в памяти.</p>
+<h3 id="опасности-мутабельности"><a class="header" href="#опасности-мутабельности">Опасности мутабельности</a></h3>
+<p>Из-за кэширования возможны следующие проблемы:</p>
+<ol>
+<li>
+<p><strong>Непредсказуемые изменения состояния</strong></p>
+<ul>
+<li>Один модуль может изменить экспортированный объект</li>
+<li>Эти изменения будут видны во всех модулях, которые его импортируют</li>
+</ul>
+</li>
+<li>
+<p><strong>Сложность отладки</strong></p>
+<ul>
+<li>Трудно отследить, кто и когда изменил состояние</li>
+<li>Особенно проблематично с транзитивными зависимостями</li>
+</ul>
+</li>
+</ol>
+<h4 id="пример-monkey-patching-встроенных-модулей"><a class="header" href="#пример-monkey-patching-встроенных-модулей">Пример: Monkey Patching встроенных модулей</a></h4>
+<pre><code class="language-javascript">const fs = require('node:fs');
+
+// Сохраняем оригинальную функцию
+const originalReadFile = fs.readFile;
+
+// Подменяем функцию
+fs.readFile = function(path, options, callback) {
+  console.log('Перехвачено чтение файла:', path);
+
+  // Вызываем оригинальную функцию
+  return originalReadFile.call(this, path, options, (...args) =&gt; {
+    console.log('Файл прочитан, размер буфера:', args[1]?.length);
+    callback(...args);
+  });
+};
+
+// Теперь в любом месте приложения, где используется fs.readFile,
+// будет выполняться наша обёртка!
+</code></pre>
+<p><strong>Опасность</strong>: Любая зависимость может модифицировать встроенные модули Node.js или глобальные прототипы, что приведёт к:</p>
+<ul>
+<li>Непредсказуемому поведению</li>
+<li>Сложности в аудите безопасности</li>
+<li>Проблемам с отладкой</li>
+</ul>
+<h3 id="очистка-кэша"><a class="header" href="#очистка-кэша">Очистка кэша</a></h3>
+<p>Можно вручную удалить модуль из кэша для повторной загрузки:</p>
+<pre><code class="language-javascript">const module1 = require('./file1-export');
+
+// Удаляем из кэша
+const modulePath = require.resolve('./file1-export');
+delete require.cache[modulePath];
+
+// Загружаем снова - будет создан новый объект
+const module2 = require('./file1-export');
+
+console.log(module1 === module2); // false - разные объекты!
+</code></pre>
+<p><strong>Ограничение</strong>: Это не защищает полностью от модификаций, так как:</p>
+<ul>
+<li>Другие зависимости могли загрузить модуль до или после очистки</li>
+<li>Невозможно контролировать момент загрузки во всех зависимостях</li>
+</ul>
+<hr>
+<h2 id="алгоритм-поиска-модулей"><a class="header" href="#алгоритм-поиска-модулей">Алгоритм поиска модулей</a></h2>
+<h3 id="последовательность-поиска-для-require"><a class="header" href="#последовательность-поиска-для-require">Последовательность поиска для require()</a></h3>
+<p>Когда вызывается <code>require('module-name')</code> (без префикса <code>./</code> или <code>/</code>), Node.js ищет модуль в следующих директориях:</p>
+<pre><code class="language-javascript">// Пример массива paths из кэшированного модуля
+[
+  '/path/to/current/directory/node_modules',
+  '/path/to/parent/directory/node_modules',
+  '/path/to/grandparent/directory/node_modules',
+  // ... до корня файловой системы
+  '/node_modules'
+]
+</code></pre>
+<p><strong>Процесс поиска:</strong></p>
+<ol>
+<li>Текущая директория → <code>./node_modules</code></li>
+<li>Родительская директория → <code>../node_modules</code></li>
+<li>Директория выше → <code>../../node_modules</code></li>
+<li>Продолжается до корня файловой системы</li>
+</ol>
+<h3 id="порядок-разрешения-расширений-файлов"><a class="header" href="#порядок-разрешения-расширений-файлов">Порядок разрешения расширений файлов</a></h3>
+<p>Если расширение не указано, Node.js пробует в следующем порядке:</p>
+<ol>
+<li><code>.js</code> - JavaScript-файл (CommonJS)</li>
+<li><code>.json</code> - JSON-файл</li>
+<li><code>.node</code> - нативное расширение C++</li>
+<li><code>.mjs</code> - ECMAScript-модуль (если используется ECMAScript modules)</li>
+</ol>
+<p><strong>Рекомендация</strong>: Всегда указывайте расширение явно для ускорения загрузки и избежания неоднозначности.</p>
+<hr>
+<h2 id="ecmascript-модули-esm"><a class="header" href="#ecmascript-модули-esm">ECMAScript модули (ESM)</a></h2>
+<h3 id="отличия-от-commonjs"><a class="header" href="#отличия-от-commonjs">Отличия от CommonJS</a></h3>
+<p><strong>Синтаксис экспорта:</strong></p>
+<pre><code class="language-javascript">// CommonJS
+module.exports = {
+  myFunction,
+  MyClass
+};
+
+// ECMAScript модули
+export {
+  myFunction,
+  MyClass
+};
+</code></pre>
+<p><strong>Синтаксис импорта:</strong></p>
+<pre><code class="language-javascript">// CommonJS
+const { myFunction, MyClass } = require('./module');
+
+// ECMAScript модули
+import { myFunction, MyClass } from './module.mjs';
+</code></pre>
+<h3 id="расширения-файлов"><a class="header" href="#расширения-файлов">Расширения файлов</a></h3>
+<ul>
+<li><code>.mjs</code> - ECMAScript модуль</li>
+<li><code>.cjs</code> - CommonJS модуль (явное указание)</li>
+<li><code>.js</code> - зависит от настройки <code>type</code> в <code>package.json</code></li>
+</ul>
+<h3 id="пример-ecmascript-модуля-file1-exportmjs"><a class="header" href="#пример-ecmascript-модуля-file1-exportmjs">Пример ECMAScript модуля (file1-export.mjs)</a></h3>
+<pre><code class="language-javascript">// Экспорт именованных идентификаторов
+export const myFunction = () =&gt; {
+  console.log('ES модуль функция');
+};
+
+export class MyClass {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+export const collection = new Map();
+</code></pre>
+<h3 id="импорт-ecmascript-модулей"><a class="header" href="#импорт-ecmascript-модулей">Импорт ECMAScript модулей</a></h3>
+<pre><code class="language-javascript">// Импорт именованных экспортов
+import { myFunction, MyClass, collection } from './file1-export.mjs';
+
+// Импорт встроенных модулей
+import * as events from 'node:events';
+</code></pre>
+<h3 id="совместимость-импорт-commonjs-из-esm"><a class="header" href="#совместимость-импорт-commonjs-из-esm">Совместимость: импорт CommonJS из ESM</a></h3>
+<p>ECMAScript модули могут импортировать CommonJS модули:</p>
+<pre><code class="language-javascript">// Импорт CommonJS модуля из ESM
+import fs from 'node:fs'; // default import для CommonJS
+import { readFile } from 'node:fs'; // именованный импорт
+
+// Импорт локального CommonJS модуля
+import myModule from './commonjs-module.js';
+</code></pre>
+<p><strong>Важно</strong>: Результат импорта идентичен, независимо от того, откуда импортируется (CommonJS или ESM).</p>
+<hr>
+<h2 id="динамический-импорт"><a class="header" href="#динамический-импорт">Динамический импорт</a></h2>
+<h3 id="синтаксис-и-использование"><a class="header" href="#синтаксис-и-использование">Синтаксис и использование</a></h3>
+<p>Динамический импорт возвращает Promise и может использоваться как в CommonJS, так и в ESM.</p>
+<pre><code class="language-javascript">// Динамический импорт возвращает Promise
+const eventsPromise = import('node:events');
+
+eventsPromise.then((events) =&gt; {
+  console.log(events); // модуль events
+});
+
+// С async/await
+const events = await import('node:events');
+console.log(events);
+</code></pre>
+<h3 id="top-level-await"><a class="header" href="#top-level-await">Top-level await</a></h3>
+<p><strong>В ECMAScript модулях (.mjs):</strong></p>
+<pre><code class="language-javascript">// Можно использовать await в корне файла
+const events = await import('node:events');
+console.log(events.EventEmitter);
+</code></pre>
+<p><strong>В CommonJS модулях (.js с “use strict”):</strong></p>
+<pre><code class="language-javascript">'use strict';
+
+// await нельзя использовать в корне
+// await import('node:events'); // Ошибка!
+
+// Но можно внутри async функции
+(async () =&gt; {
+  const events = await import('node:events');
+  console.log(events);
+})();
+</code></pre>
+<hr>
+<h2 id="получение-require-в-ecmascript-модулях"><a class="header" href="#получение-require-в-ecmascript-модулях">Получение require в ECMAScript модулях</a></h2>
+<p>ECMAScript модули не имеют встроенного <code>require</code>. Для его использования нужно создать вручную:</p>
+<pre><code class="language-javascript">import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+// Получаем путь к текущему файлу через import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+
+// Создаём require для текущего модуля
+const require = createRequire(import.meta.url);
+
+// Теперь можно использовать require
+const fs = require('node:fs');
+const ws = require('ws'); // npm пакет
+</code></pre>
+<h3 id="importmeta"><a class="header" href="#importmeta">import.meta</a></h3>
+<p>Объект <code>import.meta</code> содержит метаданные о текущем модуле:</p>
+<pre><code class="language-javascript">console.log(import.meta);
+// {
+//   url: 'file:///absolute/path/to/module.mjs'
+// }
+</code></pre>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Получение пути к текущему файлу</li>
+<li>Создание <code>require</code> в ESM</li>
+<li>Загрузка ресурсов относительно модуля</li>
+</ul>
+<hr>
+<h2 id="создание-собственной-системы-модульности"><a class="header" href="#создание-собственной-системы-модульности">Создание собственной системы модульности</a></h2>
+<h3 id="наивная-реализация-commonjs"><a class="header" href="#наивная-реализация-commonjs">Наивная реализация CommonJS</a></h3>
+<p>Рассмотрим, как создать простую систему модульности, похожую на CommonJS:</p>
+<pre><code class="language-javascript">const fs = require('node:fs').promises;
+const vm = require('node:vm');
+
+async function load(filename, sandbox = {}) {
+  // 1. Читаем содержимое файла
+  const source = await fs.readFile(filename, 'utf8');
+
+  // 2. Оборачиваем исходник в функцию
+  const wrapper =
+    `(require, module, __filename, __dirname) =&gt; {\n` +
+    source +
+    `\n}`;
+
+  // 3. Создаём скрипт
+  const script = new vm.Script(wrapper, { filename });
+
+  // 4. Создаём изолированный контекст (sandbox)
+  const context = vm.createContext(
+    Object.freeze({ ...sandbox })
+  );
+
+  // 5. Выполняем скрипт в контексте
+  const wrappedFunction = script.runInContext(context, {
+    timeout: 5000,
+    displayErrors: false
+  });
+
+  // 6. Создаём объект module для экспорта
+  const module = { exports: {} };
+
+  // 7. Создаём псевдо-require (заглушку)
+  const require = (name) =&gt; {
+    console.log('Вызван require для:', name);
+    // Здесь может быть рекурсивная загрузка
+  };
+
+  // 8. Вызываем обёрнутую функцию с нужными параметрами
+  wrappedFunction(
+    require,
+    module,
+    filename,
+    path.dirname(filename)
+  );
+
+  // 9. Возвращаем экспортированное содержимое
+  return module.exports;
+}
+
+// Использование
+const myModule = await load('./file1-export.js', {
+  // Можем подменить глобальные идентификаторы
+  Map: class PseudoMap extends Map {
+    constructor() {
+      super();
+      console.log('Создан PseudoMap!');
+    }
+  }
+});
+</code></pre>
+<p><strong>Как это работает:</strong></p>
+<ol>
+<li><strong>Чтение файла</strong> - получаем исходный код модуля</li>
+<li><strong>Обёртка</strong> - добавляем параметры <code>require</code>, <code>module</code>, <code>__filename</code>, <code>__dirname</code></li>
+<li><strong>Компиляция</strong> - создаём VM-скрипт из обёрнутого кода</li>
+<li><strong>Изоляция</strong> - создаём отдельный контекст выполнения (sandbox)</li>
+<li><strong>Выполнение</strong> - запускаем скрипт с внедрёнными зависимостями</li>
+<li><strong>Экспорт</strong> - возвращаем <code>module.exports</code></li>
+</ol>
+<h3 id="реальная-реализация-в-nodejs"><a class="header" href="#реальная-реализация-в-nodejs">Реальная реализация в Node.js</a></h3>
+<p>Это упрощённая версия. В реальном загрузчике Node.js (lib/internal/modules/cjs/loader.js):</p>
+<pre><code class="language-javascript">// Из исходников Node.js
+const wrapper = [
+  '(function (exports, require, module, __filename, __dirname) { ',
+  '\n});'
+];
+
+function wrap(script) {
+  return wrapper[0] + script + wrapper[1];
+}
+</code></pre>
+<p><strong>Отличия от нашей реализации:</strong></p>
+<ul>
+<li>Использует обычную функцию вместо стрелочной</li>
+<li>Более сложная обработка ошибок</li>
+<li>Интеграция с кэшем модулей</li>
+<li>Поддержка циклических зависимостей</li>
+</ul>
+<hr>
+<h2 id="альтернативная-система-модульности"><a class="header" href="#альтернативная-система-модульности">Альтернативная система модульности</a></h2>
+<p>Создадим систему модульности, где модуль - это просто объект с методами:</p>
+<h3 id="формат-модуля-examplemm"><a class="header" href="#формат-модуля-examplemm">Формат модуля (example.mm)</a></h3>
+<pre><code class="language-javascript">({
+  // Обычные методы
+  method1() {
+    console.log('Method 1');
+  },
+
+  // Асинхронные методы
+  async method2() {
+    return 'Result';
+  },
+
+  // Свойства
+  constant: 42,
+  collection: new Map()
+})
+</code></pre>
+<h3 id="загрузчик-для-альтернативной-системы"><a class="header" href="#загрузчик-для-альтернативной-системы">Загрузчик для альтернативной системы</a></h3>
+<pre><code class="language-javascript">const fs = require('node:fs').promises;
+const vm = require('node:vm');
+
+async function loadModule(filename, sandbox = {}) {
+  // 1. Читаем исходник
+  const source = await fs.readFile(filename, 'utf8');
+
+  // 2. Добавляем перевод строки (для отладки)
+  const wrappedSource = '\n' + source + '\n';
+
+  // 3. Создаём скрипт
+  const script = new vm.Script(wrappedSource, { filename });
+
+  // 4. Создаём контекст
+  const context = vm.createContext({ ...sandbox });
+
+  // 5. Выполняем и сразу возвращаем результат
+  return script.runInContext(context, {
+    timeout: 5000
+  });
+}
+
+// Использование
+const myModule = await loadModule('./example.mm', {
+  console // передаём console в sandbox
+});
+
+console.log(myModule.constant); // 42
+myModule.method1(); // 'Method 1'
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Проще, чем CommonJS (нет обёртки в функцию)</li>
+<li>Модуль сразу возвращает объект</li>
+<li>Меньше замыканий</li>
+<li>Можно писать код до объявления объекта</li>
+</ul>
+<p><strong>Недостатки:</strong></p>
+<ul>
+<li>Нет стандартизации</li>
+<li>Меньше экосистемной поддержки</li>
+</ul>
+<hr>
+<h2 id="работа-с-пакетами-packages"><a class="header" href="#работа-с-пакетами-packages">Работа с пакетами (packages)</a></h2>
+<h3 id="структура-пакета"><a class="header" href="#структура-пакета">Структура пакета</a></h3>
+<p>Пакет - это директория с файлом <code>package.json</code>, который описывает пакет.</p>
+<h4 id="базовый-packagejson"><a class="header" href="#базовый-packagejson">Базовый package.json</a></h4>
+<pre><code class="language-json">{
+  "name": "my-package",
+  "version": "1.0.0",
+  "author": "Author Name",
+  "main": "main.js"
+}
+</code></pre>
+<p><strong>Ключевые поля:</strong></p>
+<ul>
+<li><code>name</code> - имя пакета</li>
+<li><code>version</code> - версия (semver)</li>
+<li><code>main</code> - точка входа (по умолчанию <code>index.js</code>)</li>
+<li><code>author</code> - автор пакета</li>
+</ul>
+<h3 id="различные-способы-загрузки-пакетов"><a class="header" href="#различные-способы-загрузки-пакетов">Различные способы загрузки пакетов</a></h3>
+<h4 id="1-загрузка-корня-пакета"><a class="header" href="#1-загрузка-корня-пакета">1. Загрузка корня пакета</a></h4>
+<pre><code class="language-javascript">// Все эквивалентны - загрузят main.js из package.json
+require('./package1');
+require('./package1/');
+require('./package1/.');
+</code></pre>
+<h4 id="2-загрузка-конкретного-файла"><a class="header" href="#2-загрузка-конкретного-файла">2. Загрузка конкретного файла</a></h4>
+<pre><code class="language-javascript">// Явно указываем файл - package.json игнорируется
+require('./package1/main');
+require('./package1/main.js');
+</code></pre>
+<h4 id="3-загрузка-из-node_modules"><a class="header" href="#3-загрузка-из-node_modules">3. Загрузка из node_modules</a></h4>
+<pre><code class="language-javascript">// Ищет в node_modules по алгоритму поиска
+const pkg = require('package-name');
+</code></pre>
+<h4 id="4-загрузка-подмодулей"><a class="header" href="#4-загрузка-подмодулей">4. Загрузка подмодулей</a></h4>
+<pre><code class="language-javascript">// Загрузит utils.js из пакета
+require('./package1/utils');
+require('./package1/utils.js');
+</code></pre>
+<p><strong>Порядок проверки расширений:</strong></p>
+<ol>
+<li>Проверяет директорию <code>utils/</code> с <code>package.json</code></li>
+<li>Проверяет файл <code>utils.json</code></li>
+<li>Проверяет файл <code>utils.js</code></li>
+<li>Проверяет файл <code>utils.cjs</code></li>
+</ol>
+<p><strong>Рекомендация:</strong> Всегда указывайте <code>.js</code> расширение для файлов, чтобы избежать лишних проверок.</p>
+<h3 id="загрузка-json-файлов"><a class="header" href="#загрузка-json-файлов">Загрузка JSON файлов</a></h3>
+<p>CommonJS <code>require</code> умеет загружать JSON:</p>
+<pre><code class="language-javascript">// Загрузка package.json как объект
+const packageInfo = require('./package1/package.json');
+
+console.log(packageInfo.name); // 'my-package'
+console.log(packageInfo.version); // '1.0.0'
+</code></pre>
+<hr>
+<h2 id="ecmascript-пакеты"><a class="header" href="#ecmascript-пакеты">ECMAScript пакеты</a></h2>
+<h3 id="указание-типа-модульной-системы"><a class="header" href="#указание-типа-модульной-системы">Указание типа модульной системы</a></h3>
+<p>В <code>package.json</code> можно указать <code>type</code>:</p>
+<pre><code class="language-json">{
+  "name": "esm-package",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js"
+}
+</code></pre>
+<p><strong>Эффект:</strong></p>
+<ul>
+<li>Файлы <code>.js</code> теперь трактуются как ECMAScript модули</li>
+<li>Для CommonJS нужно использовать расширение <code>.cjs</code></li>
+<li>Можно использовать <code>import</code>/<code>export</code> в <code>.js</code> файлах</li>
+</ul>
+<h3 id="пример-mainjs-с-type-module"><a class="header" href="#пример-mainjs-с-type-module">Пример main.js с type: “module”</a></h3>
+<pre><code class="language-javascript">// main.js воспринимается как ESM благодаря "type": "module"
+export const myFunction = () =&gt; {
+  console.log('ESM функция');
+};
+
+export class MyClass {
+  constructor() {
+    console.log('ESM класс');
+  }
+}
+</code></pre>
+<hr>
+<h2 id="экспорт-нескольких-точек-входа"><a class="header" href="#экспорт-нескольких-точек-входа">Экспорт нескольких точек входа</a></h2>
+<h3 id="поле-exports-в-packagejson"><a class="header" href="#поле-exports-в-packagejson">Поле exports в package.json</a></h3>
+<p>Современный способ определения точек входа:</p>
+<pre><code class="language-json">{
+  "name": "multi-entry-package",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./main.mjs",
+    "./utils": "./utils.mjs"
+  }
+}
+</code></pre>
+<p><strong>Использование:</strong></p>
+<pre><code class="language-javascript">// Загружает main.mjs
+import pkg from 'multi-entry-package';
+
+// Загружает utils.mjs
+import utils from 'multi-entry-package/utils';
+</code></pre>
+<h3 id="conditional-exports-условный-экспорт"><a class="header" href="#conditional-exports-условный-экспорт">Conditional Exports (условный экспорт)</a></h3>
+<p>Можно определять разные точки входа для разных систем модулей:</p>
+<pre><code class="language-json">{
+  "name": "universal-package",
+  "version": "1.0.0",
+  "exports": {
+    ".": {
+      "import": "./main.mjs",
+      "require": "./main.cjs"
+    }
+  }
+}
+</code></pre>
+<p><strong>Поведение:</strong></p>
+<pre><code class="language-javascript">// Из ECMAScript модуля - загрузит main.mjs
+import pkg from 'universal-package';
+
+// Из CommonJS модуля - загрузит main.cjs
+const pkg = require('universal-package');
+</code></pre>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Создание универсальных библиотек</li>
+<li>Оптимизация для разных окружений</li>
+<li>Поддержка legacy кода</li>
+</ul>
+<hr>
+<h2 id="кэширование-и-изоляция-модулей"><a class="header" href="#кэширование-и-изоляция-модулей">Кэширование и изоляция модулей</a></h2>
+<h3 id="общий-кэш-для-require-и-import"><a class="header" href="#общий-кэш-для-require-и-import">Общий кэш для require и import?</a></h3>
+<p>Проверим, используют ли <code>require</code> и динамический <code>import</code> один кэш:</p>
+<pre><code class="language-javascript">import { createRequire } from 'node:module';
+
+// Создаём require в ESM
+const require = createRequire(import.meta.url);
+
+// Загружаем модуль через import
+const m1 = await import('node:module');
+
+// Загружаем через динамический import снова
+const m2 = await import('node:module');
+
+// Загружаем через require
+const m3 = require('node:module');
+
+// Загружаем через require снова
+const m4 = require('node:module');
+
+// Проверяем идентичность
+console.log(m1 === m2); // true - динамический import кэширует
+console.log(m3 === m4); // true - require тоже кэширует
+console.log(m1 === m3); // false (!) - разные кэши!
+</code></pre>
+<p><strong>Вывод:</strong></p>
+<ul>
+<li><code>import</code> и <code>require</code> используют <strong>разные кэши</strong></li>
+<li>Каждая система модулей имеет свой cache</li>
+<li>Это может привести к загрузке одного модуля дважды</li>
+</ul>
+<h3 id="conditional-exports-и-кэш"><a class="header" href="#conditional-exports-и-кэш">Conditional exports и кэш</a></h3>
+<p>При использовании conditional exports:</p>
+<pre><code class="language-javascript">// package.json:
+// "exports": {
+//   ".": {
+//     "import": "./main.mjs",
+//     "require": "./main.cjs"
+//   }
+// }
+
+const m1 = require('package'); // загружает main.cjs
+const m2 = await import('package'); // загружает main.mjs
+
+console.log(m1 === m2); // false - это разные файлы!
+</code></pre>
+<p><strong>Важно:</strong> Если пакет имеет разные точки входа для <code>import</code> и <code>require</code>, они загружаются как отдельные модули и имеют отдельное состояние.</p>
+<hr>
+<h2 id="песочница-sandbox-и-изоляция-кода"><a class="header" href="#песочница-sandbox-и-изоляция-кода">Песочница (Sandbox) и изоляция кода</a></h2>
+<h3 id="создание-изолированного-контекста"><a class="header" href="#создание-изолированного-контекста">Создание изолированного контекста</a></h3>
+<p>Используя <code>vm.createContext</code>, можно создать изолированное окружение:</p>
+<pre><code class="language-javascript">const vm = require('node:vm');
+
+// Создаём sandbox с ограниченным API
+const sandbox = {
+  console: {
+    log: (...args) =&gt; {
+      console.log('[SANDBOX]', ...args);
+    }
+  },
+  // Подменяем встроенные классы
+  Map: class RestrictedMap extends Map {
+    set(key, value) {
+      console.log('Map.set вызван:', key, value);
+      return super.set(key, value);
+    }
+  }
+};
+
+// Создаём контекст
+const context = vm.createContext(sandbox);
+
+// Код, который выполнится в песочнице
+const code = `
+  const map = new Map();
+  map.set('key', 'value');
+  console.log(map.get('key'));
+`;
+
+// Выполняем в изолированном контексте
+vm.runInContext(code, context, {
+  timeout: 5000,
+  displayErrors: false
+});
+</code></pre>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Выполнение ненадёжного кода</li>
+<li>Изоляция плагинов</li>
+<li>Ограничение доступа к API</li>
+<li>Тестирование с mock-объектами</li>
+</ul>
+<h3 id="ограничения-песочниц"><a class="header" href="#ограничения-песочниц">Ограничения песочниц</a></h3>
+<p><strong>Важно:</strong> Песочницы VM в Node.js не являются полноценной защитой:</p>
+<ul>
+<li>Возможен выход через прототипы</li>
+<li>Доступ к нативным функциям</li>
+<li>Не защищает от DoS (расход CPU/памяти)</li>
+</ul>
+<p>Для настоящей изоляции используйте:</p>
+<ul>
+<li>Worker Threads</li>
+<li>Child Processes</li>
+<li>Контейнеры (Docker)</li>
+<li>Виртуальные машины</li>
+</ul>
+<hr>
+<h2 id="защита-от-модификаций-и-monkey-patching"><a class="header" href="#защита-от-модификаций-и-monkey-patching">Защита от модификаций и monkey patching</a></h2>
+<h3 id="проблема"><a class="header" href="#проблема">Проблема</a></h3>
+<p>Любая зависимость может модифицировать:</p>
+<ul>
+<li>Встроенные модули Node.js</li>
+<li>Глобальные прототипы (<code>Array.prototype</code>, <code>Object.prototype</code>)</li>
+<li>Глобальные объекты</li>
+</ul>
+<h3 id="решения"><a class="header" href="#решения">Решения</a></h3>
+<h4 id="1-использование-objectfreeze"><a class="header" href="#1-использование-objectfreeze">1. Использование Object.freeze</a></h4>
+<pre><code class="language-javascript">// Заморозка экспортируемых объектов
+const API = Object.freeze({
+  method1() { },
+  method2() { }
+});
+
+module.exports = API;
+</code></pre>
+<h4 id="2-использование-песочниц"><a class="header" href="#2-использование-песочниц">2. Использование песочниц</a></h4>
+<pre><code class="language-javascript">// Запуск зависимостей в изолированном контексте
+const vm = require('node:vm');
+
+const sandbox = vm.createContext({
+  // Контролируемое окружение
+});
+
+// Загрузка модуля в песочнице
+</code></pre>
+<h4 id="3-аудит-зависимостей"><a class="header" href="#3-аудит-зависимостей">3. Аудит зависимостей</a></h4>
+<ul>
+<li>Регулярная проверка зависимостей</li>
+<li>Использование <code>npm audit</code></li>
+<li>Минимизация зависимостей</li>
+<li>Code review важных зависимостей</li>
+</ul>
+<h4 id="4-immutable-exports"><a class="header" href="#4-immutable-exports">4. Immutable exports</a></h4>
+<pre><code class="language-javascript">// Экспортируем только функции (не объекты)
+module.exports = {
+  createInstance() {
+    return { /* новый объект каждый раз */ };
+  }
+};
+</code></pre>
+<hr>
+<h2 id="лучшие-практики-модульной-системы"><a class="header" href="#лучшие-практики-модульной-системы">Лучшие практики модульной системы</a></h2>
+<h3 id="1-явное-указание-расширений-и-префиксов"><a class="header" href="#1-явное-указание-расширений-и-префиксов">1. Явное указание расширений и префиксов</a></h3>
+<pre><code class="language-javascript">// Хорошо
+const fs = require('node:fs');
+const myModule = require('./module.js');
+
+// Плохо
+const fs = require('fs'); // может конфликтовать с npm пакетом
+const myModule = require('./module'); // лишние проверки расширений
+</code></pre>
+<h3 id="2-immutable-exports"><a class="header" href="#2-immutable-exports">2. Immutable exports</a></h3>
+<pre><code class="language-javascript">// Хорошо - неизменяемый API
+module.exports = Object.freeze({
+  method1: () =&gt; {},
+  method2: () =&gt; {}
+});
+
+// Плохо - мутабельный объект
+module.exports = {
+  data: new Map() // может быть изменён извне
+};
+</code></pre>
+<h3 id="3-избегайте-глобального-состояния"><a class="header" href="#3-избегайте-глобального-состояния">3. Избегайте глобального состояния</a></h3>
+<pre><code class="language-javascript">// Плохо - глобальное состояние в модуле
+let counter = 0;
+
+module.exports = {
+  increment() { counter++; },
+  getCount() { return counter; }
+};
+
+// Хорошо - фабрика экземпляров
+module.exports = {
+  createCounter() {
+    let counter = 0;
+    return {
+      increment() { counter++; },
+      getCount() { return counter; }
+    };
+  }
+};
+</code></pre>
+<h3 id="4-документирование-контрактов-модулей"><a class="header" href="#4-документирование-контрактов-модулей">4. Документирование контрактов модулей</a></h3>
+<pre><code class="language-javascript">/**
+ * Модуль для работы с пользователями
+ * @module users
+ */
+
+/**
+ * Создаёт нового пользователя
+ * @param {string} name - Имя пользователя
+ * @param {string} email - Email пользователя
+ * @returns {Object} Объект пользователя
+ */
+function createUser(name, email) {
+  return { name, email };
+}
+
+module.exports = { createUser };
+</code></pre>
+<h3 id="5-используйте-esm-для-новых-проектов"><a class="header" href="#5-используйте-esm-для-новых-проектов">5. Используйте ESM для новых проектов</a></h3>
+<pre><code class="language-javascript">// Современный подход - ECMAScript модули
+// package.json: "type": "module"
+
+// Явный импорт
+import { readFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+
+// Асинхронная загрузка
+const config = await import('./config.js');
+</code></pre>
+<hr>
+<h2 id="структура-приложения-и-слои"><a class="header" href="#структура-приложения-и-слои">Структура приложения и слои</a></h2>
+<h3 id="применение-модульной-системы-для-чистой-архитектуры"><a class="header" href="#применение-модульной-системы-для-чистой-архитектуры">Применение модульной системы для чистой архитектуры</a></h3>
+<p>Модульная система позволяет организовать код по принципам:</p>
+<ol>
+<li>
+<p><strong>Разделение ответственности</strong></p>
+<ul>
+<li>Бизнес-логика в отдельных модулях</li>
+<li>Инфраструктурный код изолирован</li>
+</ul>
+</li>
+<li>
+<p><strong>Dependency Injection через sandbox</strong></p>
+<ul>
+<li>Внедрение зависимостей через параметры модуля</li>
+<li>Изоляция слоёв приложения</li>
+</ul>
+</li>
+<li>
+<p><strong>Минимизация coupling</strong></p>
+<ul>
+<li>Модули знают минимум друг о друге</li>
+<li>Зависимости через интерфейсы</li>
+</ul>
+</li>
+</ol>
+<p><strong>Пример структуры:</strong></p>
+<pre><code>app/
+  ├── domain/          # Бизнес-логика (чистые функции)
+  │   ├── user.js
+  │   └── order.js
+  ├── services/        # Сервисы приложения
+  │   ├── userService.js
+  │   └── orderService.js
+  ├── infrastructure/  # Детали реализации
+  │   ├── database.js
+  │   ├── http.js
+  │   └── logger.js
+  └── main.js         # Точка входа, композиция
+</code></pre>
+<hr>
+<h2 id="итоги-и-ключевые-моменты"><a class="header" href="#итоги-и-ключевые-моменты">Итоги и ключевые моменты</a></h2>
+<h3 id="основные-концепции"><a class="header" href="#основные-концепции">Основные концепции</a></h3>
+<ol>
+<li>
+<p><strong>Системы модульности в Node.js</strong></p>
+<ul>
+<li>CommonJS - традиционная система (<code>require</code>/<code>module.exports</code>)</li>
+<li>ECMAScript Modules - современный стандарт (<code>import</code>/<code>export</code>)</li>
+<li>Обе системы могут сосуществовать в одном проекте</li>
+</ul>
+</li>
+<li>
+<p><strong>Механизм загрузки</strong></p>
+<ul>
+<li>Модули оборачиваются в функции с внедрёнными зависимостями</li>
+<li>Используется <code>vm.Script</code> для выполнения в изолированном контексте</li>
+<li>Алгоритм поиска модулей идёт от текущей директории вверх</li>
+</ul>
+</li>
+<li>
+<p><strong>Кэширование</strong></p>
+<ul>
+<li><code>require</code> кэширует модули (паттерн Singleton)</li>
+<li><code>import</code> имеет отдельный кэш</li>
+<li>Очистка кэша возможна, но не решает все проблемы</li>
+</ul>
+</li>
+<li>
+<p><strong>Пакеты</strong></p>
+<ul>
+<li>Описываются через <code>package.json</code></li>
+<li>Поддерживают множественные точки входа (<code>exports</code>)</li>
+<li>Могут иметь условный экспорт для разных систем модулей</li>
+</ul>
+</li>
+<li>
+<p><strong>Безопасность</strong></p>
+<ul>
+<li>Monkey patching - серьёзная угроза</li>
+<li>Песочницы обеспечивают базовую изоляцию</li>
+<li>Требуется аудит зависимостей</li>
+</ul>
+</li>
+</ol>
+<h3 id="рекомендации"><a class="header" href="#рекомендации">Рекомендации</a></h3>
+<ol>
+<li>Используйте префикс <code>node:</code> для встроенных модулей</li>
+<li>Указывайте расширения файлов явно</li>
+<li>Делайте экспорты неизменяемыми (immutable)</li>
+<li>Избегайте глобального состояния в модулях</li>
+<li>Документируйте контракты модулей</li>
+<li>Применяйте ESM для новых проектов</li>
+<li>Используйте песочницы для ненадёжного кода</li>
+</ol>
+<h3 id="дальнейшее-изучение"><a class="header" href="#дальнейшее-изучение">Дальнейшее изучение</a></h3>
+<ul>
+<li>Документация Node.js по модулям: https://nodejs.org/api/modules.html</li>
+<li>ECMAScript Modules: https://nodejs.org/api/esm.html</li>
+<li>VM API: https://nodejs.org/api/vm.html</li>
+<li>Package.json exports: https://nodejs.org/api/packages.html#exports</li>
+</ul>
+<hr>
+<h2 id="практические-задания"><a class="header" href="#практические-задания">Практические задания</a></h2>
+<ol>
+<li>
+<p><strong>Создайте свою систему модульности</strong></p>
+<ul>
+<li>Реализуйте функцию <code>load()</code> с поддержкой кэша</li>
+<li>Добавьте рекурсивную загрузку зависимостей</li>
+<li>Реализуйте песочницу с ограничениями</li>
+</ul>
+</li>
+<li>
+<p><strong>Исследуйте кэш модулей</strong></p>
+<ul>
+<li>Загрузите модуль и изучите структуру <code>require.cache</code></li>
+<li>Попробуйте очистить кэш и перезагрузить модуль</li>
+<li>Проверьте, как кэшируются циклические зависимости</li>
+</ul>
+</li>
+<li>
+<p><strong>Создайте универсальный пакет</strong></p>
+<ul>
+<li>Напишите пакет с поддержкой CommonJS и ESM</li>
+<li>Используйте conditional exports</li>
+<li>Добавьте множественные точки входа</li>
+</ul>
+</li>
+<li>
+<p><strong>Защита от модификаций</strong></p>
+<ul>
+<li>Создайте модуль с immutable API</li>
+<li>Реализуйте песочницу с ограниченными возможностями</li>
+<li>Напишите тесты, проверяющие невозможность модификации</li>
+</ul>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week4/nodejs-architecture-layers-di-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week4/nodejs-architecture-layers-di-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

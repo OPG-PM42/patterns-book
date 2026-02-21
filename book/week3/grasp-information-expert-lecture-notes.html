@@ -1,0 +1,867 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Information Expert, Creator, Polymorphism - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="grasp-принцип-информационный-эксперт-information-expert"><a class="header" href="#grasp-принцип-информационный-эксперт-information-expert">GRASP: Принцип “Информационный эксперт” (Information Expert)</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Данная лекция посвящена детальному изучению принципа <strong>Information Expert</strong> (Информационный эксперт) из набора паттернов GRASP (General Responsibility Assignment Software Patterns), адаптированного для JavaScript и Node.js. Принцип определяет, какому объекту или модулю следует назначить определенную ответственность, основываясь на том, у кого есть необходимая информация для выполнения задачи.</p>
+<hr>
+<h2 id="основные-концепции"><a class="header" href="#основные-концепции">Основные концепции</a></h2>
+<h3 id="что-такое-принцип-информационный-эксперт"><a class="header" href="#что-такое-принцип-информационный-эксперт">Что такое принцип “Информационный эксперт”?</a></h3>
+<p><strong>Информационный эксперт</strong> — это фундаментальный принцип распределения ответственности в объектно-ориентированном проектировании. Суть принципа:</p>
+<blockquote>
+<p><strong>Ответственность должна быть назначена тому объекту или модулю, который обладает необходимой информацией для выполнения этой ответственности.</strong></p>
+</blockquote>
+<h3 id="ключевые-положения-принципа"><a class="header" href="#ключевые-положения-принципа">Ключевые положения принципа</a></h3>
+<ol>
+<li>
+<p><strong>Инкапсуляция данных</strong>: Объект должен управлять своими собственными данными и не позволять внешнему коду “лезть” в свои внутренности.</p>
+</li>
+<li>
+<p><strong>Сокрытие реализации</strong>: Внутренняя структура данных должна быть скрыта от внешнего мира через публичный интерфейс.</p>
+</li>
+<li>
+<p><strong>Консистентность данных</strong>: Объект самостоятельно поддерживает согласованность своих данных.</p>
+</li>
+<li>
+<p><strong>Независимость компонентов</strong>: Изменения внутренней реализации не должны влиять на внешний код, использующий объект.</p>
+</li>
+</ol>
+<hr>
+<h2 id="пример-1-нарушение-принципа-со-связанным-списком"><a class="header" href="#пример-1-нарушение-принципа-со-связанным-списком">Пример 1: Нарушение принципа со связанным списком</a></h2>
+<h3 id="проблема-доступ-к-внутренней-структуре-данных"><a class="header" href="#проблема-доступ-к-внутренней-структуре-данных">Проблема: Доступ к внутренней структуре данных</a></h3>
+<p>Рассмотрим простой связанный список с методами <code>push</code> и <code>pop</code>:</p>
+<pre><code class="language-javascript">class LinkedList {
+  constructor() {
+    this.first = null; // Первый элемент списка
+    this.length = 0;   // Длина списка
+  }
+
+  push(value) {
+    // Внутренняя реализация добавления элемента
+    // (детали опущены для краткости)
+  }
+
+  pop() {
+    // Внутренняя реализация извлечения элемента
+    // (детали опущены для краткости)
+  }
+}
+</code></pre>
+<h3 id="правильное-использование-без-нарушения-принципа"><a class="header" href="#правильное-использование-без-нарушения-принципа">Правильное использование (без нарушения принципа)</a></h3>
+<pre><code class="language-javascript">const list = new LinkedList();
+
+// Используем только публичный интерфейс
+list.push(1);
+list.push(2);
+list.push(3);
+
+console.log(list.pop()); // 3
+console.log(list.pop()); // 2
+console.log(list.pop()); // 1
+
+// Результат: все работает корректно
+</code></pre>
+<h3 id="нарушение-принципа-information-expert"><a class="header" href="#нарушение-принципа-information-expert">Нарушение принципа Information Expert</a></h3>
+<pre><code class="language-javascript">const list = new LinkedList();
+list.push(1);
+list.push(2);
+list.push(3);
+
+// НАРУШЕНИЕ: лезем во внутреннюю структуру!
+list.last.prev.prev = list.last;
+
+// Результат: нарушена внутренняя консистентность списка
+console.log(list.pop()); // 2
+console.log(list.pop()); // 2 (дублируется!)
+console.log(list.pop()); // ...неправильное поведение
+</code></pre>
+<p><strong>Проблема</strong>: Прямое обращение к внутренним полям (<code>list.last.prev.prev</code>) нарушает целостность внутренней структуры данных, что приводит к некорректной работе методов списка.</p>
+<hr>
+<h2 id="пример-2-иерархия-покупок-и-продуктов-composite-pattern"><a class="header" href="#пример-2-иерархия-покупок-и-продуктов-composite-pattern">Пример 2: Иерархия покупок и продуктов (Composite Pattern)</a></h2>
+<h3 id="постановка-задачи"><a class="header" href="#постановка-задачи">Постановка задачи</a></h3>
+<p>Необходимо создать систему для управления покупками, где:</p>
+<ul>
+<li>Есть отдельные <strong>продукты</strong> (Product) с ценой</li>
+<li>Есть <strong>покупки</strong> (Purchase), которые могут содержать как продукты, так и другие покупки</li>
+<li>Нужно вычислять общую стоимость на любом уровне иерархии</li>
+</ul>
+<h3 id="реализация-класса-product"><a class="header" href="#реализация-класса-product">Реализация класса Product</a></h3>
+<pre><code class="language-javascript">class Product {
+  constructor(name, price) {
+    this.name = name;
+    this.productPrice = price; // Внутреннее поле для хранения цены
+  }
+
+  // Геттер для единообразного интерфейса
+  get price() {
+    return this.productPrice;
+  }
+}
+</code></pre>
+<p><strong>Обратите внимание</strong>:</p>
+<ul>
+<li>Хотя можно было напрямую использовать <code>this.price</code>, мы создаем геттер для единообразия интерфейса с классом <code>Purchase</code>.</li>
+<li>Продукт сам знает свою цену и возвращает её через публичный интерфейс.</li>
+</ul>
+<h3 id="реализация-класса-purchase"><a class="header" href="#реализация-класса-purchase">Реализация класса Purchase</a></h3>
+<pre><code class="language-javascript">class Purchase {
+  constructor(name, ...items) {
+    this.name = name;
+    this.items = items; // Коллекция продуктов и/или других покупок
+  }
+
+  // Геттер вычисляет общую стоимость, проходя по коллекции
+  get price() {
+    let total = 0;
+    for (const item of this.items) {
+      total += item.price; // Вызываем .price у каждого элемента
+    }
+    return total;
+  }
+}
+</code></pre>
+<p><strong>Ключевые моменты</strong>:</p>
+<ul>
+<li><code>Purchase</code> не проверяет, что именно лежит в коллекции — <code>Product</code> или другой <code>Purchase</code>.</li>
+<li>Благодаря единому интерфейсу (геттер <code>price</code>), код работает полиморфно.</li>
+<li>Вложенность может быть любой: покупка внутри покупки внутри покупки.</li>
+</ul>
+<h3 id="пример-использования"><a class="header" href="#пример-использования">Пример использования</a></h3>
+<pre><code class="language-javascript">// Создаем отдельные продукты
+const laptop = new Product('Laptop', 1000);
+const mouse = new Product('Mouse', 50);
+const keyboard = new Product('Keyboard', 150);
+
+// Группируем в покупку "Электроника"
+const electronics = new Purchase('Electronics', laptop, mouse, keyboard);
+
+// Создаем еще продукты
+const bag = new Product('Bag', 80);
+const mousepad = new Product('Mousepad', 20);
+
+// Группируем в покупку "Текстиль"
+const textile = new Purchase('Textile', bag, mousepad);
+
+// Создаем общую покупку "Рабочий набор"
+const workSet = new Purchase('Work Set', electronics, textile);
+
+// Можем получить цену на любом уровне
+console.log('Electronics:', electronics.price);  // 1200
+console.log('Textile:', textile.price);          // 100
+console.log('Total:', workSet.price);            // 1300
+</code></pre>
+<h3 id="визуализация-иерархии"><a class="header" href="#визуализация-иерархии">Визуализация иерархии</a></h3>
+<pre><code>Work Set (1300)
+├── Electronics (1200)
+│   ├── Laptop (1000)
+│   ├── Mouse (50)
+│   └── Keyboard (150)
+└── Textile (100)
+    ├── Bag (80)
+    └── Mousepad (20)
+</code></pre>
+<h3 id="почему-это-соответствует-принципу-information-expert"><a class="header" href="#почему-это-соответствует-принципу-information-expert">Почему это соответствует принципу Information Expert?</a></h3>
+<ol>
+<li><strong>Product</strong> сам знает свою цену и не требует от других объектов управления этой информацией.</li>
+<li><strong>Purchase</strong> сам знает свои элементы и умеет вычислять общую стоимость, не раскрывая детали реализации.</li>
+<li>Нет необходимости во внешнем коде проверять типы элементов или обращаться к внутренним полям.</li>
+<li>Каждый объект является <strong>экспертом</strong> по своим собственным данным.</li>
+</ol>
+<h3 id="расширяемость-и-гибкость"><a class="header" href="#расширяемость-и-гибкость">Расширяемость и гибкость</a></h3>
+<p>Благодаря соблюдению принципа, можно легко расширять систему:</p>
+<pre><code class="language-javascript">// Можно добавить специальную логику вычисления цены
+class DiscountProduct extends Product {
+  constructor(name, price, discount) {
+    super(name, price);
+    this.discount = discount;
+  }
+
+  get price() {
+    // Переопределяем вычисление цены с учетом скидки
+    return this.productPrice * (1 - this.discount);
+  }
+}
+
+// Можно создать специальные типы покупок
+class SpecialOfferPurchase extends Purchase {
+  get price() {
+    // Применяем специальную скидку ко всей покупке
+    const basePrice = super.price;
+    return basePrice * 0.9; // 10% скидка
+  }
+}
+</code></pre>
+<h3 id="контракт-и-тестирование"><a class="header" href="#контракт-и-тестирование">Контракт и тестирование</a></h3>
+<p>В JavaScript нет явных интерфейсов, поэтому контракт (одинаковый геттер <code>price</code>) поддерживается:</p>
+<ol>
+<li><strong>Силой воли разработчиков</strong> — следование соглашениям</li>
+<li><strong>Тестами</strong> — проверка ожидаемого поведения</li>
+</ol>
+<pre><code class="language-javascript">// Пример теста
+const total = workSet.price;
+console.assert(total === 1300, 'Total price should be 1300');
+
+// Если где-то неправильно вычислена цена — тест не пройдет
+</code></pre>
+<hr>
+<h2 id="пример-3-циклический-буфер-ring-buffer"><a class="header" href="#пример-3-циклический-буфер-ring-buffer">Пример 3: Циклический буфер (Ring Buffer)</a></h2>
+<h3 id="назначение"><a class="header" href="#назначение">Назначение</a></h3>
+<p>Циклический буфер — это структура данных фиксированного размера, которая при переполнении начинает перезаписывать данные с начала.</p>
+<h3 id="реализация-на-основе-buffer-nodejs"><a class="header" href="#реализация-на-основе-buffer-nodejs">Реализация на основе Buffer (Node.js)</a></h3>
+<pre><code class="language-javascript">class RingBuffer {
+  constructor(size) {
+    this.buffer = Buffer.alloc(size); // Выделяем буфер заданного размера
+    this.offset = 0;                   // Текущее смещение для записи
+    this.size = size;                  // Размер буфера (дублируем для удобства)
+  }
+
+  write(str) {
+    // Получаем длину строки в байтах
+    const len = Buffer.byteLength(str, 'utf8');
+
+    // Вычисляем, сколько байтов влезет до конца буфера
+    const restBuffer = this.size - this.offset;
+
+    if (len &lt; restBuffer) {
+      // Строка полностью помещается в оставшееся место
+      this.buffer.write(str, this.offset, 'utf8');
+      this.offset += len;
+    } else {
+      // Строка не помещается, нужно разделить на две части
+
+      // Первая часть: записываем до конца буфера
+      const firstPart = str.slice(0, restBuffer);
+      this.buffer.write(firstPart, this.offset, 'utf8');
+
+      // Вторая часть: записываем с начала буфера (рекурсивно)
+      this.offset = 0;
+      const secondPart = str.slice(restBuffer);
+      this.write(secondPart); // Рекурсивный вызов
+    }
+  }
+
+  // Метод для чтения всего содержимого буфера
+  toString() {
+    return this.buffer.toString('utf8');
+  }
+}
+</code></pre>
+<h3 id="оптимизированная-версия-использует-bufferwrite"><a class="header" href="#оптимизированная-версия-использует-bufferwrite">Оптимизированная версия (использует Buffer.write)</a></h3>
+<pre><code class="language-javascript">class RingBuffer {
+  constructor(size) {
+    this.buffer = Buffer.alloc(size);
+    this.offset = 0;
+    this.size = size;
+  }
+
+  write(str) {
+    const len = Buffer.byteLength(str, 'utf8');
+    const restBuffer = this.size - this.offset;
+
+    if (len &lt; restBuffer) {
+      // Используем встроенный метод buffer.write() - более эффективно
+      this.buffer.write(str, this.offset, 'utf8');
+      this.offset += len;
+    } else {
+      // Записываем первую часть
+      const firstPart = str.slice(0, restBuffer);
+      this.buffer.write(firstPart, this.offset, 'utf8');
+
+      // Записываем вторую часть с начала
+      this.offset = 0;
+      const secondPart = str.slice(restBuffer);
+      this.write(secondPart);
+    }
+  }
+
+  toString() {
+    return this.buffer.toString('utf8');
+  }
+}
+</code></pre>
+<p><strong>Эволюция реализации</strong>:</p>
+<ul>
+<li>Первая версия: побайтовое копирование в цикле (медленно)</li>
+<li>Вторая версия: использование <code>buffer.write()</code> (быстро)</li>
+<li><strong>Важно</strong>: Внешний интерфейс остался неизменным!</li>
+</ul>
+<h3 id="пример-использования-1"><a class="header" href="#пример-использования-1">Пример использования</a></h3>
+<pre><code class="language-javascript">const ring = new RingBuffer(10);
+
+ring.write('1');
+ring.write('2');
+ring.write('3');
+ring.write('4567890a');
+
+console.log(ring.toString()); // "a234567890"
+</code></pre>
+<p><strong>Что произошло</strong>:</p>
+<ol>
+<li>Записали <code>'1'</code> (offset = 1)</li>
+<li>Записали <code>'2'</code> (offset = 2)</li>
+<li>Записали <code>'3'</code> (offset = 3)</li>
+<li>Записали <code>'4567890a'</code> — строка из 8 символов:
+<ul>
+<li>В буфере 7 свободных мест (10 - 3)</li>
+<li><code>'4567890'</code> записалось в позиции 3-9</li>
+<li><code>'a'</code> записалось в позицию 0, перезаписав <code>'1'</code></li>
+</ul>
+</li>
+<li>Результат: <code>"a234567890"</code></li>
+</ol>
+<h3 id="правильное-использование-соблюдение-information-expert"><a class="header" href="#правильное-использование-соблюдение-information-expert">Правильное использование (соблюдение Information Expert)</a></h3>
+<pre><code class="language-javascript">// ПРАВИЛЬНО: используем публичный интерфейс
+const content = ring.toString();
+console.log(content);
+</code></pre>
+<h3 id="нарушение-принципа"><a class="header" href="#нарушение-принципа">Нарушение принципа</a></h3>
+<pre><code class="language-javascript">// НЕПРАВИЛЬНО: лезем во внутренний буфер напрямую
+ring.buffer.write('b', 0, 'utf8');
+console.log(ring.buffer.toString('utf8')); // Нарушили инкапсуляцию!
+</code></pre>
+<p><strong>Проблема</strong>: Прямое обращение к <code>ring.buffer</code> обходит логику управления смещением (<code>offset</code>), что может привести к некорректному состоянию объекта.</p>
+<h3 id="исправленная-версия-с-методом-tostring"><a class="header" href="#исправленная-версия-с-методом-tostring">Исправленная версия с методом toString()</a></h3>
+<pre><code class="language-javascript">class RingBuffer {
+  constructor(size) {
+    this.buffer = Buffer.alloc(size);
+    this.offset = 0;
+    this.size = size;
+  }
+
+  write(str) {
+    const len = Buffer.byteLength(str, 'utf8');
+    const restBuffer = this.size - this.offset;
+
+    if (len &lt; restBuffer) {
+      this.buffer.write(str, this.offset, 'utf8');
+      this.offset += len;
+    } else {
+      const firstPart = str.slice(0, restBuffer);
+      this.buffer.write(firstPart, this.offset, 'utf8');
+      this.offset = 0;
+      const secondPart = str.slice(restBuffer);
+      this.write(secondPart);
+    }
+  }
+
+  // Добавили метод для чтения — инкапсулируем доступ к buffer
+  toString() {
+    return this.buffer.toString('utf8');
+  }
+}
+
+// Использование
+const ring = new RingBuffer(10);
+ring.write('1');
+ring.write('2');
+ring.write('3');
+ring.write('4567890ab');
+
+// Правильно: используем публичный метод
+console.log(ring.toString()); // "ab34567890"
+</code></pre>
+<hr>
+<h2 id="пример-4-процедурный-подход-с-модулями"><a class="header" href="#пример-4-процедурный-подход-с-модулями">Пример 4: Процедурный подход с модулями</a></h2>
+<h3 id="от-ооп-к-процедурному-программированию"><a class="header" href="#от-ооп-к-процедурному-программированию">От ООП к процедурному программированию</a></h3>
+<p>Принцип Information Expert применим не только к классам, но и к <strong>модулям</strong>. Рассмотрим процедурную версию циклического буфера.</p>
+<h3 id="модуль-ringjs-процедурный-стиль"><a class="header" href="#модуль-ringjs-процедурный-стиль">Модуль ring.js (процедурный стиль)</a></h3>
+<pre><code class="language-javascript">// ring.js - модуль для работы с циклическим буфером
+
+/**
+ * Создает циклический буфер заданного размера
+ * @param {number} size - размер буфера в байтах
+ * @returns {Object} объект с полями buffer, offset, size
+ */
+const alloc = (size) =&gt; ({
+  buffer: Buffer.alloc(size),
+  offset: 0,
+  size
+});
+
+/**
+ * Записывает строку в циклический буфер
+ * @param {Object} buf - объект буфера, созданный через alloc()
+ * @param {string} str - строка для записи
+ */
+const write = (buf, str) =&gt; {
+  const len = Buffer.byteLength(str, 'utf8');
+  const restBuffer = buf.size - buf.offset;
+
+  if (len &lt; restBuffer) {
+    buf.buffer.write(str, buf.offset, 'utf8');
+    buf.offset += len;
+  } else {
+    const firstPart = str.slice(0, restBuffer);
+    buf.buffer.write(firstPart, buf.offset, 'utf8');
+    buf.offset = 0;
+    const secondPart = str.slice(restBuffer);
+    write(buf, secondPart); // Рекурсивный вызов
+  }
+};
+
+/**
+ * Читает содержимое буфера как строку
+ * @param {Object} buf - объект буфера
+ * @returns {string} содержимое буфера в виде строки
+ */
+const read = (buf) =&gt; {
+  return buf.buffer.toString('utf8');
+};
+
+// Экспортируем публичный интерфейс модуля
+module.exports = { alloc, write, read };
+</code></pre>
+<h3 id="использование-модуля"><a class="header" href="#использование-модуля">Использование модуля</a></h3>
+<pre><code class="language-javascript">// main.js
+const ring = require('./ring');
+
+// Создаем буфер
+const buf = ring.alloc(10);
+
+// Записываем данные
+ring.write(buf, '1');
+ring.write(buf, '2');
+ring.write(buf, '3');
+ring.write(buf, '4567890a');
+
+// Читаем содержимое
+console.log(ring.read(buf)); // "a234567890"
+
+// Дополнительные записи
+ring.write(buf, 'b');
+console.log(ring.read(buf)); // "ab34567890"
+
+ring.write(buf, '***');
+console.log(ring.read(buf)); // "***4567***"
+// (звездочки перезаписали часть данных циклически)
+</code></pre>
+<h3 id="почему-это-information-expert-на-уровне-модуля"><a class="header" href="#почему-это-information-expert-на-уровне-модуля">Почему это Information Expert на уровне модуля?</a></h3>
+<ol>
+<li>
+<p><strong>Модуль инкапсулирует логику</strong>: Все функции для работы с циклическим буфером находятся в одном месте.</p>
+</li>
+<li>
+<p><strong>Единственный эксперт</strong>: Только модуль <code>ring</code> знает, как правильно работать с внутренней структурой буфера.</p>
+</li>
+<li>
+<p><strong>Публичный интерфейс</strong>: <code>alloc</code>, <code>write</code>, <code>read</code> — это контракт модуля, который не зависит от внутренней реализации.</p>
+</li>
+<li>
+<p><strong>Возможность изменения реализации</strong>: Внутреннюю логику можно оптимизировать без изменения интерфейса.</p>
+</li>
+</ol>
+<h3 id="сравнение-ооп-vs-процедурный-стиль"><a class="header" href="#сравнение-ооп-vs-процедурный-стиль">Сравнение: ООП vs Процедурный стиль</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>ООП (класс RingBuffer)</th><th>Процедурный (модуль ring)</th></tr>
+</thead>
+<tbody>
+<tr><td>Создание</td><td><code>new RingBuffer(10)</code></td><td><code>ring.alloc(10)</code></td></tr>
+<tr><td>Запись</td><td><code>buf.write('text')</code></td><td><code>ring.write(buf, 'text')</code></td></tr>
+<tr><td>Чтение</td><td><code>buf.toString()</code></td><td><code>ring.read(buf)</code></td></tr>
+<tr><td>Доступ к данным</td><td><code>this.buffer</code></td><td>передается как аргумент</td></tr>
+<tr><td>Инкапсуляция</td><td>Через приватные поля/методы</td><td>Через модуль и его экспорт</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Вывод</strong>: Принцип Information Expert работает в обоих стилях программирования!</p>
+<hr>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="1-определение-ответственности"><a class="header" href="#1-определение-ответственности">1. Определение ответственности</a></h3>
+<p><strong>Принцип</strong>: Назначайте ответственность объекту (модулю), который владеет необходимой информацией.</p>
+<pre><code class="language-javascript">// ПЛОХО: внешний код знает о внутренней структуре
+function calculateTotal(purchase) {
+  let total = 0;
+  for (const item of purchase.items) {
+    if (item instanceof Product) {
+      total += item.productPrice; // Лезем в приватное поле
+    } else if (item instanceof Purchase) {
+      total += calculateTotal(item); // Рекурсия
+    }
+  }
+  return total;
+}
+
+// ХОРОШО: объект сам знает, как вычислить свою цену
+class Purchase {
+  get price() {
+    return this.items.reduce((sum, item) =&gt; sum + item.price, 0);
+  }
+}
+</code></pre>
+<h3 id="2-инкапсуляция-защищает-от-ошибок"><a class="header" href="#2-инкапсуляция-защищает-от-ошибок">2. Инкапсуляция защищает от ошибок</a></h3>
+<p>Нарушение инкапсуляции приводит к:</p>
+<ul>
+<li>Нарушению консистентности данных</li>
+<li>Хрупкому коду (изменения внутренней структуры ломают внешний код)</li>
+<li>Сложности в поддержке и тестировании</li>
+</ul>
+<h3 id="3-единый-интерфейс-для-разных-типов"><a class="header" href="#3-единый-интерфейс-для-разных-типов">3. Единый интерфейс для разных типов</a></h3>
+<p>Благодаря единому интерфейсу (например, геттер <code>price</code>), код работает полиморфно:</p>
+<pre><code class="language-javascript">// Не важно, Product это или Purchase — интерфейс одинаковый
+items.forEach(item =&gt; console.log(item.price));
+</code></pre>
+<h3 id="4-тестирование-вместо-явных-интерфейсов"><a class="header" href="#4-тестирование-вместо-явных-интерфейсов">4. Тестирование вместо явных интерфейсов</a></h3>
+<p>В JavaScript нет встроенных интерфейсов, поэтому контракты обеспечиваются через:</p>
+<ul>
+<li><strong>Соглашения</strong> (naming conventions)</li>
+<li><strong>Тесты</strong> (проверка ожидаемого поведения)</li>
+<li><strong>Документацию</strong> (JSDoc, комментарии)</li>
+</ul>
+<pre><code class="language-javascript">/**
+ * Контракт: все элементы должны иметь геттер price
+ * @interface PricedItem
+ * @property {number} price - цена элемента
+ */
+</code></pre>
+<h3 id="5-гибкость-и-расширяемость"><a class="header" href="#5-гибкость-и-расширяемость">5. Гибкость и расширяемость</a></h3>
+<p>Правильное применение принципа позволяет:</p>
+<ul>
+<li>Менять внутреннюю реализацию без изменения интерфейса</li>
+<li>Легко добавлять новые типы объектов</li>
+<li>Минимизировать связанность между компонентами</li>
+</ul>
+<h3 id="6-применимость-на-разных-уровнях"><a class="header" href="#6-применимость-на-разных-уровнях">6. Применимость на разных уровнях</a></h3>
+<p>Information Expert работает на уровне:</p>
+<ul>
+<li><strong>Классов и объектов</strong> (ООП)</li>
+<li><strong>Модулей</strong> (процедурное программирование)</li>
+<li><strong>Микросервисов</strong> (архитектура)</li>
+</ul>
+<hr>
+<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="-правильно"><a class="header" href="#-правильно">✅ Правильно</a></h3>
+<pre><code class="language-javascript">// 1. Объект управляет своими данными
+class User {
+  constructor(name, age) {
+    this._name = name;
+    this._age = age;
+  }
+
+  get isAdult() {
+    return this._age &gt;= 18; // Сам знает, как проверить
+  }
+}
+
+// 2. Используем публичный интерфейс
+const user = new User('Alice', 25);
+console.log(user.isAdult); // true
+
+// 3. Модуль инкапсулирует логику
+const dateUtils = {
+  parse: (str) =&gt; { /* ... */ },
+  format: (date) =&gt; { /* ... */ }
+};
+</code></pre>
+<h3 id="-неправильно"><a class="header" href="#-неправильно">❌ Неправильно</a></h3>
+<pre><code class="language-javascript">// 1. Проверка в внешнем коде
+function checkAdult(user) {
+  return user._age &gt;= 18; // Лезем в приватное поле!
+}
+
+// 2. Прямой доступ к внутренним данным
+list.first.next.next = null; // Нарушаем консистентность!
+
+// 3. Обход инкапсуляции
+ring.buffer.write('x', 0); // Минуем логику ring.write()
+</code></pre>
+<h3 id="контрольные-вопросы-при-проектировании"><a class="header" href="#контрольные-вопросы-при-проектировании">Контрольные вопросы при проектировании</a></h3>
+<p>Задавайте себе эти вопросы при распределении ответственности:</p>
+<ol>
+<li><strong>Кто владеет данными?</strong> → Он должен управлять ими</li>
+<li><strong>Кому нужна эта информация?</strong> → Данные должны быть рядом</li>
+<li><strong>Может ли кто-то снаружи нарушить консистентность?</strong> → Нужна инкапсуляция</li>
+<li><strong>Можно ли изменить реализацию, не трогая интерфейс?</strong> → Хорошая инкапсуляция</li>
+</ol>
+<hr>
+<h2 id="связь-с-другими-принципами"><a class="header" href="#связь-с-другими-принципами">Связь с другими принципами</a></h2>
+<h3 id="information-expert-и-solid"><a class="header" href="#information-expert-и-solid">Information Expert и SOLID</a></h3>
+<ul>
+<li><strong>Single Responsibility</strong>: Information Expert помогает определить единственную ответственность объекта</li>
+<li><strong>Open/Closed</strong>: Инкапсуляция позволяет расширять поведение без изменения существующего кода</li>
+<li><strong>Liskov Substitution</strong>: Единый интерфейс обеспечивает взаимозаменяемость объектов</li>
+</ul>
+<h3 id="information-expert-и-другие-grasp-паттерны"><a class="header" href="#information-expert-и-другие-grasp-паттерны">Information Expert и другие GRASP-паттерны</a></h3>
+<ul>
+<li><strong>Low Coupling</strong>: Инкапсуляция снижает связанность между компонентами</li>
+<li><strong>High Cohesion</strong>: Данные и операции над ними находятся в одном месте</li>
+<li><strong>Creator</strong>: Тот, кто создает объект, часто является Information Expert по его инициализации</li>
+</ul>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="полезные-ссылки"><a class="header" href="#полезные-ссылки">Полезные ссылки</a></h3>
+<ul>
+<li>Репозиторий с примерами: <a href="https://github.com/HowProgrammingWorks/InformationExpert">github.com/HowProgrammingWorks/InformationExpert</a></li>
+<li>История коммитов показывает эволюцию реализации циклического буфера</li>
+</ul>
+<h3 id="следующие-темы-grasp"><a class="header" href="#следующие-темы-grasp">Следующие темы GRASP</a></h3>
+<p>После изучения Information Expert рекомендуется перейти к другим GRASP-паттернам:</p>
+<ul>
+<li><strong>Creator</strong> (Создатель)</li>
+<li><strong>Controller</strong> (Контроллер)</li>
+<li><strong>Low Coupling</strong> (Слабая связанность)</li>
+<li><strong>High Cohesion</strong> (Высокая связность)</li>
+<li><strong>Polymorphism</strong> (Полиморфизм)</li>
+<li><strong>Pure Fabrication</strong> (Чистая выдумка)</li>
+<li><strong>Indirection</strong> (Перенаправление)</li>
+<li><strong>Protected Variations</strong> (Защита от изменений)</li>
+</ul>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p><strong>Принцип Information Expert</strong> — это фундаментальный паттерн, который помогает правильно распределять ответственность в программных системах. Следование этому принципу приводит к созданию:</p>
+<ul>
+<li>🎯 <strong>Слабосвязанного кода</strong> — компоненты независимы друг от друга</li>
+<li>🔒 <strong>Надежной инкапсуляции</strong> — внутренние данные защищены от некорректного использования</li>
+<li>🔧 <strong>Поддерживаемого кода</strong> — изменения локализованы внутри компонентов</li>
+<li>🧪 <strong>Тестируемого кода</strong> — публичный интерфейс легко тестировать</li>
+<li>📈 <strong>Расширяемой архитектуры</strong> — новый функционал добавляется без изменения существующего</li>
+</ul>
+<p>Применяйте Information Expert на всех уровнях: от отдельных классов до модулей и микросервисов. Помните главное правило: <strong>ответственность принадлежит тому, кто владеет информацией</strong>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week3.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week3/solid-isp-interface-segregation-principle-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week3.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week3/solid-isp-interface-segregation-principle-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

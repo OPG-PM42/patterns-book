@@ -1,0 +1,1638 @@
+# Полное руководство по обработке ошибок в JavaScript и Node.js
+
+## Введение: Почему обработка ошибок критична
+
+Обработка ошибок — это **одна из трёх основных составляющих разработки**, наравне с написанием бизнес-логики и тестированием. На неё может приходиться до 30% от общего объёма работы в production-приложении. Правильная обработка ошибок определяет надёжность, безопасность и поддерживаемость системы.
+
+К сожалению, в последние годы наблюдается опасная тенденция: разработчики начинают возвращать ошибки как часть результата функции (паттерн Go), вместо того чтобы использовать исключения. Это приводит к потере информации о контексте ошибки и усложняет отладку.
+
+---
+
+## Классификация ошибок
+
+### 1. Операционные ошибки (Operational Errors)
+
+Это ошибки, связанные с внешними ресурсами и условиями, которые **могут быть обработаны** и от которых можно восстановиться.
+
+**Примеры:**
+- Сокет не смог подключиться
+- Файл не найден
+- Нет соединения с базой данных
+- Истекло время ожидания (timeout)
+- Контрольная сумма не совпала
+
+**Стратегия обработки:**
+
+```typescript
+// Exponential backoff retry strategy
+async function connectWithRetry(
+  maxRetries: number = 5,
+  delays: number[] = [5000, 5000, 20000, 60000, 600000]
+): Promise<Connection> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await connectToDatabase();
+    } catch (error) {
+      if (attempt === maxRetries - 1) {
+        throw new Error(`Failed to connect after ${maxRetries} attempts`, { 
+          cause: error 
+        });
+      }
+      
+      const delay = delays[attempt] || delays[delays.length - 1];
+      await sleep(delay);
+    }
+  }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+```
+
+### 2. Мягкие ошибки (Soft Errors)
+
+Это **ожидаемые бизнес-события**, которые не являются исключениями. Их не нужно выбрасывать как `throw`.
+
+**Примеры:**
+- Пользователь не найден в базе данных
+- Неправильный логин или пароль
+- Склад с номером 18 не обнаружен в системе
+- Город с таким названием не существует
+- Ошибка валидации входных данных
+
+**Правильная обработка:**
+
+```typescript
+interface UserResult {
+  success: boolean;
+  user?: User;
+  error?: string;
+}
+
+async function getUserById(userId: string): Promise<UserResult> {
+  try {
+    const user = await database.users.findById(userId);
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not found'
+      };
+    }
+    
+    return {
+      success: true,
+      user
+    };
+  } catch (error) {
+    // Это уже системная ошибка!
+    throw new Error('Failed to retrieve user', { cause: error });
+  }
+}
+```
+
+### 3. Жёсткие ошибки (Hard Errors)
+
+Это **runtime-ошибки**, которые **всегда приводят к отказу** и не могут быть обработаны:
+
+**Примеры:**
+- Обращение к методу, который не существует
+- Чтение свойства у `undefined`
+- Синтаксическая ошибка в коде
+- TypeError при неправильной операции
+- Division by zero в JavaScript
+
+**Правило:** Жёсткие ошибки **ДОЛЖНЫ быть выброшены как исключения**.
+
+```typescript
+// Неправильно - попытаемся обработать необработанное
+const value = unknownObject.nonExistentMethod(); // Вызовет TypeError
+
+// Правильно - ошибка выбросится на уровень, где её можно обработать
+function processData(data: unknown): void {
+  if (!data || typeof data !== 'object') {
+    throw new TypeError('Expected object, got ' + typeof data);
+  }
+  
+  // Теперь safe использовать data как object
+  const result = (data as Record<string, any>).method?.();
+}
+```
+
+### 4. Пользовательские / Доменные ошибки (Domain Errors)
+
+Это ошибки, специфичные для бизнес-логики и предметной области.
+
+**Примеры:**
+- Нельзя выдать посылку: пользователь не идентифицирован
+- Недостаточно средств для перевода
+- Превышена квота на число запросов
+- Операция запрещена по политике безопасности
+
+**Правило:** Для каждого уровня абстракции в предметной области нужен **один класс ошибки**.
+
+```typescript
+// ❌ НЕПРАВИЛЬНО - 150 идентичных классов
+class UserNotFoundError extends Error {}
+class WarehouseNotFoundError extends Error {}
+class PaymentFailedError extends Error {}
+// ... и ещё 147 классов с одинаковой структурой
+
+// ✅ ПРАВИЛЬНО - один базовый класс
+class DomainError extends Error {
+  constructor(
+    public code: string,
+    message: string,
+    public context?: Record<string, any>
+  ) {
+    super(message);
+  }
+}
+
+// Использование
+throw new DomainError('USER_NOT_FOUND', 'User with ID 123 not found', {
+  userId: 123
+});
+```
+
+---
+
+## Трансформация ошибок между слоями (Error Escalation)
+
+### Проблема
+
+Когда ошибка проходит через несколько слоёв приложения без трансформации, пользователь видит низкоуровневую ошибку.
+
+```typescript
+// ❌ НЕПРАВИЛЬНЫЙ ПОТОК
+// Слой файловой системы: "File not found"
+// → Слой доступа к данным: "File not found"  
+// → Бизнес-логика: "File not found"
+// → Frontend: "File not found"  ← Пользователь видит системную ошибку!
+```
+
+### Решение
+
+Каждый слой должен **обернуть** системную ошибку в доменную.
+
+```typescript
+// Слой доступа к данным (Data Layer)
+async function loadUserProfile(userId: string): Promise<UserProfile> {
+  try {
+    const content = await fs.readFile(`./profiles/${userId}.json`);
+    return JSON.parse(content);
+  } catch (error) {
+    // Трансформируем файловую ошибку в доменную
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new DomainError(
+        'PROFILE_NOT_FOUND',
+        `User profile not found for ID: ${userId}`,
+        { userId, cause: error }
+      );
+    }
+    
+    if (error instanceof SyntaxError) {
+      throw new DomainError(
+        'INVALID_PROFILE_DATA',
+        'User profile data is corrupted',
+        { userId, cause: error }
+      );
+    }
+    
+    throw error;
+  }
+}
+
+// Бизнес-логика (Application Layer)
+async function authenticateUser(userId: string): Promise<AuthResult> {
+  try {
+    const profile = await loadUserProfile(userId);
+    // Проверяем, активен ли пользователь
+    if (!profile.isActive) {
+      return {
+        success: false,
+        code: 'USER_INACTIVE',
+        message: 'Account is inactive'
+      };
+    }
+    return { success: true, profile };
+  } catch (error) {
+    if (error instanceof DomainError && error.code === 'PROFILE_NOT_FOUND') {
+      return {
+        success: false,
+        code: 'AUTHENTICATION_FAILED',
+        message: 'Invalid credentials' // Generic message for security!
+      };
+    }
+    throw error;
+  }
+}
+
+// Контроллер / API (Presentation Layer)
+app.post('/login', async (req, res) => {
+  try {
+    const result = await authenticateUser(req.body.userId);
+    
+    if (!result.success) {
+      return res.status(401).json({
+        error: result.message,
+        code: result.code
+      });
+    }
+    
+    res.json({ user: result.profile });
+  } catch (error) {
+    // Логируем полную ошибку на сервере
+    logger.error('Authentication error:', {
+      error,
+      userId: req.body.userId,
+      timestamp: new Date()
+    });
+    
+    // Отправляем генерическое сообщение пользователю
+    res.status(500).json({
+      error: 'Authentication service unavailable',
+      code: 'SERVICE_ERROR'
+    });
+  }
+});
+```
+
+---
+
+## Цепочки ошибок (Error Chains)
+
+### Error.cause - Правильный способ
+
+```typescript
+async function processPayment(orderId: string): Promise<void> {
+  try {
+    await chargeCard(orderId);
+  } catch (error) {
+    // Создаём цепочку ошибок для отладки
+    throw new Error(
+      `Failed to process payment for order ${orderId}`,
+      { cause: error }
+    );
+  }
+}
+
+async function fulfillOrder(orderId: string): Promise<void> {
+  try {
+    await processPayment(orderId);
+  } catch (error) {
+    throw new Error(
+      `Failed to fulfill order ${orderId}`,
+      { cause: error }
+    );
+  }
+}
+
+// При ошибке стек будет показывать всю цепочку:
+// Error: Failed to fulfill order 123
+//   cause: Error: Failed to process payment for order 123
+//     cause: Error: Card declined
+```
+
+### AggregateError - Множественные ошибки
+
+```typescript
+async function fetchUserData(userId: string): Promise<UserData> {
+  const errors: Error[] = [];
+  let profile: Profile | null = null;
+  let permissions: Permission[] | null = null;
+  
+  try {
+    [profile, permissions] = await Promise.allSettled([
+      fetchProfile(userId),
+      fetchPermissions(userId)
+    ]).then(results => 
+      results.map((result, index) => {
+        if (result.status === 'rejected') {
+          errors.push(result.reason);
+          return null;
+        }
+        return result.value;
+      })
+    );
+  } catch (error) {
+    errors.push(error as Error);
+  }
+  
+  if (errors.length > 0) {
+    throw new AggregateError(
+      errors,
+      `Failed to fetch user data for ${userId}`
+    );
+  }
+  
+  if (!profile || !permissions) {
+    throw new Error('Incomplete user data');
+  }
+  
+  return { profile, permissions };
+}
+
+// Обработка
+try {
+  const userData = await fetchUserData('123');
+} catch (error) {
+  if (error instanceof AggregateError) {
+    console.log(`Multiple errors occurred: ${error.message}`);
+    error.errors.forEach((err, index) => {
+      console.log(`Error ${index + 1}:`, err.message);
+    });
+  }
+}
+```
+
+---
+
+## Практики обработки ошибок
+
+### 1. Early Return (Fail Fast)
+
+```typescript
+async function processOrder(order: Order): Promise<void> {
+  // Проверяем все условия в начале
+  if (!order.customerId) {
+    throw new Error('Order must have customer ID');
+  }
+  
+  if (order.items.length === 0) {
+    throw new Error('Order cannot be empty');
+  }
+  
+  if (order.total < 0) {
+    throw new Error('Order total cannot be negative');
+  }
+  
+  // Теперь безопасно работаем с order
+  await validateInventory(order.items);
+  await processPayment(order);
+  await shipOrder(order);
+}
+```
+
+### 2. Either / Result паттерн
+
+```typescript
+// Right/Left для функционального подхода
+type Either<L, R> = { tag: 'left'; value: L } | { tag: 'right'; value: R };
+
+function createEither<L, R>(
+  value: R | null,
+  error: L | null
+): Either<L, R> {
+  if (value !== null) {
+    return { tag: 'right', value };
+  }
+  return { tag: 'left', value: error as L };
+}
+
+async function getUserWithEither(
+  userId: string
+): Promise<Either<Error, User>> {
+  try {
+    const user = await fetchUser(userId);
+    return createEither(user, null);
+  } catch (error) {
+    return createEither(null, error as Error);
+  }
+}
+
+// Использование
+const result = await getUserWithEither('123');
+if (result.tag === 'right') {
+  console.log('User found:', result.value);
+} else {
+  console.error('Error:', result.value.message);
+}
+```
+
+### 3. Try-Catch vs Promise Chain
+
+```typescript
+// Try-Catch (явный контроль потока)
+async function processWithTryCatch(): Promise<void> {
+  try {
+    const data = await fetchData();
+    const processed = await process(data);
+    const result = await save(processed);
+    return result;
+  } catch (error) {
+    if (isNetworkError(error)) {
+      retry();
+    } else if (isValidationError(error)) {
+      logAndNotify(error);
+    } else {
+      rethrow(error);
+    }
+  } finally {
+    cleanup();
+  }
+}
+
+// Promise Chain (функциональный стиль)
+function processWithPromiseChain(): Promise<void> {
+  return fetchData()
+    .then(process)
+    .then(save)
+    .catch((error) => {
+      if (isNetworkError(error)) return retry();
+      if (isValidationError(error)) return logAndNotify(error);
+      throw error;
+    })
+    .finally(cleanup);
+}
+```
+
+**Разница:** Try-catch работает с **состояниями** (pending, fulfilled, rejected), а Promise chain управляет **потоком данных**. У try-catch есть `finally`, что удобнее для очистки ресурсов.
+
+---
+
+## Логирование ошибок и трейсинг
+
+### Стратегия логирования
+
+```typescript
+interface ErrorLog {
+  id: string; // UUID для трейсинга
+  timestamp: string;
+  severity: 'critical' | 'error' | 'warning' | 'info';
+  code: string;
+  message: string;
+  stack?: string;
+  context: Record<string, any>;
+  userId?: string; // Anon если возможно
+  requestId?: string;
+}
+
+class ErrorLogger {
+  log(error: Error, context: Record<string, any>): ErrorLog {
+    const id = generateUUID();
+    const errorLog: ErrorLog = {
+      id,
+      timestamp: new Date().toISOString(),
+      severity: this.determineSeverity(error),
+      code: (error as any).code || 'UNKNOWN',
+      message: error.message,
+      stack: error.stack,
+      context: this.sanitizeContext(context)
+    };
+    
+    // Логируем локально (полная информация)
+    this.writeToFile(errorLog);
+    
+    // Отправляем на удалённый сервис (очищенная информация)
+    this.sendToLoggingService({
+      ...errorLog,
+      stack: undefined, // Не шлём локальные пути
+      context: this.filterSensitiveData(errorLog.context)
+    });
+    
+    return errorLog;
+  }
+  
+  private sanitizeContext(context: Record<string, any>): Record<string, any> {
+    // Удаляем пароли, токены, etc.
+    const { password, token, creditCard, ssn, ...safe } = context;
+    return safe;
+  }
+  
+  private filterSensitiveData(context: Record<string, any>): Record<string, any> {
+    return Object.fromEntries(
+      Object.entries(context).map(([key, value]) => [
+        key,
+        typeof value === 'string' && value.length > 50 ? '[redacted]' : value
+      ])
+    );
+  }
+  
+  private determineSeverity(error: Error): ErrorLog['severity'] {
+    if (error instanceof DomainError) return 'warning';
+    if ((error as any).code === 'ECONNREFUSED') return 'error';
+    return 'critical';
+  }
+  
+  private writeToFile(log: ErrorLog): void {
+    // Ротация логов по размеру
+    fs.appendFileSync('./logs/errors.json', JSON.stringify(log) + '\n');
+  }
+  
+  private sendToLoggingService(log: ErrorLog): void {
+    // Отправка в ElasticSearch, Datadog, CloudWatch, etc.
+    fetch('https://logging.service/api/errors', {
+      method: 'POST',
+      body: JSON.stringify(log)
+    }).catch(err => console.error('Failed to log error:', err));
+  }
+}
+
+// Использование с ID трейсинга
+app.use((req, res, next) => {
+  req.id = generateUUID();
+  next();
+});
+
+app.post('/pay', async (req, res) => {
+  try {
+    const result = await processPayment(req.body);
+    res.json(result);
+  } catch (error) {
+    const log = errorLogger.log(error as Error, {
+      userId: req.user?.id,
+      requestId: req.id,
+      orderId: req.body.orderId,
+      timestamp: new Date()
+    });
+    
+    // Отправляем ID ошибки пользователю
+    res.status(500).json({
+      error: 'Payment processing failed',
+      errorId: log.id // Пользователь может использовать это для support
+    });
+  }
+});
+```
+
+---
+
+## Обработка асинхронных ошибок
+
+### Unhandled Promise Rejection
+
+```typescript
+// Проблема: асинхронная ошибка в callback теряется
+const emitter = new EventEmitter();
+
+emitter.on('data', async (data) => {
+  throw new Error('Async error in callback'); // Куда делась эта ошибка?
+});
+
+// Решение 1: Явный try-catch внутри callback
+emitter.on('data', async (data) => {
+  try {
+    await processData(data);
+  } catch (error) {
+    emitter.emit('error', error);
+  }
+});
+
+// Решение 2: Использовать capture-rejections
+const emitter = new EventEmitter({ captureRejections: true });
+
+emitter.on('data', async (data) => {
+  throw new Error('Now this is caught!');
+});
+
+emitter.on('error', (error) => {
+  console.error('Caught error:', error);
+});
+
+// Глобальный обработчик для всех эмиттеров
+EventEmitter.captureRejections = true;
+
+// Решение 3: Глобальный обработчик unhandled rejection
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
+  logger.error('Unhandled rejection', { reason, promise });
+  // В production можно перезагрузить процесс
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  logger.error('Uncaught exception', { error });
+  // ВАЖНО: после этого нужно перезагрузить процесс
+  process.exit(1);
+});
+```
+
+---
+
+## Стратегии восстановления (Recovery Strategies)
+
+### Модель изоляции
+
+```typescript
+// 1. Наиболее дорого: перезагрузка процесса
+// Используем для критических ошибок в production
+process.on('uncaughtException', () => {
+  gracefulShutdown();
+  process.exit(1);
+});
+
+// 2. Перезагрузка потока (Worker Threads)
+// Используем для тяжёлых обработок
+function createWorkerPool(size: number): void {
+  const workers: Worker[] = [];
+  
+  for (let i = 0; i < size; i++) {
+    const worker = new Worker('./worker.js');
+    
+    worker.on('error', () => {
+      workers.splice(workers.indexOf(worker), 1);
+      // Создаём новый worker вместо упавшего
+      workers.push(new Worker('./worker.js'));
+    });
+    
+    workers.push(worker);
+  }
+}
+
+// 3. Изоляция через замыкание (V8 Snapshot)
+class IsolatedContext {
+  private snapshot: any = {};
+  
+  execute(fn: Function): Result {
+    try {
+      const result = fn();
+      return { success: true, result };
+    } catch (error) {
+      // Контекст остаётся нетронутым (в замыкании)
+      return { success: false, error };
+    }
+  }
+}
+
+// 4. Дешево: контекст объекта
+class Operation {
+  private state: Record<string, any> = {};
+  
+  process(): void {
+    try {
+      this.doSomething();
+    } catch (error) {
+      // Только this.state может быть повреждён, глобальное состояние safe
+    }
+  }
+}
+
+// 5. Почти бесплатно: замыкание
+function createOperation() {
+  const localState = {};
+  
+  return {
+    process() {
+      try {
+        // работаем только с localState
+      } catch (error) {
+        // localState остаётся в замыкании
+      }
+    }
+  };
+}
+```
+
+---
+
+## Развёртывание и миграция (Deployment Strategies)
+
+### Canary Release
+
+```typescript
+// Фича флаг с постепенным развёртыванием
+const featureFlags = {
+  newPaymentSystem: {
+    enabled: true,
+    canaryPercentage: 5 // Только 5% пользователей
+  }
+};
+
+function shouldUseNewPayment(userId: string): boolean {
+  const hash = parseInt(userId.slice(0, 8), 16);
+  const percentage = hash % 100;
+  
+  return percentage < featureFlags.newPaymentSystem.canaryPercentage;
+}
+
+app.post('/pay', async (req, res) => {
+  const useNewSystem = shouldUseNewPayment(req.user.id);
+  
+  try {
+    if (useNewSystem) {
+      return res.json(await newPaymentService.process(req.body));
+    } else {
+      return res.json(await oldPaymentService.process(req.body));
+    }
+  } catch (error) {
+    // Если новая система падает, сразу отключаем для всех
+    if (useNewSystem) {
+      featureFlags.newPaymentSystem.enabled = false;
+      // Переключаемся на старую
+      return res.json(await oldPaymentService.process(req.body));
+    }
+    throw error;
+  }
+});
+```
+
+### Blue-Green Deploy
+
+```typescript
+const currentDeployment = {
+  blue: { version: '1.0.0', traffic: 100 },
+  green: { version: '1.1.0', traffic: 0 }
+};
+
+function getActiveServer(): Server {
+  if (currentDeployment.blue.traffic > 0) {
+    return blueServer;
+  }
+  return greenServer;
+}
+
+async function gradualMigration(): Promise<void> {
+  // 10% → green
+  currentDeployment.green.traffic = 10;
+  currentDeployment.blue.traffic = 90;
+  
+  await monitorMetrics(5 * 60 * 1000); // 5 минут
+  
+  if (noErrorsDetected()) {
+    // 100% → green
+    currentDeployment.green.traffic = 100;
+    currentDeployment.blue.traffic = 0;
+  } else {
+    // Откатываемся
+    rollbackDeployment();
+  }
+}
+```
+
+### Fallback Strategy
+
+```typescript
+async function getExchangeRate(currency: string): Promise<number> {
+  const cacheKey = `rate:${currency}`;
+  
+  try {
+    // Попытка 1: Основной источник
+    return await externalAPI.getRate(currency);
+  } catch (error) {
+    logger.error('Primary source failed', { currency, error });
+    
+    // Попытка 2: Резервный источник
+    try {
+      return await backupAPI.getRate(currency);
+    } catch (backupError) {
+      logger.error('Backup source failed', { currency, error: backupError });
+      
+      // Попытка 3: Кэш
+      const cached = cache.get(cacheKey);
+      if (cached) {
+        logger.warn('Using cached rate', { currency, age: Date.now() - cached.timestamp });
+        return cached.value;
+      }
+      
+      // Попытка 4: Из БД (историческая данные)
+      const historical = await database.getLastKnownRate(currency);
+      if (historical) {
+        logger.warn('Using historical rate', { currency, date: historical.date });
+        return historical.value;
+      }
+      
+      // Всё плохо - бросаем ошибку
+      throw new Error(`Cannot get exchange rate for ${currency}`);
+    }
+  }
+}
+```
+
+---
+
+## Типичные ошибки и как их избежать
+
+### ❌ Проблема: Чрезмерное количество кастомных ошибок
+
+```typescript
+// ПЛОХО: 150 идентичных классов
+class UserNotFoundError extends Error {}
+class ProductNotFoundError extends Error {}
+class OrderNotFoundError extends Error {}
+class WarehouseNotFoundError extends Error {}
+// ... ещё 146 классов
+
+// ХОРОШО: Один класс для всей предметной области
+class NotFoundError extends Error {
+  constructor(resourceType: string, resourceId: any) {
+    super(`${resourceType} not found: ${resourceId}`);
+    this.code = 'NOT_FOUND';
+  }
+}
+```
+
+### ❌ Проблема: Утечка низкоуровневых ошибок пользователю
+
+```typescript
+// ПЛОХО: Пользователь видит имя поля БД
+app.get('/users/:id', async (req, res) => {
+  try {
+    const user = await db.query(
+      'SELECT * FROM users WHERE user_id = ?',
+      [req.params.id]
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message }); // Может содержать 'foreign key constraint'
+  }
+});
+
+// ХОРОШО: Генерическое сообщение
+app.get('/users/:id', async (req, res) => {
+  try {
+    const user = await db.query(
+      'SELECT * FROM users WHERE user_id = ?',
+      [req.params.id]
+    );
+    res.json(user);
+  } catch (error) {
+    logger.error('User fetch failed', { error, userId: req.params.id });
+    res.status(500).json({ 
+      error: 'Unable to retrieve user information',
+      errorId: generateErrorId()
+    });
+  }
+});
+```
+
+### ❌ Проблема: Потеря stack trace
+
+```typescript
+// ПЛОХО: Stack trace теряется
+try {
+  await operation();
+} catch (error) {
+  throw 'Something went wrong'; // String вместо Error!
+}
+
+// ПЛОХО: Error передаётся несколько раз без цепочки
+const error1 = new Error('first');
+const error2 = new Error('second');
+throw error2; // Потеряли error1
+
+// ХОРОШО: Используем Error.cause
+try {
+  await operation();
+} catch (error) {
+  throw new Error('Operation failed', { cause: error });
+}
+```
+
+---
+
+## Заключение
+
+Правильная обработка ошибок — это искусство баланса между:
+
+- **Надёжностью**: Приложение должно восстанавливаться от сбоев
+- **Безопасностью**: Пользователь не должен видеть внутренние детали
+- **Отладкой**: Разработчики должны быстро найти причину
+- **Производительностью**: Логирование и мониторинг не должны замедлять систему
+
+Помните: **обработка ошибок — это 30% вашей работы**. Инвестируйте в правильную архитектуру обработки ошибок с самого начала проекта.
+
+
+
+
+# Примеры кода: Обработка ошибок в JavaScript/TypeScript
+
+## 1: Операционная ошибка и восстановление
+
+```typescript
+async function fetchWithExponentialBackoff(
+  url: string,
+  maxAttempts: number = 5
+): Promise<Response> {
+  const baseDelay = 1000; // 1 секунда
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      console.log(`Попытка ${attempt + 1} из ${maxAttempts}...`);
+      return await fetch(url, { timeout: 5000 });
+    } catch (error) {
+      if (attempt === maxAttempts - 1) {
+        throw new Error(
+          `Сеть молчит после ${maxAttempts} попыток`,
+          { cause: error }
+        );
+      }
+      
+      // Экспоненциальная задержка: 1s, 2s, 4s, 8s, 16s
+      const delayMs = baseDelay * Math.pow(2, attempt);
+      console.log(`Жду ${delayMs}ms перед повтором...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  
+  throw new Error('Impossible branch');
+}
+
+// Использование
+try {
+  const response = await fetchWithExponentialBackoff('https://api.example.com/data');
+  console.log('✨ Успех! Данные получены');
+} catch (error) {
+  console.error('💔 Сеть не отозвалась:', (error as Error).message);
+}
+```
+
+---
+
+## Сонет 2: Трансформация ошибок между слоями
+
+```typescript
+class UserProfileService {
+  async getUserProfile(userId: string): Promise<UserProfile> {
+    try {
+      // Уровень 1: Файловая система (низкий уровень)
+      const profilePath = `./data/users/${userId}/profile.json`;
+      const fileContent = await fs.promises.readFile(profilePath, 'utf-8');
+      
+      // Уровень 2: Парсинг JSON
+      try {
+        return JSON.parse(fileContent);
+      } catch (parseError) {
+        // Трансформируем JSON ошибку в доменную
+        throw new DomainError(
+          'CORRUPTED_PROFILE_DATA',
+          `Профиль пользователя ${userId} повреждён`,
+          { userId, cause: parseError }
+        );
+      }
+    } catch (fileError) {
+      // Проверяем тип файловой ошибки
+      const nodeError = fileError as NodeJS.ErrnoException;
+      
+      if (nodeError.code === 'ENOENT') {
+        // Файл не найден → трансформируем в бизнес-ошибку
+        throw new DomainError(
+          'USER_NOT_FOUND',
+          `Профиль пользователя ${userId} не существует`,
+          { userId, systemError: 'ENOENT' }
+        );
+      }
+      
+      if (nodeError.code === 'EACCES') {
+        // Нет прав доступа → трансформируем в ошибку безопасности
+        throw new DomainError(
+          'SECURITY_ERROR',
+          'Нет прав доступа к профилю пользователя',
+          { userId, systemError: 'EACCES' }
+        );
+      }
+      
+      // Неизвестная ошибка → пробрасываем выше
+      throw new DomainError(
+        'SYSTEM_ERROR',
+        'Системная ошибка при загрузке профиля',
+        { userId, cause: fileError }
+      );
+    }
+  }
+}
+
+// Уровень 3: Бизнес-логика (высокий уровень)
+class AuthenticationService {
+  constructor(private profileService: UserProfileService) {}
+  
+  async authenticate(userId: string): Promise<AuthResult> {
+    try {
+      const profile = await this.profileService.getUserProfile(userId);
+      
+      // Проверяем, активен ли аккаунт
+      if (!profile.isActive) {
+        return {
+          success: false,
+          code: 'ACCOUNT_INACTIVE',
+          message: 'Аккаунт деактивирован'
+        };
+      }
+      
+      return { success: true, profile };
+    } catch (error) {
+      if (error instanceof DomainError) {
+        // Преобразуем доменную ошибку в результат аутентификации
+        return {
+          success: false,
+          code: 'AUTH_FAILED',
+          message: 'Неверные учётные данные' // Генерическое сообщение для безопасности
+        };
+      }
+      
+      // Неожиданная ошибка → пробрасываем выше
+      throw error;
+    }
+  }
+}
+
+// Использование
+const authService = new AuthenticationService(new UserProfileService());
+
+try {
+  const result = await authService.authenticate('user123');
+  if (result.success) {
+    console.log('✨ Добро пожаловать!', result.profile.name);
+  } else {
+    console.log('❌', result.message);
+  }
+} catch (error) {
+  console.error('💥 Критическая ошибка:', (error as Error).message);
+}
+```
+
+---
+
+## 3: Цепочка ошибок (Error Chain)
+
+```typescript
+class PaymentProcessor {
+  async processPayment(orderId: string, amount: number): Promise<void> {
+    try {
+      await this.chargeCard(orderId, amount);
+    } catch (error) {
+      // Уровень 1: Платёжная система не ответила
+      throw new Error(
+        `Не удалось обработать платёж для заказа ${orderId}`,
+        { cause: error }
+      );
+    }
+  }
+  
+  private async chargeCard(orderId: string, amount: number): Promise<void> {
+    try {
+      const response = await fetch('https://payment-gateway.com/charge', {
+        method: 'POST',
+        body: JSON.stringify({ orderId, amount })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+    } catch (error) {
+      // Уровень 2: Сетевая ошибка при обращении к платёжному шлюзу
+      throw new Error(
+        'Платёжный шлюз не доступен',
+        { cause: error }
+      );
+    }
+  }
+}
+
+class OrderService {
+  constructor(private paymentProcessor: PaymentProcessor) {}
+  
+  async fulfillOrder(orderId: string, amount: number): Promise<void> {
+    try {
+      await this.paymentProcessor.processPayment(orderId, amount);
+    } catch (error) {
+      // Уровень 3: Не удалось выполнить заказ
+      throw new Error(
+        `Не удалось выполнить заказ ${orderId}`,
+        { cause: error }
+      );
+    }
+  }
+}
+
+// Вывод полной цепочки ошибок
+function printErrorChain(error: Error): void {
+  let current: Error | undefined = error;
+  let level = 0;
+  
+  while (current) {
+    console.log('  '.repeat(level) + `→ ${current.message}`);
+    current = (current as any).cause;
+    level++;
+  }
+}
+
+// Использование
+const orderService = new OrderService(new PaymentProcessor());
+
+try {
+  await orderService.fulfillOrder('ORDER-123', 9999);
+} catch (error) {
+  console.error('Цепочка ошибок:');
+  printErrorChain(error as Error);
+  
+  /**
+   * Вывод:
+   * Цепочка ошибок:
+   * → Не удалось выполнить заказ ORDER-123
+   *   → Не удалось обработать платёж для заказа ORDER-123
+   *     → Платёжный шлюз не доступен
+   *       → TypeError: fetch failed
+   */
+}
+```
+
+---
+
+## 4: AggregateError — множество бед
+
+```typescript
+interface UserData {
+  profile: UserProfile;
+  permissions: Permission[];
+  preferences: Preferences;
+}
+
+async function fetchUserDataComplete(userId: string): Promise<UserData> {
+  const errors: Error[] = [];
+  const results = await Promise.allSettled([
+    fetchUserProfile(userId),
+    fetchUserPermissions(userId),
+    fetchUserPreferences(userId)
+  ]);
+  
+  let profile: UserProfile | null = null;
+  let permissions: Permission[] | null = null;
+  let preferences: Preferences | null = null;
+  
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    
+    if (result.status === 'rejected') {
+      errors.push(result.reason);
+    } else {
+      if (i === 0) profile = result.value;
+      else if (i === 1) permissions = result.value;
+      else if (i === 2) preferences = result.value;
+    }
+  }
+  
+  // Если есть ошибки — выбросим AggregateError
+  if (errors.length > 0) {
+    throw new AggregateError(
+      errors,
+      `Не удалось загрузить все данные пользователя ${userId}`
+    );
+  }
+  
+  if (!profile || !permissions || !preferences) {
+    throw new Error('Неполные данные пользователя');
+  }
+  
+  return { profile, permissions, preferences };
+}
+
+// Обработка AggregateError
+try {
+  const userData = await fetchUserDataComplete('user-123');
+  console.log('✨ Все данные загружены успешно');
+} catch (error) {
+  if (error instanceof AggregateError) {
+    console.error(`❌ Произошло ${error.errors.length} ошибок:`);
+    
+    for (let i = 0; i < error.errors.length; i++) {
+      const err = error.errors[i];
+      console.error(`  ${i + 1}. ${(err as Error).message}`);
+    }
+    
+    // Пример: загружаем профиль из кэша если остальное не загрузилось
+    const cachedProfile = getCachedUserData('user-123');
+    console.log('📦 Используем кэшированные данные:', cachedProfile);
+  } else {
+    console.error('💥 Критическая ошибка:', (error as Error).message);
+  }
+}
+```
+
+---
+
+## Сонет 5: Логирование с ID трейсинга
+
+```typescript
+interface ErrorContext {
+  errorId: string;
+  requestId: string;
+  userId?: string;
+  timestamp: string;
+  severity: 'critical' | 'error' | 'warning';
+  message: string;
+  code: string;
+  stack?: string;
+  context: Record<string, any>;
+}
+
+class AdvancedErrorLogger {
+  private log(errorContext: ErrorContext): void {
+    // Логируем локально (полная информация с stack trace)
+    const localEntry = {
+      ...errorContext,
+      timestamp: new Date().toISOString()
+    };
+    
+    console.error('📋 [LOCAL LOG]', JSON.stringify(localEntry, null, 2));
+    
+    // Отправляем на удалённый сервис (очищенная информация)
+    this.sendToRemoteService({
+      ...errorContext,
+      stack: undefined, // Не шлём локальные пути
+      context: this.filterSensitiveFields(errorContext.context)
+    });
+  }
+  
+  private filterSensitiveFields(data: Record<string, any>): Record<string, any> {
+    const sensitive = ['password', 'token', 'creditCard', 'ssn', 'apiKey'];
+    
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        sensitive.includes(key) ? '[REDACTED]' : value
+      ])
+    );
+  }
+  
+  private sendToRemoteService(context: Partial<ErrorContext>): void {
+    // В production — отправляем в DataDog, ElasticSearch, CloudWatch, и т.д.
+    console.log('☁️  [REMOTE]', {
+      errorId: context.errorId,
+      requestId: context.requestId,
+      message: context.message,
+      code: context.code
+    });
+  }
+  
+  captureError(
+    error: Error,
+    context: Partial<ErrorContext>
+  ): string {
+    const errorId = this.generateUUID();
+    
+    const fullContext: ErrorContext = {
+      errorId,
+      requestId: context.requestId || 'unknown',
+      userId: context.userId,
+      timestamp: new Date().toISOString(),
+      severity: (context.severity || 'error') as any,
+      message: error.message,
+      code: (error as any).code || 'UNKNOWN',
+      stack: error.stack,
+      context: context.context || {}
+    };
+    
+    this.log(fullContext);
+    return errorId;
+  }
+  
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+}
+
+// Использование в Express приложении
+const errorLogger = new AdvancedErrorLogger();
+
+app.use((req, res, next) => {
+  req.id = generateUUID(); // Добавляем ID для каждого запроса
+  next();
+});
+
+app.post('/orders/:orderId/payment', async (req, res) => {
+  try {
+    const payment = await processPayment(req.params.orderId, req.body);
+    res.json({ success: true, payment });
+  } catch (error) {
+    const errorId = errorLogger.captureError(error as Error, {
+      requestId: req.id,
+      userId: req.user?.id,
+      severity: 'error',
+      context: {
+        orderId: req.params.orderId,
+        amount: req.body.amount,
+        method: 'POST'
+      }
+    });
+    
+    // Отправляем ID ошибки пользователю
+    res.status(500).json({
+      error: 'Платёж не может быть обработан в данный момент',
+      errorId, // Пользователь может использовать это для support
+      message: 'Обратитесь в служб поддержки с кодом ошибки: ' + errorId
+    });
+  }
+});
+
+// Пользователь может после рассказать support: "У меня была ошибка 550e8400-e29b-41d4-a716-446655440000"
+// А support сразу найдёт полную информацию в системе логирования
+```
+
+---
+
+## Сонет 6: Асинхронные ошибки в EventEmitter
+
+```typescript
+class DataProcessor extends EventEmitter {
+  constructor() {
+    super({
+      captureRejections: true // Ловим асинхронные ошибки!
+    });
+    
+    // Обработчик для всех отклоненных промисов
+    this.on('error', (error) => {
+      console.error('🔥 Поймана асинхронная ошибка:', error.message);
+      this.logError(error);
+    });
+  }
+  
+  processDataBatch(items: any[]): void {
+    // Эта асинхронная ошибка БУДЕТ поймана благодаря captureRejections
+    this.on('item', async (item) => {
+      if (!item.id) {
+        throw new Error(`Item без ID: ${JSON.stringify(item)}`);
+      }
+      
+      await this.saveToDatabase(item);
+      this.emit('itemProcessed', item);
+    });
+    
+    for (const item of items) {
+      this.emit('item', item);
+    }
+  }
+  
+  private async saveToDatabase(item: any): Promise<void> {
+    // Имитация сохранения в БД
+    return new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  
+  private logError(error: Error): void {
+    console.error('📝 Логируем ошибку в систему:', {
+      message: error.message,
+      stack: error.stack
+    });
+  }
+}
+
+// Использование
+const processor = new DataProcessor();
+
+processor.on('itemProcessed', (item) => {
+  console.log('✅ Элемент обработан:', item.id);
+});
+
+processor.processDataBatch([
+  { id: 1, data: 'first' },
+  { id: 2, data: 'second' },
+  { data: 'third' }, // ❌ Ошибка! Нет ID, будет поймана
+  { id: 4, data: 'fourth' }
+]);
+
+/**
+ * Без captureRejections: ошибка потеряется в консоли
+ * С captureRejections: ошибка будет обработана в 'error' обработчике
+ */
+```
+
+---
+
+## 7: Паттерн Either для функционального стиля
+
+```typescript
+
+// Either type для функционального программирования
+type Either<L, R> = 
+  | { tag: 'left'; value: L }
+  | { tag: 'right'; value: R };
+
+function left<L, R>(value: L): Either<L, R> {
+  return { tag: 'left', value };
+}
+
+function right<L, R>(value: R): Either<L, R> {
+  return { tag: 'right', value };
+}
+
+// Утилиты для работы с Either
+const Either = {
+  map: <L, R1, R2>(
+    either: Either<L, R1>,
+    fn: (value: R1) => R2
+  ): Either<L, R2> => {
+    return either.tag === 'right'
+      ? right(fn(either.value))
+      : either;
+  },
+  
+  flatMap: <L, R1, R2>(
+    either: Either<L, R1>,
+    fn: (value: R1) => Either<L, R2>
+  ): Either<L, R2> => {
+    return either.tag === 'right'
+      ? fn(either.value)
+      : either;
+  },
+  
+  fold: <L, R, A>(
+    either: Either<L, R>,
+    onLeft: (value: L) => A,
+    onRight: (value: R) => A
+  ): A => {
+    return either.tag === 'left'
+      ? onLeft(either.value)
+      : onRight(either.value);
+  }
+};
+
+// Примеры функций, возвращающих Either
+
+function parseJSON(str: string): Either<Error, any> {
+  try {
+    return right(JSON.parse(str));
+  } catch (error) {
+    return left(error as Error);
+  }
+}
+
+async function fetchUser(userId: string): Promise<Either<Error, User>> {
+  try {
+    const response = await fetch(`/api/users/${userId}`);
+    if (!response.ok) {
+      return left(new Error(`HTTP ${response.status}`));
+    }
+    const user = await response.json();
+    return right(user);
+  } catch (error) {
+    return left(error as Error);
+  }
+}
+
+function validateUser(user: User): Either<Error, User> {
+  if (!user.email) {
+    return left(new Error('Email is required'));
+  }
+  if (user.email.indexOf('@') === -1) {
+    return left(new Error('Invalid email format'));
+  }
+  return right(user);
+}
+
+// Композиция Either операций
+async function loadAndValidateUser(userId: string): Promise<Either<Error, User>> {
+  const result = await fetchUser(userId);
+  
+  if (result.tag === 'left') {
+    return result;
+  }
+  
+  return validateUser(result.value);
+}
+
+// Использование
+loadAndValidateUser('user-123').then(result => {
+  Either.fold(
+    result,
+    // onLeft — что делать если ошибка
+    (error) => {
+      console.error('❌ Ошибка:', error.message);
+      return 'FAILURE';
+    },
+    // onRight — что делать если успех
+    (user) => {
+      console.log('✅ Пользователь загружен:', user.name);
+      return 'SUCCESS';
+    }
+  );
+});
+
+// Более элегантно с цепочкой операций
+loadAndValidateUser('user-123').then(result => {
+  const message = Either.fold(
+    result,
+    (error) => `❌ Ошибка: ${error.message}`,
+    (user) => `✅ Добро пожаловать, ${user.name}!`
+  );
+  console.log(message);
+});
+```
+
+---
+
+## 8: Graceful Shutdown при ошибках
+
+```typescript
+
+class Application {
+  private db: DatabaseConnection | null = null;
+  private server: Server | null = null;
+  private requestCount = 0;
+  private isShuttingDown = false;
+  
+  async start(): Promise<void> {
+    // Подключаемся к БД
+    this.db = await DatabaseConnection.create();
+    
+    // Создаём сервер
+    this.server = createServer(async (req, res) => {
+      if (this.isShuttingDown) {
+        res.writeHead(503, { 'Retry-After': '30' });
+        res.end('Service is shutting down');
+        return;
+      }
+      
+      this.requestCount++;
+      try {
+        await this.handleRequest(req, res);
+      } finally {
+        this.requestCount--;
+      }
+    });
+    
+    this.server.listen(3000, () => {
+      console.log('🚀 Сервер запущен на порту 3000');
+    });
+    
+    // Обработчики сигналов ОС
+    process.on('SIGTERM', () => this.gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => this.gracefulShutdown('SIGINT'));
+    
+    // Обработчики необработанных ошибок
+    process.on('uncaughtException', (error) => {
+      console.error('💥 Необработанное исключение:', error);
+      this.gracefulShutdown('uncaughtException');
+    });
+    
+    process.on('unhandledRejection', (reason) => {
+      console.error('⚠️  Необработанное отклонение:', reason);
+      this.gracefulShutdown('unhandledRejection');
+    });
+  }
+  
+  private async handleRequest(req: any, res: any): Promise<void> {
+    try {
+      // Обработка запроса
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok' }));
+    } catch (error) {
+      console.error('❌ Ошибка при обработке запроса:', error);
+      res.writeHead(500);
+      res.end('Internal Server Error');
+    }
+  }
+  
+  private async gracefulShutdown(signal: string): Promise<void> {
+    if (this.isShuttingDown) return;
+    
+    this.isShuttingDown = true;
+    console.log(`\n🛑 Получен сигнал: ${signal}`);
+    console.log('📍 Начинаем graceful shutdown...');
+    
+    // Шаг 1: Прекращаем принимать новые запросы
+    this.server?.close(() => {
+      console.log('✓ Сервер закрыт для новых подключений');
+    });
+    
+    // Шаг 2: Ожидаем завершения текущих запросов (макс 30 сек)
+    const shutdownTimeout = setTimeout(() => {
+      console.error('❌ Timeout при shutdown, выходим');
+      process.exit(1);
+    }, 30000);
+    
+    const waitInterval = setInterval(() => {
+      console.log(`⏳ Ожидаем завершения ${this.requestCount} запросов...`);
+      
+      if (this.requestCount === 0) {
+        clearInterval(waitInterval);
+        clearTimeout(shutdownTimeout);
+        
+        // Шаг 3: Закрываем подключение к БД
+        this.db?.close().then(() => {
+          console.log('✓ Подключение к БД закрыто');
+          console.log('✓ Graceful shutdown завершён');
+          process.exit(0);
+        });
+      }
+    }, 1000);
+  }
+}
+
+// Запуск приложения
+const app = new Application();
+app.start().catch((error) => {
+  console.error('💥 Ошибка при запуске приложения:', error);
+  process.exit(1);
+});
+```
+
+---
+
+## Заключение
+
+Каждый сонет иллюстрирует определённый аспект обработки ошибок:
+1. **Восстановление** — exponential backoff
+2. **Трансформация** — между слоями приложения
+3. **Цепочки** — Error.cause для отладки
+4. **Множественные ошибки** — AggregateError
+5. **Логирование** — с ID трейсинга
+6. **Асинхронные ошибки** — captureRejections
+7. **Функциональный стиль** — Either паттерн
+8. **Корректное завершение** — graceful shutdown
+
+Эти практики обеспечивают **надёжность**, **отладку** и **безопасность** приложений.

@@ -1,0 +1,835 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Семинар по адаптерам для Node.js и асинхронного программирования - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="паттерн-адаптер-в-nodejs-и-javascript---qa-сессия"><a class="header" href="#паттерн-адаптер-в-nodejs-и-javascript---qa-сессия">Паттерн Адаптер в Node.js и JavaScript - Q&amp;A сессия</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Эта лекция представляет собой глубокое погружение в паттерн Адаптер (Adapter Pattern) в контексте JavaScript и Node.js. Основная идея заключается в том, что реализация паттернов в JavaScript радикально отличается от их реализации в других языках программирования благодаря гибкости языка и его уникальным возможностям.</p>
+<hr>
+<h2 id="основная-концепция-паттерна-адаптер"><a class="header" href="#основная-концепция-паттерна-адаптер">Основная концепция паттерна Адаптер</a></h2>
+<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<p><strong>Паттерн Адаптер</strong> — это структурный паттерн проектирования, который позволяет объектам с несовместимыми интерфейсами работать вместе.</p>
+<h3 id="аналогия-из-реальной-жизни"><a class="header" href="#аналогия-из-реальной-жизни">Аналогия из реальной жизни</a></h3>
+<p>Представьте переходник между вилкой и розеткой:</p>
+<ul>
+<li>Есть вилка (один интерфейс)</li>
+<li>Есть розетка (другой интерфейс)</li>
+<li>Нужен адаптер, чтобы их состыковать</li>
+</ul>
+<h3 id="ключевое-отличие-от-фасада"><a class="header" href="#ключевое-отличие-от-фасада">Ключевое отличие от фасада</a></h3>
+<p><strong>Адаптер:</strong></p>
+<ul>
+<li>Преобразует один простой интерфейс в другой простой интерфейс</li>
+<li>Работает с относительно простыми абстракциями</li>
+</ul>
+<p><strong>Фасад:</strong></p>
+<ul>
+<li>Скрывает сложную структуру за простым интерфейсом</li>
+<li>За фасадом стоит много абстракций, большое API</li>
+</ul>
+<hr>
+<h2 id="разнообразие-реализаций-в-javascript"><a class="header" href="#разнообразие-реализаций-в-javascript">Разнообразие реализаций в JavaScript</a></h2>
+<h3 id="почему-в-javascript-так-много-вариантов"><a class="header" href="#почему-в-javascript-так-много-вариантов">Почему в JavaScript так много вариантов?</a></h3>
+<p>В отличие от языков со строгой типизацией (Java, C#), где паттерны реализуются по четко определенным “рецептам”, JavaScript предоставляет огромное количество возможностей благодаря:</p>
+<ul>
+<li>Гибкости языка</li>
+<li>Поддержке разных парадигм (ООП, функциональное программирование)</li>
+<li>Динамической типизации</li>
+<li>Замыканиям и функциям высшего порядка</li>
+<li>Прототипному наследованию</li>
+</ul>
+<h3 id="основные-подходы-к-реализации-адаптера"><a class="header" href="#основные-подходы-к-реализации-адаптера">Основные подходы к реализации адаптера</a></h3>
+<h4 id="1-боксинг-boxing"><a class="header" href="#1-боксинг-boxing">1. Боксинг (Boxing)</a></h4>
+<p>Помещение одного экземпляра класса или объекта внутрь другого.</p>
+<p><strong>Пример: Адаптер для файловой системы с интерфейсом Map</strong></p>
+<pre><code class="language-javascript">// Адаптер Map для работы с файловой системой
+class FileSystemMap {
+  #api;
+  #path;
+
+  constructor(api, path) {
+    this.#api = api;
+    this.#path = path;
+  }
+
+  async set(key, value) {
+    const filePath = `${this.#path}/${key}`;
+    await this.#api.writeFile(filePath, JSON.stringify(value));
+  }
+
+  async get(key) {
+    const filePath = `${this.#path}/${key}`;
+    try {
+      const data = await this.#api.readFile(filePath, 'utf8');
+      return JSON.parse(data);
+    } catch (err) {
+      return undefined;
+    }
+  }
+
+  async delete(key) {
+    const filePath = `${this.#path}/${key}`;
+    await this.#api.unlink(filePath);
+  }
+
+  get size() {
+    // Реализация подсчета файлов
+  }
+
+  async keys() {
+    const files = await this.#api.readdir(this.#path);
+    return files;
+  }
+}
+
+// Использование
+const dictionary = new FileSystemMap(fs.promises, './data');
+await dictionary.set('key1', { value: 'data' });
+const value = await dictionary.get('key1');
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Единый интерфейс Map для работы с разными хранилищами</li>
+<li>Можно легко переключаться между памятью, файловой системой, базой данных</li>
+<li>Прозрачность для клиентского кода</li>
+</ul>
+<h4 id="2-функции-обёртки-wrapper-functions"><a class="header" href="#2-функции-обёртки-wrapper-functions">2. Функции-обёртки (Wrapper Functions)</a></h4>
+<p>Функции, которые оборачивают другие функции, преобразуя их интерфейс.</p>
+<p><strong>Пример: promisify - адаптер callback-last к промисам</strong></p>
+<pre><code class="language-javascript">// Адаптер от callback-стиля к Promise-стилю
+function promisify(fn) {
+  return (...args) =&gt; {
+    return new Promise((resolve, reject) =&gt; {
+      fn(...args, (err, result) =&gt; {
+        if (err) reject(err);
+        else resolve(result);
+      });
+    });
+  };
+}
+
+// Использование
+const fs = require('fs');
+const readFile = promisify(fs.readFile);
+
+// Теперь можно использовать с async/await
+const data = await readFile('file.txt', 'utf8');
+</code></pre>
+<p><strong>Ключевые моменты:</strong></p>
+<ul>
+<li><code>promisify</code> принимает функцию с callback-last стилем</li>
+<li>Возвращает функцию, которая возвращает Promise</li>
+<li>Внутри создается callback, который resolve/reject промис</li>
+</ul>
+<h4 id="3-композиция-vs-агрегация"><a class="header" href="#3-композиция-vs-агрегация">3. Композиция vs Агрегация</a></h4>
+<p><strong>Композиция:</strong></p>
+<ul>
+<li>Абстракция создается внутри конструктора адаптера</li>
+<li>Адаптер владеет созданным объектом</li>
+</ul>
+<p><strong>Агрегация:</strong></p>
+<ul>
+<li>Абстракция передается в адаптер снаружи (через конструктор или сеттер)</li>
+<li>Адаптер только использует переданный объект</li>
+</ul>
+<p><strong>Пример композиции: Таймер с setInterval</strong></p>
+<pre><code class="language-javascript">class Timer {
+  #interval;
+  #counter = 0;
+  #resolve;
+
+  constructor(delay) {
+    // Композиция - создаем setInterval внутри
+    this.#interval = setInterval(() =&gt; {
+      this.#counter++;
+      if (this.#resolve) {
+        this.#resolve(this.#counter);
+      }
+    }, delay);
+  }
+
+  // Реализация async iterator
+  [Symbol.asyncIterator]() {
+    return {
+      next: () =&gt; {
+        return new Promise((resolve) =&gt; {
+          this.#resolve = (value) =&gt; {
+            resolve({ value, done: false });
+          };
+        });
+      }
+    };
+  }
+
+  stop() {
+    clearInterval(this.#interval);
+  }
+}
+
+// Использование
+const timer = new Timer(1000);
+for await (const tick of timer) {
+  console.log(`Tick: ${tick}`);
+  if (tick &gt;= 5) {
+    timer.stop();
+    break;
+  }
+}
+</code></pre>
+<p><strong>Пример агрегации:</strong></p>
+<pre><code class="language-javascript">class RequestAdapter {
+  #request;
+
+  constructor(request) {
+    // Агрегация - получаем объект извне
+    this.#request = request;
+  }
+
+  async get(url) {
+    return this.#request({ method: 'GET', url });
+  }
+
+  async post(url, data) {
+    return this.#request({ method: 'POST', url, body: data });
+  }
+}
+</code></pre>
+<h4 id="4-реализация-нескольких-интерфейсов"><a class="header" href="#4-реализация-нескольких-интерфейсов">4. Реализация нескольких интерфейсов</a></h4>
+<p>Одна абстракция может одновременно реализовывать несколько интерфейсов - “универсальная розетка”.</p>
+<p><strong>Пример: NodeEventTarget (EventEmitter + EventTarget)</strong></p>
+<pre><code class="language-javascript">// В Node.js есть класс, который совмещает оба интерфейса
+const { EventTarget } = require('events');
+
+class UniversalEventBus extends EventTarget {
+  // Методы EventTarget: addEventListener, removeEventListener, dispatchEvent
+
+  // Добавляем методы EventEmitter
+  on(event, listener) {
+    this.addEventListener(event, listener);
+  }
+
+  emit(event, data) {
+    this.dispatchEvent(new Event(event, { data }));
+  }
+
+  off(event, listener) {
+    this.removeEventListener(event, listener);
+  }
+}
+
+// Теперь код работает и на фронте, и в Node.js
+const bus = new UniversalEventBus();
+bus.on('message', (e) =&gt; console.log(e.data));
+bus.emit('message', { text: 'Hello' });
+</code></pre>
+<p><strong>Ограничения:</strong></p>
+<ul>
+<li>Не всегда возможно совместить несовместимые интерфейсы</li>
+<li>Аналогия: невозможно сделать универсальный переходник для космического корабля и обычной розетки</li>
+</ul>
+<h4 id="5-revealing-constructor-pattern"><a class="header" href="#5-revealing-constructor-pattern">5. Revealing Constructor Pattern</a></h4>
+<p>Использование конструктора для передачи поведения вместо наследования.</p>
+<p><strong>Пример: Readable Stream</strong></p>
+<pre><code class="language-javascript">const { Readable } = require('stream');
+
+// Вместо наследования передаем функцию read в конструктор
+const readable = new Readable({
+  read(size) {
+    // Кастомная логика чтения
+    this.push(data);
+  }
+});
+</code></pre>
+<hr>
+<h2 id="практические-примеры-адаптеров"><a class="header" href="#практические-примеры-адаптеров">Практические примеры адаптеров</a></h2>
+<h3 id="1-адаптер-для-асинхронных-итераторов-с-таймером"><a class="header" href="#1-адаптер-для-асинхронных-итераторов-с-таймером">1. Адаптер для асинхронных итераторов с таймером</a></h3>
+<pre><code class="language-javascript">class Timer {
+  #interval;
+  #counter = 0;
+  #resolve;
+
+  constructor(delay) {
+    this.#interval = setInterval(() =&gt; {
+      this.#counter++;
+      if (this.#resolve) {
+        this.#resolve(this.#counter);
+      }
+    }, delay);
+  }
+
+  [Symbol.asyncIterator]() {
+    return {
+      next: () =&gt; {
+        return new Promise((resolve) =&gt; {
+          this.#resolve = (value) =&gt; {
+            resolve({ value, done: false });
+          };
+        });
+      }
+    };
+  }
+}
+
+// Использование
+for await (const count of new Timer(1000)) {
+  console.log(count); // 1, 2, 3, ...
+}
+</code></pre>
+<h3 id="2-адаптер-массива-к-интерфейсу-очереди"><a class="header" href="#2-адаптер-массива-к-интерфейсу-очереди">2. Адаптер массива к интерфейсу очереди</a></h3>
+<pre><code class="language-javascript">// Функция-адаптер добавляет методы очереди к массиву
+function arrayToQueue(arr) {
+  arr.enqueue = function(item) {
+    this.push(item);
+  };
+
+  arr.dequeue = function() {
+    return this.shift();
+  };
+
+  arr.peek = function() {
+    return this[0];
+  };
+
+  return arr;
+}
+
+// Использование
+const queue = arrayToQueue([]);
+queue.enqueue(1);
+queue.enqueue(2);
+console.log(queue.dequeue()); // 1
+</code></pre>
+<h3 id="3-адаптер-между-парадигмами-ооп--фп"><a class="header" href="#3-адаптер-между-парадигмами-ооп--фп">3. Адаптер между парадигмами (ООП ↔ ФП)</a></h3>
+<pre><code class="language-javascript">// Функциональный стиль
+const map = (fn) =&gt; (arr) =&gt; arr.map(fn);
+const filter = (predicate) =&gt; (arr) =&gt; arr.filter(predicate);
+
+// Адаптер к ООП стилю
+class Collection {
+  #data;
+
+  constructor(data) {
+    this.#data = data;
+  }
+
+  map(fn) {
+    return new Collection(map(fn)(this.#data));
+  }
+
+  filter(predicate) {
+    return new Collection(filter(predicate)(this.#data));
+  }
+
+  toArray() {
+    return this.#data;
+  }
+}
+
+// Использование
+const result = new Collection([1, 2, 3, 4])
+  .map(x =&gt; x * 2)
+  .filter(x =&gt; x &gt; 4)
+  .toArray(); // [6, 8]
+</code></pre>
+<hr>
+<h2 id="адаптеры-контрактов-асинхронности"><a class="header" href="#адаптеры-контрактов-асинхронности">Адаптеры контрактов асинхронности</a></h2>
+<h3 id="callback-last--promise"><a class="header" href="#callback-last--promise">Callback-last → Promise</a></h3>
+<pre><code class="language-javascript">function promisify(fn) {
+  return (...args) =&gt; {
+    return new Promise((resolve, reject) =&gt; {
+      fn(...args, (err, result) =&gt; {
+        if (err) reject(err);
+        else resolve(result);
+      });
+    });
+  };
+}
+</code></pre>
+<h3 id="promise--callback"><a class="header" href="#promise--callback">Promise → Callback</a></h3>
+<pre><code class="language-javascript">function callbackify(fn) {
+  return (...args) =&gt; {
+    const callback = args.pop();
+
+    fn(...args)
+      .then(result =&gt; callback(null, result))
+      .catch(err =&gt; callback(err));
+  };
+}
+</code></pre>
+<h3 id="async-iterator--stream"><a class="header" href="#async-iterator--stream">Async Iterator → Stream</a></h3>
+<pre><code class="language-javascript">const { Readable } = require('stream');
+
+async function* generator() {
+  for (let i = 0; i &lt; 10; i++) {
+    yield i;
+  }
+}
+
+// Адаптер
+const stream = Readable.from(generator());
+</code></pre>
+<hr>
+<h2 id="важные-концепции"><a class="header" href="#важные-концепции">Важные концепции</a></h2>
+<h3 id="клиент-в-javascript"><a class="header" href="#клиент-в-javascript">Клиент в JavaScript</a></h3>
+<p><strong>Ключевое отличие от Java/C#:</strong></p>
+<p>В строго типизированных языках клиентом всегда является другая абстракция (класс), потому что код может существовать только внутри методов классов.</p>
+<p>В JavaScript клиентом может быть:</p>
+<ul>
+<li>Код в модуле (top-level)</li>
+<li>Код внутри функции</li>
+<li>Код в обработчике события</li>
+<li>Код в любом другом месте</li>
+</ul>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-javascript">// usage.js - это и есть клиент
+const timer = new Timer(1000);
+
+for await (const tick of timer) {
+  console.log(tick);
+}
+</code></pre>
+<h3 id="прототипный-стиль-legacy"><a class="header" href="#прототипный-стиль-legacy">Прототипный стиль (Legacy)</a></h3>
+<p><strong>Старый стиль:</strong></p>
+<pre><code class="language-javascript">function Timer(delay) {
+  this.counter = 0;
+  this.interval = setInterval(() =&gt; {
+    this.counter++;
+  }, delay);
+}
+
+Timer.prototype.stop = function() {
+  clearInterval(this.interval);
+};
+
+Object.defineProperty(Timer.prototype, 'count', {
+  get: function() {
+    return this.counter;
+  }
+});
+</code></pre>
+<p><strong>Современный стиль (предпочтительный):</strong></p>
+<pre><code class="language-javascript">class Timer {
+  #counter = 0;
+  #interval;
+
+  constructor(delay) {
+    this.#interval = setInterval(() =&gt; {
+      this.#counter++;
+    }, delay);
+  }
+
+  stop() {
+    clearInterval(this.#interval);
+  }
+
+  get count() {
+    return this.#counter;
+  }
+}
+</code></pre>
+<hr>
+<h2 id="культурные-различия-в-реализации-паттернов"><a class="header" href="#культурные-различия-в-реализации-паттернов">Культурные различия в реализации паттернов</a></h2>
+<h3 id="проблема-прямого-переноса-из-других-языков"><a class="header" href="#проблема-прямого-переноса-из-других-языков">Проблема прямого переноса из других языков</a></h3>
+<p>Многие книги и статьи о паттернах просто переводят код с Java/C# на JavaScript <strong>слово в слово</strong>, не адаптируя его под:</p>
+<ul>
+<li>Особенности языка</li>
+<li>Идиомы платформы (Node.js vs Browser)</li>
+<li>Культуру JavaScript-сообщества</li>
+</ul>
+<p><strong>Неправильный подход:</strong></p>
+<pre><code class="language-javascript">// Прямой перевод с Java
+class AdapterImpl extends Adaptee implements Target {
+  // Код выглядит как Java на JavaScript
+}
+</code></pre>
+<p><strong>Правильный подход:</strong></p>
+<pre><code class="language-javascript">// Идиоматический JavaScript
+const adapter = (adaptee) =&gt; ({
+  method: () =&gt; adaptee.legacyMethod(),
+  // Используем возможности языка
+});
+</code></pre>
+<h3 id="адаптация-под-культуру-платформы"><a class="header" href="#адаптация-под-культуру-платформы">Адаптация под культуру платформы</a></h3>
+<p><strong>Пример культурных различий:</strong></p>
+<p>В Node.js принято:</p>
+<ul>
+<li>Использовать callback-last, error-first</li>
+<li>Использовать EventEmitter</li>
+<li>Использовать Streams</li>
+</ul>
+<p>В браузере принято:</p>
+<ul>
+<li>Использовать EventTarget</li>
+<li>Использовать Promise/async-await</li>
+<li>Использовать Web APIs</li>
+</ul>
+<p><strong>Универсальный адаптер:</strong></p>
+<pre><code class="language-javascript">// Работает и в Node.js, и в браузере
+class UniversalTimer {
+  constructor(delay) {
+    if (typeof setInterval === 'function') {
+      // Браузер или Node.js
+      this.timer = setInterval(this.tick.bind(this), delay);
+    }
+  }
+
+  tick() {
+    // Универсальная логика
+  }
+}
+</code></pre>
+<hr>
+<h2 id="специальные-случаи-и-нюансы"><a class="header" href="#специальные-случаи-и-нюансы">Специальные случаи и нюансы</a></h2>
+<h3 id="await-с-неправильной-реализацией"><a class="header" href="#await-с-неправильной-реализацией">Await с неправильной реализацией</a></h3>
+<p><strong>Проблема:</strong> Бесконечная рекурсия при <code>await</code> функции, которая возвращает промис</p>
+<pre><code class="language-javascript">// НЕПРАВИЛЬНО - вызовет переполнение стека
+async function recurse() {
+  return await recurse();
+}
+</code></pre>
+<p><strong>Объяснение:</strong></p>
+<ol>
+<li>Функция вызывается</li>
+<li><code>await</code> ждет промис</li>
+<li>Функция вызывается рекурсивно снова</li>
+<li>Очередь микротасков не успевает обработаться</li>
+<li>Стек переполняется</li>
+</ol>
+<p><strong>Правильно:</strong> Использовать <code>await</code> со скалярным значением</p>
+<pre><code class="language-javascript">async function safe() {
+  return await null; // Работает - заглушка пропускает null через await
+}
+</code></pre>
+<p><strong>Как это работает:</strong></p>
+<p>В JavaScript есть встроенная заглушка, которая:</p>
+<ol>
+<li>Оборачивает скаляры в промис</li>
+<li>Промис резолвится</li>
+<li>Очередь микротасков прокручивается</li>
+<li>Рекурсия прерывается</li>
+</ol>
+<h3 id="примеси-mixins-vs-адаптеры"><a class="header" href="#примеси-mixins-vs-адаптеры">Примеси (Mixins) vs Адаптеры</a></h3>
+<p><strong>Примесь - это НЕ адаптер</strong>, если она:</p>
+<ul>
+<li>Просто добавляет поля к объекту</li>
+<li>Не преобразует интерфейс</li>
+<li>Не инкапсулирует другую абстракцию</li>
+</ul>
+<p><strong>Примесь:</strong></p>
+<pre><code class="language-javascript">function addToken(obj, token) {
+  obj.token = token; // Просто добавили поле
+  return obj;
+}
+</code></pre>
+<p><strong>Адаптер:</strong></p>
+<pre><code class="language-javascript">function addAuthAdapter(request, token) {
+  return {
+    get: (url) =&gt; request.get(url, { headers: { token } }),
+    post: (url, data) =&gt; request.post(url, data, { headers: { token } })
+  };
+}
+</code></pre>
+<hr>
+<h2 id="рекомендации-по-использованию"><a class="header" href="#рекомендации-по-использованию">Рекомендации по использованию</a></h2>
+<h3 id="когда-использовать-адаптер"><a class="header" href="#когда-использовать-адаптер">Когда использовать адаптер?</a></h3>
+<ol>
+<li><strong>Интеграция сторонних библиотек</strong> с несовместимыми интерфейсами</li>
+<li><strong>Миграция между технологиями</strong> (например, из монолита в микросервисы)</li>
+<li><strong>Кросс-платформенный код</strong> (Node.js + Browser)</li>
+<li><strong>Преобразование контрактов</strong> (callback → promise, sync → async)</li>
+</ol>
+<h3 id="когда-не-использовать-адаптер"><a class="header" href="#когда-не-использовать-адаптер">Когда НЕ использовать адаптер?</a></h3>
+<ol>
+<li>Если можно изменить исходный код напрямую</li>
+<li>Если интерфейсы уже совместимы</li>
+<li>Если адаптер добавляет только один метод (используйте простую функцию)</li>
+</ol>
+<h3 id="выбор-типа-адаптера"><a class="header" href="#выбор-типа-адаптера">Выбор типа адаптера</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Ситуация</th><th>Рекомендация</th></tr>
+</thead>
+<tbody>
+<tr><td>Нужно обернуть класс</td><td>Боксинг (класс-обёртка)</td></tr>
+<tr><td>Нужно обернуть функцию</td><td>Функция-обёртка</td></tr>
+<tr><td>Нужно поддержать 2 интерфейса</td><td>Множественная реализация</td></tr>
+<tr><td>Нужна гибкость</td><td>Revealing Constructor</td></tr>
+<tr><td>Преобразование контрактов</td><td>Специализированные адаптеры (promisify, callbackify)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<ol>
+<li><strong>Гибкость JavaScript</strong> позволяет реализовывать паттерны множеством способов</li>
+<li><strong>Адаптер в JS</strong> — это не строгая схема, а семейство техник для преобразования интерфейсов</li>
+<li><strong>Культурная адаптация</strong> важнее прямого переноса кода из других языков</li>
+<li><strong>Боксинг и обёртки</strong> — два основных подхода к реализации адаптеров</li>
+<li><strong>Композиция vs агрегация</strong> определяет владение адаптируемым объектом</li>
+<li><strong>Клиентом в JS</strong> может быть любой код, не только классы</li>
+<li><strong>Современный синтаксис</strong> (классы, приватные поля) предпочтительнее прототипного стиля</li>
+</ol>
+<hr>
+<h2 id="дополнительные-ресурсы"><a class="header" href="#дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
+<h3 id="примеры-кода"><a class="header" href="#примеры-кода">Примеры кода</a></h3>
+<p>Все примеры из лекции доступны в репозитории с практическими задачами на каждый тип адаптера.</p>
+<h3 id="задачи-для-практики"><a class="header" href="#задачи-для-практики">Задачи для практики</a></h3>
+<ol>
+<li>Реализовать адаптер Map для работы с Redis</li>
+<li>Создать адаптер таймера с поддержкой AbortSignal</li>
+<li>Написать адаптер между EventEmitter и EventTarget</li>
+<li>Реализовать promisify для функций с нестандартным callback</li>
+<li>Создать адаптер для работы с файловой системой через интерфейс Set</li>
+</ol>
+<h3 id="связанные-паттерны"><a class="header" href="#связанные-паттерны">Связанные паттерны</a></h3>
+<ul>
+<li><strong>Декоратор</strong> — добавляет функциональность, сохраняя интерфейс</li>
+<li><strong>Фасад</strong> — упрощает сложный интерфейс</li>
+<li><strong>Мост (Bridge)</strong> — разделяет абстракцию и реализацию</li>
+<li><strong>Стратегия</strong> — может использоваться внутри адаптера для выбора реализации</li>
+</ul>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>Паттерн Адаптер в JavaScript — это мощный инструмент для работы с несовместимыми интерфейсами. Благодаря гибкости языка, мы можем создавать адаптеры, которые элегантно решают проблемы интеграции, не жертвуя читаемостью и производительностью кода.</p>
+<p>Ключ к успешному применению паттерна — понимание контекста платформы и использование идиоматичных для JavaScript решений, а не слепое копирование реализаций из других языков программирования.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week5/solid-lsp-principle-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week5/solid-lsp-principle-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,2791 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Callback &amp; Callback-last-error-first - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="callback-контракт-в-javascript-подробный-конспект"><a class="header" href="#callback-контракт-в-javascript-подробный-конспект">Callback контракт в JavaScript: Подробный конспект</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>Callbacks (колбеки) представляют собой первый и наиболее фундаментальный контракт асинхронности в JavaScript и Node.js. Эта лекция детально рассматривает эволюцию от простых синхронных функций к асинхронным колбекам, объясняет контракт <strong>callback-last-error-first</strong>, демонстрирует решение проблемы callback hell и показывает лучшие практики работы с колбеками.</p>
+<p><strong>Ключевые темы лекции:</strong></p>
+<ul>
+<li>Эволюция от синхронных функций к callback-паттерну</li>
+<li>Контракт callback-last-error-first (CLF) и его значение</li>
+<li>Различие между синхронными и асинхронными колбеками</li>
+<li>Именованные колбеки и их преимущества перед анонимными</li>
+<li>Эффективное решение проблемы callback hell через декомпозицию</li>
+<li>Систематическая обработка ошибок в асинхронном коде</li>
+<li>Восстановление естественного логического порядка операций</li>
+</ul>
+<hr>
+<h2 id="1-что-такое-колбек-эволюция-от-синхронности-к-асинхронности"><a class="header" href="#1-что-такое-колбек-эволюция-от-синхронности-к-асинхронности">1. Что такое колбек? Эволюция от синхронности к асинхронности</a></h2>
+<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<p><strong>Callback (колбек)</strong> — это функция, которая передается в качестве аргумента в другую функцию и вызывается этой функцией для передачи результата операции или сигнализации о завершении выполнения.</p>
+<p>Колбеки являются примером паттерна <strong>Inversion of Control</strong> (инверсия управления): вместо того чтобы возвращать результат через <code>return</code>, функция вызывает переданный ей колбек с результатом.</p>
+<h3 id="от-синхронной-функции-к-асинхронному-колбеку"><a class="header" href="#от-синхронной-функции-к-асинхронному-колбеку">От синхронной функции к асинхронному колбеку</a></h3>
+<h4 id="шаг-1-обычная-синхронная-функция"><a class="header" href="#шаг-1-обычная-синхронная-функция">Шаг 1: Обычная синхронная функция</a></h4>
+<pre><code class="language-javascript">// Простая синхронная функция сложения двух чисел
+function sum(a, b) {
+  return a + b;
+}
+
+// Использование
+const result = sum(5, 3);
+console.log('Результат:', result); // Результат: 8
+
+// Выполнение происходит синхронно:
+console.log('До вызова sum');
+const res = sum(10, 20);
+console.log('После вызова sum, результат:', res);
+console.log('Продолжаем выполнение');
+
+// Вывод (последовательный):
+// До вызова sum
+// После вызова sum, результат: 30
+// Продолжаем выполнение
+</code></pre>
+<p><strong>Характеристики синхронной функции:</strong></p>
+<ul>
+<li>Принимает параметры (в данном случае <code>a</code> и <code>b</code>)</li>
+<li>Выполняет вычисления</li>
+<li>Возвращает результат через оператор <code>return</code></li>
+<li>Блокирует выполнение программы до получения результата</li>
+<li>Результат доступен немедленно после вызова</li>
+</ul>
+<p><strong>Проблемы синхронного подхода:</strong></p>
+<ul>
+<li>Блокировка выполнения при долгих операциях (чтение файлов, сетевые запросы)</li>
+<li>Невозможность выполнять другие задачи во время ожидания</li>
+<li>Неэффективное использование ресурсов</li>
+</ul>
+<h4 id="шаг-2-простой-колбек-без-обработки-ошибок"><a class="header" href="#шаг-2-простой-колбек-без-обработки-ошибок">Шаг 2: Простой колбек без обработки ошибок</a></h4>
+<pre><code class="language-javascript">// Функция с колбеком - добавляем третий параметр
+function sum(a, b, callback) {
+  // Вместо return вызываем колбек с результатом
+  const result = a + b;
+  callback(result);
+}
+
+// Использование с анонимной стрелочной функцией
+sum(5, 3, (result) =&gt; {
+  console.log('Результат через колбек:', result);
+  // Результат через колбек: 8
+});
+
+// Использование с именованной функцией
+function handleSum(result) {
+  console.log('Сумма равна:', result);
+}
+
+sum(10, 20, handleSum); // Сумма равна: 30
+
+// Демонстрация асинхронного поведения
+console.log('Начало');
+
+sum(7, 13, (result) =&gt; {
+  console.log('Результат:', result);
+});
+
+console.log('Конец');
+
+// Вывод (пока синхронный):
+// Начало
+// Результат: 20
+// Конец
+</code></pre>
+<p><strong>Что изменилось:</strong></p>
+<ul>
+<li>Добавлен третий аргумент — функция <code>callback</code></li>
+<li>Вместо <code>return</code> результат передается как аргумент в колбек</li>
+<li>Вызывающий код получает результат через вызов переданной функции</li>
+<li>Подготовка к асинхронному выполнению (хотя пока код синхронный)</li>
+</ul>
+<p><strong>Важное замечание:</strong> Сам факт использования колбека не делает функцию асинхронной. Для асинхронности нужны специальные механизмы (таймеры, I/O операции, промисы и т.д.).</p>
+<h4 id="шаг-3-колбек-с-контрактом-error-first"><a class="header" href="#шаг-3-колбек-с-контрактом-error-first">Шаг 3: Колбек с контрактом error-first</a></h4>
+<pre><code class="language-javascript">// Функция следует контракту callback-last-error-first
+function sum(a, b, callback) {
+  // Первый аргумент колбека - ошибка (null, если её нет)
+  // Второй аргумент - результат вычисления
+  callback(null, a + b);
+}
+
+// Использование с явной обработкой ошибок
+sum(5, 3, (error, result) =&gt; {
+  if (error) {
+    console.error('Произошла ошибка:', error.message);
+    return; // Важно! Прекращаем выполнение при ошибке
+  }
+  console.log('Результат:', result); // Результат: 8
+});
+
+// Пример с множественными операциями
+function calculate(operation, a, b, callback) {
+  let result;
+
+  switch(operation) {
+    case 'add':
+      result = a + b;
+      break;
+    case 'subtract':
+      result = a - b;
+      break;
+    case 'multiply':
+      result = a * b;
+      break;
+    case 'divide':
+      if (b === 0) {
+        callback(new Error('Division by zero'));
+        return;
+      }
+      result = a / b;
+      break;
+    default:
+      callback(new Error(`Unknown operation: ${operation}`));
+      return;
+  }
+
+  callback(null, result);
+}
+
+// Использование
+calculate('add', 10, 5, (err, res) =&gt; {
+  if (err) return console.error(err.message);
+  console.log('10 + 5 =', res); // 10 + 5 = 15
+});
+
+calculate('divide', 10, 0, (err, res) =&gt; {
+  if (err) return console.error(err.message); // Division by zero
+  console.log(res);
+});
+</code></pre>
+<p><strong>Ключевые моменты контракта error-first:</strong></p>
+<ul>
+<li>Первый аргумент колбека <strong>всегда</strong> зарезервирован для ошибки</li>
+<li>Если операция успешна, первый аргумент равен <code>null</code> или <code>undefined</code></li>
+<li>Результаты операции передаются начиная со второго аргумента</li>
+<li>Обработчик <strong>обязан</strong> проверить наличие ошибки перед использованием результата</li>
+</ul>
+<h4 id="шаг-4-передача-ошибки-в-колбек"><a class="header" href="#шаг-4-передача-ошибки-в-колбек">Шаг 4: Передача ошибки в колбек</a></h4>
+<pre><code class="language-javascript">// Функция с валидацией и генерацией ошибок
+function divide(a, b, callback) {
+  // Валидация входных данных
+  if (typeof a !== 'number' || typeof b !== 'number') {
+    callback(new Error('Аргументы должны быть числами'));
+    return;
+  }
+
+  if (b === 0) {
+    // Передаем ошибку как первый аргумент
+    callback(new Error('Деление на ноль невозможно'));
+    return;
+  }
+
+  // Успешный результат - первый аргумент null
+  callback(null, a / b);
+}
+
+// Примеры использования
+divide(10, 2, (error, result) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error.message);
+    return;
+  }
+  console.log('Результат деления:', result);
+  // Результат деления: 5
+});
+
+divide(10, 0, (error, result) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error.message);
+    // Ошибка: Деление на ноль невозможно
+    return;
+  }
+  console.log('Результат деления:', result);
+});
+
+divide('10', 2, (error, result) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error.message);
+    // Ошибка: Аргументы должны быть числами
+    return;
+  }
+  console.log('Результат деления:', result);
+});
+
+// Обработка с разными стратегиями
+function divideWithLogging(a, b, callback) {
+  divide(a, b, (error, result) =&gt; {
+    if (error) {
+      // Логируем ошибку и пробрасываем дальше
+      console.error(`[LOG] Ошибка при делении ${a} на ${b}:`, error.message);
+      callback(error);
+      return;
+    }
+
+    // Логируем успешный результат
+    console.log(`[LOG] ${a} / ${b} = ${result}`);
+    callback(null, result);
+  });
+}
+</code></pre>
+<p><strong>Типы ошибок, которые стоит обрабатывать:</strong></p>
+<ol>
+<li><strong>Ошибки валидации</strong> — некорректные входные данные</li>
+<li><strong>Логические ошибки</strong> — невозможность выполнения операции (деление на ноль)</li>
+<li><strong>Системные ошибки</strong> — ошибки файловой системы, сети и т.д.</li>
+<li><strong>Ошибки парсинга</strong> — некорректный формат данных</li>
+</ol>
+<hr>
+<h2 id="2-контракт-callback-last-error-first"><a class="header" href="#2-контракт-callback-last-error-first">2. Контракт Callback-last-error-first</a></h2>
+<h3 id="полное-определение-контракта"><a class="header" href="#полное-определение-контракта">Полное определение контракта</a></h3>
+<p><strong>Callback-last-error-first (CLF)</strong> — это соглашение (convention) о том, как структурировать асинхронные функции и колбеки в экосистеме Node.js и JavaScript.</p>
+<p><strong>Название контракта состоит из двух частей:</strong></p>
+<ol>
+<li>
+<p><strong>Callback-last</strong> (колбек последним):</p>
+<ul>
+<li>Функция с асинхронным поведением принимает колбек <strong>последним аргументом</strong></li>
+<li>Все параметры данных идут перед колбеком</li>
+<li>Это делает API предсказуемым и единообразным</li>
+</ul>
+</li>
+<li>
+<p><strong>Error-first</strong> (ошибка первой):</p>
+<ul>
+<li>Колбек получает ошибку <strong>первым аргументом</strong></li>
+<li>Если ошибки нет, передается <code>null</code> или <code>undefined</code></li>
+<li>Данные результата передаются начиная со второго аргумента</li>
+</ul>
+</li>
+</ol>
+<h3 id="формальная-структура-контракта"><a class="header" href="#формальная-структура-контракта">Формальная структура контракта</a></h3>
+<pre><code class="language-javascript">// Общая форма асинхронной функции с CLF контрактом
+function asyncOperation(param1, param2, ..., paramN, callback) {
+  // Выполнение асинхронной операции
+
+  // При возникновении ошибки:
+  if (errorCondition) {
+    callback(new Error('Описание ошибки'));
+    return;
+  }
+
+  // При успешном выполнении:
+  callback(null, result1, result2, ..., resultN);
+}
+
+// Общая форма callback-функции
+function callback(error, data1, data2, ..., dataN) {
+  // Обязательная проверка ошибки
+  if (error) {
+    // Обработка ошибки: логирование, пробрасывание, восстановление
+    console.error('Error:', error.message);
+    return; // Важно! Прекращаем выполнение
+  }
+
+  // Работа с результатами
+  console.log('Data:', data1, data2, ..., dataN);
+}
+</code></pre>
+<h3 id="примеры-сигнатур-функций-с-clf"><a class="header" href="#примеры-сигнатур-функций-с-clf">Примеры сигнатур функций с CLF</a></h3>
+<pre><code class="language-javascript">// Чтение файла (Node.js fs module)
+fs.readFile(path, encoding, callback);
+// callback(error, data)
+
+// Запись файла
+fs.writeFile(path, data, encoding, callback);
+// callback(error)
+
+// Запрос к базе данных
+database.query(sql, params, callback);
+// callback(error, rows)
+
+// HTTP запрос
+http.get(url, options, callback);
+// callback(error, response)
+
+// Множественные результаты
+someAsyncOperation(param1, param2, callback);
+// callback(error, result1, result2, result3)
+</code></pre>
+<h3 id="почему-контракт-clf-важен"><a class="header" href="#почему-контракт-clf-важен">Почему контракт CLF важен?</a></h3>
+<p><strong>Преимущества следования контракту:</strong></p>
+<ol>
+<li>
+<p><strong>Единообразие API</strong></p>
+<ul>
+<li>Все асинхронные функции следуют одному паттерну</li>
+<li>Не нужно каждый раз читать документацию</li>
+<li>Снижается когнитивная нагрузка</li>
+</ul>
+</li>
+<li>
+<p><strong>Обязательная обработка ошибок</strong></p>
+<ul>
+<li>Первый аргумент напоминает о необходимости проверки ошибок</li>
+<li>Ошибки нельзя “случайно” проигнорировать</li>
+<li>Явная обработка ошибок на каждом уровне</li>
+</ul>
+</li>
+<li>
+<p><strong>Предсказуемость кода</strong></p>
+<ul>
+<li>Легко читать чужой код</li>
+<li>Легко писать код, который другие поймут</li>
+<li>Упрощается code review</li>
+</ul>
+</li>
+<li>
+<p><strong>Совместимость экосистемы</strong></p>
+<ul>
+<li>Стандарт для всего Node.js ecosystem</li>
+<li>Все библиотеки и модули следуют одному контракту</li>
+<li>Легко интегрировать разные модули</li>
+</ul>
+</li>
+<li>
+<p><strong>Возможность создания утилит</strong></p>
+<ul>
+<li>Можно писать универсальные обработчики</li>
+<li>Легко промисифицировать функции</li>
+<li>Упрощается тестирование</li>
+</ul>
+</li>
+</ol>
+<h3 id="пример-универсального-обработчика"><a class="header" href="#пример-универсального-обработчика">Пример универсального обработчика</a></h3>
+<pre><code class="language-javascript">// Универсальная функция для логирования операций
+function withLogging(operationName, asyncFunction) {
+  return function(...args) {
+    const callback = args[args.length - 1];
+
+    // Создаем обертку над колбеком
+    const wrappedCallback = (error, ...results) =&gt; {
+      if (error) {
+        console.error(`[${operationName}] ERROR:`, error.message);
+      } else {
+        console.log(`[${operationName}] SUCCESS:`, results);
+      }
+
+      // Вызываем оригинальный колбек
+      callback(error, ...results);
+    };
+
+    // Заменяем последний аргумент (колбек) на обертку
+    args[args.length - 1] = wrappedCallback;
+
+    console.log(`[${operationName}] START`);
+    asyncFunction(...args);
+  };
+}
+
+// Использование
+const fs = require('fs');
+
+const readFileWithLogging = withLogging('ReadFile', fs.readFile);
+
+readFileWithLogging('./config.json', 'utf8', (error, data) =&gt; {
+  if (error) return;
+  console.log('File content:', data);
+});
+
+// Вывод:
+// [ReadFile] START
+// [ReadFile] SUCCESS: ['{"port": 3000}']
+// File content: {"port": 3000}
+</code></pre>
+<h3 id="нарушение-контракта-и-его-последствия"><a class="header" href="#нарушение-контракта-и-его-последствия">Нарушение контракта и его последствия</a></h3>
+<pre><code class="language-javascript">// ПЛОХО: Колбек не последний аргумент
+function badFunction(callback, param1, param2) {
+  // Непривычный порядок - легко ошибиться
+  callback(null, param1 + param2);
+}
+
+// ПЛОХО: Ошибка не первый аргумент
+function badFunction2(param, callback) {
+  // Нарушает контракт error-first
+  callback(result, error);
+}
+
+// ХОРОШО: Следование контракту
+function goodFunction(param1, param2, callback) {
+  if (someError) {
+    callback(new Error('Description'));
+    return;
+  }
+  callback(null, result);
+}
+</code></pre>
+<hr>
+<h2 id="3-синхронные-и-асинхронные-колбеки"><a class="header" href="#3-синхронные-и-асинхронные-колбеки">3. Синхронные и асинхронные колбеки</a></h2>
+<h3 id="важное-различие"><a class="header" href="#важное-различие">Важное различие</a></h3>
+<p><strong>Критическое понимание:</strong> Сам по себе паттерн колбеков <strong>не гарантирует асинхронность</strong>. Колбеки — это просто способ передачи функции в качестве аргумента. Колбек может быть вызван как синхронно, так и асинхронно.</p>
+<p><strong>Асинхронность зависит от:</strong></p>
+<ul>
+<li>Использования Event Loop (setTimeout, setInterval)</li>
+<li>I/O операций (fs, network, database)</li>
+<li>Промисов и async/await</li>
+<li>Web APIs (в браузере)</li>
+<li>Worker threads, child processes</li>
+</ul>
+<h3 id="синхронные-колбеки"><a class="header" href="#синхронные-колбеки">Синхронные колбеки</a></h3>
+<p>Синхронные колбеки выполняются немедленно, в рамках текущего выполнения, до того как управление вернется к следующей строке кода.</p>
+<h4 id="пример-1-методы-массивов"><a class="header" href="#пример-1-методы-массивов">Пример 1: Методы массивов</a></h4>
+<pre><code class="language-javascript">const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+console.log('Начало');
+
+// Array.prototype.filter - синхронный метод
+const evenNumbers = numbers.filter((num) =&gt; {
+  console.log('  Проверяем число:', num);
+  return num % 2 === 0;
+});
+
+console.log('Четные числа:', evenNumbers);
+console.log('---');
+
+// Array.prototype.map - синхронный метод
+const doubled = numbers.map((num) =&gt; {
+  console.log('  Удваиваем:', num);
+  return num * 2;
+});
+
+console.log('Удвоенные числа:', doubled);
+console.log('---');
+
+// Array.prototype.reduce - синхронный метод
+const sum = numbers.reduce((acc, num) =&gt; {
+  console.log(`  Аккумулятор: ${acc}, текущее: ${num}`);
+  return acc + num;
+}, 0);
+
+console.log('Сумма:', sum);
+console.log('---');
+
+// Array.prototype.find - синхронный метод
+const firstEven = numbers.find((num) =&gt; {
+  console.log('  Ищем четное, проверяем:', num);
+  return num % 2 === 0;
+});
+
+console.log('Первое четное:', firstEven);
+console.log('Конец');
+
+// Вывод будет строго последовательным
+</code></pre>
+<p><strong>Характеристики синхронных колбеков:</strong></p>
+<ul>
+<li>Выполняются немедленно в момент вызова</li>
+<li>Блокируют дальнейшее выполнение до завершения</li>
+<li>Не требуют Event Loop</li>
+<li>Используются для:
+<ul>
+<li>Итерации по коллекциям</li>
+<li>Фильтрации и преобразования данных</li>
+<li>Сортировки (Array.prototype.sort)</li>
+<li>Валидации данных</li>
+</ul>
+</li>
+</ul>
+<h4 id="пример-2-пользовательские-синхронные-колбеки"><a class="header" href="#пример-2-пользовательские-синхронные-колбеки">Пример 2: Пользовательские синхронные колбеки</a></h4>
+<pre><code class="language-javascript">// Функция принимает массив и колбек для обработки каждого элемента
+function forEachSync(array, callback) {
+  for (let i = 0; i &lt; array.length; i++) {
+    // Колбек вызывается синхронно
+    callback(array[i], i, array);
+  }
+}
+
+// Использование
+console.log('До forEach');
+
+forEachSync([1, 2, 3], (item, index) =&gt; {
+  console.log(`  Элемент ${index}: ${item}`);
+});
+
+console.log('После forEach');
+
+// Вывод (последовательный):
+// До forEach
+//   Элемент 0: 1
+//   Элемент 1: 2
+//   Элемент 2: 3
+// После forEach
+</code></pre>
+<h4 id="пример-3-обработка-конфигурации"><a class="header" href="#пример-3-обработка-конфигурации">Пример 3: Обработка конфигурации</a></h4>
+<pre><code class="language-javascript">// Синхронная обработка конфигурации
+function processConfig(config, validators) {
+  const errors = [];
+
+  // Проходим по всем валидаторам синхронно
+  validators.forEach((validator) =&gt; {
+    const error = validator(config);
+    if (error) {
+      errors.push(error);
+    }
+  });
+
+  return errors;
+}
+
+// Валидаторы
+const validators = [
+  (config) =&gt; config.port ? null : 'Port is required',
+  (config) =&gt; config.host ? null : 'Host is required',
+  (config) =&gt; typeof config.port === 'number' ? null : 'Port must be a number',
+];
+
+const config = { port: 3000, host: 'localhost' };
+
+console.log('Начало валидации');
+const errors = processConfig(config, validators);
+console.log('Конец валидации');
+console.log('Ошибки:', errors); // []
+</code></pre>
+<h3 id="асинхронные-колбеки"><a class="header" href="#асинхронные-колбеки">Асинхронные колбеки</a></h3>
+<p>Асинхронные колбеки выполняются в будущем, после завершения текущего стека вызовов. Они не блокируют выполнение программы.</p>
+<h4 id="пример-1-таймеры"><a class="header" href="#пример-1-таймеры">Пример 1: Таймеры</a></h4>
+<pre><code class="language-javascript">// Асинхронные колбеки с таймерами
+console.log('1. Начало программы');
+
+setTimeout(() =&gt; {
+  // Этот колбек выполнится асинхронно через 0 мс
+  console.log('2. Таймер 0 мс');
+}, 0);
+
+setTimeout(() =&gt; {
+  console.log('4. Таймер 100 мс');
+}, 100);
+
+console.log('3. Синхронный код');
+
+// Вывод:
+// 1. Начало программы
+// 3. Синхронный код
+// 2. Таймер 0 мс
+// 4. Таймер 100 мс
+
+// Обратите внимание: даже с задержкой 0 мс,
+// колбек выполняется после синхронного кода!
+</code></pre>
+<h4 id="пример-2-обработка-массива-с-задержкой"><a class="header" href="#пример-2-обработка-массива-с-задержкой">Пример 2: Обработка массива с задержкой</a></h4>
+<pre><code class="language-javascript">// Асинхронная итерация по массиву
+const data = [
+  { id: 1, name: 'Alice', role: 'Admin' },
+  { id: 2, name: 'Bob', role: 'User' },
+  { id: 3, name: 'Charlie', role: 'Moderator' }
+];
+
+let index = 0;
+
+console.log('Запуск асинхронной обработки');
+
+// Устанавливаем интервал на 10 миллисекунд
+const timerId = setInterval(() =&gt; {
+  // Этот колбек выполняется асинхронно каждые 10 мс
+  const item = data[index];
+  console.log(`  [${index + 1}] Обработка:`, item.name, '-', item.role);
+
+  index++;
+
+  // Когда дошли до конца массива - останавливаем таймер
+  if (index &gt;= data.length) {
+    clearInterval(timerId);
+    console.log('Обработка завершена');
+  }
+}, 10);
+
+console.log('Таймер запущен, продолжаем выполнение...');
+console.log('Эта строка выполнится ДО обработки элементов');
+
+// Вывод:
+// Запуск асинхронной обработки
+// Таймер запущен, продолжаем выполнение...
+// Эта строка выполнится ДО обработки элементов
+//   [1] Обработка: Alice - Admin
+//   [2] Обработка: Bob - User
+//   [3] Обработка: Charlie - Moderator
+// Обработка завершена
+</code></pre>
+<h4 id="пример-3-имитация-асинхронной-операции"><a class="header" href="#пример-3-имитация-асинхронной-операции">Пример 3: Имитация асинхронной операции</a></h4>
+<pre><code class="language-javascript">// Функция имитирует асинхронную операцию (например, API запрос)
+function fetchUserData(userId, callback) {
+  console.log(`  [API] Отправка запроса для пользователя ${userId}`);
+
+  // Имитируем задержку сети с помощью setTimeout
+  setTimeout(() =&gt; {
+    // Имитируем получение данных
+    const userData = {
+      id: userId,
+      name: `User${userId}`,
+      email: `user${userId}@example.com`,
+      createdAt: new Date().toISOString()
+    };
+
+    console.log(`  [API] Получены данные для пользователя ${userId}`);
+
+    // Вызываем колбек с результатом
+    callback(null, userData);
+  }, Math.random() * 1000); // Случайная задержка 0-1000 мс
+}
+
+// Использование
+console.log('Начало');
+
+fetchUserData(1, (error, user) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error);
+    return;
+  }
+  console.log('Получен пользователь:', user.name);
+});
+
+fetchUserData(2, (error, user) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error);
+    return;
+  }
+  console.log('Получен пользователь:', user.name);
+});
+
+console.log('Конец синхронного кода');
+
+// Вывод (порядок может варьироваться из-за случайной задержки):
+// Начало
+//   [API] Отправка запроса для пользователя 1
+//   [API] Отправка запроса для пользователя 2
+// Конец синхронного кода
+//   [API] Получены данные для пользователя 2
+// Получен пользователь: User2
+//   [API] Получены данные для пользователя 1
+// Получен пользователь: User1
+</code></pre>
+<p><strong>Характеристики асинхронных колбеков:</strong></p>
+<ul>
+<li>Выполняются в будущем, не блокируя текущий код</li>
+<li>Используют Event Loop для планирования выполнения</li>
+<li>Позволяют программе продолжать работу во время ожидания</li>
+<li>Применяются для:
+<ul>
+<li>Операций ввода-вывода (файлы, сеть, БД)</li>
+<li>Таймеров и интервалов</li>
+<li>Событий пользователя (клики, нажатия клавиш)</li>
+<li>Асинхронных вычислений</li>
+</ul>
+</li>
+</ul>
+<h3 id="опасность-смешивания-синхронного-и-асинхронного-поведения"><a class="header" href="#опасность-смешивания-синхронного-и-асинхронного-поведения">Опасность смешивания синхронного и асинхронного поведения</a></h3>
+<pre><code class="language-javascript">// ПЛОХО: Непредсказуемое поведение
+function maybeAsync(useCache, callback) {
+  if (useCache) {
+    // Синхронный вызов колбека
+    callback(null, cachedData);
+  } else {
+    // Асинхронный вызов колбека
+    fetchData((error, data) =&gt; {
+      callback(error, data);
+    });
+  }
+}
+
+// ХОРОШО: Всегда асинхронно
+function alwaysAsync(useCache, callback) {
+  if (useCache) {
+    // Делаем синхронный вызов асинхронным
+    process.nextTick(() =&gt; {
+      callback(null, cachedData);
+    });
+  } else {
+    fetchData((error, data) =&gt; {
+      callback(error, data);
+    });
+  }
+}
+</code></pre>
+<p><strong>Принцип:</strong> Если функция может быть асинхронной, она должна быть <strong>всегда</strong> асинхронной, даже когда результат доступен немедленно.</p>
+<hr>
+<h2 id="4-асинхронные-операции-ввода-вывода-в-nodejs"><a class="header" href="#4-асинхронные-операции-ввода-вывода-в-nodejs">4. Асинхронные операции ввода-вывода в Node.js</a></h2>
+<h3 id="файловая-система-fs-module"><a class="header" href="#файловая-система-fs-module">Файловая система (fs module)</a></h3>
+<p>Все операции ввода-вывода в Node.js используют контракт callback-last-error-first. Модуль <code>fs</code> предоставляет как синхронные, так и асинхронные версии методов.</p>
+<h4 id="чтение-файла"><a class="header" href="#чтение-файла">Чтение файла</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+const path = require('path');
+
+// Асинхронное чтение файла
+function readConfigFile(callback) {
+  const configPath = path.join(__dirname, 'config.json');
+
+  // fs.readFile следует контракту CLF
+  fs.readFile(configPath, 'utf8', (error, data) =&gt; {
+    if (error) {
+      // Обработка различных типов ошибок
+      if (error.code === 'ENOENT') {
+        console.error('Файл не найден:', configPath);
+      } else if (error.code === 'EACCES') {
+        console.error('Нет прав доступа к файлу:', configPath);
+      } else {
+        console.error('Ошибка чтения файла:', error.message);
+      }
+
+      callback(error);
+      return;
+    }
+
+    // Парсинг JSON
+    try {
+      const config = JSON.parse(data);
+      console.log('Конфиг успешно прочитан');
+      callback(null, config);
+    } catch (parseError) {
+      console.error('Ошибка парсинга JSON:', parseError.message);
+      callback(parseError);
+    }
+  });
+}
+
+// Использование
+console.log('Запрос на чтение конфига...');
+
+readConfigFile((error, config) =&gt; {
+  if (error) {
+    console.error('Не удалось загрузить конфиг');
+    process.exit(1);
+    return;
+  }
+
+  console.log('Конфигурация:', config);
+  console.log('Порт:', config.port);
+  console.log('Хост:', config.host);
+});
+
+console.log('Продолжаем выполнение (не ждем чтения файла)');
+
+// Вывод:
+// Запрос на чтение конфига...
+// Продолжаем выполнение (не ждем чтения файла)
+// Конфиг успешно прочитан
+// Конфигурация: { port: 3000, host: 'localhost' }
+// Порт: 3000
+// Хост: localhost
+</code></pre>
+<h4 id="запись-в-файл"><a class="header" href="#запись-в-файл">Запись в файл</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+const path = require('path');
+
+// Асинхронная запись данных в файл
+function saveData(filename, data, callback) {
+  const filePath = path.join(__dirname, filename);
+
+  // Преобразуем объект в JSON строку
+  let jsonString;
+  try {
+    jsonString = JSON.stringify(data, null, 2); // с форматированием
+  } catch (stringifyError) {
+    callback(stringifyError);
+    return;
+  }
+
+  // Записываем в файл
+  fs.writeFile(filePath, jsonString, 'utf8', (error) =&gt; {
+    if (error) {
+      console.error('Ошибка записи файла:', error.message);
+      callback(error);
+      return;
+    }
+
+    console.log('Данные успешно записаны в', filename);
+    callback(null);
+  });
+}
+
+// Использование
+const reportData = {
+  timestamp: Date.now(),
+  message: 'Hello, World!',
+  status: 'success',
+  items: [1, 2, 3, 4, 5]
+};
+
+saveData('report.json', reportData, (error) =&gt; {
+  if (error) {
+    console.error('Не удалось сохранить отчет');
+    return;
+  }
+
+  console.log('Отчет сохранен');
+});
+</code></pre>
+<h4 id="проверка-существования-и-создание-директории"><a class="header" href="#проверка-существования-и-создание-директории">Проверка существования и создание директории</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+const path = require('path');
+
+// Создание директории, если она не существует
+function ensureDirectoryExists(dirPath, callback) {
+  // Проверяем существование
+  fs.access(dirPath, fs.constants.F_OK, (error) =&gt; {
+    if (error) {
+      // Директория не существует - создаем
+      console.log('Директория не существует, создаем:', dirPath);
+
+      fs.mkdir(dirPath, { recursive: true }, (mkdirError) =&gt; {
+        if (mkdirError) {
+          console.error('Ошибка создания директории:', mkdirError.message);
+          callback(mkdirError);
+          return;
+        }
+
+        console.log('Директория создана');
+        callback(null);
+      });
+    } else {
+      // Директория существует
+      console.log('Директория уже существует:', dirPath);
+      callback(null);
+    }
+  });
+}
+
+// Использование
+const logsDir = path.join(__dirname, 'logs');
+
+ensureDirectoryExists(logsDir, (error) =&gt; {
+  if (error) {
+    console.error('Не удалось подготовить директорию для логов');
+    return;
+  }
+
+  // Теперь можем безопасно записывать файлы в директорию
+  const logFile = path.join(logsDir, 'app.log');
+  fs.writeFile(logFile, 'Application started\n', 'utf8', (writeError) =&gt; {
+    if (writeError) {
+      console.error('Ошибка записи лога:', writeError.message);
+      return;
+    }
+    console.log('Лог записан');
+  });
+});
+</code></pre>
+<h4 id="чтение-содержимого-директории"><a class="header" href="#чтение-содержимого-директории">Чтение содержимого директории</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+const path = require('path');
+
+// Получение списка файлов в директории
+function listFiles(dirPath, callback) {
+  fs.readdir(dirPath, (error, files) =&gt; {
+    if (error) {
+      console.error('Ошибка чтения директории:', error.message);
+      callback(error);
+      return;
+    }
+
+    console.log(`Найдено файлов: ${files.length}`);
+
+    // Фильтруем только файлы (не директории)
+    const fileStats = [];
+    let pending = files.length;
+
+    if (pending === 0) {
+      callback(null, []);
+      return;
+    }
+
+    files.forEach((file) =&gt; {
+      const filePath = path.join(dirPath, file);
+
+      fs.stat(filePath, (statError, stats) =&gt; {
+        if (!statError &amp;&amp; stats.isFile()) {
+          fileStats.push({
+            name: file,
+            size: stats.size,
+            modified: stats.mtime
+          });
+        }
+
+        pending--;
+
+        if (pending === 0) {
+          callback(null, fileStats);
+        }
+      });
+    });
+  });
+}
+
+// Использование
+listFiles(__dirname, (error, files) =&gt; {
+  if (error) {
+    console.error('Не удалось получить список файлов');
+    return;
+  }
+
+  console.log('Файлы в директории:');
+  files.forEach((file) =&gt; {
+    console.log(`  ${file.name} - ${file.size} байт`);
+  });
+});
+</code></pre>
+<h3 id="важные-моменты-работы-с-fs"><a class="header" href="#важные-моменты-работы-с-fs">Важные моменты работы с fs</a></h3>
+<p><strong>Параметры колбека в разных операциях:</strong></p>
+<ul>
+<li><code>fs.readFile(path, encoding, callback)</code> → <code>callback(error, data)</code></li>
+<li><code>fs.writeFile(path, data, encoding, callback)</code> → <code>callback(error)</code></li>
+<li><code>fs.readdir(path, callback)</code> → <code>callback(error, files)</code></li>
+<li><code>fs.stat(path, callback)</code> → <code>callback(error, stats)</code></li>
+<li><code>fs.mkdir(path, options, callback)</code> → <code>callback(error)</code></li>
+<li><code>fs.unlink(path, callback)</code> → <code>callback(error)</code></li>
+</ul>
+<p><strong>Общие паттерны:</strong></p>
+<ul>
+<li>Колбек всегда последний аргумент</li>
+<li>Первый параметр колбека — ошибка</li>
+<li>Для операций чтения — второй параметр содержит данные</li>
+<li>Для операций записи/удаления — колбек получает только ошибку</li>
+</ul>
+<hr>
+<h2 id="5-именованные-колбеки-лучшая-практика"><a class="header" href="#5-именованные-колбеки-лучшая-практика">5. Именованные колбеки: лучшая практика</a></h2>
+<h3 id="проблема-анонимных-колбеков"><a class="header" href="#проблема-анонимных-колбеков">Проблема анонимных колбеков</a></h3>
+<p>Анонимные стрелочные функции удобны для простых случаев, но создают проблемы:</p>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// ПРОБЛЕМА: Множественные анонимные колбеки
+fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const config = JSON.parse(data);
+
+  fs.readFile(config.dataFile, 'utf8', (error2, data2) =&gt; {
+    if (error2) {
+      console.error(error2);
+      return;
+    }
+
+    processData(data2, (error3, result) =&gt; {
+      if (error3) {
+        console.error(error3);
+        return;
+      }
+
+      console.log(result);
+    });
+  });
+});
+</code></pre>
+<p><strong>Проблемы этого кода:</strong></p>
+<ol>
+<li><strong>Плохие stack traces</strong> — при ошибке трудно понять, где именно проблема</li>
+<li><strong>Сложность отладки</strong> — невозможно поставить breakpoint на конкретную функцию</li>
+<li><strong>Невозможность переиспользования</strong> — анонимные функции нельзя вызвать повторно</li>
+<li><strong>Сложность тестирования</strong> — нельзя протестировать отдельные части</li>
+<li><strong>Плохая читаемость</strong> — код превращается в “пирамиду”</li>
+</ol>
+<h3 id="решение-именованные-функции"><a class="header" href="#решение-именованные-функции">Решение: именованные функции</a></h3>
+<p><strong>Преимущества именованных колбеков:</strong></p>
+<ul>
+<li>Понятные stack traces с названиями функций</li>
+<li>Каждую функцию можно экспортировать и переиспользовать</li>
+<li>Легко писать unit-тесты для каждой функции</li>
+<li>Код самодокументируется через имена функций</li>
+<li>Упрощается отладка и профилирование</li>
+</ul>
+<h4 id="пример-1-базовое-использование"><a class="header" href="#пример-1-базовое-использование">Пример 1: Базовое использование</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Именованная функция-обработчик
+function handleFileRead(error, data) {
+  if (error) {
+    console.error('Ошибка чтения файла:', error.message);
+    return;
+  }
+  console.log('Содержимое файла:', data);
+}
+
+// Использование
+fs.readFile('./data.txt', 'utf8', handleFileRead);
+</code></pre>
+<p><strong>Stack trace с именованной функцией:</strong></p>
+<pre><code>Error: ENOENT: no such file or directory
+    at Object.handleFileRead (example.js:5:15)
+    at FSReqCallback.readFileCallback (fs.js:280:3)
+</code></pre>
+<p><strong>Stack trace с анонимной функцией:</strong></p>
+<pre><code>Error: ENOENT: no such file or directory
+    at Object.&lt;anonymous&gt; (example.js:5:15)
+    at FSReqCallback.readFileCallback (fs.js:280:3)
+</code></pre>
+<h3 id="паттерн-с-замыканием"><a class="header" href="#паттерн-с-замыканием">Паттерн с замыканием</a></h3>
+<p>Часто нужно передать в колбек дополнительные параметры. Для этого используют замыкания.</p>
+<h4 id="пример-замыкание-vs-bind"><a class="header" href="#пример-замыкание-vs-bind">Пример: Замыкание vs bind</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Функция для вывода содержимого файла с префиксом
+function printFileContent(prefix, error, data) {
+  if (error) {
+    console.error(`[${prefix}] Ошибка:`, error.message);
+    return;
+  }
+  console.log(`[${prefix}] Содержимое:`, data);
+}
+
+// ВАРИАНТ 1: Использование bind (старый подход)
+// Связываем первый аргумент (prefix), оставляя два других свободными
+fs.readFile('./file1.txt', 'utf8', printFileContent.bind(null, 'FILE1'));
+fs.readFile('./file2.txt', 'utf8', printFileContent.bind(null, 'FILE2'));
+
+// Проблемы bind:
+// - Нужно помнить про context (первый аргумент null)
+// - Неочевидный порядок аргументов
+// - Сложнее читается
+
+// ВАРИАНТ 2: Использование замыкания (современный подход)
+function printFileContent(prefix) {
+  // Возвращаем функцию с нужной сигнатурой
+  return function(error, data) {
+    if (error) {
+      console.error(`[${prefix}] Ошибка:`, error.message);
+      return;
+    }
+    console.log(`[${prefix}] Содержимое:`, data);
+  };
+}
+
+// Вызов функции возвращает готовый колбек
+fs.readFile('./file1.txt', 'utf8', printFileContent('FILE1'));
+fs.readFile('./file2.txt', 'utf8', printFileContent('FILE2'));
+fs.readFile('./file3.txt', 'utf8', printFileContent('FILE3'));
+
+// Преимущества замыкания:
+// - Явное разделение параметров конфигурации и runtime параметров
+// - Чистый и читаемый синтаксис
+// - Не нужно думать про контекст
+// - Более функциональный подход
+</code></pre>
+<h4 id="пример-создание-обработчиков-с-контекстом"><a class="header" href="#пример-создание-обработчиков-с-контекстом">Пример: Создание обработчиков с контекстом</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Фабрика обработчиков с логированием
+function createFileHandler(fileName, onSuccess) {
+  return function(error, data) {
+    if (error) {
+      console.error(`[${fileName}] Ошибка чтения:`, error.code);
+      // Можно добавить fallback логику
+      if (error.code === 'ENOENT') {
+        console.log(`[${fileName}] Используем значения по умолчанию`);
+        onSuccess('default content');
+      }
+      return;
+    }
+
+    console.log(`[${fileName}] Файл прочитан, размер: ${data.length} байт`);
+    onSuccess(data);
+  };
+}
+
+// Использование
+function processConfig(data) {
+  console.log('Обработка конфига:', data);
+}
+
+function processData(data) {
+  console.log('Обработка данных:', data);
+}
+
+fs.readFile('./config.json', 'utf8', createFileHandler('config.json', processConfig));
+fs.readFile('./data.json', 'utf8', createFileHandler('data.json', processData));
+</code></pre>
+<h4 id="пример-параметризация-обработки-ошибок"><a class="header" href="#пример-параметризация-обработки-ошибок">Пример: Параметризация обработки ошибок</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Создаем обработчик с разными стратегиями обработки ошибок
+function createReader(options = {}) {
+  const {
+    fileName = 'unknown',
+    onError = 'log',    // 'log', 'throw', 'ignore'
+    defaultValue = null,
+    encoding = 'utf8'
+  } = options;
+
+  return function(error, data) {
+    if (error) {
+      switch(onError) {
+        case 'throw':
+          throw error;
+        case 'ignore':
+          break;
+        case 'log':
+        default:
+          console.error(`[${fileName}] Error:`, error.message);
+      }
+
+      // Используем значение по умолчанию при ошибке
+      if (defaultValue !== null) {
+        console.log(`[${fileName}] Using default value`);
+        return processData(defaultValue);
+      }
+      return;
+    }
+
+    console.log(`[${fileName}] Success`);
+    processData(data);
+  };
+}
+
+// Использование с разными стратегиями
+fs.readFile('./critical.json', 'utf8', createReader({
+  fileName: 'critical.json',
+  onError: 'throw'  // Критичный файл - прерываем при ошибке
+}));
+
+fs.readFile('./optional.json', 'utf8', createReader({
+  fileName: 'optional.json',
+  onError: 'ignore',  // Опциональный файл - игнорируем ошибку
+  defaultValue: '{}'
+}));
+
+fs.readFile('./config.json', 'utf8', createReader({
+  fileName: 'config.json',
+  onError: 'log',  // Обычный файл - логируем ошибку
+  defaultValue: '{"port": 3000}'
+}));
+</code></pre>
+<hr>
+<h2 id="6-адаптация-существующих-api-к-контракту-clf"><a class="header" href="#6-адаптация-существующих-api-к-контракту-clf">6. Адаптация существующих API к контракту CLF</a></h2>
+<h3 id="проблема-settimeout-и-setinterval"><a class="header" href="#проблема-settimeout-и-setinterval">Проблема: setTimeout и setInterval</a></h3>
+<p>Функции таймеров в JavaScript были разработаны до стандартизации контракта CLF и имеют другую сигнатуру:</p>
+<pre><code class="language-javascript">// setTimeout принимает колбек ПЕРВЫМ аргументом (не соответствует CLF)
+setTimeout(callback, delay, ...args);
+
+// setInterval также принимает колбек ПЕРВЫМ
+setInterval(callback, interval, ...args);
+
+// Это несовместимо с паттерном callback-last
+</code></pre>
+<h3 id="решение-адаптеры"><a class="header" href="#решение-адаптеры">Решение: Адаптеры</a></h3>
+<p>Создаем обертки, которые меняют порядок аргументов:</p>
+<pre><code class="language-javascript">// Адаптер для setTimeout - приводим к CLF
+function delay(timeout, callback) {
+  setTimeout(callback, timeout);
+}
+
+// Адаптер для setInterval - приводим к CLF
+function repeat(interval, callback) {
+  return setInterval(callback, interval);
+}
+
+// Теперь можно использовать с CLF контрактом
+delay(1000, () =&gt; {
+  console.log('Прошла 1 секунда');
+});
+
+const timerId = repeat(500, () =&gt; {
+  console.log('Тик');
+});
+
+// Остановка интервала через 3 секунды
+delay(3000, () =&gt; {
+  clearInterval(timerId);
+  console.log('Интервал остановлен');
+});
+</code></pre>
+<h4 id="расширенный-адаптер-с-error-first"><a class="header" href="#расширенный-адаптер-с-error-first">Расширенный адаптер с error-first</a></h4>
+<pre><code class="language-javascript">// Адаптер с поддержкой error-first (для совместимости)
+function delayWithCallback(timeout, callback) {
+  // Валидация
+  if (typeof timeout !== 'number' || timeout &lt; 0) {
+    // Асинхронно вызываем с ошибкой
+    process.nextTick(() =&gt; {
+      callback(new Error('Timeout must be a positive number'));
+    });
+    return;
+  }
+
+  if (typeof callback !== 'function') {
+    throw new TypeError('Callback must be a function');
+  }
+
+  // Запускаем таймер
+  const timerId = setTimeout(() =&gt; {
+    // Вызываем колбек без ошибки
+    callback(null);
+  }, timeout);
+
+  // Возвращаем функцию для отмены
+  return () =&gt; clearTimeout(timerId);
+}
+
+// Использование
+const cancel = delayWithCallback(2000, (error) =&gt; {
+  if (error) {
+    console.error('Ошибка:', error.message);
+    return;
+  }
+  console.log('Таймер сработал');
+});
+
+// Можем отменить таймер
+// cancel();
+</code></pre>
+<h3 id="промисификация-таймеров-в-nodejs"><a class="header" href="#промисификация-таймеров-в-nodejs">Промисификация таймеров в Node.js</a></h3>
+<p>В современном Node.js есть промисифицированные версии таймеров:</p>
+<pre><code class="language-javascript">// Node.js v16+ предоставляет промисифицированные таймеры
+const { setTimeout, setInterval } = require('timers/promises');
+
+// setTimeout возвращает Promise
+async function example() {
+  console.log('Начало');
+
+  // Ожидание 1 секунды
+  await setTimeout(1000);
+  console.log('Прошла 1 секунда');
+
+  // Ожидание еще 2 секунды с возвратом значения
+  const value = await setTimeout(2000, 'completed');
+  console.log('Прошло еще 2 секунды, результат:', value);
+}
+
+example();
+
+// setInterval для асинхронной итерации
+async function intervalExample() {
+  const interval = setInterval(500);
+  let count = 0;
+
+  // for await...of для асинхронной итерации
+  for await (const timestamp of interval) {
+    console.log(`Тик ${count}:`, new Date(timestamp).toISOString());
+    count++;
+
+    if (count &gt;= 5) {
+      break; // Прерываем цикл
+    }
+  }
+
+  console.log('Завершено');
+}
+
+intervalExample();
+</code></pre>
+<p><strong>Важно понимать:</strong> Промисы используют колбеки внутри себя. Promise — это абстракция над колбеками, но не замена им. Большинство контрактов асинхронности в JavaScript построены на колбеках как на базовом примитиве.</p>
+<h3 id="адаптер-для-приведения-любой-функции-к-clf"><a class="header" href="#адаптер-для-приведения-любой-функции-к-clf">Адаптер для приведения любой функции к CLF</a></h3>
+<pre><code class="language-javascript">// Универсальный адаптер
+function toCLF(fn, callbackPosition = 0) {
+  return function(...args) {
+    const callback = args.pop(); // Последний аргумент - колбек
+
+    // Вставляем колбек в нужную позицию оригинальной функции
+    args.splice(callbackPosition, 0, callback);
+
+    return fn(...args);
+  };
+}
+
+// Использование
+const delayC LF = toCLF(setTimeout, 0); // callback на позиции 0
+
+delayCLF(1000, () =&gt; {
+  console.log('Таймер сработал');
+});
+
+// Другой пример: функция с колбеком в середине
+function processData(data, callback, options) {
+  // callback на позиции 1
+  callback(null, data.toUpperCase());
+}
+
+const processDataCLF = toCLF(processData, 1);
+
+processDataCLF('hello', { format: 'upper' }, (error, result) =&gt; {
+  console.log(result); // HELLO
+});
+</code></pre>
+<hr>
+<h2 id="7-callback-hell-миф-и-реальность"><a class="header" href="#7-callback-hell-миф-и-реальность">7. Callback Hell: миф и реальность</a></h2>
+<h3 id="что-такое-callback-hell"><a class="header" href="#что-такое-callback-hell">Что такое Callback Hell?</a></h3>
+<p><strong>Callback Hell (Пирамида погибели, Ад колбеков)</strong> — это антипаттерн, при котором множественные вложенные колбеки создают “пирамиду” кода, растущую вправо.</p>
+<p><strong>Важное понимание:</strong> Callback Hell — это НЕ проблема самого паттерна колбеков, а результат <strong>плохой организации кода</strong>. При правильном подходе проблемы не возникает.</p>
+<h4 id="пример-классический-callback-hell"><a class="header" href="#пример-классический-callback-hell">Пример: Классический Callback Hell</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// ПЛОХО: Глубокая вложенность, "пирамида погибели"
+fs.readFile('./config.json', 'utf8', (err1, config) =&gt; {
+  if (err1) {
+    console.error('Ошибка чтения конфига:', err1);
+    return;
+  }
+
+  const parsedConfig = JSON.parse(config);
+
+  fs.readFile(parsedConfig.database, 'utf8', (err2, dbConfig) =&gt; {
+    if (err2) {
+      console.error('Ошибка чтения DB конфига:', err2);
+      return;
+    }
+
+    const db = connectToDatabase(JSON.parse(dbConfig));
+
+    db.query('SELECT * FROM users', (err3, users) =&gt; {
+      if (err3) {
+        console.error('Ошибка запроса:', err3);
+        return;
+      }
+
+      users.forEach(user =&gt; {
+        fetchUserDetails(user.id, (err4, details) =&gt; {
+          if (err4) {
+            console.error('Ошибка получения деталей:', err4);
+            return;
+          }
+
+          generateReport(details, (err5, report) =&gt; {
+            if (err5) {
+              console.error('Ошибка генерации отчета:', err5);
+              return;
+            }
+
+            saveReport(report, (err6) =&gt; {
+              if (err6) {
+                console.error('Ошибка сохранения:', err6);
+                return;
+              }
+
+              console.log('Успех!');
+            });
+          });
+        });
+      });
+    });
+  });
+});
+</code></pre>
+<p><strong>Проблемы этого кода:</strong></p>
+<ol>
+<li><strong>“Елочка” кода</strong> — вложенность растет вправо</li>
+<li><strong>Плохая читаемость</strong> — сложно понять логику</li>
+<li><strong>Игнорирование ошибок</strong> — некоторые ошибки только логируются</li>
+<li><strong>Дублирование логики</strong> — повторяющийся код обработки ошибок</li>
+<li><strong>Невозможность тестирования</strong> — нельзя тестировать отдельные шаги</li>
+<li><strong>Смешение ответственностей</strong> — всё в одной функции</li>
+<li><strong>Сложность модификации</strong> — трудно добавить новые шаги</li>
+</ol>
+<h3 id="решение-1-именованные-функции-декомпозиция"><a class="header" href="#решение-1-именованные-функции-декомпозиция">Решение 1: Именованные функции (Декомпозиция)</a></h3>
+<p><strong>Главный принцип:</strong> Каждому колбеку дать имя и вынести в отдельную функцию.</p>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// ХОРОШО: Плоская структура с именованными функциями
+
+// Шаг 6: Финальная обработка
+function handleReportSaved(error) {
+  if (error) {
+    console.error('[ERROR] Не удалось сохранить отчет:', error.message);
+    process.exit(1);
+    return;
+  }
+
+  console.log('[SUCCESS] Отчет успешно сохранен');
+  process.exit(0);
+}
+
+// Шаг 5: Сохранение отчета
+function saveReportFile(error, report) {
+  if (error) {
+    console.error('[ERROR] Ошибка генерации отчета:', error.message);
+    handleReportSaved(error);
+    return;
+  }
+
+  const reportPath = './reports/output.json';
+  const reportData = JSON.stringify(report, null, 2);
+
+  fs.writeFile(reportPath, reportData, 'utf8', handleReportSaved);
+}
+
+// Шаг 4: Генерация отчета
+function generateUserReport(error, userDetails) {
+  if (error) {
+    console.error('[ERROR] Ошибка получения деталей пользователя:', error.message);
+    saveReportFile(error);
+    return;
+  }
+
+  // Логика генерации отчета
+  const report = {
+    timestamp: new Date().toISOString(),
+    user: userDetails,
+    summary: `Report for ${userDetails.name}`
+  };
+
+  saveReportFile(null, report);
+}
+
+// Шаг 3: Получение деталей пользователя
+function fetchFirstUserDetails(error, users) {
+  if (error) {
+    console.error('[ERROR] Ошибка запроса к БД:', error.message);
+    generateUserReport(error);
+    return;
+  }
+
+  if (users.length === 0) {
+    generateUserReport(new Error('No users found'));
+    return;
+  }
+
+  // Для примера берем первого пользователя
+  const firstUser = users[0];
+
+  // Имитация получения деталей
+  setTimeout(() =&gt; {
+    const details = { ...firstUser, fetchedAt: Date.now() };
+    generateUserReport(null, details);
+  }, 100);
+}
+
+// Шаг 2: Запрос к базе данных
+function queryUsers(error, dbConfig) {
+  if (error) {
+    console.error('[ERROR] Ошибка чтения конфига БД:', error.message);
+    fetchFirstUserDetails(error);
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(dbConfig);
+    console.log('[INFO] Подключение к БД:', parsed.host);
+
+    // Имитация запроса к БД
+    setTimeout(() =&gt; {
+      const users = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' }
+      ];
+      fetchFirstUserDetails(null, users);
+    }, 100);
+  } catch (parseError) {
+    fetchFirstUserDetails(parseError);
+  }
+}
+
+// Шаг 1: Чтение конфигурации БД
+function readDatabaseConfig(error, config) {
+  if (error) {
+    console.error('[ERROR] Ошибка чтения основного конфига:', error.message);
+    queryUsers(error);
+    return;
+  }
+
+  try {
+    const parsedConfig = JSON.parse(config);
+    const dbConfigPath = parsedConfig.database || './db-config.json';
+
+    fs.readFile(dbConfigPath, 'utf8', queryUsers);
+  } catch (parseError) {
+    queryUsers(parseError);
+  }
+}
+
+// Точка входа
+console.log('[START] Начало обработки');
+fs.readFile('./config.json', 'utf8', readDatabaseConfig);
+</code></pre>
+<p><strong>Преимущества этого подхода:</strong></p>
+<ol>
+<li><strong>Плоская структура</strong> — нет глубокой вложенности</li>
+<li><strong>Именованные функции</strong> — каждый шаг имеет понятное имя</li>
+<li><strong>Единая ответственность</strong> — каждая функция делает одну вещь</li>
+<li><strong>Тестируемость</strong> — можно тестировать каждую функцию отдельно</li>
+<li><strong>Читаемость</strong> — легко понять последовательность операций</li>
+<li><strong>Переиспользование</strong> — функции можно экспортировать</li>
+<li><strong>Обработка ошибок</strong> — систематическая обработка на каждом шаге</li>
+</ol>
+<p><strong>Но есть новая проблема:</strong> Порядок объявления функций <strong>обратный</strong> порядку выполнения!</p>
+<ul>
+<li>Выполнение: readConfig → readDB → queryUsers → fetchDetails → generateReport → saveReport</li>
+<li>Объявление: saveReport → generateReport → fetchDetails → queryUsers → readDB → readConfig</li>
+</ul>
+<p>Это неудобно для чтения и понимания логики.</p>
+<h3 id="решение-2-восстановление-логического-порядка"><a class="header" href="#решение-2-восстановление-логического-порядка">Решение 2: Восстановление логического порядка</a></h3>
+<p>Чтобы код читался в естественном порядке выполнения, используем объект или класс.</p>
+<h4 id="вариант-a-использование-объекта"><a class="header" href="#вариант-a-использование-объекта">Вариант A: Использование объекта</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Все шаги в логическом порядке выполнения
+const pipeline = {};
+
+// Шаг 1: Чтение конфигурации
+pipeline.start = function() {
+  console.log('[STEP 1] Чтение конфигурации');
+  fs.readFile('./config.json', 'utf8', pipeline.processConfig);
+};
+
+// Шаг 2: Обработка конфигурации
+pipeline.processConfig = function(error, config) {
+  if (error) {
+    console.error('[STEP 2] Ошибка:', error.message);
+    pipeline.handleError(error);
+    return;
+  }
+
+  try {
+    const parsedConfig = JSON.parse(config);
+    console.log('[STEP 2] Конфиг прочитан');
+
+    fs.readFile(parsedConfig.database, 'utf8', pipeline.queryDatabase);
+  } catch (parseError) {
+    pipeline.handleError(parseError);
+  }
+};
+
+// Шаг 3: Запрос к базе данных
+pipeline.queryDatabase = function(error, dbConfig) {
+  if (error) {
+    console.error('[STEP 3] Ошибка:', error.message);
+    pipeline.handleError(error);
+    return;
+  }
+
+  console.log('[STEP 3] Выполнение запроса к БД');
+
+  // Имитация запроса
+  setTimeout(() =&gt; {
+    const data = [{ id: 1, value: 'data' }];
+    pipeline.callAPI(null, data);
+  }, 100);
+};
+
+// Шаг 4: Вызов API
+pipeline.callAPI = function(error, dbData) {
+  if (error) {
+    console.error('[STEP 4] Ошибка:', error.message);
+    pipeline.handleError(error);
+    return;
+  }
+
+  console.log('[STEP 4] Вызов внешнего API');
+
+  // Имитация API запроса
+  setTimeout(() =&gt; {
+    const enrichedData = { ...dbData[0], enriched: true };
+    pipeline.generateReport(null, enrichedData);
+  }, 100);
+};
+
+// Шаг 5: Генерация отчета
+pipeline.generateReport = function(error, apiData) {
+  if (error) {
+    console.error('[STEP 5] Ошибка:', error.message);
+    pipeline.handleError(error);
+    return;
+  }
+
+  console.log('[STEP 5] Генерация отчета');
+
+  const report = {
+    timestamp: new Date().toISOString(),
+    data: apiData
+  };
+
+  pipeline.checkSuccess(null, report);
+};
+
+// Шаг 6: Проверка успешности
+pipeline.checkSuccess = function(error, report) {
+  if (error) {
+    console.error('[STEP 6] Ошибка:', error.message);
+    pipeline.handleError(error);
+    return;
+  }
+
+  console.log('[STEP 6] Успех!');
+  console.log('Итоговый отчет:', report);
+};
+
+// Обработчик ошибок
+pipeline.handleError = function(error) {
+  console.error('[FATAL] Критическая ошибка:', error.message);
+  process.exit(1);
+};
+
+// Запуск pipeline
+pipeline.start();
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Шаги объявлены в порядке выполнения</li>
+<li>Код читается сверху вниз</li>
+<li>Логика понятна и последовательна</li>
+<li>Можно добавлять новые шаги без путаницы</li>
+</ul>
+<h4 id="вариант-b-использование-класса"><a class="header" href="#вариант-b-использование-класса">Вариант B: Использование класса</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Класс инкапсулирует всю логику обработки
+class DataProcessor {
+  constructor(configPath) {
+    this.configPath = configPath;
+    this.config = null;
+    this.dbData = null;
+    this.apiData = null;
+  }
+
+  // Точка входа
+  start() {
+    console.log('[START] Начало обработки');
+    this.readConfig();
+  }
+
+  // Шаг 1: Чтение конфигурации
+  readConfig() {
+    console.log('[STEP 1] Чтение конфигурации');
+    fs.readFile(this.configPath, 'utf8', this.handleConfig.bind(this));
+  }
+
+  // Шаг 2: Обработка конфигурации
+  handleConfig(error, data) {
+    if (error) {
+      return this.handleError('Reading config', error);
+    }
+
+    try {
+      this.config = JSON.parse(data);
+      console.log('[STEP 2] Конфиг загружен:', this.config);
+      this.queryDatabase();
+    } catch (parseError) {
+      this.handleError('Parsing config', parseError);
+    }
+  }
+
+  // Шаг 3: Запрос к БД
+  queryDatabase() {
+    console.log('[STEP 3] Запрос к БД');
+
+    // Имитация асинхронного запроса
+    setTimeout(() =&gt; {
+      this.dbData = [
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' }
+      ];
+      this.callAPI();
+    }, 100);
+  }
+
+  // Шаг 4: Вызов API
+  callAPI() {
+    console.log('[STEP 4] Вызов API');
+
+    // Имитация API запроса
+    setTimeout(() =&gt; {
+      this.apiData = {
+        items: this.dbData,
+        metadata: { source: 'API', version: '1.0' }
+      };
+      this.generateReport();
+    }, 100);
+  }
+
+  // Шаг 5: Генерация отчета
+  generateReport() {
+    console.log('[STEP 5] Генерация отчета');
+
+    const report = {
+      timestamp: new Date().toISOString(),
+      config: this.config,
+      data: this.apiData,
+      status: 'completed'
+    };
+
+    this.saveReport(report);
+  }
+
+  // Шаг 6: Сохранение отчета
+  saveReport(report) {
+    console.log('[STEP 6] Сохранение отчета');
+
+    const reportPath = './report.json';
+    const reportData = JSON.stringify(report, null, 2);
+
+    fs.writeFile(reportPath, reportData, 'utf8', (error) =&gt; {
+      if (error) {
+        return this.handleError('Saving report', error);
+      }
+
+      this.finish(report);
+    });
+  }
+
+  // Завершение
+  finish(report) {
+    console.log('[SUCCESS] Обработка завершена успешно!');
+    console.log('Отчет сохранен, количество элементов:', report.data.items.length);
+  }
+
+  // Обработка ошибок
+  handleError(step, error) {
+    console.error(`[ERROR] Ошибка на шаге "${step}":`, error.message);
+    process.exit(1);
+  }
+}
+
+// Использование
+const processor = new DataProcessor('./config.json');
+processor.start();
+</code></pre>
+<p><strong>Преимущества класса:</strong></p>
+<ol>
+<li><strong>Инкапсуляция состояния</strong> — храним config, dbData, apiData в свойствах</li>
+<li><strong>Логический порядок</strong> — методы объявлены в порядке выполнения</li>
+<li><strong>Автоматическая видимость</strong> — методы видят друг друга через <code>this</code></li>
+<li><strong>Переиспользование</strong> — можно создать несколько экземпляров</li>
+<li><strong>Расширяемость</strong> — легко добавлять новые методы</li>
+<li><strong>Тестируемость</strong> — можно тестировать каждый метод отдельно</li>
+</ol>
+<p><strong>Важное замечание:</strong> При использовании методов класса как колбеков нужно не забывать про <code>bind(this)</code>, иначе контекст будет потерян.</p>
+<hr>
+<h2 id="8-систематическая-обработка-ошибок"><a class="header" href="#8-систематическая-обработка-ошибок">8. Систематическая обработка ошибок</a></h2>
+<h3 id="золотое-правило"><a class="header" href="#золотое-правило">Золотое правило</a></h3>
+<p><strong>НИКОГДА не игнорируйте ошибки в колбеках!</strong></p>
+<p>Ошибка — это не исключительная ситуация, а нормальная часть работы программы. Задача программиста — предусмотреть и обработать все возможные ошибки.</p>
+<h3 id="антипаттерны-обработки-ошибок"><a class="header" href="#антипаттерны-обработки-ошибок">Антипаттерны обработки ошибок</a></h3>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// ПЛОХО #1: Полное игнорирование ошибки
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  // Ошибка не проверяется - ОПАСНО!
+  console.log(data); // Может быть undefined
+  const parsed = JSON.parse(data); // Может упасть
+});
+
+// ПЛОХО #2: Проверка без действия
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  if (error) {
+    // Ничего не делаем - ошибка проглатывается
+  }
+  console.log(data); // Все равно используем data
+});
+
+// ПЛОХО #3: Только логирование без прекращения
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  if (error) {
+    console.error(error);
+    // Забыли return - продолжаем выполнение
+  }
+  const result = data.toUpperCase(); // Упадет, если data undefined
+  console.log(result);
+});
+
+// ХОРОШО: Полная обработка
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  if (error) {
+    console.error('Ошибка чтения файла:', error.message);
+    // Логируем в систему логирования
+    logger.error('File read failed', { file: './file.txt', error });
+    // Передаем ошибку дальше или прекращаем выполнение
+    return; // ОБЯЗАТЕЛЬНО!
+  }
+
+  // Безопасно используем data
+  console.log('Содержимое:', data);
+});
+</code></pre>
+<h3 id="паттерны-обработки-ошибок"><a class="header" href="#паттерны-обработки-ошибок">Паттерны обработки ошибок</a></h3>
+<h4 id="паттерн-1-логирование-и-прокидывание"><a class="header" href="#паттерн-1-логирование-и-прокидывание">Паттерн 1: Логирование и прокидывание</a></h4>
+<pre><code class="language-javascript">const fs = require('fs');
+
+function readConfigFile(callback) {
+  fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
+    if (error) {
+      // Логируем для отладки
+      console.error('[readConfigFile] Ошибка:', error.message);
+
+      // Передаем ошибку дальше по цепочке
+      callback(error);
+      return;
+    }
+
+    try {
+      const config = JSON.parse(data);
+      callback(null, config);
+    } catch (parseError) {
+      console.error('[readConfigFile] Ошибка парсинга:', parseError.message);
+      callback(parseError);
+    }
+  });
+}
+
+// Использование
+readConfigFile((error, config) =&gt; {
+  if (error) {
+    console.error('Не удалось загрузить конфиг');
+    process.exit(1);
+    return;
+  }
+
+  console.log('Конфиг загружен:', config);
+});
+</code></pre>
+<p><strong>Когда использовать:</strong> В промежуточных функциях, где ошибка должна всплыть на уровень выше.</p>
+<h4 id="паттерн-2-обогащение-ошибки-контекстом"><a class="header" href="#паттерн-2-обогащение-ошибки-контекстом">Паттерн 2: Обогащение ошибки контекстом</a></h4>
+<pre><code class="language-javascript">function fetchUserData(userId, callback) {
+  const filename = `./data/users/${userId}.json`;
+
+  fs.readFile(filename, 'utf8', (error, data) =&gt; {
+    if (error) {
+      // Создаем новую ошибку с дополнительной информацией
+      const enrichedError = new Error(
+        `Failed to load user ${userId}: ${error.message}`
+      );
+
+      // Сохраняем оригинальную ошибку
+      enrichedError.originalError = error;
+      enrichedError.userId = userId;
+      enrichedError.code = error.code; // ENOENT, EACCES, etc.
+
+      callback(enrichedError);
+      return;
+    }
+
+    try {
+      const userData = JSON.parse(data);
+      callback(null, userData);
+    } catch (parseError) {
+      const enrichedError = new Error(
+        `Invalid JSON for user ${userId}: ${parseError.message}`
+      );
+      enrichedError.originalError = parseError;
+      enrichedError.userId = userId;
+      enrichedError.rawData = data; // Для отладки
+
+      callback(enrichedError);
+    }
+  });
+}
+
+// Использование
+fetchUserData(42, (error, user) =&gt; {
+  if (error) {
+    console.error('Error:', error.message);
+    console.error('User ID:', error.userId);
+    console.error('Error code:', error.code);
+    console.error('Original error:', error.originalError);
+    return;
+  }
+
+  console.log('User loaded:', user);
+});
+</code></pre>
+<p><strong>Когда использовать:</strong> Когда нужно добавить контекст выполнения для упрощения отладки.</p>
+<h4 id="паттерн-3-fallback-значения"><a class="header" href="#паттерн-3-fallback-значения">Паттерн 3: Fallback значения</a></h4>
+<pre><code class="language-javascript">function loadConfigWithDefaults(callback) {
+  const defaultConfig = {
+    port: 3000,
+    host: 'localhost',
+    env: 'development',
+    debug: false
+  };
+
+  fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
+    if (error) {
+      // Если файл не найден - используем значения по умолчанию
+      if (error.code === 'ENOENT') {
+        console.warn('Config file not found, using defaults');
+        callback(null, defaultConfig);
+        return;
+      }
+
+      // Для других ошибок - прокидываем дальше
+      callback(error);
+      return;
+    }
+
+    try {
+      const userConfig = JSON.parse(data);
+
+      // Объединяем с дефолтными значениями
+      const config = { ...defaultConfig, ...userConfig };
+
+      callback(null, config);
+    } catch (parseError) {
+      console.warn('Invalid config JSON, using defaults');
+      callback(null, defaultConfig);
+    }
+  });
+}
+</code></pre>
+<p><strong>Когда использовать:</strong> Для опциональных конфигураций, где можно использовать разумные значения по умолчанию.</p>
+<h4 id="паттерн-4-retry-логика"><a class="header" href="#паттерн-4-retry-логика">Паттерн 4: Retry логика</a></h4>
+<pre><code class="language-javascript">function readFileWithRetry(filepath, options, callback) {
+  const maxRetries = options.maxRetries || 3;
+  const retryDelay = options.retryDelay || 1000;
+  let attempts = 0;
+
+  function attempt() {
+    attempts++;
+    console.log(`Attempt ${attempts}/${maxRetries}`);
+
+    fs.readFile(filepath, 'utf8', (error, data) =&gt; {
+      if (error) {
+        // Если еще есть попытки и ошибка временная
+        if (attempts &lt; maxRetries &amp;&amp; isRetryableError(error)) {
+          console.warn(`Retry in ${retryDelay}ms...`);
+          setTimeout(attempt, retryDelay);
+          return;
+        }
+
+        // Исчерпали попытки или ошибка не временная
+        const finalError = new Error(
+          `Failed after ${attempts} attempts: ${error.message}`
+        );
+        finalError.attempts = attempts;
+        finalError.originalError = error;
+
+        callback(finalError);
+        return;
+      }
+
+      // Успех
+      callback(null, data);
+    });
+  }
+
+  function isRetryableError(error) {
+    // Повторяем только для временных ошибок
+    return error.code === 'EBUSY' ||
+           error.code === 'EAGAIN' ||
+           error.code === 'ETIMEDOUT';
+  }
+
+  attempt();
+}
+
+// Использование
+readFileWithRetry('./file.txt', { maxRetries: 5, retryDelay: 2000 }, (error, data) =&gt; {
+  if (error) {
+    console.error('Failed after retries:', error.message);
+    console.error('Total attempts:', error.attempts);
+    return;
+  }
+
+  console.log('File loaded:', data);
+});
+</code></pre>
+<p><strong>Когда использовать:</strong> Для операций, которые могут временно не удаваться (сетевые запросы, занятые файлы).</p>
+<h4 id="паттерн-5-централизованная-обработка-ошибок"><a class="header" href="#паттерн-5-централизованная-обработка-ошибок">Паттерн 5: Централизованная обработка ошибок</a></h4>
+<pre><code class="language-javascript">// Централизованный обработчик ошибок
+class ErrorHandler {
+  constructor(logger) {
+    this.logger = logger;
+  }
+
+  handle(context, error, callback) {
+    // Логирование
+    this.logger.error(`[${context}] Error occurred`, {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+
+    // Определяем тип ошибки и стратегию обработки
+    if (error.code === 'ENOENT') {
+      this.logger.warn(`[${context}] File not found - using fallback`);
+      // Можем вернуть fallback значение
+      callback(null, this.getFallbackValue(context));
+      return;
+    }
+
+    if (error.code === 'EACCES') {
+      this.logger.error(`[${context}] Permission denied - critical error`);
+      // Критическая ошибка - останавливаем процесс
+      process.exit(1);
+    }
+
+    // По умолчанию - прокидываем ошибку
+    callback(error);
+  }
+
+  getFallbackValue(context) {
+    // Fallback значения для разных контекстов
+    const fallbacks = {
+      'config': { port: 3000, host: 'localhost' },
+      'users': [],
+      'settings': {}
+    };
+
+    return fallbacks[context] || null;
+  }
+}
+
+// Использование
+const errorHandler = new ErrorHandler(console);
+
+function readConfig(callback) {
+  fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
+    if (error) {
+      errorHandler.handle('config', error, callback);
+      return;
+    }
+
+    try {
+      const config = JSON.parse(data);
+      callback(null, config);
+    } catch (parseError) {
+      errorHandler.handle('config', parseError, callback);
+    }
+  });
+}
+</code></pre>
+<h3 id="комплексный-пример-с-полной-обработкой-ошибок"><a class="header" href="#комплексный-пример-с-полной-обработкой-ошибок">Комплексный пример с полной обработкой ошибок</a></h3>
+<pre><code class="language-javascript">const fs = require('fs');
+
+// Полная цепочка с обработкой ошибок на каждом шаге
+
+// Финальный обработчик
+function handleCompletion(error) {
+  if (error) {
+    console.error('\n=== OPERATION FAILED ===');
+    console.error('Error:', error.message);
+    console.error('Code:', error.code);
+    console.error('========================\n');
+    process.exit(1);
+    return;
+  }
+
+  console.log('\n=== OPERATION SUCCEEDED ===');
+  console.log('All steps completed successfully');
+  console.log('===========================\n');
+  process.exit(0);
+}
+
+// Шаг 4: Сохранение отчета
+function saveReport(error, report) {
+  if (error) {
+    console.error('[Step 4] Report generation failed:', error.message);
+    handleCompletion(error);
+    return;
+  }
+
+  console.log('[Step 4] Saving report...');
+
+  fs.writeFile('./output/report.json', JSON.stringify(report, null, 2), 'utf8', (writeError) =&gt; {
+    if (writeError) {
+      const enrichedError = new Error(`Failed to save report: ${writeError.message}`);
+      enrichedError.originalError = writeError;
+      handleCompletion(enrichedError);
+      return;
+    }
+
+    console.log('[Step 4] Report saved successfully');
+    handleCompletion(null);
+  });
+}
+
+// Шаг 3: Генерация отчета
+function generateReport(error, apiData) {
+  if (error) {
+    console.error('[Step 3] API call failed:', error.message);
+    saveReport(error);
+    return;
+  }
+
+  console.log('[Step 3] Generating report...');
+
+  try {
+    const report = {
+      timestamp: new Date().toISOString(),
+      data: apiData,
+      summary: `Processed ${apiData.length} records`,
+      status: 'completed'
+    };
+
+    console.log('[Step 3] Report generated');
+    saveReport(null, report);
+  } catch (err) {
+    const enrichedError = new Error(`Report generation error: ${err.message}`);
+    enrichedError.originalError = err;
+    saveReport(enrichedError);
+  }
+}
+
+// Шаг 2: Вызов API
+function callAPI(error, dbData) {
+  if (error) {
+    console.error('[Step 2] Database query failed:', error.message);
+    generateReport(error);
+    return;
+  }
+
+  console.log('[Step 2] Calling external API...');
+
+  // Имитация API вызова с возможностью ошибки
+  setTimeout(() =&gt; {
+    const success = Math.random() &gt; 0.2; // 80% успеха
+
+    if (!success) {
+      const apiError = new Error('API request timeout');
+      apiError.code = 'ETIMEDOUT';
+      generateReport(apiError);
+      return;
+    }
+
+    const enrichedData = dbData.map(item =&gt; ({
+      ...item,
+      enriched: true,
+      apiTimestamp: Date.now()
+    }));
+
+    console.log('[Step 2] API call successful');
+    generateReport(null, enrichedData);
+  }, 500);
+}
+
+// Шаг 1: Запрос к БД
+function queryDatabase(error, config) {
+  if (error) {
+    console.error('[Step 1] Config loading failed:', error.message);
+    callAPI(error);
+    return;
+  }
+
+  console.log('[Step 1] Querying database...');
+
+  // Имитация запроса к БД
+  setTimeout(() =&gt; {
+    const dbData = [
+      { id: 1, value: 'Record 1' },
+      { id: 2, value: 'Record 2' },
+      { id: 3, value: 'Record 3' }
+    ];
+
+    console.log('[Step 1] Database query successful');
+    callAPI(null, dbData);
+  }, 300);
+}
+
+// Точка входа: Чтение конфигурации
+function startProcess() {
+  console.log('\n=== STARTING PROCESS ===\n');
+  console.log('[Step 0] Loading configuration...');
+
+  fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
+    if (error) {
+      // Обрабатываем разные типы ошибок по-разному
+      if (error.code === 'ENOENT') {
+        console.warn('[Step 0] Config not found, using defaults');
+        const defaultConfig = { database: 'default_db' };
+        queryDatabase(null, defaultConfig);
+        return;
+      }
+
+      const enrichedError = new Error(`Config load error: ${error.message}`);
+      enrichedError.code = error.code;
+      queryDatabase(enrichedError);
+      return;
+    }
+
+    try {
+      const config = JSON.parse(data);
+      console.log('[Step 0] Configuration loaded');
+      queryDatabase(null, config);
+    } catch (parseError) {
+      const enrichedError = new Error(`Config parse error: ${parseError.message}`);
+      queryDatabase(enrichedError);
+    }
+  });
+}
+
+// Запуск
+startProcess();
+</code></pre>
+<p><strong>Ключевые принципы обработки ошибок:</strong></p>
+<ol>
+<li><strong>Проверяйте каждый колбек</strong> — <code>if (error)</code> первым делом</li>
+<li><strong>Всегда используйте <code>return</code></strong> после обработки ошибки</li>
+<li><strong>Пробрасывайте или обрабатывайте</strong> — не проглатывайте ошибки</li>
+<li><strong>Добавляйте контекст</strong> — обогащайте ошибки информацией</li>
+<li><strong>Логируйте системно</strong> — используйте logger, а не только console</li>
+<li><strong>Различайте типы ошибок</strong> — обрабатывайте по-разному</li>
+<li><strong>Используйте try-catch</strong> — для синхронных операций в асинхронном коде</li>
+</ol>
+<hr>
+<h2 id="9-ключевые-выводы-и-best-practices"><a class="header" href="#9-ключевые-выводы-и-best-practices">9. Ключевые выводы и best practices</a></h2>
+<h3 id="контракт-callback-last-error-first"><a class="header" href="#контракт-callback-last-error-first">Контракт Callback-last-error-first</a></h3>
+<p><strong>Резюме:</strong></p>
+<ul>
+<li>Колбек передается <strong>последним</strong> аргументом</li>
+<li>Ошибка передается <strong>первым</strong> аргументом в колбек</li>
+<li>Это стандарт для всей экосистемы Node.js</li>
+<li>Обеспечивает единообразие и предсказуемость API</li>
+</ul>
+<p><strong>Следуйте контракту:</strong></p>
+<pre><code class="language-javascript">// ПРАВИЛЬНО
+function asyncOp(param1, param2, callback) {
+  callback(error, result);
+}
+
+// НЕПРАВИЛЬНО
+function asyncOp(callback, param1, param2) { // колбек не последний
+  callback(result, error); // ошибка не первая
+}
+</code></pre>
+<h3 id="callback-hell--это-миф"><a class="header" href="#callback-hell--это-миф">Callback Hell — это миф</a></h3>
+<p><strong>Важное понимание:</strong></p>
+<p>Callback Hell НЕ является неизбежной проблемой колбеков. Это результат:</p>
+<ul>
+<li>Плохой организации кода</li>
+<li>Неиспользования именованных функций</li>
+<li>Отсутствия декомпозиции</li>
+<li>Нарушения принципа единственной ответственности</li>
+</ul>
+<p><strong>При правильном подходе:</strong></p>
+<ul>
+<li>Код легко читается</li>
+<li>Каждая функция имеет четкую ответственность</li>
+<li>Ошибки обрабатываются систематически</li>
+<li>Код легко тестировать и поддерживать</li>
+</ul>
+<h3 id="именованные-колбеки--обязательная-практика"><a class="header" href="#именованные-колбеки--обязательная-практика">Именованные колбеки — обязательная практика</a></h3>
+<p><strong>Преимущества:</strong></p>
+<ol>
+<li><strong>Читаемость</strong> — код самодокументируется</li>
+<li><strong>Отладка</strong> — понятные stack traces</li>
+<li><strong>Тестируемость</strong> — каждую функцию можно тестировать отдельно</li>
+<li><strong>Переиспользование</strong> — функции можно экспортировать</li>
+<li><strong>Производительность</strong> — движок может лучше оптимизировать</li>
+</ol>
+<pre><code class="language-javascript">// ПЛОХО
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  if (error) return console.error(error);
+  process(data, (err, result) =&gt; {
+    if (err) return console.error(err);
+    save(result, (e) =&gt; {
+      if (e) return console.error(e);
+      console.log('Done');
+    });
+  });
+});
+
+// ХОРОШО
+function handleFileRead(error, data) {
+  if (error) return console.error('Read error:', error);
+  process(data, handleProcess);
+}
+
+function handleProcess(error, result) {
+  if (error) return console.error('Process error:', error);
+  save(result, handleSave);
+}
+
+function handleSave(error) {
+  if (error) return console.error('Save error:', error);
+  console.log('Done');
+}
+
+fs.readFile('./file.txt', 'utf8', handleFileRead);
+</code></pre>
+<h3 id="обработка-ошибок--критически-важна"><a class="header" href="#обработка-ошибок--критически-важна">Обработка ошибок — критически важна</a></h3>
+<p><strong>Золотые правила:</strong></p>
+<ol>
+<li><strong>Никогда не игнорируйте</strong> первый аргумент error-first колбеков</li>
+<li><strong>Всегда проверяйте</strong> ошибку перед использованием результата</li>
+<li><strong>Обязательно используйте return</strong> после обработки ошибки</li>
+<li><strong>Логируйте или пробрасывайте</strong> — не проглатывайте ошибки</li>
+<li><strong>Добавляйте контекст</strong> — обогащайте ошибки для отладки</li>
+</ol>
+<pre><code class="language-javascript">// Правильная обработка
+function operation(callback) {
+  asyncTask((error, data) =&gt; {
+    if (error) {
+      logger.error('Task failed', { error: error.message });
+      callback(error); // Пробрасываем
+      return; // Обязательно!
+    }
+
+    // Безопасно используем data
+    callback(null, processData(data));
+  });
+}
+</code></pre>
+<h3 id="колбеки-как-фундамент-асинхронности"><a class="header" href="#колбеки-как-фундамент-асинхронности">Колбеки как фундамент асинхронности</a></h3>
+<p><strong>Ключевое понимание:</strong></p>
+<p>Колбеки — это <strong>базовый примитив</strong> асинхронности в JavaScript. Все остальные контракты используют колбеки:</p>
+<ul>
+<li><strong>Promises</strong> — используют колбеки в <code>.then()</code> и <code>.catch()</code></li>
+<li><strong>async/await</strong> — синтаксический сахар над промисами</li>
+<li><strong>Observables</strong> — используют колбеки для подписчиков</li>
+<li><strong>Event Emitters</strong> — колбеки как обработчики событий</li>
+<li><strong>Async Iterators</strong> — колбеки в реализации</li>
+</ul>
+<p><strong>Поэтому понимание колбеков критически важно для:</strong></p>
+<ul>
+<li>Работы с любым асинхронным кодом</li>
+<li>Понимания более сложных паттернов</li>
+<li>Отладки и оптимизации</li>
+<li>Создания собственных асинхронных абстракций</li>
+</ul>
+<h3 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h3>
+<h4 id="при-написании-функций-с-колбеками"><a class="header" href="#при-написании-функций-с-колбеками">При написании функций с колбеками:</a></h4>
+<ol>
+<li><strong>Следуйте CLF</strong> — callback-last-error-first</li>
+<li><strong>Документируйте</strong> — особенно структуру ошибок и результатов</li>
+<li><strong>Вызывайте колбек ровно один раз</strong> — избегайте множественных вызовов</li>
+<li><strong>Делайте асинхронность явной</strong> — если может быть async, должно быть всегда async</li>
+<li><strong>Используйте try-catch</strong> — для синхронных операций в асинхронном контексте</li>
+</ol>
+<pre><code class="language-javascript">function goodAsyncFunction(param, callback) {
+  // Валидация
+  if (!param) {
+    process.nextTick(() =&gt; {
+      callback(new Error('param is required'));
+    });
+    return;
+  }
+
+  // Асинхронная операция
+  asyncOperation(param, (error, result) =&gt; {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    // Синхронная обработка в try-catch
+    try {
+      const processed = processResult(result);
+      callback(null, processed);
+    } catch (err) {
+      callback(err);
+    }
+  });
+}
+</code></pre>
+<h4 id="при-использовании-колбеков"><a class="header" href="#при-использовании-колбеков">При использовании колбеков:</a></h4>
+<ol>
+<li><strong>Всегда обрабатывайте ошибки</strong> — первым делом проверяйте <code>error</code></li>
+<li><strong>Используйте именованные функции</strong> — для сложных цепочек</li>
+<li><strong>Не создавайте глубокие вложенности</strong> — декомпозируйте код</li>
+<li><strong>Группируйте связанные операции</strong> — в классы или модули</li>
+<li><strong>Добавляйте логирование</strong> — для отладки асинхронных операций</li>
+</ol>
+<h4 id="при-рефакторинге"><a class="header" href="#при-рефакторинге">При рефакторинге:</a></h4>
+<ol>
+<li><strong>Начните с именования</strong> — дайте имена анонимным функциям</li>
+<li><strong>Извлеките логику</strong> — каждая функция = одна ответственность</li>
+<li><strong>Добавьте обработку ошибок</strong> — на каждый уровень</li>
+<li><strong>Используйте классы/объекты</strong> — для восстановления порядка</li>
+<li><strong>Рассмотрите промисы</strong> — для нового кода</li>
+</ol>
+<hr>
+<h2 id="10-дополнительные-материалы-и-связь-с-другими-паттернами"><a class="header" href="#10-дополнительные-материалы-и-связь-с-другими-паттернами">10. Дополнительные материалы и связь с другими паттернами</a></h2>
+<h3 id="эволюция-асинхронных-паттернов"><a class="header" href="#эволюция-асинхронных-паттернов">Эволюция асинхронных паттернов</a></h3>
+<p>Колбеки — это первый шаг в эволюции асинхронного программирования в JavaScript:</p>
+<pre><code>Callbacks (ES5)
+    ↓
+Thenable (переходный паттерн)
+    ↓
+Promises (ES6/ES2015)
+    ↓
+async/await (ES2017)
+    ↓
+AsyncIterators (ES2018)
+    ↓
+Top-level await (ES2022)
+</code></pre>
+<p>Каждый следующий паттерн решает проблемы предыдущего, но использует его как основу.</p>
+<h3 id="связь-с-другими-паттернами"><a class="header" href="#связь-с-другими-паттернами">Связь с другими паттернами</a></h3>
+<h4 id="thenable"><a class="header" href="#thenable">Thenable</a></h4>
+<p><strong>Thenable</strong> — предшественник промисов, объект с методом <code>.then()</code>:</p>
+<pre><code class="language-javascript">// Колбек
+function fetchData(callback) {
+  setTimeout(() =&gt; {
+    callback(null, 'data');
+  }, 1000);
+}
+
+// Thenable (упрощенная версия)
+function fetchDataThenable() {
+  return {
+    then(onSuccess, onError) {
+      setTimeout(() =&gt; {
+        onSuccess('data');
+      }, 1000);
+    }
+  };
+}
+
+// Использование
+fetchDataThenable().then(
+  data =&gt; console.log(data),
+  error =&gt; console.error(error)
+);
+</code></pre>
+<h4 id="promise"><a class="header" href="#promise">Promise</a></h4>
+<p><strong>Promise</strong> — стандартизированный способ работы с асинхронностью:</p>
+<pre><code class="language-javascript">// Промисификация callback-функции
+function promisify(fn) {
+  return function(...args) {
+    return new Promise((resolve, reject) =&gt; {
+      fn(...args, (error, result) =&gt; {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  };
+}
+
+// Использование
+const readFilePromise = promisify(fs.readFile);
+
+readFilePromise('./file.txt', 'utf8')
+  .then(data =&gt; console.log(data))
+  .catch(error =&gt; console.error(error));
+</code></pre>
+<h4 id="asyncawait"><a class="header" href="#asyncawait">Async/Await</a></h4>
+<p><strong>Async/await</strong> — синтаксический сахар над промисами:</p>
+<pre><code class="language-javascript">// Callback
+fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
+  if (error) return console.error(error);
+  console.log(data);
+});
+
+// Promise
+readFilePromise('./file.txt', 'utf8')
+  .then(data =&gt; console.log(data))
+  .catch(error =&gt; console.error(error));
+
+// Async/await
+async function readFile() {
+  try {
+    const data = await readFilePromise('./file.txt', 'utf8');
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+</code></pre>
+<h3 id="nodejs-utilpromisify"><a class="header" href="#nodejs-utilpromisify">Node.js util.promisify</a></h3>
+<p>Node.js предоставляет встроенную утилиту для промисификации:</p>
+<pre><code class="language-javascript">const util = require('util');
+const fs = require('fs');
+
+// Промисификация всего модуля
+const readFilePromise = util.promisify(fs.readFile);
+const writeFilePromise = util.promisify(fs.writeFile);
+
+// Использование с async/await
+async function processFile() {
+  try {
+    const data = await readFilePromise('./input.txt', 'utf8');
+    const processed = data.toUpperCase();
+    await writeFilePromise('./output.txt', processed, 'utf8');
+    console.log('File processed');
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+processFile();
+</code></pre>
+<h3 id="для-самостоятельного-изучения"><a class="header" href="#для-самостоятельного-изучения">Для самостоятельного изучения</a></h3>
+<p><strong>Практические задания:</strong></p>
+<ol>
+<li>Напишите 3-4 функции с контрактом CLF для работы с данными</li>
+<li>Создайте цепочку из 5 асинхронных операций с именованными колбеками</li>
+<li>Рефакторите пример callback hell в плоскую структуру</li>
+<li>Реализуйте retry-логику для асинхронной операции</li>
+<li>Создайте универсальный обработчик ошибок для колбеков</li>
+</ol>
+<p><strong>Изучите исходный код:</strong></p>
+<ul>
+<li>Node.js <code>fs</code> module — примеры CLF в действии</li>
+<li>Express.js middleware — использование колбеков для цепочки обработки</li>
+<li>Async.js library — утилиты для работы с колбеками</li>
+</ul>
+<p><strong>Следующие темы:</strong></p>
+<ul>
+<li><strong>Thenable</strong> — переходный паттерн между callbacks и promises</li>
+<li><strong>Promise API</strong> — современный стандарт асинхронности</li>
+<li><strong>Iterator &amp; AsyncIterator</strong> — для работы с последовательностями</li>
+<li><strong>Disposable</strong> — управление ресурсами с автоматическим освобождением</li>
+</ul>
+<hr>
+<h2 id="итоговое-резюме"><a class="header" href="#итоговое-резюме">Итоговое резюме</a></h2>
+<h3 id="что-мы-изучили"><a class="header" href="#что-мы-изучили">Что мы изучили</a></h3>
+<ol>
+<li><strong>Эволюция от sync к async</strong> — как функции превращаются в колбеки</li>
+<li><strong>Контракт CLF</strong> — callback-last-error-first как стандарт Node.js</li>
+<li><strong>Синхронные vs асинхронные колбеки</strong> — важное различие</li>
+<li><strong>Работа с fs модулем</strong> — практические примеры I/O операций</li>
+<li><strong>Именованные колбеки</strong> — решение проблем читаемости и тестируемости</li>
+<li><strong>Адаптация API</strong> — приведение к единому контракту</li>
+<li><strong>Решение callback hell</strong> — через декомпозицию и именование</li>
+<li><strong>Обработка ошибок</strong> — систематический подход на каждом уровне</li>
+</ol>
+<h3 id="ключевые-takeaways"><a class="header" href="#ключевые-takeaways">Ключевые takeaways</a></h3>
+<ul>
+<li><strong>Колбеки — фундамент</strong> асинхронности в JavaScript</li>
+<li><strong>CLF контракт</strong> обеспечивает единообразие API</li>
+<li><strong>Callback hell — миф</strong> при правильной организации кода</li>
+<li><strong>Именованные функции</strong> критически важны для качества кода</li>
+<li><strong>Обработка ошибок</strong> должна быть на каждом уровне</li>
+<li><strong>Все асинхронные паттерны</strong> используют колбеки как основу</li>
+</ul>
+<h3 id="что-дальше"><a class="header" href="#что-дальше">Что дальше</a></h3>
+<p>Колбеки — это база. Понимая их, вы готовы к изучению:</p>
+<ul>
+<li>Промисов и их комбинаторов</li>
+<li>Async/await синтаксиса</li>
+<li>Асинхронных итераторов</li>
+<li>Event-driven архитектуры</li>
+<li>Reactive programming с Observables</li>
+</ul>
+<hr>
+<p><strong>Автор лекции:</strong> Тимур Шемсединов
+<strong>Курс:</strong> Асинхронное программирование в Node.js
+<strong>Неделя:</strong> 2 - Native features in language and platforms
+<strong>Ссылка на видео:</strong> https://youtu.be/vcOGCWL-eZc</p>
+<hr>
+<p><strong>Примечание:</strong> Все примеры кода доступны в репозитории курса. Практикуйтесь, экспериментируйте и не бойтесь колбеков — они ваши друзья в асинхронном программировании!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week2/Thenable-контракт-конспект.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week2/Thenable-контракт-конспект.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

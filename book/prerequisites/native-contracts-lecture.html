@@ -1,0 +1,788 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>💡JavaScript Native Primitives: Callable, Thenable/Promise, Iterable, Observable, Streams... - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="javascript-native-primitives"><a class="header" href="#javascript-native-primitives">JavaScript Native Primitives</a></h1>
+<h2 id="встроенные-контракты-javascript"><a class="header" href="#встроенные-контракты-javascript">Встроенные контракты JavaScript</a></h2>
+<h3 id="результаты-опроса-понимания-контрактов"><a class="header" href="#результаты-опроса-понимания-контрактов">Результаты опроса понимания контрактов</a></h3>
+<ul>
+<li><strong>Callable</strong> - 43% понимают</li>
+<li><strong>Thenable</strong> - 60% понимают</li>
+<li><strong>Promise</strong> - 91% понимают (это понятно)</li>
+<li><strong>Date-able</strong> - 70% понимают</li>
+<li><strong>Async Iterator</strong> - 52% понимают</li>
+<li><strong>Array-like</strong> - примерно 45%</li>
+<li><strong>Observable</strong> - примерно 45%</li>
+<li><strong>Stream</strong> - примерно 45%</li>
+<li><strong>Transferable</strong> - 8% понимают (наиболее неизвестная штука)</li>
+<li><strong>Callback (error-first)</strong> - 52% понимают</li>
+</ul>
+<p>Практически всё, кроме callable и transferable, на слуху. Но нужны примеры и определения. Как для всех паттернов теперь есть индекс с определениями, такие же индексы появятся для контрактов асинхронного программирования и встроенных контрактов JavaScript.</p>
+<hr>
+<h2 id="что-такое-callable-вызываемое"><a class="header" href="#что-такое-callable-вызываемое">Что такое Callable (вызываемое)</a></h2>
+<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<p><strong>Callable</strong> - это всё, что может быть вызвано как функция. Это контракт, который немножечко сложнее, чем может показаться. Слово “callable” очень редко используется в мире JavaScript, хотя это фундаментальное понятие.</p>
+<h3 id="что-может-быть-callable"><a class="header" href="#что-может-быть-callable">Что может быть callable?</a></h3>
+<p>Вызвано может быть не только функция! Все, что можно вызвать как функцию - это callable:</p>
+<ol>
+<li><strong>Обычная функция</strong></li>
+<li><strong>Объект через Proxy</strong> с ловушкой <code>apply</code></li>
+</ol>
+<h3 id="особенность-callable"><a class="header" href="#особенность-callable">Особенность callable</a></h3>
+<p>Это единственная штука, которую невозможно объявить у объекта напрямую. Мы не можем переопределить метод <code>call</code> у объекта в JavaScript. Но если мы унаследуемся от класса <code>Function</code>, экземпляр этого класса будет callable.</p>
+<h3 id="примеры-кода"><a class="header" href="#примеры-кода">Примеры кода</a></h3>
+<h4 id="пример-1-обычная-функция"><a class="header" href="#пример-1-обычная-функция">Пример 1: Обычная функция</a></h4>
+<pre><code class="language-javascript">// Just function
+const callable = (...pars) =&gt; {
+  const { length } = pars;
+  return length;
+};
+</code></pre>
+<h4 id="пример-2-built-in-javascript-proxy"><a class="header" href="#пример-2-built-in-javascript-proxy">Пример 2: Built-in JavaScript Proxy</a></h4>
+<pre><code class="language-javascript">const proxy = new Proxy(callable, {
+  apply: (target, context, args) =&gt; {
+    console.log('call', target.name, context, args); // "call" "callable" undefined // [object Array] (3) [1,2,3]
+    const res = target(...args);
+    console.log('return', res); // "return" 3
+    return res;
+  },
+});
+
+const argCount = proxy(1, 2, 3);
+console.log({ argCount }); // { "argCount": 3 }
+</code></pre>
+<h3 id="важные-моменты-про-proxyapply"><a class="header" href="#важные-моменты-про-proxyapply">Важные моменты про Proxy.apply</a></h3>
+<ul>
+<li><strong>target</strong> - оригинальная функция</li>
+<li><strong>context</strong> - контекст вызова</li>
+<li><strong>args</strong> - массив аргументов (это именно массив, а не array-like)</li>
+</ul>
+<p>Перехват <code>apply</code> - это единственный способ сделать обычный объект callable без наследования от <code>Function</code>.</p>
+<hr>
+<h2 id="thenable-обещаемое"><a class="header" href="#thenable-обещаемое">Thenable (обещаемое)</a></h2>
+<h3 id="определение-1"><a class="header" href="#определение-1">Определение</a></h3>
+<p><strong>Thenable</strong> - это объект, у которого есть метод <code>then</code>. На базе этого контракта разработан Promise и совместимые с Promise конструкции, которые умеют взаимодействовать с async/await.</p>
+<h3 id="структура-thenable"><a class="header" href="#структура-thenable">Структура thenable</a></h3>
+<pre><code class="language-javascript">const thenable = {
+  then(onFulfilled, onRejected) {
+    // Логика выполнения
+    // onFulfilled вызывается при успехе
+    // onRejected вызывается при ошибке
+  }
+};
+</code></pre>
+<h3 id="примеры-кода-1"><a class="header" href="#примеры-кода-1">Примеры кода</a></h3>
+<h4 id="пример-thenable"><a class="header" href="#пример-thenable">Пример: Thenable</a></h4>
+<pre><code class="language-javascript">const numbers = {
+  then(onFulfilled, onRejected) {
+    console.log({ onFulfilled, onRejected }); // { "onFulfilled": function () { [native code] }, "onRejected": undefined  }
+    const array = [1, 2, 3];
+    onFulfilled(array); // [1,2,3]
+    return numbers;
+  },
+};
+
+const main = async () =&gt; {
+  numbers.then(console.log); 
+  const res = await numbers;
+  console.log({ res });  // { "res": [ 1, 2, 3 ]  }
+};
+
+main();
+</code></pre>
+<h3 id="связь-с-promise"><a class="header" href="#связь-с-promise">Связь с Promise</a></h3>
+<p>Promise - это стандартная реализация thenable контракта с дополнительными методами (<code>catch</code>, <code>finally</code>) и гарантиями выполнения.</p>
+<hr>
+<h2 id="iterable-перебираемое"><a class="header" href="#iterable-перебираемое">Iterable (перебираемое)</a></h2>
+<h3 id="определение-2"><a class="header" href="#определение-2">Определение</a></h3>
+<p><strong>Iterable</strong> - это объект, который можно перебрать в цикле <code>for...of</code>. Объект становится iterable, когда реализует метод <code>[Symbol.iterator]()</code>, возвращающий iterator.</p>
+<h3 id="структура-iterable"><a class="header" href="#структура-iterable">Структура iterable</a></h3>
+<pre><code class="language-javascript">const iterable = {
+  [Symbol.iterator]() {
+    // Возвращает iterator с методом next()
+    return {
+      next() {
+        return {
+          value: /* значение */,
+          done: /* true/false */
+        };
+      }
+    };
+  }
+};
+</code></pre>
+<h3 id="примеры-кода-2"><a class="header" href="#примеры-кода-2">Примеры кода</a></h3>
+<h4 id="пример-1-простой-iterable"><a class="header" href="#пример-1-простой-iterable">Пример 1: Простой iterable</a></h4>
+<pre><code class="language-javascript">// Простой iterable объект
+const range = (start, end) =&gt; ({
+  [Symbol.iterator]() {
+    let current = start;
+    return {
+      next() {
+        if (current &lt;= end) {
+          return { value: current++, done: false };
+        }
+        return { done: true };
+      }
+    };
+  }
+});
+
+// Использование
+for (const num of range(1, 5)) {
+  console.log(num); // 1, 2, 3, 4, 5
+}
+</code></pre>
+<h4 id="пример-2-iterable-коллекция"><a class="header" href="#пример-2-iterable-коллекция">Пример 2: Iterable коллекция</a></h4>
+<pre><code class="language-javascript">// Iterable коллекция
+class Collection {
+  constructor() {
+    this.items = [];
+  }
+
+  add(item) {
+    this.items.push(item);
+  }
+
+  [Symbol.iterator]() {
+    let index = 0;
+    const items = this.items;
+    
+    return {
+      next() {
+        if (index &lt; items.length) {
+          return { value: items[index++], done: false };
+        }
+        return { done: true };
+      }
+    };
+  }
+}
+
+// Использование
+const collection = new Collection();
+collection.add('apple');
+collection.add('banana');
+collection.add('orange');
+
+for (const item of collection) {
+  console.log(item);
+}
+// apple
+// banana
+// orange
+</code></pre>
+<h4 id="пример-3-iterable"><a class="header" href="#пример-3-iterable">Пример 3: Iterable</a></h4>
+<pre><code class="language-javascript">const DONE = { done: true, value: undefined };
+
+const iterable = {
+  [Symbol.iterator]() {
+    let i = 0;
+    const iterator = {
+      next() {
+        return {
+          value: i++,
+          done: i &gt; 3,
+        };
+      },
+
+      throw(error) {
+        console.log('throws:', error.message);
+        return DONE;
+      },
+
+      return(value) {
+        console.log('returns', value);
+        return DONE;
+      },
+    };
+    return iterator;
+  },
+};
+
+const fn = () =&gt; {
+  for (const value of iterable) {
+    console.log({ value }); // { "value": 0 }
+    //throw new Error('Hello');
+    //return;
+    break;
+  }
+};
+
+fn();
+</code></pre>
+<hr>
+<h2 id="async-iterator-асинхронный-итератор"><a class="header" href="#async-iterator-асинхронный-итератор">Async Iterator (асинхронный итератор)</a></h2>
+<h3 id="определение-3"><a class="header" href="#определение-3">Определение</a></h3>
+<p><strong>Async Iterator</strong> - это итератор, который работает с асинхронными данными. Реализует метод <code>[Symbol.asyncIterator]()</code> и возвращает promises из метода <code>next()</code>.</p>
+<h3 id="структура-async-iterator"><a class="header" href="#структура-async-iterator">Структура async iterator</a></h3>
+<pre><code class="language-javascript">const asyncIterable = {
+  [Symbol.asyncIterator]() {
+    return {
+      async next() {
+        return {
+          value: /* значение */,
+          done: /* true/false */
+        };
+      }
+    };
+  }
+};
+</code></pre>
+<h3 id="примеры-кода-3"><a class="header" href="#примеры-кода-3">Примеры кода</a></h3>
+<h4 id="пример"><a class="header" href="#пример">Пример:</a></h4>
+<pre><code class="language-javascript">const DONE = { done: true, value: undefined };
+
+const iterable = {
+  [Symbol.asyncIterator]() {
+    let i = 0;
+    const iterator = {
+      async next() {
+        return {
+          value: i++,
+          done: i &gt; 3,
+        };
+      },
+
+      async throw(error) {
+        console.log('throws:', error.message);
+        return DONE;
+      },
+
+      async return(value) {
+        console.log('returns', value); // "returns" undefined
+        return DONE;
+      },
+    };
+    return iterator;
+  },
+};
+
+const fn = async () =&gt; {
+  for await (const value of iterable) {
+    console.log({ value }); // { "value": 0 }
+    throw new Error('Hello');
+    //return;
+    //break;
+  }
+};
+
+fn();
+</code></pre>
+<hr>
+<h2 id="array-like-псевдомассив"><a class="header" href="#array-like-псевдомассив">Array-like (псевдомассив)</a></h2>
+<h3 id="определение-4"><a class="header" href="#определение-4">Определение</a></h3>
+<p><strong>Array-like</strong> - это объект, который выглядит как массив: имеет числовые индексы и свойство <code>length</code>, но не является настоящим массивом и не имеет методов Array.prototype.</p>
+<h3 id="структура-array-like"><a class="header" href="#структура-array-like">Структура array-like</a></h3>
+<pre><code class="language-javascript">const arrayLike = {
+  0: 'first',
+  1: 'second',
+  2: 'third',
+  length: 3
+};
+</code></pre>
+<h3 id="примеры-кода-4"><a class="header" href="#примеры-кода-4">Примеры кода</a></h3>
+<h4 id="пример-1-создание-array-like-объекта"><a class="header" href="#пример-1-создание-array-like-объекта">Пример 1: Создание array-like объекта</a></h4>
+<pre><code class="language-javascript">// Простой array-like объект
+const createArrayLike = (...items) =&gt; {
+  const obj = { length: items.length };
+  items.forEach((item, index) =&gt; {
+    obj[index] = item;
+  });
+  return obj;
+};
+
+const arrayLike = createArrayLike('a', 'b', 'c');
+console.log(arrayLike); // { 0: 'a', 1: 'b', 2: 'c', length: 3 }
+console.log(arrayLike[1]); // 'b'
+console.log(arrayLike.length); // 3
+</code></pre>
+<h4 id="пример-2-преобразование-в-настоящий-массив"><a class="header" href="#пример-2-преобразование-в-настоящий-массив">Пример 2: Преобразование в настоящий массив</a></h4>
+<pre><code class="language-javascript">// Преобразование array-like в массив
+const arrayLike = {
+  0: 10,
+  1: 20,
+  2: 30,
+  length: 3
+};
+
+// Способ 1: Array.from()
+const arr1 = Array.from(arrayLike);
+console.log(arr1); // [10, 20, 30]
+
+// Способ 2: Spread operator
+const arr2 = [...arrayLike]; // Не работает для array-like без итератора
+
+// Способ 3: Array.prototype.slice
+const arr3 = Array.prototype.slice.call(arrayLike);
+console.log(arr3); // [10, 20, 30]
+</code></pre>
+<h4 id="пример-3-классический-array-like-на-классах"><a class="header" href="#пример-3-классический-array-like-на-классах">Пример 3: Классический array-like на классах</a></h4>
+<pre><code class="language-javascript">// Class
+
+class ArrayLike {
+  constructor(...items) {
+    for (let i = 0; i &lt; items.length; i++) {
+      this[i] = items[i];
+    }
+    this.length = items.length;
+  }
+}
+
+const instance = new ArrayLike('a', 'b'); // {"0": "a","1": "b","length": 2}
+console.log(Array.from(instance)); // ["a","b"]
+
+// Arguments
+
+const f = function () {
+  console.log(arguments);
+  console.log(arguments.length);
+};
+
+f('a', 'b');
+</code></pre>
+<hr>
+<h2 id="observable-наблюдаемое"><a class="header" href="#observable-наблюдаемое">Observable (наблюдаемое)</a></h2>
+<h3 id="определение-5"><a class="header" href="#определение-5">Определение</a></h3>
+<p><strong>Observable</strong> - это объект, который представляет поток данных или событий, на которые можно подписаться. Это паттерн для реактивного программирования.</p>
+<h3 id="структура-observable"><a class="header" href="#структура-observable">Структура observable</a></h3>
+<pre><code class="language-javascript">const observable = {
+  subscribe(observer) {
+    // observer - объект с методами: next, error, complete
+    // Возвращает объект subscription с методом unsubscribe
+  }
+};
+</code></pre>
+<h3 id="примеры-кода-5"><a class="header" href="#примеры-кода-5">Примеры кода</a></h3>
+<h4 id="пример-1-простой-observable"><a class="header" href="#пример-1-простой-observable">Пример 1: Простой Observable</a></h4>
+<pre><code class="language-javascript">// Базовая реализация Observable
+class Observable {
+  constructor(subscribe) {
+    this._subscribe = subscribe;
+  }
+
+  subscribe(observer) {
+    return this._subscribe(observer);
+  }
+}
+
+// Создание observable
+const observable = new Observable((observer) =&gt; {
+  observer.next(1);
+  observer.next(2);
+  observer.next(3);
+  
+  setTimeout(() =&gt; {
+    observer.next(4);
+    observer.complete();
+  }, 1000);
+
+  // Функция отписки
+  return {
+    unsubscribe() {
+      console.log('Unsubscribed');
+    }
+  };
+});
+
+// Подписка
+const subscription = observable.subscribe({
+  next(value) {
+    console.log('Next:', value);
+  },
+  error(err) {
+    console.error('Error:', err);
+  },
+  complete() {
+    console.log('Complete');
+  }
+});
+
+// Отписка через 2 секунды
+setTimeout(() =&gt; {
+  subscription.unsubscribe();
+}, 2000);
+</code></pre>
+<h4 id="пример-2-observable-для-событий"><a class="header" href="#пример-2-observable-для-событий">Пример 2: Observable для событий</a></h4>
+<pre><code class="language-javascript">const observable = new EventTarget();
+
+observable.addEventListener('buy', (event) =&gt; {
+  const bought = event.detail;
+  console.log({ bought }); // { "bought": { "name": "Laptop", "price":1500 } etc.
+}
+});
+
+const electronics = [
+  { name: 'Laptop', price: 1500 },
+  { name: 'Keyboard', price: 100 },
+  { name: 'HDMI cable', price: 10 },
+];
+
+for (const item of electronics) {
+  const data = { detail: item };
+  const event = new CustomEvent('buy', data);
+  observable.dispatchEvent(event);
+}
+</code></pre>
+<hr>
+<h2 id="stream-поток"><a class="header" href="#stream-поток">Stream (поток)</a></h2>
+<h3 id="определение-6"><a class="header" href="#определение-6">Определение</a></h3>
+<p><strong>Stream</strong> - это абстракция для работы с потоковыми данными. В Node.js это события, которые позволяют читать или записывать данные частями, не загружая всё в память.</p>
+<h3 id="типы-стримов-в-nodejs"><a class="header" href="#типы-стримов-в-nodejs">Типы стримов в Node.js</a></h3>
+<ol>
+<li><strong>Readable</strong> - поток чтения</li>
+<li><strong>Writable</strong> - поток записи</li>
+<li><strong>Duplex</strong> - двунаправленный поток (чтение и запись)</li>
+<li><strong>Transform</strong> - трансформирующий поток (модификация данных)</li>
+</ol>
+<h3 id="примеры-кода-6"><a class="header" href="#примеры-кода-6">Примеры кода</a></h3>
+<h4 id="пример-1-stream"><a class="header" href="#пример-1-stream">Пример 1: Stream</a></h4>
+<pre><code class="language-javascript">const URL = 'https://developer.mozilla.org/';
+
+const main = async () =&gt; {
+  const response = await fetch(URL);
+  const { body } = response;
+  let total = 0;
+
+  for await (const chunk of body) {
+    const name = chunk.constructor.name;
+    const { length } = chunk;
+    total += length;
+    console.log(`Chunk: ${name}, Length: ${length}`);
+  }
+
+  console.log(`Total length: ${total} bytes`);
+};
+
+main();
+</code></pre>
+<hr>
+<h2 id="transferable-передаваемое"><a class="header" href="#transferable-передаваемое">Transferable (передаваемое)</a></h2>
+<h3 id="определение-7"><a class="header" href="#определение-7">Определение</a></h3>
+<p><strong>Transferable</strong> - это объекты, которые могут быть переданы между Web Workers или Worker threads с передачей владения, а не копированием. После передачи оригинальный объект становится недоступен.</p>
+<h3 id="transferable-объекты"><a class="header" href="#transferable-объекты">Transferable объекты</a></h3>
+<ul>
+<li><code>ArrayBuffer</code></li>
+<li><code>MessagePort</code></li>
+<li><code>ImageBitmap</code></li>
+<li><code>OffscreenCanvas</code></li>
+</ul>
+<h3 id="примеры-кода-7"><a class="header" href="#примеры-кода-7">Примеры кода</a></h3>
+<h4 id="пример-1-transferable"><a class="header" href="#пример-1-transferable">Пример 1: Transferable</a></h4>
+<pre><code class="language-javascript">const { Worker, workerData, isMainThread } = require('worker_threads');
+
+if (isMainThread) {
+  const workerData = new ArrayBuffer(8);
+  const uint32 = new Uint32Array(workerData);
+  uint32[0] = 42;
+  console.log('Main: before transfer', uint32);
+
+  const transferList = [workerData]; // Mark buffer as transferable
+  const worker = new Worker(__filename, { workerData, transferList });
+
+  worker.on('exit', () =&gt; {
+    console.log('Main: after transfer', uint32);
+  });
+} else {
+  const uint32 = new Uint32Array(workerData);
+  console.log('Worker: received buffer', uint32);
+  uint32[0] += 1;
+}
+</code></pre>
+<hr>
+<h2 id="callback-и-error-first-callback"><a class="header" href="#callback-и-error-first-callback">Callback и Error-First Callback</a></h2>
+<h3 id="определение-8"><a class="header" href="#определение-8">Определение</a></h3>
+<p><strong>Callback</strong> - это функция, которая передаётся в другую функцию для последующего вызова.</p>
+<p><strong>Error-First Callback</strong> - это соглашение Node.js, где первый аргумент callback всегда ошибка (или null), а последующие - данные.</p>
+<h3 id="примеры-кода-8"><a class="header" href="#примеры-кода-8">Примеры кода</a></h3>
+<h4 id="пример-1-callback-last-error-first"><a class="header" href="#пример-1-callback-last-error-first">Пример 1: Callback-last-error-first</a></h4>
+<pre><code class="language-javascript">const fs = require('node:fs');
+
+const callback = (error, data) =&gt; {
+  if (error) {
+    console.error(error.message);
+  } else {
+    console.log(data);
+  }
+};
+
+fs.readFile('1-callback.js', 'utf8', callback);
+fs.readFile('unknown-file', 'utf8', callback);
+</code></pre>
+<hr>
+<h2 id="пререквизиты-для-курсов"><a class="header" href="#пререквизиты-для-курсов">Пререквизиты для курсов</a></h2>
+<h3 id="базовые-концепции-кода"><a class="header" href="#базовые-концепции-кода">Базовые концепции кода</a></h3>
+<p>Что нужно понимать для всех курсов:</p>
+<ol>
+<li><strong>Чистая функция</strong> - функция без побочных эффектов</li>
+<li><strong>Замыкание</strong> - доступ к переменным внешней области видимости</li>
+<li><strong>Колбэк</strong> - функция, переданная как аргумент</li>
+<li><strong>Композиция функций</strong> - создание новых функций из существующих</li>
+<li><strong>Композиция классов</strong> - комбинирование возможностей классов</li>
+<li><strong>Лексический контекст</strong> - область видимости переменных</li>
+<li><strong>Форма объектов</strong> - структура объектов для оптимизации</li>
+<li><strong>Мономорфный код</strong> - код с предсказуемыми типами</li>
+<li><strong>Инлайнинг</strong> - встраивание кода для оптимизации</li>
+</ol>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>Встроенные контракты JavaScript - это фундамент, необходимый для понимания:</p>
+<ul>
+<li>Паттернов проектирования</li>
+<li>Асинхронного программирования</li>
+<li>Node.js разработки</li>
+</ul>
+<p>Каждый контракт имеет чёткое определение, примеры и область применения. Понимание этих контрактов позволяет писать более качественный и поддерживаемый код.</p>
+<hr>
+<h2 id="полезные-ссылки"><a class="header" href="#полезные-ссылки">Полезные ссылки</a></h2>
+<ul>
+<li><strong>Репозиторий с примерами:</strong> https://github.com/HowProgrammingWorks/NativeContracts</li>
+<li><strong>Thenable:</strong> https://github.com/HowProgrammingWorks/Thenable</li>
+<li><strong>YouTube канал:</strong> How Programming Works</li>
+<li><strong>Telegram канал:</strong> @metarhia</li>
+</ul>
+<hr>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../prerequisites/error-handling-lecture.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../prerequisites/lecture_notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../prerequisites/error-handling-lecture.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../prerequisites/lecture_notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

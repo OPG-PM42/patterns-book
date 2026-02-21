@@ -1,0 +1,1312 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>AsyncPool — Шаблон асинхронного программирования «Асинхронный пул» - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d959ff8c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="asyncpool--паттерн-асинхронный-пул-объектов"><a class="header" href="#asyncpool--паттерн-асинхронный-пул-объектов">AsyncPool — Паттерн асинхронный пул объектов</a></h1>
+<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+<p>AsyncPool — это паттерн проектирования, представляющий собой <strong>пул объектов</strong> (Object Pool), адаптированный для работы в асинхронной среде Node.js. Он предназначен для управления ограниченным количеством экземпляров объектов (инстансов) и предоставления механизма ожидания освобождения ресурсов при их исчерпании.</p>
+<h3 id="основные-задачи-паттерна"><a class="header" href="#основные-задачи-паттерна">Основные задачи паттерна</a></h3>
+<ul>
+<li><strong>Хранение инстансов</strong> — поддержание коллекции переиспользуемых объектов</li>
+<li><strong>Управление доступностью</strong> — отслеживание свободных и занятых экземпляров</li>
+<li><strong>Асинхронное ожидание</strong> — предоставление механизма ожидания через Promise, когда свободные инстансы отсутствуют</li>
+<li><strong>Автоматическая инстанциация</strong> — создание необходимого количества объектов через фабрику</li>
+</ul>
+<hr>
+<h2 id="зачем-нужен-асинхронный-пул"><a class="header" href="#зачем-нужен-асинхронный-пул">Зачем нужен асинхронный пул?</a></h2>
+<p>В современных Node.js приложениях часто возникает необходимость ограничить количество одновременно используемых ресурсов:</p>
+<ul>
+<li><strong>Подключения к базе данных</strong> — ограниченное количество соединений</li>
+<li><strong>HTTP-соединения</strong> — контроль одновременных запросов</li>
+<li><strong>Тяжелые объекты</strong> — переиспользование дорогостоящих в создании экземпляров</li>
+<li><strong>Управление памятью</strong> — предотвращение утечек при массовых операциях</li>
+</ul>
+<p><strong>Ключевое отличие от синхронного пула</strong>: вместо блокирования или колбеков используется <strong>Promise-контракт</strong> для ожидания освобождения ресурсов.</p>
+<hr>
+<h2 id="архитектура-asyncpool"><a class="header" href="#архитектура-asyncpool">Архитектура AsyncPool</a></h2>
+<h3 id="основные-компоненты"><a class="header" href="#основные-компоненты">Основные компоненты</a></h3>
+<pre><code class="language-javascript">class AsyncPool {
+  // Коллекция хранимых инстансов
+  instances = [];
+
+  // Флаги доступности: true = свободен, false = занят
+  free = [];
+
+  // Очередь ожидающих Promise
+  queue = [];
+
+  // Указатель на текущий инстанс для выдачи
+  current = 0;
+
+  // Размер пула
+  size = 0;
+
+  // Счетчик доступных (свободных) инстансов
+  available = 0;
+}
+</code></pre>
+<h3 id="диаграмма-состояний"><a class="header" href="#диаграмма-состояний">Диаграмма состояний</a></h3>
+<pre><code>┌─────────────────────────────────────┐
+│      AsyncPool (size: 10)           │
+├─────────────────────────────────────┤
+│ instances: [obj0...obj9]            │
+│ free:      [T,T,F,F,T,T,T,T,T,T]    │
+│ available: 8                        │
+│ queue:     [{resolve, timer}, ...]  │
+└─────────────────────────────────────┘
+         ↑                    ↓
+    release()            getInstance()
+</code></pre>
+<hr>
+<h2 id="реализация-базового-asyncpool"><a class="header" href="#реализация-базового-asyncpool">Реализация базового AsyncPool</a></h2>
+<h3 id="1-конструктор-и-инициализация"><a class="header" href="#1-конструктор-и-инициализация">1. Конструктор и инициализация</a></h3>
+<pre><code class="language-javascript">class AsyncPool {
+  constructor(factory, size) {
+    this.size = size;
+    this.available = size;
+    this.current = 0;
+    this.instances = new Array(size);
+    this.free = new Array(size);
+    this.queue = [];
+
+    // Инициализация флагов "свободен"
+    for (let i = 0; i &lt; size; i++) {
+      this.free[i] = true;
+      // Вызов фабрики для создания инстансов
+      this.instances[i] = factory(i);
+    }
+  }
+}
+</code></pre>
+<p><strong>Ключевые моменты:</strong></p>
+<ul>
+<li><strong>Фабрика вместо готовых объектов</strong> — пул сам создает нужное количество инстансов через переданную функцию-фабрику</li>
+<li><strong>Размер фиксирован</strong> — массивы инициализируются сразу на полный размер</li>
+<li><strong>Счетчик available</strong> — позволяет быстро проверить наличие свободных элементов без перебора массива</li>
+</ul>
+<h3 id="2-метод-получения-инстанса-getinstance"><a class="header" href="#2-метод-получения-инстанса-getinstance">2. Метод получения инстанса (getInstance)</a></h3>
+<pre><code class="language-javascript">async getInstance() {
+  // Если нет свободных — ставим Promise в очередь
+  if (this.available === 0) {
+    return new Promise((resolve) =&gt; {
+      this.queue.push(resolve);
+    });
+  }
+
+  // Ищем следующий свободный инстанс
+  return this.next();
+}
+</code></pre>
+<p><strong>Логика работы:</strong></p>
+<ol>
+<li><strong>Проверка доступности</strong> — если <code>available === 0</code>, создается промис и его <code>resolve</code> добавляется в очередь</li>
+<li><strong>Асинхронное ожидание</strong> — вызывающий код получит инстанс только когда кто-то освободит ресурс</li>
+<li><strong>Немедленная выдача</strong> — если есть свободные, вызывается <code>next()</code> для поиска инстанса</li>
+</ol>
+<h3 id="3-поиск-следующего-свободного-элемента-next"><a class="header" href="#3-поиск-следующего-свободного-элемента-next">3. Поиск следующего свободного элемента (next)</a></h3>
+<pre><code class="language-javascript">next() {
+  let instance = null;
+  let free = false;
+
+  // Цикл поиска свободного инстанса
+  while (!free) {
+    instance = this.instances[this.current];
+    free = this.free[this.current];
+
+    // Циклическое перемещение указателя
+    this.current++;
+    if (this.current &gt;= this.size) {
+      this.current = 0;
+    }
+
+    // Если нашли свободный — помечаем занятым и возвращаем
+    if (instance &amp;&amp; free) {
+      this.free[this.current] = false;
+      this.available--;
+      return instance;
+    }
+  }
+}
+</code></pre>
+<p><strong>Особенности реализации:</strong></p>
+<ul>
+<li><strong>Циклический обход</strong> — указатель <code>current</code> двигается по кругу (Round-Robin)</li>
+<li><strong>Гарантия завершения</strong> — цикл безопасен, так как перед вызовом <code>next()</code> проверяется <code>available &gt; 0</code></li>
+<li><strong>Атомарное изменение состояния</strong> — флаг <code>free</code> меняется сразу, счетчик уменьшается</li>
+</ul>
+<h3 id="4-освобождение-инстанса-release"><a class="header" href="#4-освобождение-инстанса-release">4. Освобождение инстанса (release)</a></h3>
+<pre><code class="language-javascript">release(instance) {
+  // Проверка: существует ли инстанс в пуле
+  const index = this.instances.indexOf(instance);
+  if (index === -1) {
+    throw new Error('Attempting to release an instance not managed by this pool');
+  }
+
+  // Проверка: не пытаются ли вернуть уже свободный инстанс
+  if (this.free[index]) {
+    throw new Error('Attempting to release an already free instance');
+  }
+
+  // Если есть ожидающие в очереди — отдаем им напрямую
+  if (this.queue.length &gt; 0) {
+    const resolve = this.queue.shift();
+
+    // Отправляем инстанс в промис через setImmediate
+    setImmediate(() =&gt; {
+      resolve(instance);
+    });
+
+    // Инстанс остается занятым (переходит к новому владельцу)
+    return;
+  }
+
+  // Если очередь пуста — помечаем свободным
+  this.available++;
+  this.free[index] = true;
+}
+</code></pre>
+<p><strong>Важные детали:</strong></p>
+<ol>
+<li><strong>Валидация инстанса</strong> — защита от попыток вернуть “чужие” объекты</li>
+<li><strong>Защита от двойного освобождения</strong> — предотвращение багов с сохраненными ссылками</li>
+<li><strong>Прямая передача ожидающим</strong> — если есть очередь, инстанс сразу переходит следующему потребителю</li>
+<li><strong>setImmediate для resolve</strong> — передача кванта времени в event loop, избегание синхронного выполнения</li>
+</ol>
+<hr>
+<h2 id="расширенная-версия-с-таймаутом"><a class="header" href="#расширенная-версия-с-таймаутом">Расширенная версия с таймаутом</a></h2>
+<h3 id="зачем-нужен-таймаут"><a class="header" href="#зачем-нужен-таймаут">Зачем нужен таймаут?</a></h3>
+<p>В реальных приложениях нельзя бесконечно ждать освобождения ресурса:</p>
+<ul>
+<li><strong>Предотвращение зависаний</strong> — защита от deadlock-ситуаций</li>
+<li><strong>Контроль времени отклика</strong> — ограничение максимального времени ожидания</li>
+<li><strong>Graceful degradation</strong> — возможность обработать ошибку и применить альтернативную стратегию</li>
+</ul>
+<h3 id="модификация-конструктора"><a class="header" href="#модификация-конструктора">Модификация конструктора</a></h3>
+<pre><code class="language-javascript">class AsyncPool {
+  constructor(factory, options) {
+    this.size = options.size;
+    this.timeout = options.timeout; // Таймаут в миллисекундах
+    this.available = this.size;
+    this.current = 0;
+    this.instances = new Array(this.size);
+    this.free = new Array(this.size);
+    this.queue = [];
+
+    for (let i = 0; i &lt; this.size; i++) {
+      this.free[i] = true;
+      this.instances[i] = factory(i);
+    }
+  }
+}
+</code></pre>
+<p><strong>Изменения:</strong></p>
+<ul>
+<li>Параметры теперь передаются через объект <code>options</code></li>
+<li>Добавлено поле <code>timeout</code> для хранения лимита ожидания</li>
+</ul>
+<h3 id="модифицированный-getinstance-с-таймером"><a class="header" href="#модифицированный-getinstance-с-таймером">Модифицированный getInstance с таймером</a></h3>
+<pre><code class="language-javascript">async getInstance() {
+  if (this.available === 0) {
+    return new Promise((resolve, reject) =&gt; {
+      // Создаем таймер для отклонения промиса
+      const timer = setTimeout(() =&gt; {
+        reject(new Error('Pool timeout exceeded'));
+      }, this.timeout);
+
+      // В очередь сохраняем resolve и timer
+      this.queue.push({ resolve, timer });
+    });
+  }
+
+  return this.next();
+}
+</code></pre>
+<p><strong>Механизм работы:</strong></p>
+<ol>
+<li><strong>Создание таймера</strong> — <code>setTimeout</code> вызовет <code>reject</code> через заданное время</li>
+<li><strong>Структура в очереди</strong> — сохраняется и <code>resolve</code>, и <code>timer</code> для последующей очистки</li>
+<li><strong>Отклонение промиса</strong> — если таймаут достигнут, вызывающий код получит ошибку</li>
+</ol>
+<h3 id="модифицированный-release"><a class="header" href="#модифицированный-release">Модифицированный release</a></h3>
+<pre><code class="language-javascript">release(instance) {
+  const index = this.instances.indexOf(instance);
+  if (index === -1) {
+    throw new Error('Attempting to release an instance not managed by this pool');
+  }
+
+  if (this.free[index]) {
+    throw new Error('Attempting to release an already free instance');
+  }
+
+  // Если есть ожидающие — отдаем им
+  if (this.queue.length &gt; 0) {
+    const { resolve, timer } = this.queue.shift();
+
+    // ВАЖНО: очищаем таймер, так как ожидание завершилось успешно
+    clearTimeout(timer);
+
+    setImmediate(() =&gt; {
+      resolve(instance);
+    });
+
+    return;
+  }
+
+  // Помечаем свободным
+  this.available++;
+  this.free[index] = true;
+}
+</code></pre>
+<p><strong>Критически важно:</strong></p>
+<ul>
+<li><strong>clearTimeout(timer)</strong> — предотвращение срабатывания таймера после успешного получения инстанса</li>
+<li><strong>Извлечение из очереди</strong> — <code>shift()</code> удаляет элемент, освобождая память</li>
+</ul>
+<hr>
+<h2 id="альтернатива-использование-abortsignal"><a class="header" href="#альтернатива-использование-abortsignal">Альтернатива: использование AbortSignal</a></h2>
+<h3 id="современный-подход-к-отмене-операций"><a class="header" href="#современный-подход-к-отмене-операций">Современный подход к отмене операций</a></h3>
+<p>AbortSignal — это стандартный Web API для отмены асинхронных операций:</p>
+<pre><code class="language-javascript">async getInstance() {
+  if (this.available === 0) {
+    return new Promise((resolve, reject) =&gt; {
+      // Создаем AbortSignal с таймаутом
+      const signal = AbortSignal.timeout(this.timeout);
+
+      // Обработчик отмены
+      const listener = () =&gt; {
+        // Ошибка хранится в signal.reason
+        reject(signal.reason);
+      };
+
+      // Подписываемся на событие abort
+      signal.addEventListener('abort', listener);
+
+      // Сохраняем в очередь все три компонента
+      this.queue.push({ resolve, signal, listener });
+    });
+  }
+
+  return this.next();
+}
+</code></pre>
+<h3 id="очистка-при-успешном-получении"><a class="header" href="#очистка-при-успешном-получении">Очистка при успешном получении</a></h3>
+<pre><code class="language-javascript">release(instance) {
+  const index = this.instances.indexOf(instance);
+  if (index === -1) {
+    throw new Error('Attempting to release an instance not managed by this pool');
+  }
+
+  if (this.free[index]) {
+    throw new Error('Attempting to release an already free instance');
+  }
+
+  if (this.queue.length &gt; 0) {
+    const { resolve, signal, listener } = this.queue.shift();
+
+    // Удаляем обработчик события
+    signal.removeEventListener('abort', listener);
+
+    setImmediate(() =&gt; {
+      resolve(instance);
+    });
+
+    return;
+  }
+
+  this.available++;
+  this.free[index] = true;
+}
+</code></pre>
+<p><strong>Преимущества AbortSignal:</strong></p>
+<ul>
+<li><strong>Стандартизация</strong> — единый API для отмены операций</li>
+<li><strong>Автоматическое управление</strong> — таймаут встроен в сигнал</li>
+<li><strong>Garbage Collection</strong> — после <code>removeEventListener</code> и удаления из очереди все объекты освобождаются</li>
+</ul>
+<p><strong>Недостатки:</strong></p>
+<ul>
+<li><strong>Необходимость хранить listener</strong> — EventTarget требует точную ссылку на функцию для удаления</li>
+<li><strong>Более сложная структура</strong> — три компонента вместо двух в варианте с setTimeout</li>
+</ul>
+<hr>
+<h2 id="практические-примеры-использования"><a class="header" href="#практические-примеры-использования">Практические примеры использования</a></h2>
+<h3 id="пример-1-фабрика-соединений"><a class="header" href="#пример-1-фабрика-соединений">Пример 1: Фабрика соединений</a></h3>
+<pre><code class="language-javascript">// Фабрика создает объекты соединений
+const connectionFactory = (index) =&gt; {
+  return {
+    id: `connection-${index}`,
+    query: async (sql) =&gt; {
+      console.log(`[${this.id}] Executing: ${sql}`);
+      // Симуляция запроса к БД
+      return new Promise((resolve) =&gt; {
+        setTimeout(() =&gt; resolve({ rows: [] }), 100);
+      });
+    },
+    close: () =&gt; {
+      console.log(`[${this.id}] Closed`);
+    }
+  };
+};
+
+// Создание пула с 10 соединениями
+const pool = new AsyncPool(connectionFactory, { size: 10, timeout: 3000 });
+</code></pre>
+<h3 id="пример-2-базовое-использование-без-таймаута"><a class="header" href="#пример-2-базовое-использование-без-таймаута">Пример 2: Базовое использование без таймаута</a></h3>
+<pre><code class="language-javascript">const pool = new AsyncPool(connectionFactory, 10);
+const connections = [];
+
+// Запрашиваем 12 инстансов при размере пула 10
+for (let i = 0; i &lt; 12; i++) {
+  (async () =&gt; {
+    try {
+      const conn = await pool.getInstance();
+      console.log(`Got instance: ${conn.id}`);
+
+      // Первые два сохраняем для позднего освобождения
+      if (i &lt; 2) {
+        connections.push(conn);
+      } else {
+        // Остальные сразу возвращаем
+        pool.release(conn);
+      }
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+    }
+  })();
+}
+
+// Через 2 секунды освобождаем первый
+setTimeout(() =&gt; {
+  console.log('Releasing connection 0');
+  pool.release(connections[0]);
+}, 2000);
+
+// Через 5 секунд освобождаем второй
+setTimeout(() =&gt; {
+  console.log('Releasing connection 1');
+  pool.release(connections[1]);
+}, 5000);
+</code></pre>
+<p><strong>Вывод программы:</strong></p>
+<pre><code>Got instance: connection-0
+Got instance: connection-1
+Got instance: connection-2
+Got instance: connection-3
+Got instance: connection-4
+Got instance: connection-5
+Got instance: connection-6
+Got instance: connection-7
+Got instance: connection-8
+Got instance: connection-9
+Releasing connection 0
+Got instance: connection-0   // 11-й запрос получил освободившийся инстанс
+Releasing connection 1
+Got instance: connection-1   // 12-й запрос получил освободившийся инстанс
+</code></pre>
+<p><strong>Объяснение:</strong></p>
+<ol>
+<li>Первые 10 запросов сразу получают инстансы (пул заполнен)</li>
+<li>Запросы 11 и 12 становятся в очередь (<code>available === 0</code>)</li>
+<li>Через 2 секунды освобождается <code>connection-0</code>, он сразу передается 11-му запросу</li>
+<li>Через 5 секунд освобождается <code>connection-1</code>, он передается 12-му запросу</li>
+</ol>
+<h3 id="пример-3-работа-с-таймаутом"><a class="header" href="#пример-3-работа-с-таймаутом">Пример 3: Работа с таймаутом</a></h3>
+<pre><code class="language-javascript">const pool = new AsyncPool(connectionFactory, {
+  size: 10,
+  timeout: 3000  // Максимум 3 секунды ожидания
+});
+
+const connections = [];
+
+for (let i = 0; i &lt; 12; i++) {
+  (async () =&gt; {
+    try {
+      const conn = await pool.getInstance();
+      console.log(`[${i}] Got instance: ${conn.id}`);
+
+      if (i &lt; 2) {
+        connections.push(conn);
+      } else {
+        pool.release(conn);
+      }
+    } catch (error) {
+      console.error(`[${i}] Error: ${error.message}`);
+    }
+  })();
+}
+
+// Освобождаем через 4 секунды (позже таймаута!)
+setTimeout(() =&gt; {
+  console.log('Releasing connection 0');
+  pool.release(connections[0]);
+}, 4000);
+
+setTimeout(() =&gt; {
+  console.log('Releasing connection 1');
+  pool.release(connections[1]);
+}, 5000);
+</code></pre>
+<p><strong>Вывод программы:</strong></p>
+<pre><code>[0] Got instance: connection-0
+[1] Got instance: connection-1
+[2] Got instance: connection-2
+[3] Got instance: connection-3
+[4] Got instance: connection-4
+[5] Got instance: connection-5
+[6] Got instance: connection-6
+[7] Got instance: connection-7
+[8] Got instance: connection-8
+[9] Got instance: connection-9
+[10] Error: Pool timeout exceeded     // Таймаут через 3 секунды
+Releasing connection 0                 // Освобождение через 4 секунды
+[11] Got instance: connection-0        // 12-й запрос дождался
+Releasing connection 1
+</code></pre>
+<p><strong>Анализ:</strong></p>
+<ul>
+<li>Запрос 11 (индекс 10) ждет 3 секунды → таймаут → получает ошибку</li>
+<li>Запрос 12 (индекс 11) ждет 3 секунды → все еще в очереди → через 4 секунды получает инстанс</li>
+</ul>
+<hr>
+<h2 id="расширенные-возможности-пула"><a class="header" href="#расширенные-возможности-пула">Расширенные возможности пула</a></h2>
+<h3 id="1-динамическое-расширение-пула"><a class="header" href="#1-динамическое-расширение-пула">1. Динамическое расширение пула</a></h3>
+<p>Можно модифицировать пул для создания дополнительных инстансов сверх начального размера:</p>
+<pre><code class="language-javascript">class DynamicAsyncPool extends AsyncPool {
+  constructor(factory, options) {
+    super(factory, options);
+    this.maxSize = options.maxSize || this.size * 2;
+    this.factory = factory;
+  }
+
+  async getInstance() {
+    // Если нет свободных, но не достигнут maxSize — создаем новый
+    if (this.available === 0 &amp;&amp; this.instances.length &lt; this.maxSize) {
+      const newInstance = this.factory(this.instances.length);
+      this.instances.push(newInstance);
+      this.free.push(false);
+      this.size++;
+      return newInstance;
+    }
+
+    return super.getInstance();
+  }
+
+  release(instance) {
+    const index = this.instances.indexOf(instance);
+
+    // Если инстанс сверх начального размера и очередь пуста — удаляем
+    if (index &gt;= options.size &amp;&amp; this.queue.length === 0) {
+      this.instances.splice(index, 1);
+      this.free.splice(index, 1);
+      this.size--;
+
+      // Вызываем cleanup если есть
+      if (instance.close) {
+        instance.close();
+      }
+
+      return;
+    }
+
+    super.release(instance);
+  }
+}
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li><strong>Адаптивность</strong> — пул растет под нагрузкой</li>
+<li><strong>Экономия ресурсов</strong> — лишние инстансы удаляются при снижении нагрузки</li>
+<li><strong>Ограничение роста</strong> — параметр <code>maxSize</code> предотвращает бесконтрольное потребление памяти</li>
+</ul>
+<h3 id="2-добавление-метода-add-для-внешних-инстансов"><a class="header" href="#2-добавление-метода-add-для-внешних-инстансов">2. Добавление метода add для внешних инстансов</a></h3>
+<pre><code class="language-javascript">add(instance) {
+  // Проверяем, что инстанс не в пуле
+  if (this.instances.indexOf(instance) !== -1) {
+    throw new Error('Instance already in pool');
+  }
+
+  // Если есть ожидающие — сразу отдаем им
+  if (this.queue.length &gt; 0) {
+    const { resolve, timer } = this.queue.shift();
+    clearTimeout(timer);
+
+    setImmediate(() =&gt; {
+      resolve(instance);
+    });
+
+    return;
+  }
+
+  // Добавляем в пул
+  this.instances.push(instance);
+  this.free.push(true);
+  this.size++;
+  this.available++;
+}
+</code></pre>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Возможность добавлять инстансы извне</li>
+<li>Гибкость в управлении размером пула</li>
+<li>Интеграция с внешними источниками объектов</li>
+</ul>
+<hr>
+<h2 id="ключевые-концепции-и-термины"><a class="header" href="#ключевые-концепции-и-термины">Ключевые концепции и термины</a></h2>
+<h3 id="round-robin-циклический-обход"><a class="header" href="#round-robin-циклический-обход">Round-Robin (циклический обход)</a></h3>
+<p><strong>Определение:</strong> Алгоритм равномерного распределения нагрузки, при котором указатель циклически перемещается по коллекции.</p>
+<p><strong>Применение в AsyncPool:</strong></p>
+<pre><code class="language-javascript">this.current++;
+if (this.current &gt;= this.size) {
+  this.current = 0;  // Возврат к началу
+}
+</code></pre>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Равномерное использование всех инстансов</li>
+<li>Предотвращение “голодания” отдельных объектов</li>
+<li>Простота реализации</li>
+</ul>
+<h3 id="promise-based-контракт"><a class="header" href="#promise-based-контракт">Promise-based контракт</a></h3>
+<p><strong>Определение:</strong> Использование Promise как механизма асинхронного ожидания освобождения ресурса.</p>
+<p><strong>Сравнение с колбеками:</strong></p>
+<pre><code class="language-javascript">// Колбек-стиль (устаревший)
+pool.getInstance((err, instance) =&gt; {
+  if (err) return console.error(err);
+  // Использование instance
+});
+
+// Promise-стиль (современный)
+try {
+  const instance = await pool.getInstance();
+  // Использование instance
+} catch (error) {
+  console.error(error);
+}
+</code></pre>
+<p><strong>Преимущества Promise:</strong></p>
+<ul>
+<li>Поддержка async/await синтаксиса</li>
+<li>Естественная обработка ошибок через try/catch</li>
+<li>Возможность композиции (Promise.all, Promise.race)</li>
+</ul>
+<h3 id="event-loop-и-setimmediate"><a class="header" href="#event-loop-и-setimmediate">Event Loop и setImmediate</a></h3>
+<p><strong>Зачем использовать setImmediate?</strong></p>
+<pre><code class="language-javascript">// БЕЗ setImmediate — синхронное выполнение
+resolve(instance);
+// resolve может вызвать длинную цепочку синхронного кода
+
+// С setImmediate — передача кванта времени
+setImmediate(() =&gt; {
+  resolve(instance);
+});
+// Другие операции в event loop получат шанс выполниться
+</code></pre>
+<p><strong>Фазы Event Loop:</strong></p>
+<pre><code>   ┌───────────────────────────┐
+┌─&gt;│           timers          │ — setTimeout, setInterval
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │     pending callbacks     │ — системные колбеки
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │       idle, prepare       │ — внутренние операции
+│  └─────────────┬─────────────┘      ┌───────────────┐
+│  ┌─────────────┴─────────────┐      │   incoming:   │
+│  │           poll            │&lt;─────┤  connections, │
+│  └─────────────┬─────────────┘      │   data, etc.  │
+│  ┌─────────────┴─────────────┐      └───────────────┘
+│  │           check           │ — setImmediate
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+└──┤      close callbacks      │ — socket.on('close', ...)
+   └───────────────────────────┘
+</code></pre>
+<p>setImmediate выполняется в фазе <strong>check</strong>, позволяя другим операциям завершиться.</p>
+<hr>
+<h2 id="распространенные-ошибки-и-их-предотвращение"><a class="header" href="#распространенные-ошибки-и-их-предотвращение">Распространенные ошибки и их предотвращение</a></h2>
+<h3 id="ошибка-1-забыли-вызвать-release"><a class="header" href="#ошибка-1-забыли-вызвать-release">Ошибка 1: Забыли вызвать release</a></h3>
+<pre><code class="language-javascript">// НЕПРАВИЛЬНО
+const conn = await pool.getInstance();
+await conn.query('SELECT * FROM users');
+// Забыли вернуть в пул — утечка ресурсов!
+
+// ПРАВИЛЬНО
+const conn = await pool.getInstance();
+try {
+  await conn.query('SELECT * FROM users');
+} finally {
+  pool.release(conn);  // Гарантированное освобождение
+}
+</code></pre>
+<p><strong>Решение:</strong> Всегда использовать try/finally или обернуть в специальный метод:</p>
+<pre><code class="language-javascript">async withInstance(callback) {
+  const instance = await this.getInstance();
+  try {
+    return await callback(instance);
+  } finally {
+    this.release(instance);
+  }
+}
+
+// Использование
+await pool.withInstance(async (conn) =&gt; {
+  return await conn.query('SELECT * FROM users');
+});
+</code></pre>
+<h3 id="ошибка-2-сохранение-ссылки-и-повторное-освобождение"><a class="header" href="#ошибка-2-сохранение-ссылки-и-повторное-освобождение">Ошибка 2: Сохранение ссылки и повторное освобождение</a></h3>
+<pre><code class="language-javascript">// НЕПРАВИЛЬНО
+const conn = await pool.getInstance();
+const savedRef = conn;  // Сохранили ссылку
+
+pool.release(conn);
+// ... позже ...
+pool.release(savedRef);  // Error: already free instance
+</code></pre>
+<p><strong>Защита в коде:</strong></p>
+<pre><code class="language-javascript">if (this.free[index]) {
+  throw new Error('Attempting to release an already free instance');
+}
+</code></pre>
+<h3 id="ошибка-3-возврат-чужого-инстанса"><a class="header" href="#ошибка-3-возврат-чужого-инстанса">Ошибка 3: Возврат “чужого” инстанса</a></h3>
+<pre><code class="language-javascript">// НЕПРАВИЛЬНО
+const externalConn = createConnection();
+pool.release(externalConn);  // Error: not managed by this pool
+</code></pre>
+<p><strong>Защита в коде:</strong></p>
+<pre><code class="language-javascript">const index = this.instances.indexOf(instance);
+if (index === -1) {
+  throw new Error('Attempting to release an instance not managed by this pool');
+}
+</code></pre>
+<hr>
+<h2 id="оптимизация-и-лучшие-практики"><a class="header" href="#оптимизация-и-лучшие-практики">Оптимизация и лучшие практики</a></h2>
+<h3 id="1-выбор-правильного-размера-пула"><a class="header" href="#1-выбор-правильного-размера-пула">1. Выбор правильного размера пула</a></h3>
+<pre><code class="language-javascript">// Формула для пула соединений к БД:
+// connections = ((core_count * 2) + effective_spindle_count)
+
+const cpuCount = require('os').cpus().length;
+const poolSize = (cpuCount * 2) + 1;
+
+const pool = new AsyncPool(dbConnectionFactory, {
+  size: poolSize,
+  timeout: 5000
+});
+</code></pre>
+<h3 id="2-мониторинг-состояния-пула"><a class="header" href="#2-мониторинг-состояния-пула">2. Мониторинг состояния пула</a></h3>
+<pre><code class="language-javascript">class MonitoredAsyncPool extends AsyncPool {
+  getStats() {
+    return {
+      size: this.size,
+      available: this.available,
+      inUse: this.size - this.available,
+      queueLength: this.queue.length,
+      utilizationPercent: ((this.size - this.available) / this.size * 100).toFixed(2)
+    };
+  }
+
+  logStats() {
+    const stats = this.getStats();
+    console.log(`Pool: ${stats.inUse}/${stats.size} in use, ${stats.queueLength} waiting, ${stats.utilizationPercent}% utilization`);
+  }
+}
+</code></pre>
+<h3 id="3-graceful-shutdown"><a class="header" href="#3-graceful-shutdown">3. Graceful shutdown</a></h3>
+<pre><code class="language-javascript">class GracefulAsyncPool extends AsyncPool {
+  async drain() {
+    // Ждем освобождения всех инстансов
+    while (this.available &lt; this.size) {
+      await new Promise(resolve =&gt; setTimeout(resolve, 100));
+    }
+
+    // Закрываем все инстансы
+    for (const instance of this.instances) {
+      if (instance.close) {
+        await instance.close();
+      }
+    }
+
+    this.instances = [];
+    this.free = [];
+    this.size = 0;
+    this.available = 0;
+  }
+}
+
+// Использование
+process.on('SIGTERM', async () =&gt; {
+  console.log('Draining pool...');
+  await pool.drain();
+  process.exit(0);
+});
+</code></pre>
+<hr>
+<h2 id="сравнение-с-другими-паттернами"><a class="header" href="#сравнение-с-другими-паттернами">Сравнение с другими паттернами</a></h2>
+<h3 id="asyncpool-vs-semaphore"><a class="header" href="#asyncpool-vs-semaphore">AsyncPool vs Semaphore</a></h3>
+<pre><code class="language-javascript">// Семафор — ограничивает количество одновременных операций
+class Semaphore {
+  constructor(max) {
+    this.max = max;
+    this.current = 0;
+    this.queue = [];
+  }
+
+  async acquire() {
+    if (this.current &lt; this.max) {
+      this.current++;
+      return;
+    }
+
+    await new Promise(resolve =&gt; this.queue.push(resolve));
+  }
+
+  release() {
+    if (this.queue.length &gt; 0) {
+      const resolve = this.queue.shift();
+      resolve();
+    } else {
+      this.current--;
+    }
+  }
+}
+
+// AsyncPool — управляет конкретными экземплярами объектов
+</code></pre>
+<p><strong>Различия:</strong></p>
+<ul>
+<li><strong>Семафор</strong> — абстрактный счетчик, не хранит объекты</li>
+<li><strong>AsyncPool</strong> — управляет жизненным циклом конкретных инстансов</li>
+</ul>
+<h3 id="asyncpool-vs-worker-pool"><a class="header" href="#asyncpool-vs-worker-pool">AsyncPool vs Worker Pool</a></h3>
+<pre><code class="language-javascript">// Worker Pool — пул потоков для выполнения задач
+const { Worker } = require('worker_threads');
+
+class WorkerPool {
+  constructor(workerScript, poolSize) {
+    this.workers = [];
+    for (let i = 0; i &lt; poolSize; i++) {
+      this.workers.push(new Worker(workerScript));
+    }
+  }
+
+  async exec(data) {
+    const worker = await this.getAvailableWorker();
+    return new Promise((resolve, reject) =&gt; {
+      worker.once('message', resolve);
+      worker.once('error', reject);
+      worker.postMessage(data);
+    });
+  }
+}
+</code></pre>
+<p><strong>Различия:</strong></p>
+<ul>
+<li><strong>Worker Pool</strong> — специфичен для параллельных вычислений</li>
+<li><strong>AsyncPool</strong> — универсальный паттерн для любых объектов</li>
+</ul>
+<hr>
+<h2 id="интеграция-с-реальными-библиотеками"><a class="header" href="#интеграция-с-реальными-библиотеками">Интеграция с реальными библиотеками</a></h2>
+<h3 id="пример-пул-подключений-к-postgresql"><a class="header" href="#пример-пул-подключений-к-postgresql">Пример: Пул подключений к PostgreSQL</a></h3>
+<pre><code class="language-javascript">const { Client } = require('pg');
+
+const pgConnectionFactory = (index) =&gt; {
+  const client = new Client({
+    host: 'localhost',
+    port: 5432,
+    database: 'mydb',
+    user: 'user',
+    password: 'password'
+  });
+
+  // Асинхронное подключение
+  client.connect();
+
+  return client;
+};
+
+const dbPool = new AsyncPool(pgConnectionFactory, {
+  size: 20,
+  timeout: 10000
+});
+
+// Использование
+async function getUser(id) {
+  const client = await dbPool.getInstance();
+  try {
+    const result = await client.query('SELECT * FROM users WHERE id = $1', [id]);
+    return result.rows[0];
+  } finally {
+    dbPool.release(client);
+  }
+}
+</code></pre>
+<h3 id="пример-пул-http-агентов"><a class="header" href="#пример-пул-http-агентов">Пример: Пул HTTP-агентов</a></h3>
+<pre><code class="language-javascript">const https = require('https');
+
+const httpsAgentFactory = () =&gt; {
+  return new https.Agent({
+    keepAlive: true,
+    maxSockets: 1,  // Один сокет на агент
+    timeout: 5000
+  });
+};
+
+const agentPool = new AsyncPool(httpsAgentFactory, {
+  size: 50,  // 50 одновременных соединений
+  timeout: 3000
+});
+
+async function fetchData(url) {
+  const agent = await agentPool.getInstance();
+  try {
+    return await new Promise((resolve, reject) =&gt; {
+      https.get(url, { agent }, (res) =&gt; {
+        let data = '';
+        res.on('data', chunk =&gt; data += chunk);
+        res.on('end', () =&gt; resolve(data));
+      }).on('error', reject);
+    });
+  } finally {
+    agentPool.release(agent);
+  }
+}
+</code></pre>
+<hr>
+<h2 id="тестирование-asyncpool"><a class="header" href="#тестирование-asyncpool">Тестирование AsyncPool</a></h2>
+<h3 id="базовый-тест-функциональности"><a class="header" href="#базовый-тест-функциональности">Базовый тест функциональности</a></h3>
+<pre><code class="language-javascript">const assert = require('assert');
+
+describe('AsyncPool', () =&gt; {
+  it('should create instances via factory', async () =&gt; {
+    let factoryCallCount = 0;
+    const factory = () =&gt; ({ id: factoryCallCount++ });
+
+    const pool = new AsyncPool(factory, 5);
+
+    assert.strictEqual(pool.size, 5);
+    assert.strictEqual(pool.available, 5);
+    assert.strictEqual(factoryCallCount, 5);
+  });
+
+  it('should provide instances immediately when available', async () =&gt; {
+    const factory = (i) =&gt; ({ id: i });
+    const pool = new AsyncPool(factory, 3);
+
+    const inst1 = await pool.getInstance();
+    const inst2 = await pool.getInstance();
+
+    assert.strictEqual(pool.available, 1);
+    assert.ok(inst1.id !== inst2.id);
+  });
+
+  it('should queue requests when pool exhausted', async () =&gt; {
+    const factory = (i) =&gt; ({ id: i });
+    const pool = new AsyncPool(factory, 2);
+
+    const inst1 = await pool.getInstance();
+    const inst2 = await pool.getInstance();
+
+    let inst3Resolved = false;
+    const inst3Promise = pool.getInstance().then(inst =&gt; {
+      inst3Resolved = true;
+      return inst;
+    });
+
+    // inst3 должен ждать
+    await new Promise(resolve =&gt; setImmediate(resolve));
+    assert.strictEqual(inst3Resolved, false);
+
+    // Освобождаем inst1
+    pool.release(inst1);
+
+    const inst3 = await inst3Promise;
+    assert.strictEqual(inst3Resolved, true);
+    assert.strictEqual(inst3.id, inst1.id);  // Получили тот же инстанс
+  });
+
+  it('should reject on timeout', async () =&gt; {
+    const factory = (i) =&gt; ({ id: i });
+    const pool = new AsyncPool(factory, { size: 1, timeout: 100 });
+
+    const inst1 = await pool.getInstance();
+
+    // Второй запрос должен упасть по таймауту
+    await assert.rejects(
+      pool.getInstance(),
+      /Pool timeout exceeded/
+    );
+  });
+
+  it('should throw when releasing foreign instance', async () =&gt; {
+    const factory = (i) =&gt; ({ id: i });
+    const pool = new AsyncPool(factory, 2);
+
+    const foreignInstance = { id: 999 };
+
+    assert.throws(
+      () =&gt; pool.release(foreignInstance),
+      /not managed by this pool/
+    );
+  });
+
+  it('should throw when releasing already free instance', async () =&gt; {
+    const factory = (i) =&gt; ({ id: i });
+    const pool = new AsyncPool(factory, 2);
+
+    const inst = await pool.getInstance();
+    pool.release(inst);
+
+    assert.throws(
+      () =&gt; pool.release(inst),
+      /already free instance/
+    );
+  });
+});
+</code></pre>
+<h3 id="нагрузочный-тест"><a class="header" href="#нагрузочный-тест">Нагрузочный тест</a></h3>
+<pre><code class="language-javascript">async function stressTest() {
+  const factory = (i) =&gt; ({
+    id: i,
+    async work() {
+      await new Promise(resolve =&gt; setTimeout(resolve, Math.random() * 100));
+    }
+  });
+
+  const pool = new AsyncPool(factory, { size: 10, timeout: 5000 });
+  const operations = [];
+
+  // 1000 операций
+  for (let i = 0; i &lt; 1000; i++) {
+    operations.push((async () =&gt; {
+      const inst = await pool.getInstance();
+      try {
+        await inst.work();
+      } finally {
+        pool.release(inst);
+      }
+    })());
+  }
+
+  const start = Date.now();
+  await Promise.all(operations);
+  const duration = Date.now() - start;
+
+  console.log(`Completed 1000 operations in ${duration}ms`);
+  console.log(`Average: ${(duration / 1000).toFixed(2)}ms per operation`);
+}
+</code></pre>
+<hr>
+<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
+<h3 id="основные-преимущества-asyncpool"><a class="header" href="#основные-преимущества-asyncpool">Основные преимущества AsyncPool</a></h3>
+<p>✅ <strong>Ограничение ресурсов</strong> — контроль максимального количества одновременно используемых объектов</p>
+<p>✅ <strong>Переиспользование</strong> — создание дорогостоящих объектов один раз, многократное использование</p>
+<p>✅ <strong>Асинхронное ожидание</strong> — элегантный Promise-контракт вместо блокировки или колбеков</p>
+<p>✅ <strong>Защита от ошибок</strong> — валидация возвращаемых инстансов, предотвращение двойного освобождения</p>
+<p>✅ <strong>Гибкость</strong> — поддержка таймаутов, расширения пула, мониторинга</p>
+<h3 id="когда-использовать"><a class="header" href="#когда-использовать">Когда использовать</a></h3>
+<p>🎯 <strong>Подключения к базам данных</strong> — ограниченное количество соединений</p>
+<p>🎯 <strong>HTTP-клиенты</strong> — контроль одновременных запросов к внешним API</p>
+<p>🎯 <strong>Файловые дескрипторы</strong> — ограничение открытых файлов</p>
+<p>🎯 <strong>Тяжелые объекты</strong> — парсеры, компиляторы, криптографические контексты</p>
+<p>🎯 <strong>Worker threads</strong> — пул потоков для параллельных вычислений</p>
+<h3 id="когда-не-использовать"><a class="header" href="#когда-не-использовать">Когда НЕ использовать</a></h3>
+<p>❌ <strong>Легковесные объекты</strong> — накладные расходы пула перевесят выгоду</p>
+<p>❌ <strong>Одноразовые объекты</strong> — если объект используется единожды</p>
+<p>❌ <strong>Объекты с состоянием</strong> — если сброс состояния невозможен или сложен</p>
+<p>❌ <strong>Малая нагрузка</strong> — при редких запросах пул не даст выигрыша</p>
+<hr>
+<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="ссылки-на-исходный-код"><a class="header" href="#ссылки-на-исходный-код">Ссылки на исходный код</a></h3>
+<p>Продакшн-версия асинхронного пула доступна в репозитории <strong>Metarhia</strong>:</p>
+<ul>
+<li><a href="https://github.com/metarhia/metautil">AsyncPool в Metarhia</a></li>
+</ul>
+<p>Демонстрационные примеры из лекции:</p>
+<ul>
+<li>Базовая версия AsyncPool</li>
+<li>AsyncPool с таймаутом через setTimeout</li>
+<li>AsyncPool с AbortSignal</li>
+</ul>
+<h3 id="рекомендации-по-углублению"><a class="header" href="#рекомендации-по-углублению">Рекомендации по углублению</a></h3>
+<ol>
+<li>
+<p><strong>Изучите реализации в популярных библиотеках:</strong></p>
+<ul>
+<li><code>pg-pool</code> для PostgreSQL</li>
+<li><code>generic-pool</code> — универсальная библиотека пулов</li>
+<li><code>tarn</code> — современная альтернатива с TypeScript</li>
+</ul>
+</li>
+<li>
+<p><strong>Экспериментируйте с кодом:</strong></p>
+<ul>
+<li>Напишите собственную реализацию с нуля</li>
+<li>Добавьте метрики и мониторинг</li>
+<li>Реализуйте стратегии вытеснения (LIFO, FIFO, LRU)</li>
+</ul>
+</li>
+<li>
+<p><strong>Примените на практике:</strong></p>
+<ul>
+<li>Создайте пул для вашего проекта</li>
+<li>Проведите нагрузочное тестирование</li>
+<li>Сравните производительность с/без пула</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<p>AsyncPool — это фундаментальный паттерн для эффективного управления ресурсами в асинхронных Node.js приложениях. Понимание его внутреннего устройства позволяет:</p>
+<ul>
+<li>Писать более эффективный код</li>
+<li>Избегать распространенных ошибок с ресурсами</li>
+<li>Оптимизировать производительность приложений</li>
+<li>Проектировать масштабируемые системы</li>
+</ul>
+<p>Практикуйтесь в реализации этого паттерна, экспериментируйте с различными стратегиями и адаптируйте его под конкретные задачи вашего проекта.</p>
+<p><strong>Успехов в изучении паттернов асинхронного программирования!</strong> 🚀</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week4/object-pool-factory-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../week5.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week4/object-pool-factory-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../week5.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
