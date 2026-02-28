@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,41 +124,36 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="декомпозиция-инстанцирование-инкапсуляция-агрегация-композиция-ассоциация-делегирование"><a class="header" href="#декомпозиция-инстанцирование-инкапсуляция-агрегация-композиция-ассоциация-делегирование">Декомпозиция, Инстанцирование, Инкапсуляция, Агрегация, Композиция, Ассоциация, Делегирование</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Декомпозиция-Инстанцирование-Инкапсуляция-Агрегация-Композиция-Ассоциация-Делегирование"><a class="header" href="#Декомпозиция-Инстанцирование-Инкапсуляция-Агрегация-Композиция-Ассоциация-Делегирование">Декомпозиция, Инстанцирование, Инкапсуляция, Агрегация, Композиция, Ассоциация, Делегирование</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Эта лекция посвящена фундаментальным понятиям объектно-ориентированного проектирования, которые помогают разделять абстракции на части, делая их менее сложными и более гибкими в компоновке. Мы рассмотрим различные способы связывания объектов и управления их зависимостями, что является ключевым навыком для создания масштабируемых и поддерживаемых приложений.</p>
 <p><strong>Основные темы:</strong></p>
 <ul>
@@ -185,14 +163,14 @@
 <li>Делегирование ответственности</li>
 <li>Инкапсуляция внутренней структуры</li>
 </ul>
-<hr>
-<h2 id="1-инстанцирование-и-ассоциация"><a class="header" href="#1-инстанцирование-и-ассоциация">1. Инстанцирование и Ассоциация</a></h2>
-<h3 id="концепция"><a class="header" href="#концепция">Концепция</a></h3>
+<hr />
+<h2 id="1-Инстанцирование-и-Ассоциация"><a class="header" href="#1-Инстанцирование-и-Ассоциация">1. Инстанцирование и Ассоциация</a></h2>
+<h3 id="Концепция"><a class="header" href="#Концепция">Концепция</a></h3>
 <p><strong>Инстанцирование</strong> — это процесс создания экземпляров объектов из классов или фабричных функций. При инстанцировании мы связываем различные абстракции друг с другом.</p>
 <p><strong>Ассоциация</strong> — это самый слабый тип связи между объектами, когда они знают друг о друге, но не владеют друг другом. Это наименее желательный способ связывания объектов.</p>
-<h3 id="проблема-внешней-ассоциации"><a class="header" href="#проблема-внешней-ассоциации">Проблема внешней ассоциации</a></h3>
+<h3 id="Проблема-внешней-ассоциации"><a class="header" href="#Проблема-внешней-ассоциации">Проблема внешней ассоциации</a></h3>
 <p>Когда мы связываем объекты извне, мы создаем жесткую связь и нарушаем инкапсуляцию.</p>
-<h4 id="пример-плохая-практика-внешняя-ассоциация"><a class="header" href="#пример-плохая-практика-внешняя-ассоциация">Пример: Плохая практика (внешняя ассоциация)</a></h4>
+<h4 id="Пример-Плохая-практика-внешняя-ассоциация"><a class="header" href="#Пример-Плохая-практика-внешняя-ассоциация">Пример: Плохая практика (внешняя ассоциация)</a></h4>
 <pre><code class="language-javascript">// Определение класса Logger
 class Logger {
   constructor() {
@@ -222,11 +200,11 @@ logger.log('Сообщение в лог');
 <li>Сложно контролировать валидность состояния объекта</li>
 <li>Нет гарантий, что stream будет установлен корректно</li>
 </ul>
-<hr>
-<h2 id="2-агрегация"><a class="header" href="#2-агрегация">2. Агрегация</a></h2>
-<h3 id="концепция-1"><a class="header" href="#концепция-1">Концепция</a></h3>
+<hr />
+<h2 id="2-Агрегация"><a class="header" href="#2-Агрегация">2. Агрегация</a></h2>
+<h3 id="Концепция-1"><a class="header" href="#Концепция-1">Концепция</a></h3>
 <p><strong>Агрегация</strong> — это способ связывания объектов, при котором один объект содержит ссылку на другой, но <strong>не владеет</strong> им и не отвечает за его жизненный цикл. Объект передается извне (обычно через конструктор или сеттер) и может существовать независимо.</p>
-<h3 id="характеристики-агрегации"><a class="header" href="#характеристики-агрегации">Характеристики агрегации</a></h3>
+<h3 id="Характеристики-агрегации"><a class="header" href="#Характеристики-агрегации">Характеристики агрегации</a></h3>
 <ul>
 <li>Объект получает зависимость извне</li>
 <li>Не отвечает за создание зависимости</li>
@@ -234,7 +212,7 @@ logger.log('Сообщение в лог');
 <li>Зависимость может быть разделена между несколькими объектами</li>
 <li>Обеспечивает слабую связанность (loose coupling)</li>
 </ul>
-<h3 id="пример-агрегация-с-использованием-классов"><a class="header" href="#пример-агрегация-с-использованием-классов">Пример: Агрегация с использованием классов</a></h3>
+<h3 id="Пример-Агрегация-с-использованием-классов"><a class="header" href="#Пример-Агрегация-с-использованием-классов">Пример: Агрегация с использованием классов</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Logger получает stream извне и использует его
@@ -267,7 +245,7 @@ outputStream.end();
 <li>Все операции жизненного цикла stream (открытие, закрытие, удаление файла) выполняются внешним кодом</li>
 <li><code>Logger</code> имеет только одну обязанность — писать в переданный stream</li>
 </ul>
-<h3 id="пример-агрегация-через-замыкание"><a class="header" href="#пример-агрегация-через-замыкание">Пример: Агрегация через замыкание</a></h3>
+<h3 id="Пример-Агрегация-через-замыкание"><a class="header" href="#Пример-Агрегация-через-замыкание">Пример: Агрегация через замыкание</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Фабричная функция для создания logger
@@ -300,18 +278,18 @@ outputStream.end();
 <li>Более функциональный стиль кода</li>
 <li>Легко тестировать, передавая mock-объекты</li>
 </ul>
-<hr>
-<h2 id="3-композиция"><a class="header" href="#3-композиция">3. Композиция</a></h2>
-<h3 id="концепция-2"><a class="header" href="#концепция-2">Концепция</a></h3>
+<hr />
+<h2 id="3-Композиция"><a class="header" href="#3-Композиция">3. Композиция</a></h2>
+<h3 id="Концепция-2"><a class="header" href="#Концепция-2">Концепция</a></h3>
 <p><strong>Композиция</strong> — это способ связывания объектов, при котором один объект <strong>создает</strong> и <strong>владеет</strong> другим объектом. Владелец отвечает за полный жизненный цикл вложенного объекта, включая его создание и уничтожение.</p>
-<h3 id="характеристики-композиции"><a class="header" href="#характеристики-композиции">Характеристики композиции</a></h3>
+<h3 id="Характеристики-композиции"><a class="header" href="#Характеристики-композиции">Характеристики композиции</a></h3>
 <ul>
 <li>Объект создает свои зависимости внутри себя</li>
 <li>Полностью отвечает за жизненный цикл зависимостей</li>
 <li>Зависимость не может существовать независимо от владельца</li>
 <li>Обеспечивает сильную связанность, но упрощает управление</li>
 </ul>
-<h3 id="пример-композиция-с-использованием-классов"><a class="header" href="#пример-композиция-с-использованием-классов">Пример: Композиция с использованием классов</a></h3>
+<h3 id="Пример-Композиция-с-использованием-классов"><a class="header" href="#Пример-Композиция-с-использованием-классов">Пример: Композиция с использованием классов</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 class Logger {
@@ -357,7 +335,7 @@ logger.close();
 <li>Сложнее тестировать (нужно мокировать файловую систему)</li>
 <li>Жесткая связь с конкретной реализацией</li>
 </ul>
-<h3 id="пример-композиция-через-замыкание"><a class="header" href="#пример-композиция-через-замыкание">Пример: Композиция через замыкание</a></h3>
+<h3 id="Пример-Композиция-через-замыкание"><a class="header" href="#Пример-Композиция-через-замыкание">Пример: Композиция через замыкание</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 function createLogger(filename) {
@@ -382,23 +360,17 @@ logger.log('Сообщение через композицию');
 logger.close();
 </code></pre>
 <p><strong>Разница между агрегацией и композицией через замыкания:</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Агрегация</th><th>Композиция</th></tr>
-</thead>
-<tbody>
+<div class="table-wrapper"><table><thead><tr><th>Агрегация</th><th>Композиция</th></tr></thead><tbody>
 <tr><td><code>createLogger(stream)</code> — stream передается</td><td><code>createLogger(filename)</code> — stream создается внутри</td></tr>
 <tr><td>Объект не владеет зависимостью</td><td>Объект владеет зависимостью</td></tr>
 <tr><td>Не отвечает за уничтожение</td><td>Отвечает за уничтожение</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<hr>
-<h2 id="4-функциональная-композиция"><a class="header" href="#4-функциональная-композиция">4. Функциональная композиция</a></h2>
-<h3 id="концепция-3"><a class="header" href="#концепция-3">Концепция</a></h3>
+<hr />
+<h2 id="4-Функциональная-композиция"><a class="header" href="#4-Функциональная-композиция">4. Функциональная композиция</a></h2>
+<h3 id="Концепция-3"><a class="header" href="#Концепция-3">Концепция</a></h3>
 <p><strong>Функциональная композиция</strong> — это объединение нескольких функций в одну цепочку обработки данных. Это отличается от композиции классов, но может сочетаться с агрегацией абстракций.</p>
-<h3 id="пример-функциональная-композиция-с-агрегацией"><a class="header" href="#пример-функциональная-композиция-с-агрегацией">Пример: Функциональная композиция с агрегацией</a></h3>
+<h3 id="Пример-Функциональная-композиция-с-агрегацией"><a class="header" href="#Пример-Функциональная-композиция-с-агрегацией">Пример: Функциональная композиция с агрегацией</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Вспомогательная функция compose для композиции функций
@@ -441,7 +413,7 @@ outputStream.end();
 <li>Разделение ответственности: форматирование и запись — отдельные функции</li>
 <li>Композиция читается справа налево (или снизу вверх)</li>
 </ul>
-<h3 id="альтернативная-реализация-с-pipe"><a class="header" href="#альтернативная-реализация-с-pipe">Альтернативная реализация с pipe</a></h3>
+<h3 id="Альтернативная-реализация-с-pipe"><a class="header" href="#Альтернативная-реализация-с-pipe">Альтернативная реализация с pipe</a></h3>
 <pre><code class="language-javascript">// pipe читается слева направо (более интуитивно)
 const pipe = (...fns) =&gt; (x) =&gt; fns.reduce((acc, fn) =&gt; fn(acc), x);
 
@@ -452,9 +424,9 @@ const log = pipe(
 
 log('Сообщение через pipe');
 </code></pre>
-<hr>
-<h2 id="5-переход-от-наследования-к-композиции"><a class="header" href="#5-переход-от-наследования-к-композиции">5. Переход от наследования к композиции</a></h2>
-<h3 id="проблема-наследования"><a class="header" href="#проблема-наследования">Проблема наследования</a></h3>
+<hr />
+<h2 id="5-Переход-от-наследования-к-композиции"><a class="header" href="#5-Переход-от-наследования-к-композиции">5. Переход от наследования к композиции</a></h2>
+<h3 id="Проблема-наследования"><a class="header" href="#Проблема-наследования">Проблема наследования</a></h3>
 <p>Наследование создает жесткую иерархию классов, которая может привести к:</p>
 <ul>
 <li>Сложности изменения базовых классов</li>
@@ -462,7 +434,7 @@ log('Сообщение через pipe');
 <li>Жесткой связанности между родителем и потомком</li>
 <li>Сложности понимания глубоких иерархий</li>
 </ul>
-<h3 id="пример-использование-наследования-не-рекомендуется"><a class="header" href="#пример-использование-наследования-не-рекомендуется">Пример: Использование наследования (не рекомендуется)</a></h3>
+<h3 id="Пример-Использование-наследования-не-рекомендуется"><a class="header" href="#Пример-Использование-наследования-не-рекомендуется">Пример: Использование наследования (не рекомендуется)</a></h3>
 <pre><code class="language-javascript">const EventEmitter = require('events');
 
 // Channel наследует EventEmitter
@@ -519,7 +491,7 @@ general.send('Привет всем!', 'Alice');
 <li><strong>Смешение ответственностей:</strong> Channel занимается и хранением сообщений, и эмиттингом событий</li>
 <li><strong>Сложность тестирования:</strong> Трудно изолировать функциональность событий от бизнес-логики</li>
 </ol>
-<h3 id="улучшенный-подход-композиция-вместо-наследования"><a class="header" href="#улучшенный-подход-композиция-вместо-наследования">Улучшенный подход: Композиция вместо наследования</a></h3>
+<h3 id="Улучшенный-подход-Композиция-вместо-наследования"><a class="header" href="#Улучшенный-подход-Композиция-вместо-наследования">Улучшенный подход: Композиция вместо наследования</a></h3>
 <pre><code class="language-javascript">const EventEmitter = require('events');
 
 // Channel использует КОМПОЗИЦИЮ - создает свой EventEmitter
@@ -589,11 +561,11 @@ general.send('Привет через композицию!', 'Bob');
 <li>Гибкость: можно легко заменить <code>EventEmitter</code> на другую реализацию</li>
 <li>Лучшая тестируемость: можно мокировать emitter</li>
 </ul>
-<hr>
-<h2 id="6-делегирование"><a class="header" href="#6-делегирование">6. Делегирование</a></h2>
-<h3 id="концепция-4"><a class="header" href="#концепция-4">Концепция</a></h3>
+<hr />
+<h2 id="6-Делегирование"><a class="header" href="#6-Делегирование">6. Делегирование</a></h2>
+<h3 id="Концепция-4"><a class="header" href="#Концепция-4">Концепция</a></h3>
 <p><strong>Делегирование</strong> — это паттерн, при котором объект передает выполнение определенных операций другому объекту (делегату), скрывая детали реализации за своим интерфейсом.</p>
-<h3 id="проблема-прямого-доступа-к-внутренностям"><a class="header" href="#проблема-прямого-доступа-к-внутренностям">Проблема прямого доступа к внутренностям</a></h3>
+<h3 id="Проблема-прямого-доступа-к-внутренностям"><a class="header" href="#Проблема-прямого-доступа-к-внутренностям">Проблема прямого доступа к внутренностям</a></h3>
 <pre><code class="language-javascript">// ПЛОХОЙ ПРИМЕР - прямой доступ к вложенным объектам
 class Application {
   constructor() {
@@ -627,7 +599,7 @@ app.emitter.on('channel:created', (data) =&gt; {
 <li>Сложно изменить внутреннюю реализацию без breaking changes</li>
 <li>Возможность случайного изменения внутреннего состояния</li>
 </ul>
-<h3 id="правильное-делегирование"><a class="header" href="#правильное-делегирование">Правильное делегирование</a></h3>
+<h3 id="Правильное-делегирование"><a class="header" href="#Правильное-делегирование">Правильное делегирование</a></h3>
 <pre><code class="language-javascript">class Application {
   constructor() {
     this.channels = new Map();
@@ -664,7 +636,7 @@ app.on('channel:created', (data) =&gt; {
   console.log('Канал создан:', data.name);
 });
 </code></pre>
-<h3 id="расширенный-пример-делегирования-с-адаптацией-интерфейса"><a class="header" href="#расширенный-пример-делегирования-с-адаптацией-интерфейса">Расширенный пример делегирования с адаптацией интерфейса</a></h3>
+<h3 id="Расширенный-пример-делегирования-с-адаптацией-интерфейса"><a class="header" href="#Расширенный-пример-делегирования-с-адаптацией-интерфейса">Расширенный пример делегирования с адаптацией интерфейса</a></h3>
 <pre><code class="language-javascript">class Application {
   constructor() {
     this.channels = new Map();
@@ -727,9 +699,9 @@ app.sendMessage('general', 'Привет!', 'Alice');
 <li>Возможность адаптации интерфейса (изменение формата данных)</li>
 <li>Централизованный контроль над операциями</li>
 </ul>
-<hr>
-<h2 id="7-композиция-с-агрегацией-и-делегированием"><a class="header" href="#7-композиция-с-агрегацией-и-делегированием">7. Композиция с агрегацией и делегированием</a></h2>
-<h3 id="комплексный-пример"><a class="header" href="#комплексный-пример">Комплексный пример</a></h3>
+<hr />
+<h2 id="7-Композиция-с-агрегацией-и-делегированием"><a class="header" href="#7-Композиция-с-агрегацией-и-делегированием">7. Композиция с агрегацией и делегированием</a></h2>
+<h3 id="Комплексный-пример"><a class="header" href="#Комплексный-пример">Комплексный пример</a></h3>
 <pre><code class="language-javascript">const EventEmitter = require('events');
 
 class Channel {
@@ -882,15 +854,10 @@ app.removeChannel('random');
 </ul>
 </li>
 </ol>
-<hr>
-<h2 id="8-сравнение-подходов"><a class="header" href="#8-сравнение-подходов">8. Сравнение подходов</a></h2>
-<h3 id="таблица-наследование-vs-композиция-vs-агрегация"><a class="header" href="#таблица-наследование-vs-композиция-vs-агрегация">Таблица: Наследование vs Композиция vs Агрегация</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Наследование</th><th>Композиция</th><th>Агрегация</th></tr>
-</thead>
-<tbody>
+<hr />
+<h2 id="8-Сравнение-подходов"><a class="header" href="#8-Сравнение-подходов">8. Сравнение подходов</a></h2>
+<h3 id="Таблица-Наследование-vs-Композиция-vs-Агрегация"><a class="header" href="#Таблица-Наследование-vs-Композиция-vs-Агрегация">Таблица: Наследование vs Композиция vs Агрегация</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Наследование</th><th>Композиция</th><th>Агрегация</th></tr></thead><tbody>
 <tr><td><strong>Связанность</strong></td><td>Сильная</td><td>Средняя</td><td>Слабая</td></tr>
 <tr><td><strong>Владение</strong></td><td>Неявное</td><td>Да (владеет)</td><td>Нет (использует)</td></tr>
 <tr><td><strong>Жизненный цикл</strong></td><td>Связан с родителем</td><td>Полный контроль</td><td>Независимый</td></tr>
@@ -898,11 +865,10 @@ app.removeChannel('random');
 <tr><td><strong>Повторное использование</strong></td><td>Сложно</td><td>Среднее</td><td>Легко</td></tr>
 <tr><td><strong>Тестируемость</strong></td><td>Сложная</td><td>Средняя</td><td>Легкая</td></tr>
 <tr><td><strong>Изменяемость</strong></td><td>Сложная</td><td>Средняя</td><td>Легкая</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="когда-использовать-каждый-подход"><a class="header" href="#когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
-<h4 id="используйте-агрегацию-когда"><a class="header" href="#используйте-агрегацию-когда">Используйте Агрегацию когда:</a></h4>
+<h3 id="Когда-использовать-каждый-подход"><a class="header" href="#Когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
+<h4 id="Используйте-Агрегацию-когда"><a class="header" href="#Используйте-Агрегацию-когда">Используйте Агрегацию когда:</a></h4>
 <ul>
 <li>Объект должен работать с зависимостью, но не владеть ей</li>
 <li>Зависимость создается и управляется извне</li>
@@ -912,7 +878,7 @@ app.removeChannel('random');
 <pre><code class="language-javascript">// Пример: Logger использует переданный stream
 const logger = new Logger(outputStream);
 </code></pre>
-<h4 id="используйте-композицию-когда"><a class="header" href="#используйте-композицию-когда">Используйте Композицию когда:</a></h4>
+<h4 id="Используйте-Композицию-когда"><a class="header" href="#Используйте-Композицию-когда">Используйте Композицию когда:</a></h4>
 <ul>
 <li>Объект должен полностью контролировать зависимость</li>
 <li>Зависимость является частью объекта</li>
@@ -922,9 +888,9 @@ const logger = new Logger(outputStream);
 <pre><code class="language-javascript">// Пример: Logger создает и владеет stream
 const logger = new Logger('./app.log');
 </code></pre>
-<h4 id="используйте-наследование-когда"><a class="header" href="#используйте-наследование-когда">Используйте Наследование когда:</a></h4>
+<h4 id="Используйте-Наследование-когда"><a class="header" href="#Используйте-Наследование-когда">Используйте Наследование когда:</a></h4>
 <ul>
-<li>Есть четкое отношение “является” (is-a)</li>
+<li>Есть четкое отношение "является" (is-a)</li>
 <li>Базовый класс специально спроектирован для расширения</li>
 <li>Необходимо полиморфное поведение</li>
 <li>Иерархия неглубокая (1-2 уровня)</li>
@@ -936,9 +902,9 @@ class ReadableStream extends EventEmitter {
 }
 </code></pre>
 <p><strong>Общее правило:</strong> Предпочитайте композицию и агрегацию наследованию (Composition over Inheritance).</p>
-<hr>
-<h2 id="9-инкапсуляция-и-защита-внутренностей"><a class="header" href="#9-инкапсуляция-и-защита-внутренностей">9. Инкапсуляция и защита внутренностей</a></h2>
-<h3 id="проблема-доступ-к-вложенным-объектам"><a class="header" href="#проблема-доступ-к-вложенным-объектам">Проблема: Доступ к вложенным объектам</a></h3>
+<hr />
+<h2 id="9-Инкапсуляция-и-защита-внутренностей"><a class="header" href="#9-Инкапсуляция-и-защита-внутренностей">9. Инкапсуляция и защита внутренностей</a></h2>
+<h3 id="Проблема-Доступ-к-вложенным-объектам"><a class="header" href="#Проблема-Доступ-к-вложенным-объектам">Проблема: Доступ к вложенным объектам</a></h3>
 <pre><code class="language-javascript">// ПЛОХО - цепочка точек раскрывает внутреннюю структуру
 class Application {
   constructor() {
@@ -965,7 +931,7 @@ console.log(app.state.channels.get('general').messages[0].text);
 <li>Нет валидации данных</li>
 <li>Легко создать некорректное состояние</li>
 </ul>
-<h3 id="решение-инкапсуляция-с-делегированием"><a class="header" href="#решение-инкапсуляция-с-делегированием">Решение: Инкапсуляция с делегированием</a></h3>
+<h3 id="Решение-Инкапсуляция-с-делегированием"><a class="header" href="#Решение-Инкапсуляция-с-делегированием">Решение: Инкапсуляция с делегированием</a></h3>
 <pre><code class="language-javascript">class Application {
   constructor() {
     // Приватные поля (convention с _)
@@ -1034,7 +1000,7 @@ for (const channel of app.channels()) {
   console.log(channel.name);
 }
 </code></pre>
-<h3 id="использование-приватных-полей-современный-javascript"><a class="header" href="#использование-приватных-полей-современный-javascript">Использование приватных полей (современный JavaScript)</a></h3>
+<h3 id="Использование-приватных-полей-современный-javascript"><a class="header" href="#Использование-приватных-полей-современный-javascript">Использование приватных полей (современный JavaScript)</a></h3>
 <pre><code class="language-javascript">class Application {
   // Настоящие приватные поля (ES2022)
   #channels = new Map();
@@ -1072,9 +1038,9 @@ for (const channel of app.channels()) {
 const app = new Application();
 // app.#channels // SyntaxError: Private field '#channels' must be declared in an enclosing class
 </code></pre>
-<hr>
-<h2 id="10-практические-рекомендации"><a class="header" href="#10-практические-рекомендации">10. Практические рекомендации</a></h2>
-<h3 id="чек-лист-при-проектировании"><a class="header" href="#чек-лист-при-проектировании">Чек-лист при проектировании</a></h3>
+<hr />
+<h2 id="10-Практические-рекомендации"><a class="header" href="#10-Практические-рекомендации">10. Практические рекомендации</a></h2>
+<h3 id="Чек-лист-при-проектировании"><a class="header" href="#Чек-лист-при-проектировании">Чек-лист при проектировании</a></h3>
 <ol>
 <li>
 <p><strong>Избегайте внешней ассоциации</strong></p>
@@ -1086,9 +1052,9 @@ const app = new Application();
 <li>
 <p><strong>Предпочитайте агрегацию и композицию наследованию</strong></p>
 <ul>
-<li>Наследование только для отношений “является”</li>
-<li>Композиция для “содержит” с владением</li>
-<li>Агрегация для “использует” без владения</li>
+<li>Наследование только для отношений "является"</li>
+<li>Композиция для "содержит" с владением</li>
+<li>Агрегация для "использует" без владения</li>
 </ul>
 </li>
 <li>
@@ -1116,8 +1082,8 @@ const app = new Application();
 </ul>
 </li>
 </ol>
-<h3 id="пример-полный-цикл-от-плохого-к-хорошему-коду"><a class="header" href="#пример-полный-цикл-от-плохого-к-хорошему-коду">Пример: Полный цикл от плохого к хорошему коду</a></h3>
-<h4 id="плохо-внешняя-ассоциация-доступ-к-внутренностям"><a class="header" href="#плохо-внешняя-ассоциация-доступ-к-внутренностям">Плохо: Внешняя ассоциация, доступ к внутренностям</a></h4>
+<h3 id="Пример-Полный-цикл-от-плохого-к-хорошему-коду"><a class="header" href="#Пример-Полный-цикл-от-плохого-к-хорошему-коду">Пример: Полный цикл от плохого к хорошему коду</a></h3>
+<h4 id="Плохо-Внешняя-ассоциация-доступ-к-внутренностям"><a class="header" href="#Плохо-Внешняя-ассоциация-доступ-к-внутренностям">Плохо: Внешняя ассоциация, доступ к внутренностям</a></h4>
 <pre><code class="language-javascript">class Application {
   constructor() {
     this.channels = [];
@@ -1137,7 +1103,7 @@ app.emitter.emit('channel:created', channel);
 // Плохо - лазание в кишки
 app.channels[0].messages.push({ text: 'Привет' });
 </code></pre>
-<h4 id="средне-методы-есть-но-слабая-инкапсуляция"><a class="header" href="#средне-методы-есть-но-слабая-инкапсуляция">Средне: Методы есть, но слабая инкапсуляция</a></h4>
+<h4 id="Средне-Методы-есть-но-слабая-инкапсуляция"><a class="header" href="#Средне-Методы-есть-но-слабая-инкапсуляция">Средне: Методы есть, но слабая инкапсуляция</a></h4>
 <pre><code class="language-javascript">class Application {
   constructor() {
     this.channels = new Map();
@@ -1159,7 +1125,7 @@ app.addChannel(channel);
 // Все еще можно лазить
 app.channels.get('general').messages.push({ text: 'Привет' });
 </code></pre>
-<h4 id="хорошо-полная-инкапсуляция-делегирование-управление"><a class="header" href="#хорошо-полная-инкапсуляция-делегирование-управление">Хорошо: Полная инкапсуляция, делегирование, управление</a></h4>
+<h4 id="Хорошо-Полная-инкапсуляция-делегирование-управление"><a class="header" href="#Хорошо-Полная-инкапсуляция-делегирование-управление">Хорошо: Полная инкапсуляция, делегирование, управление</a></h4>
 <pre><code class="language-javascript">class Channel {
   #messages = [];
   #emitter = new EventEmitter();
@@ -1253,9 +1219,9 @@ console.log('История:', history);
 
 app.removeChannel('general');
 </code></pre>
-<hr>
-<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
-<h3 id="ключевые-понятия"><a class="header" href="#ключевые-понятия">Ключевые понятия</a></h3>
+<hr />
+<h2 id="Резюме"><a class="header" href="#Резюме">Резюме</a></h2>
+<h3 id="Ключевые-понятия"><a class="header" href="#Ключевые-понятия">Ключевые понятия</a></h3>
 <ol>
 <li>
 <p><strong>Инстанцирование</strong> — создание экземпляров и связывание абстракций</p>
@@ -1296,7 +1262,7 @@ app.removeChannel('general');
 </ul>
 </li>
 </ol>
-<h3 id="принципы-проектирования"><a class="header" href="#принципы-проектирования">Принципы проектирования</a></h3>
+<h3 id="Принципы-проектирования"><a class="header" href="#Принципы-проектирования">Принципы проектирования</a></h3>
 <ul>
 <li><strong>Composition over Inheritance</strong> — предпочитайте композицию наследованию</li>
 <li><strong>Information Hiding</strong> — скрывайте детали реализации</li>
@@ -1304,7 +1270,7 @@ app.removeChannel('general');
 <li><strong>Loose Coupling</strong> — стремитесь к слабой связанности</li>
 <li><strong>Dependency Injection</strong> — передавайте зависимости извне (агрегация)</li>
 </ul>
-<h3 id="практические-советы"><a class="header" href="#практические-советы">Практические советы</a></h3>
+<h3 id="Практические-советы"><a class="header" href="#Практические-советы">Практические советы</a></h3>
 <ol>
 <li>Начинайте с агрегации — это дает максимальную гибкость</li>
 <li>Переходите к композиции, когда нужен контроль жизненного цикла</li>
@@ -1313,9 +1279,9 @@ app.removeChannel('general');
 <li>Всегда предоставляйте методы для корректного уничтожения объектов</li>
 <li>Помните о предотвращении утечек памяти при работе с событиями</li>
 </ol>
-<hr>
-<h2 id="дополнительные-ресурсы"><a class="header" href="#дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
-<h3 id="связанные-паттерны"><a class="header" href="#связанные-паттерны">Связанные паттерны</a></h3>
+<hr />
+<h2 id="Дополнительные-ресурсы"><a class="header" href="#Дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
+<h3 id="Связанные-паттерны"><a class="header" href="#Связанные-паттерны">Связанные паттерны</a></h3>
 <ul>
 <li><strong>Dependency Injection</strong> — передача зависимостей извне</li>
 <li><strong>Factory Pattern</strong> — создание объектов через фабричные методы</li>
@@ -1323,7 +1289,7 @@ app.removeChannel('general');
 <li><strong>Facade Pattern</strong> — упрощенный интерфейс к сложной системе</li>
 <li><strong>Proxy Pattern</strong> — контроль доступа к объекту</li>
 </ul>
-<h3 id="принципы-solid"><a class="header" href="#принципы-solid">Принципы SOLID</a></h3>
+<h3 id="Принципы-solid"><a class="header" href="#Принципы-solid">Принципы SOLID</a></h3>
 <ul>
 <li><strong>Single Responsibility</strong> — класс должен иметь одну ответственность</li>
 <li><strong>Open/Closed</strong> — открыт для расширения, закрыт для модификации</li>
@@ -1331,7 +1297,7 @@ app.removeChannel('general');
 <li><strong>Interface Segregation</strong> — много специализированных интерфейсов лучше одного общего</li>
 <li><strong>Dependency Inversion</strong> — зависеть от абстракций, а не от конкретики</li>
 </ul>
-<h3 id="для-дальнейшего-изучения"><a class="header" href="#для-дальнейшего-изучения">Для дальнейшего изучения</a></h3>
+<h3 id="Для-дальнейшего-изучения"><a class="header" href="#Для-дальнейшего-изучения">Для дальнейшего изучения</a></h3>
 <ul>
 <li>Patterns of Enterprise Application Architecture (Martin Fowler)</li>
 <li>Design Patterns: Elements of Reusable Object-Oriented Software (Gang of Four)</li>
@@ -1344,11 +1310,11 @@ app.removeChannel('general');
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week3/object-pool-factory-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week3/builder-pattern-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1358,38 +1324,17 @@ app.removeChannel('general');
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week3/object-pool-factory-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week3/builder-pattern-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1397,16 +1342,15 @@ app.removeChannel('general');
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

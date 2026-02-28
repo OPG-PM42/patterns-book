@@ -1,0 +1,569 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Web Streams — потоки событий в браузере - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="web-streams--потоки-данных-в-браузере-и-современном-nodejs"><a class="header" href="#web-streams--потоки-данных-в-браузере-и-современном-nodejs">Web Streams — потоки данных в браузере и современном Node.js</a></h1>
+<hr />
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Web Streams API (WHATWG Streams) — это стандарт W3C/WHATWG для работы с потоками данных
+в браузере. Начиная с Node.js 18, этот API доступен глобально без <code>require</code>.</p>
+<p>Принципиальное отличие от Node.js Streams: Web Streams не основаны на <code>EventEmitter</code>.
+Вместо событий используется Promise-based API — каждая операция возвращает Promise,
+и backpressure реализуется через разрешение или отклонение этих Promise.</p>
+<p>Стримы в браузере встречаются при:</p>
+<ul>
+<li>Загрузке файлов с сервера (Fetch API — <code>response.body</code> это <code>ReadableStream</code>)</li>
+<li>Работе с файлами через File System Access API</li>
+<li>Обработке медиаданных (MediaRecorder)</li>
+<li>Любой потоковой передаче данных через Service Workers</li>
+</ul>
+<hr />
+<h2 id="21-readablestream--чтение-из-fetch-api"><a class="header" href="#21-readablestream--чтение-из-fetch-api">2.1 ReadableStream — чтение из Fetch API</a></h2>
+<pre><code class="language-javascript">// Пример 13. Чтение потокового ответа через getReader()
+//
+// fetch() возвращает Response, у которого body — это ReadableStream.
+// Мы можем читать его побайтово через reader, не ожидая загрузки всего файла.
+//
+// Это критически важно для больших файлов: браузер не держит весь файл в памяти.
+//
+// Чанки приходят как Uint8Array — типизированный байтовый массив.
+// В браузере нет Buffer.concat, поэтому склейку реализуем вручную.
+
+// Этот код запускается в Node.js 18+ (fetch доступен глобально)
+// или в браузере без изменений.
+
+async function fetchWithProgress(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
+  }
+
+  // Получаем длину файла из заголовка (может отсутствовать)
+  const contentLength = response.headers.get('content-length');
+  const total = contentLength ? parseInt(contentLength, 10) : null;
+
+  // Получаем reader — единственный ридер на стрим одновременно.
+  // После вызова getReader() стрим становится "locked" (заблокированным).
+  const reader = response.body.getReader();
+
+  const chunks = [];
+  let received = 0;
+
+  try {
+    while (true) {
+      // read() возвращает Promise&lt;{ done: boolean, value: Uint8Array | undefined }&gt;
+      const { done, value } = await reader.read();
+
+      if (done) {
+        // value === undefined когда done === true
+        break;
+      }
+
+      chunks.push(value);
+      received += value.length;
+
+      // Прогресс загрузки
+      if (total) {
+        const percent = ((received / total) * 100).toFixed(1);
+        process.stdout.write(`\rЗагружено: ${percent}% (${received}/${total} байт)`);
+      } else {
+        process.stdout.write(`\rПолучено: ${received} байт`);
+      }
+    }
+  } finally {
+    // Освобождаем reader — это разблокирует стрим
+    reader.releaseLock();
+  }
+
+  console.log('\nЗагрузка завершена');
+  return concatUint8Arrays(chunks);
+}
+
+// Аналог Buffer.concat для Uint8Array (в браузере Buffer недоступен)
+function concatUint8Arrays(arrays) {
+  const totalLength = arrays.reduce((sum, arr) =&gt; sum + arr.length, 0);
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const arr of arrays) {
+    result.set(arr, offset);
+    offset += arr.length;
+  }
+  return result;
+}
+
+// Запуск (только в Node.js 18+ или браузере)
+async function main() {
+  try {
+    const data = await fetchWithProgress('https://httpbin.org/bytes/1024');
+    const decoder = new TextDecoder();
+    console.log(`Получено ${data.length} байт`);
+  } catch (err) {
+    console.error('Ошибка:', err.message);
+  }
+}
+
+main();
+</code></pre>
+<h3 id="Чтение-через-for-awaitof--единый-интерфейс"><a class="header" href="#Чтение-через-for-awaitof--единый-интерфейс">Чтение через <code>for await...of</code> — единый интерфейс</a></h3>
+<pre><code class="language-javascript">// Пример 14. for await...of с Web ReadableStream
+//
+// ReadableStream (Web Streams API) также реализует Symbol.asyncIterator.
+// Это означает, что и Node.js Streams, и Web Streams читаются ОДИНАКОВО
+// через for await — унифицированный интерфейс для любых потоков данных.
+//
+// При использовании for await:
+// - Не нужно вручную создавать reader через getReader()
+// - Ошибки перехватываются через try/catch
+// - Стрим автоматически освобождается при выходе из цикла
+
+async function fetchWithForAwait(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP ошибка: ${response.status}`);
+  }
+
+  const chunks = [];
+  let byteCount = 0;
+
+  // for await работает напрямую с response.body (ReadableStream)
+  // Под капотом создаётся ридер, который освобождается автоматически
+  for await (const chunk of response.body) {
+    // chunk — Uint8Array
+    chunks.push(chunk);
+    byteCount += chunk.length;
+    console.log(`Чанк: ${chunk.length} байт (тип: ${chunk.constructor.name})`);
+  }
+
+  console.log(`Всего получено: ${byteCount} байт в ${chunks.length} чанках`);
+
+  // Декодируем байты в строку
+  const decoder = new TextDecoder('utf-8');
+  const total = concatUint8Arrays(chunks);
+  return decoder.decode(total);
+}
+
+function concatUint8Arrays(arrays) {
+  const totalLength = arrays.reduce((sum, arr) =&gt; sum + arr.length, 0);
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const arr of arrays) {
+    result.set(arr, offset);
+    offset += arr.length;
+  }
+  return result;
+}
+
+// Запуск (Node.js 18+ или браузер)
+fetchWithForAwait('https://httpbin.org/json')
+  .then((text) =&gt; console.log('Ответ:', text.slice(0, 100)))
+  .catch(console.error);
+</code></pre>
+<hr />
+<h2 id="22-writablestream-в-браузере"><a class="header" href="#22-writablestream-в-браузере">2.2 WritableStream в браузере</a></h2>
+<pre><code class="language-javascript">// Пример 15. WritableStream через открытый конструктор
+//
+// WritableStream создаётся передачей объекта с методами в конструктор
+// (паттерн Revealing Constructor — тот же, что в Node.js Writable).
+//
+// Методы:
+//   start(controller)      — вызывается при создании стрима
+//   write(chunk, controller) — вызывается для каждого чанка (может быть async)
+//   close()                — вызывается когда все данные записаны
+//   abort(reason)          — вызывается при отмене стрима
+
+// WritableStream — Web API, доступен в браузере и Node.js 18+
+function createCollectorWritable() {
+  const collectedChunks = [];
+
+  const stream = new WritableStream({
+    // write возвращает Promise — это основа Promise-based backpressure.
+    // Следующий чанк не придёт, пока Promise не разрешится.
+    async write(chunk) {
+      // Имитируем асинхронную обработку
+      await new Promise((resolve) =&gt; setTimeout(resolve, 5));
+      collectedChunks.push(chunk);
+      console.log(`WritableStream получил чанк: ${chunk.constructor.name}, ${chunk.length} байт`);
+    },
+
+    close() {
+      console.log(`WritableStream закрыт. Собрано чанков: ${collectedChunks.length}`);
+    },
+
+    abort(reason) {
+      console.error('WritableStream отменён:', reason);
+    }
+  });
+
+  return { stream, getChunks: () =&gt; collectedChunks };
+}
+
+// Демонстрация записи через writer
+async function demoWritableStream() {
+  const { stream, getChunks } = createCollectorWritable();
+
+  // getWriter() блокирует стрим — только один writer за раз
+  const writer = stream.getWriter();
+
+  try {
+    // Записываем данные
+    await writer.write(new Uint8Array([72, 101, 108, 108, 111])); // "Hello"
+    await writer.write(new Uint8Array([87, 111, 114, 108, 100])); // "World"
+
+    // Закрываем стрим — вызовет close()
+    await writer.close();
+  } finally {
+    // Освобождаем writer
+    writer.releaseLock();
+  }
+
+  const chunks = getChunks();
+  const decoder = new TextDecoder();
+  const text = chunks.map((c) =&gt; decoder.decode(c)).join('');
+  console.log('Собранный текст:', text);
+}
+
+demoWritableStream().catch(console.error);
+</code></pre>
+<hr />
+<h2 id="23-transformstream-и-pipethrough"><a class="header" href="#23-transformstream-и-pipethrough">2.3 TransformStream и pipeThrough</a></h2>
+<pre><code class="language-javascript">// Пример 16. TransformStream — трансформация в цепочке Web Streams
+//
+// TransformStream содержит внутри:
+//   .readable — ReadableStream (выход трансформации)
+//   .writable — WritableStream (вход трансформации)
+//
+// pipeThrough(transform) — аналог .pipe(transform) в Node.js.
+// Возвращает новый ReadableStream (readable-конец трансформа).
+// Это позволяет строить декларативные цепочки.
+//
+// Метод transform(chunk, controller):
+//   controller.enqueue(value) — передать данные дальше (аналог this.push в Node.js)
+//   controller.terminate()    — закончить стрим (аналог push(null) в Node.js)
+//   controller.error(reason)  — завершить с ошибкой
+
+async function demonstrateTransformStream() {
+  // Создаём тестовый ReadableStream из массива строк
+  const sourceData = [
+    'Hello World',
+    'Node.js Streams',
+    'Web Streams API',
+    'Transform Pipeline',
+  ];
+
+  // ReadableStream из массива
+  const readable = new ReadableStream({
+    start(controller) {
+      for (const item of sourceData) {
+        controller.enqueue(item); // кладём строку в поток
+      }
+      controller.close(); // закрываем поток
+    }
+  });
+
+  // TransformStream 1: преобразует строки в верхний регистр
+  const upperCaseTransform = new TransformStream({
+    transform(chunk, controller) {
+      // chunk — строка
+      controller.enqueue(chunk.toUpperCase());
+    }
+  });
+
+  // TransformStream 2: подсчитывает длину и создаёт объект-статистику
+  // objectMode в Web Streams не требуется явно — типы не ограничены
+  const statsTransform = new TransformStream({
+    transform(chunk, controller) {
+      controller.enqueue({
+        original: chunk,
+        length: chunk.length,
+        wordCount: chunk.split(' ').length,
+      });
+    }
+  });
+
+  // Строим цепочку через pipeThrough
+  // readable -&gt; upperCase -&gt; stats -&gt; результирующий ReadableStream
+  const resultStream = readable
+    .pipeThrough(upperCaseTransform)
+    .pipeThrough(statsTransform);
+
+  // Читаем результат через for await
+  console.log('Результат цепочки трансформаций:');
+  for await (const record of resultStream) {
+    console.log(`  "${record.original}" | длина: ${record.length} | слов: ${record.wordCount}`);
+  }
+}
+
+demonstrateTransformStream().catch(console.error);
+</code></pre>
+<hr />
+<h2 id="24-pipe-в-web-streams"><a class="header" href="#24-pipe-в-web-streams">2.4 Pipe в Web Streams</a></h2>
+<pre><code class="language-javascript">// Пример 17. pipeTo — передача данных из ReadableStream в WritableStream
+//
+// pipeTo() — аналог pipe() из Node.js для Web Streams.
+// Возвращает Promise, который разрешается когда вся передача завершена.
+// Поддерживает AbortSignal для отмены.
+
+async function pipeToDemo() {
+  // Создаём ReadableStream, генерирующий числа
+  let count = 0;
+  const numberStream = new ReadableStream({
+    pull(controller) {
+      if (count &gt;= 5) {
+        controller.close();
+        return;
+      }
+      controller.enqueue(count++);
+    }
+  });
+
+  // TransformStream: число -&gt; строка
+  const toStringTransform = new TransformStream({
+    transform(chunk, controller) {
+      controller.enqueue(`Number: ${chunk}\n`);
+    }
+  });
+
+  // WritableStream: выводит в консоль
+  const consoleWritable = new WritableStream({
+    write(chunk) {
+      process.stdout.write(chunk);
+    },
+    close() {
+      console.log('WritableStream закрыт');
+    }
+  });
+
+  // Цепочка: numbers -&gt; toString -&gt; console
+  await numberStream
+    .pipeThrough(toStringTransform)
+    .pipeTo(consoleWritable);
+}
+
+pipeToDemo().catch(console.error);
+</code></pre>
+<hr />
+<h2 id="25-Отличия-web-streams-от-nodejs-streams"><a class="header" href="#25-Отличия-web-streams-от-nodejs-streams">2.5 Отличия Web Streams от Node.js Streams</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Node.js Streams</th><th>Web Streams (WHATWG)</th></tr></thead><tbody>
+<tr><td>Основан на</td><td><code>EventEmitter</code></td><td>Promise API</td></tr>
+<tr><td>Чтение</td><td><code>on('data')</code>, <code>for await</code>, <code>pipe</code></td><td><code>getReader()</code>, <code>for await</code>, <code>pipeTo</code></td></tr>
+<tr><td>Запись</td><td><code>write(chunk, enc, next)</code></td><td><code>getWriter()</code>, <code>writer.write(chunk)</code></td></tr>
+<tr><td>Трансформация</td><td><code>Transform</code> класс</td><td><code>TransformStream</code> класс</td></tr>
+<tr><td>Цепочки</td><td><code>pipe()</code> / <code>pipeline()</code></td><td><code>pipeThrough()</code> / <code>pipeTo()</code></td></tr>
+<tr><td>Завершение стрима</td><td><code>push(null)</code></td><td><code>controller.close()</code></td></tr>
+<tr><td>Завершение трансформа</td><td><code>push(null)</code></td><td><code>controller.terminate()</code></td></tr>
+<tr><td>Блокировка</td><td>нет</td><td><code>locked: true</code> при наличии reader/writer</td></tr>
+<tr><td>Backpressure</td><td>Флаг из <code>write()</code> + событие <code>drain</code></td><td>Promise из <code>write()</code></td></tr>
+<tr><td>Достпуность</td><td>Node.js (<code>require('node:stream')</code>)</td><td>Глобально (браузер, Node.js 18+)</td></tr>
+<tr><td>Интероперабельность</td><td><code>toWeb()</code> / <code>fromWeb()</code></td><td><code>Readable.fromWeb()</code> / <code>toWeb()</code></td></tr>
+</tbody></table>
+</div>
+<p><strong>Унифицированный интерфейс через <code>for await</code>:</strong></p>
+<p>И Node.js Streams, и Web Streams реализуют <code>Symbol.asyncIterator</code>. Это означает, что
+один и тот же код <code>for await (const chunk of stream)</code> работает для обоих типов.
+Это намеренное проектное решение — унифицировать доступ к потокам данных независимо
+от их происхождения.</p>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week7/lecture-1-node-streams.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week7/lecture-3-actor-pattern.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week7/lecture-1-node-streams.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week7/lecture-3-actor-pattern.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Паттерн «Команда» — TypeScript (часть 1) - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Паттерн-command-Команда--Часть-1"><a class="header" href="#Паттерн-command-Команда--Часть-1">Паттерн Command (Команда) — Часть 1</a></h1>
+<blockquote>
+<p>Поведенческий паттерн из классической книги «Банды четырёх» (GoF).
+Лекция на TypeScript.</p>
+</blockquote>
+<hr />
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Паттерн <strong>Command</strong> («Команда») — это поведенческий паттерн проектирования из книги <em>Design Patterns</em> («Банды четырёх»). Он превращает запросы или простые операции в объекты-данные (команды), которые можно передавать, хранить, откатывать и воспроизводить.</p>
+<p>Паттерн широко применяется в самых разных языках и платформах — от Delphi и C++ Builder до современного TypeScript. Его принципы универсальны и не зависят от конкретного языка программирования.</p>
+<hr />
+<h2 id="Проблема"><a class="header" href="#Проблема">Проблема</a></h2>
+<p>В системах часто встречается следующая ситуация: есть <strong>отправитель</strong> (Invoker) — тот, кто хочет вызвать какую-то операцию, и есть <strong>получатель</strong> (Receiver) — тот, кто должен её выполнить.</p>
+<pre><code>Invoker ──вызывает──► Receiver
+</code></pre>
+<p>Самый простой способ — вызывать методы друг у друга напрямую или передавать события. Но это создаёт <strong>сильную связанность</strong> (coupling): Invoker знает о конкретном классе Receiver и наоборот.</p>
+<p>Проблемы сильной связанности:</p>
+<ul>
+<li>Трудно заменить одну реализацию другой без изменения обеих сторон.</li>
+<li>Невозможно поставить операцию в очередь или записать историю вызовов.</li>
+<li>Нельзя легко реализовать отмену (undo) и повтор (redo) операций.</li>
+<li>Сложно передать операцию в другую систему или сохранить на диск.</li>
+</ul>
+<hr />
+<h2 id="Решение"><a class="header" href="#Решение">Решение</a></h2>
+<p>Паттерн <strong>Command</strong> предлагает выделить описание операции в отдельную <strong>структуру данных</strong> — объект-команду (Command object). Это так называемый <strong>анемичный объект</strong> (Anemic Object) или <strong>DTO</strong> (Data Transfer Object): он хранит данные о том, <em>что</em> нужно сделать, но не знает <em>как</em>.</p>
+<pre><code>Invoker ──создаёт──► Command ──передаёт──► Receiver
+</code></pre>
+<p>Теперь:</p>
+<ul>
+<li>Invoker знает только о структуре Command.</li>
+<li>Receiver знает только о структуре Command.</li>
+<li>Invoker и Receiver <strong>не знают друг о друге</strong>.</li>
+</ul>
+<p>Это аналогично разделению через интерфейсы: все стороны знают про контракт (интерфейс или структуру данных), но не зависят напрямую друг от друга.</p>
+<h3 id="Что-открывает-этот-паттерн"><a class="header" href="#Что-открывает-этот-паттерн">Что открывает этот паттерн</a></h3>
+<p>Сериализация команд в объекты открывает путь к целому ряду мощных архитектурных решений:</p>
+<div class="table-wrapper"><table><thead><tr><th>Паттерн / Приём</th><th>Что даёт</th></tr></thead><tbody>
+<tr><td><strong>CQS</strong> (Command Query Separation)</td><td>Разделение команд (изменений) и запросов (чтений)</td></tr>
+<tr><td><strong>CQRS</strong> (Command Query Responsibility Segregation)</td><td>Разделение слоёв чтения и записи, доступ к БД</td></tr>
+<tr><td><strong>Event Sourcing</strong></td><td>Хранение истории всех изменений, масштабируемость</td></tr>
+<tr><td><strong>Saga</strong></td><td>Откат распределённых транзакций</td></tr>
+</tbody></table>
+</div>
+<h3 id="Практические-возможности"><a class="header" href="#Практические-возможности">Практические возможности</a></h3>
+<ul>
+<li><strong>Логирование</strong>: автоматическая запись всех действий в системе.</li>
+<li><strong>Undo / Redo</strong>: движение по истории вперёд и назад.</li>
+<li><strong>Очередь команд</strong>: постановка операций в очередь для асинхронной обработки.</li>
+<li><strong>Передача по сети</strong>: отправка команды в другую систему для выполнения там.</li>
+<li><strong>Сохранение на диск / в БД</strong>: персистентность истории операций.</li>
+<li><strong>Синхронизация систем</strong>: команды можно накатить на другую базу данных.</li>
+</ul>
+<h3 id="Недостатки"><a class="header" href="#Недостатки">Недостатки</a></h3>
+<ul>
+<li>Увеличивается количество классов и структур в коде.</li>
+<li>Незначительно растёт потребление памяти и процессора.</li>
+</ul>
+<p>Тем не менее польза от паттерна в подходящих задачах значительно превышает его стоимость.</p>
+<hr />
+<h2 id="Реализация"><a class="header" href="#Реализация">Реализация</a></h2>
+<p>Рассмотрим два варианта реализации на TypeScript: классический (ООП с абстрактным классом) и современный (через интерфейсы и анемичные структуры).</p>
+<h3 id="Вариант-1-Классический-ООП-подход"><a class="header" href="#Вариант-1-Классический-ООП-подход">Вариант 1. Классический ООП-подход</a></h3>
+<p>В этом варианте используется абстрактный класс <code>Command</code> с методами <code>exec()</code> и <code>undo()</code>, от которого наследуются конкретные команды.</p>
+<pre><code class="language-typescript">// --- Модель данных ---
+
+class BankAccount {
+  constructor(
+    public name: string,
+    public balance: number
+  ) {}
+}
+
+// --- Абстрактная команда ---
+
+abstract class Command {
+  constructor(
+    public account: BankAccount,
+    public amount: number,
+    public operation: string
+  ) {}
+
+  abstract exec(): void;
+  abstract undo(): void;
+}
+
+// --- Конкретная команда: пополнение счёта ---
+
+class IncomeCommand extends Command {
+  constructor(account: BankAccount, amount: number) {
+    super(account, amount, 'income');
+  }
+
+  exec(): void {
+    this.account.balance += this.amount;
+    console.log(`[+] ${this.account.name}: +${this.amount} =&gt; ${this.account.balance}`);
+  }
+
+  undo(): void {
+    this.account.balance -= this.amount;
+    console.log(`[undo+] ${this.account.name}: -${this.amount} =&gt; ${this.account.balance}`);
+  }
+}
+
+// --- Конкретная команда: списание со счёта ---
+
+class WithdrawCommand extends Command {
+  constructor(account: BankAccount, amount: number) {
+    super(account, amount, 'withdraw');
+  }
+
+  exec(): void {
+    this.account.balance -= this.amount;
+    console.log(`[-] ${this.account.name}: -${this.amount} =&gt; ${this.account.balance}`);
+  }
+
+  undo(): void {
+    this.account.balance += this.amount;
+    console.log(`[undo-] ${this.account.name}: +${this.amount} =&gt; ${this.account.balance}`);
+  }
+}
+
+// --- Инвокер: Банк хранит историю команд ---
+
+class Bank {
+  private history: Command[] = [];
+
+  operate(account: BankAccount, value: number): void {
+    // Выбираем класс команды в зависимости от знака суммы
+    const CommandClass = value &gt; 0 ? IncomeCommand : WithdrawCommand;
+    const command = new CommandClass(account, Math.abs(value));
+    command.exec();
+    this.history.push(command);
+  }
+
+  undo(steps: number): void {
+    for (let i = 0; i &lt; steps; i++) {
+      const command = this.history.pop();
+      if (command) command.undo();
+    }
+  }
+
+  showOperations(): void {
+    console.log('\n--- История операций ---');
+    console.table(
+      this.history.map((c) =&gt; ({
+        account: c.account.name,
+        operation: c.operation,
+        amount: c.amount,
+        balance: c.account.balance,
+      }))
+    );
+  }
+}
+
+// --- Использование ---
+
+const bank = new Bank();
+const alice = new BankAccount('Alice', 1000);
+const bob = new BankAccount('Bob', 500);
+
+bank.operate(alice, 200);   // Alice: +200
+bank.operate(alice, -50);   // Alice: -50
+bank.operate(bob, 300);     // Bob: +300
+bank.operate(bob, -100);    // Bob: -100
+bank.operate(alice, 150);   // Alice: +150
+
+bank.showOperations();      // 5 операций
+
+bank.undo(2);               // откатываем 2 последних
+
+bank.showOperations();      // 3 операции
+</code></pre>
+<hr />
+<h3 id="Вариант-2-Современный-typescript-подход-анемичные-команды--record"><a class="header" href="#Вариант-2-Современный-typescript-подход-анемичные-команды--record">Вариант 2. Современный TypeScript-подход (анемичные команды + Record)</a></h3>
+<p>В этом варианте команды являются <strong>чистыми структурами данных</strong> (анемичными объектами), а поведение хранится отдельно — в коллекции обработчиков. Это более гибкий и идиоматичный подход для TypeScript.</p>
+<pre><code class="language-typescript">// --- Тип аккаунта ---
+
+type Account = {
+  name: string;
+  balance: number;
+};
+
+// --- Коллекция аккаунтов ---
+
+type Accounts = Map&lt;string, Account&gt;;
+
+const accounts: Accounts = new Map();
+
+function addAccount(name: string, initialBalance: number): void {
+  accounts.set(name, { name, balance: initialBalance });
+}
+
+// --- Анемичная команда (только данные, никакого поведения) ---
+
+type OperationType = 'withdraw' | 'income';
+
+interface Command {
+  account: string;  // идентификатор аккаунта
+  amount: number;   // абсолютное значение суммы
+  type: OperationType;
+}
+
+// --- Интерфейс операции (поведение) ---
+
+interface Operation {
+  exec(command: Command): void;
+  undo(command: Command): void;
+}
+
+// --- Коллекция обработчиков: поведение хранится отдельно ---
+
+type Operations = Record&lt;OperationType, Operation&gt;;
+
+const operations: Operations = {
+  income: {
+    exec(command: Command): void {
+      const acc = accounts.get(command.account);
+      if (!acc) throw new Error(`Account not found: ${command.account}`);
+      acc.balance += command.amount;
+      console.log(`[+] ${acc.name}: +${command.amount} =&gt; ${acc.balance}`);
+    },
+    undo(command: Command): void {
+      const acc = accounts.get(command.account);
+      if (!acc) throw new Error(`Account not found: ${command.account}`);
+      acc.balance -= command.amount;
+      console.log(`[undo+] ${acc.name}: -${command.amount} =&gt; ${acc.balance}`);
+    },
+  },
+
+  withdraw: {
+    exec(command: Command): void {
+      const acc = accounts.get(command.account);
+      if (!acc) throw new Error(`Account not found: ${command.account}`);
+      acc.balance -= command.amount;
+      console.log(`[-] ${acc.name}: -${command.amount} =&gt; ${acc.balance}`);
+    },
+    undo(command: Command): void {
+      const acc = accounts.get(command.account);
+      if (!acc) throw new Error(`Account not found: ${command.account}`);
+      acc.balance += command.amount;
+      console.log(`[undo-] ${acc.name}: +${command.amount} =&gt; ${acc.balance}`);
+    },
+  },
+};
+
+// --- Банк: хранит историю анемичных команд ---
+
+class Bank {
+  private history: Command[] = [];
+
+  operate(accountName: string, value: number): void {
+    // Определяем тип операции по знаку суммы
+    const type: OperationType = value &gt;= 0 ? 'income' : 'withdraw';
+    const command: Command = {
+      account: accountName,
+      amount: Math.abs(value),
+      type,
+    };
+
+    // Выполняем операцию через коллекцию обработчиков
+    operations[type].exec(command);
+
+    // Сохраняем анемичную команду в историю
+    this.history.push(command);
+  }
+
+  undo(steps: number): void {
+    for (let i = 0; i &lt; steps; i++) {
+      const command = this.history.pop();
+      if (command) {
+        operations[command.type].undo(command);
+      }
+    }
+  }
+
+  showOperations(): void {
+    console.log('\n--- История операций ---');
+    console.table(this.history);
+  }
+}
+
+// --- Использование ---
+
+addAccount('Alice', 1000);
+addAccount('Bob', 500);
+
+const bank = new Bank();
+
+bank.operate('Alice', 200);   // Alice: +200
+bank.operate('Alice', -50);   // Alice: -50
+bank.operate('Bob', 300);     // Bob: +300
+bank.operate('Bob', -100);    // Bob: -100
+bank.operate('Alice', 150);   // Alice: +150
+
+bank.showOperations();        // 5 команд в истории
+
+bank.undo(2);                 // откатываем 2 операции
+
+bank.showOperations();        // 3 команды в истории
+</code></pre>
+<hr />
+<h2 id="Применение"><a class="header" href="#Применение">Применение</a></h2>
+<p>Паттерн Command уместен в следующих ситуациях:</p>
+<ol>
+<li><strong>Нужна история операций</strong> — когда требуется знать, что было сделано в системе (аудит, логирование).</li>
+<li><strong>Нужен Undo/Redo</strong> — редакторы текста, графические редакторы, IDE.</li>
+<li><strong>Асинхронная обработка</strong> — команды ставятся в очередь (message queue) и выполняются позднее.</li>
+<li><strong>Распределённые системы</strong> — команды сериализуются и передаются между сервисами (микросервисы, event-driven архитектура).</li>
+<li><strong>Синхронизация данных</strong> — одна и та же история команд накатывается на несколько баз данных.</li>
+<li><strong>Транзакции с откатом</strong> — реализация паттерна Saga для распределённых транзакций.</li>
+</ol>
+<h3 id="Отличие-двух-вариантов-реализации"><a class="header" href="#Отличие-двух-вариантов-реализации">Отличие двух вариантов реализации</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Критерий</th><th>Классический (абстрактный класс)</th><th>Современный (анемичные объекты)</th></tr></thead><tbody>
+<tr><td>Поведение</td><td>Внутри команды</td><td>Отдельно в коллекции обработчиков</td></tr>
+<tr><td>Расширяемость</td><td>Новый класс-наследник</td><td>Новый ключ в <code>Record</code></td></tr>
+<tr><td>Сериализация</td><td>Затруднена (классы)</td><td>Легко (plain objects)</td></tr>
+<tr><td>Зависимость от ресивера</td><td>Команда знает о BankAccount</td><td>Команда знает только <code>string</code> id</td></tr>
+<tr><td>TypeScript-идиоматичность</td><td>Хорошо</td><td>Очень хорошо</td></tr>
+</tbody></table>
+</div>
+<hr />
+<h2 id="Итог"><a class="header" href="#Итог">Итог</a></h2>
+<p>Паттерн <strong>Command</strong> решает проблему связанности между отправителем и получателем операции, вводя промежуточную структуру данных — <strong>команду</strong>.</p>
+<p>Ключевые идеи:</p>
+<ul>
+<li>Команда — это <strong>данные</strong>, а не поведение. Поведение хранится отдельно.</li>
+<li>Обе стороны (Invoker и Receiver) знают только о <strong>структуре команды</strong>, но не друг о друге.</li>
+<li>История команд позволяет реализовать <strong>undo/redo</strong>, <strong>логирование</strong>, <strong>очереди</strong>, <strong>синхронизацию систем</strong>.</li>
+<li>В TypeScript предпочтительнее использовать <strong>анемичные объекты</strong> вместо классов — это упрощает сериализацию и передачу данных.</li>
+</ul>
+<p>Этот паттерн является фундаментом для таких архитектурных стилей как CQS, CQRS, Event Sourcing и Saga, которые широко используются в современных распределённых системах.</p>
+<hr />
+<blockquote>
+<p>Следующая часть лекции: реализация паттерна Command на JavaScript на том же примере.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week9.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week9/lecture-command-part2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week9.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week9/lecture-command-part2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

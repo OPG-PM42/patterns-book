@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,74 +124,69 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="паттерны-gof-и-архитектура-сервера-в-nodejs-академический-конспект"><a class="header" href="#паттерны-gof-и-архитектура-сервера-в-nodejs-академический-конспект">Паттерны GoF и архитектура сервера в Node.js: Академический конспект</a></h1>
-<h2 id="метаданные"><a class="header" href="#метаданные">Метаданные</a></h2>
+                        <h1 id="Паттерны-gof-и-архитектура-сервера-в-nodejs-Академический-конспект"><a class="header" href="#Паттерны-gof-и-архитектура-сервера-в-nodejs-Академический-конспект">Паттерны GoF и архитектура сервера в Node.js: Академический конспект</a></h1>
+<h2 id="Метаданные"><a class="header" href="#Метаданные">Метаданные</a></h2>
 <ul>
-<li><strong>Источник</strong>: Лекция “Структура классов сервера и GoF паттерны в Node.js”</li>
+<li><strong>Источник</strong>: Лекция "Структура классов сервера и GoF паттерны в Node.js"</li>
 <li><strong>Дата обработки</strong>: 2025-12-06</li>
 <li><strong>Уровень</strong>: Продвинутый курс по Node.js архитектуре</li>
 </ul>
-<hr>
-<h2 id="содержание"><a class="header" href="#содержание">Содержание</a></h2>
+<hr />
+<h2 id="Содержание"><a class="header" href="#Содержание">Содержание</a></h2>
 <ol>
-<li><a href="#введение">Введение</a></li>
-<li><a href="#архитектурные-компоненты-и-их-взаимосвязи">Архитектурные компоненты и их взаимосвязи</a></li>
-<li><a href="#gof-паттерны-в-nodejs">GoF паттерны в Node.js</a>
+<li><a href="#%D0%B2%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5">Введение</a></li>
+<li><a href="#%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D0%BD%D1%8B%D0%B5-%D0%BA%D0%BE%D0%BC%D0%BF%D0%BE%D0%BD%D0%B5%D0%BD%D1%82%D1%8B-%D0%B8-%D0%B8%D1%85-%D0%B2%D0%B7%D0%B0%D0%B8%D0%BC%D0%BE%D1%81%D0%B2%D1%8F%D0%B7%D0%B8">Архитектурные компоненты и их взаимосвязи</a></li>
+<li><a href="#gof-%D0%BF%D0%B0%D1%82%D1%82%D0%B5%D1%80%D0%BD%D1%8B-%D0%B2-nodejs">GoF паттерны в Node.js</a>
 <ul>
-<li><a href="#1-strategy-стратегия">Strategy (Стратегия)</a></li>
-<li><a href="#2-proxy-прокси">Proxy (Прокси)</a></li>
-<li><a href="#3-facade-фасад">Facade (Фасад)</a></li>
-<li><a href="#4-chain-of-responsibility-цепочка-ответственности">Chain of Responsibility (Цепочка ответственности)</a></li>
-<li><a href="#5-singleton-синглтон">Singleton (Синглтон)</a></li>
+<li><a href="#1-strategy-%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B5%D0%B3%D0%B8%D1%8F">Strategy (Стратегия)</a></li>
+<li><a href="#2-proxy-%D0%BF%D1%80%D0%BE%D0%BA%D1%81%D0%B8">Proxy (Прокси)</a></li>
+<li><a href="#3-facade-%D1%84%D0%B0%D1%81%D0%B0%D0%B4">Facade (Фасад)</a></li>
+<li><a href="#4-chain-of-responsibility-%D1%86%D0%B5%D0%BF%D0%BE%D1%87%D0%BA%D0%B0-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8">Chain of Responsibility (Цепочка ответственности)</a></li>
+<li><a href="#5-singleton-%D1%81%D0%B8%D0%BD%D0%B3%D0%BB%D1%82%D0%BE%D0%BD">Singleton (Синглтон)</a></li>
 </ul>
 </li>
-<li><a href="#javascript-специфичные-паттерны">JavaScript-специфичные паттерны</a>
+<li><a href="#javascript-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D1%84%D0%B8%D1%87%D0%BD%D1%8B%D0%B5-%D0%BF%D0%B0%D1%82%D1%82%D0%B5%D1%80%D0%BD%D1%8B">JavaScript-специфичные паттерны</a>
 <ul>
 <li><a href="#eventemitter-vs-publisher-subscriber">EventEmitter vs Publisher-Subscriber</a></li>
-<li><a href="#hooks-как-альтернатива-middleware">Hooks как альтернатива Middleware</a></li>
+<li><a href="#hooks-%D0%BA%D0%B0%D0%BA-%D0%B0%D0%BB%D1%8C%D1%82%D0%B5%D1%80%D0%BD%D0%B0%D1%82%D0%B8%D0%B2%D0%B0-middleware">Hooks как альтернатива Middleware</a></li>
 </ul>
 </li>
-<li><a href="#принципы-проектирования-архитектуры">Принципы проектирования архитектуры</a></li>
-<li><a href="#управление-состоянием-и-изоляция-контекстов">Управление состоянием и изоляция контекстов</a></li>
-<li><a href="#заключение">Заключение</a></li>
+<li><a href="#%D0%BF%D1%80%D0%B8%D0%BD%D1%86%D0%B8%D0%BF%D1%8B-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D1%8B">Принципы проектирования архитектуры</a></li>
+<li><a href="#%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D1%81%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D0%B5%D0%BC-%D0%B8-%D0%B8%D0%B7%D0%BE%D0%BB%D1%8F%D1%86%D0%B8%D1%8F-%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2">Управление состоянием и изоляция контекстов</a></li>
+<li><a href="#%D0%B7%D0%B0%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5">Заключение</a></li>
 </ol>
-<hr>
-<h2 id="введение"><a class="header" href="#введение">Введение</a></h2>
-<p>Данный конспект представляет собой академический анализ применения паттернов проектирования из книги “Design Patterns: Elements of Reusable Object-Oriented Software” (Gang of Four, GoF) в контексте разработки серверных приложений на Node.js.</p>
-<h3 id="почему-gof-паттерны-выглядят-иначе-в-javascript"><a class="header" href="#почему-gof-паттерны-выглядят-иначе-в-javascript">Почему GoF паттерны выглядят иначе в JavaScript?</a></h3>
+<hr />
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Данный конспект представляет собой академический анализ применения паттернов проектирования из книги "Design Patterns: Elements of Reusable Object-Oriented Software" (Gang of Four, GoF) в контексте разработки серверных приложений на Node.js.</p>
+<h3 id="Почему-gof-паттерны-выглядят-иначе-в-javascript"><a class="header" href="#Почему-gof-паттерны-выглядят-иначе-в-javascript">Почему GoF паттерны выглядят иначе в JavaScript?</a></h3>
 <p>JavaScript является <strong>мультипарадигменным языком</strong>, что принципиально отличает его от классических объектно-ориентированных языков (Java, C++, C#), для которых изначально были созданы паттерны GoF. Ключевые отличия:</p>
 <ol>
 <li><strong>Функции первого класса</strong> (first-class functions) - функции могут передаваться как значения, храниться в переменных, возвращаться из других функций</li>
@@ -223,7 +201,7 @@
 <li>Заменяются идиоматичными JavaScript-конструкциями</li>
 <li>Получают альтернативные реализации, более подходящие для языка</li>
 </ul>
-<h3 id="цели-архитектуры-rpc-сервера"><a class="header" href="#цели-архитектуры-rpc-сервера">Цели архитектуры RPC-сервера</a></h3>
+<h3 id="Цели-архитектуры-rpc-сервера"><a class="header" href="#Цели-архитектуры-rpc-сервера">Цели архитектуры RPC-сервера</a></h3>
 <p>Рассматриваемая архитектура решает следующие задачи:</p>
 <ol>
 <li><strong>Интероперабельность протоколов</strong> - поддержка HTTP и WebSocket через единый интерфейс</li>
@@ -233,11 +211,11 @@
 <li><strong>Персистентность</strong> - сохранение состояния сессий</li>
 <li><strong>Масштабируемость</strong> - возможность добавления аутентификации, авторизации, RBAC</li>
 </ol>
-<hr>
-<h2 id="архитектурные-компоненты-и-их-взаимосвязи"><a class="header" href="#архитектурные-компоненты-и-их-взаимосвязи">Архитектурные компоненты и их взаимосвязи</a></h2>
-<h3 id="двухслойная-архитектура"><a class="header" href="#двухслойная-архитектура">Двухслойная архитектура</a></h3>
+<hr />
+<h2 id="Архитектурные-компоненты-и-их-взаимосвязи"><a class="header" href="#Архитектурные-компоненты-и-их-взаимосвязи">Архитектурные компоненты и их взаимосвязи</a></h2>
+<h3 id="Двухслойная-архитектура"><a class="header" href="#Двухслойная-архитектура">Двухслойная архитектура</a></h3>
 <p>Архитектура четко разделена на два слоя с различными уровнями доступа:</p>
-<h4 id="system-layer-системный-слой"><a class="header" href="#system-layer-системный-слой">System Layer (Системный слой)</a></h4>
+<h4 id="system-layer-Системный-слой"><a class="header" href="#system-layer-Системный-слой">System Layer (Системный слой)</a></h4>
 <p>Компоненты, недоступные из бизнес-логики:</p>
 <ul>
 <li><strong>Server</strong> - центральный координатор, управляет коллекциями сессий и клиентов</li>
@@ -253,14 +231,14 @@
 <li><strong>Тестируемость</strong> - бизнес-логику можно тестировать без поднятия реального сервера</li>
 <li><strong>Гибкость</strong> - можно менять транспортный протокол без изменения бизнес-логики</li>
 </ol>
-<h4 id="userland-пользовательский-слой"><a class="header" href="#userland-пользовательский-слой">Userland (Пользовательский слой)</a></h4>
+<h4 id="userland-Пользовательский-слой"><a class="header" href="#userland-Пользовательский-слой">Userland (Пользовательский слой)</a></h4>
 <p>Компоненты, доступные из бизнес-логики:</p>
 <ul>
 <li><strong>Context</strong> - контекст RPC-вызова</li>
 <li><strong>Client</strong> - представление клиентского соединения</li>
 <li><strong>Session</strong> - пользовательская сессия</li>
 </ul>
-<h3 id="структура-классов-и-их-отношения"><a class="header" href="#структура-классов-и-их-отношения">Структура классов и их отношения</a></h3>
+<h3 id="Структура-классов-и-их-отношения"><a class="header" href="#Структура-классов-и-их-отношения">Структура классов и их отношения</a></h3>
 <pre><code>Server (Singleton)
 ├── sessions: Map&lt;string, Session&gt;  // Глобальная коллекция сессий
 ├── clients: Set&lt;Client&gt;             // Клиенты текущего порта
@@ -290,7 +268,7 @@ Context
 ├── session: Session | null
 └── uuid: string                     // UUID вызова
 </code></pre>
-<h3 id="поток-данных-при-rpc-вызове"><a class="header" href="#поток-данных-при-rpc-вызове">Поток данных при RPC-вызове</a></h3>
+<h3 id="Поток-данных-при-rpc-вызове"><a class="header" href="#Поток-данных-при-rpc-вызове">Поток данных при RPC-вызове</a></h3>
 <ol>
 <li>Запрос приходит на <strong>Server</strong> (HTTP или WebSocket)</li>
 <li><strong>Server</strong> создает соответствующий <strong>Transport</strong> (Strategy)</li>
@@ -300,10 +278,10 @@ Context
 <li>Бизнес-логика работает с Context, не зная о деталях протокола</li>
 <li>Ответ отправляется через Transport, абстрагированный Client</li>
 </ol>
-<hr>
+<hr />
 <h2 id="gof-паттерны-в-nodejs"><a class="header" href="#gof-паттерны-в-nodejs">GoF паттерны в Node.js</a></h2>
-<h3 id="1-strategy-стратегия"><a class="header" href="#1-strategy-стратегия">1. Strategy (Стратегия)</a></h3>
-<h4 id="академическое-определение"><a class="header" href="#академическое-определение">Академическое определение</a></h4>
+<h3 id="1-strategy-Стратегия"><a class="header" href="#1-strategy-Стратегия">1. Strategy (Стратегия)</a></h3>
+<h4 id="Академическое-определение"><a class="header" href="#Академическое-определение">Академическое определение</a></h4>
 <p><strong>Strategy</strong> (Стратегия) - поведенческий паттерн проектирования, который определяет семейство алгоритмов, инкапсулирует каждый из них и делает их взаимозаменяемыми. Стратегия позволяет изменять алгоритмы независимо от клиентов, которые ими пользуются.</p>
 <p><strong>Классические компоненты паттерна:</strong></p>
 <ul>
@@ -311,7 +289,7 @@ Context
 <li><strong>ConcreteStrategy</strong> - конкретные реализации алгоритмов</li>
 <li><strong>Context</strong> - использует Strategy для выполнения операций</li>
 </ul>
-<h4 id="применение-в-архитектуре-transport"><a class="header" href="#применение-в-архитектуре-transport">Применение в архитектуре: Transport</a></h4>
+<h4 id="Применение-в-архитектуре-transport"><a class="header" href="#Применение-в-архитектуре-transport">Применение в архитектуре: Transport</a></h4>
 <p>В данной архитектуре паттерн Strategy применяется для абстрагирования от конкретного транспортного протокола.</p>
 <p><strong>Иерархия классов:</strong></p>
 <pre><code class="language-javascript">// Базовый класс Transport - определяет интерфейс
@@ -365,7 +343,7 @@ class WebSocketTransport extends Transport {
   }
 }
 </code></pre>
-<h4 id="почему-именно-так-в-nodejs"><a class="header" href="#почему-именно-так-в-nodejs">Почему именно так в Node.js?</a></h4>
+<h4 id="Почему-именно-так-в-nodejs"><a class="header" href="#Почему-именно-так-в-nodejs">Почему именно так в Node.js?</a></h4>
 <p><strong>1. Динамический выбор стратегии</strong></p>
 <p>В Node.js выбор стратегии происходит во время выполнения, основываясь на типе входящего соединения:</p>
 <pre><code class="language-javascript">// В server.js
@@ -379,22 +357,16 @@ const createTransport = (request, responseOrConnection) =&gt; {
 </code></pre>
 <p><strong>2. Единый интерфейс для различающейся машинерии</strong></p>
 <p>HTTP и WebSocket принципиально различаются:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>HTTP</th><th>WebSocket</th></tr>
-</thead>
-<tbody>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>HTTP</th><th>WebSocket</th></tr></thead><tbody>
 <tr><td>Тип соединения</td><td>Request-Response (одноразовое)</td><td>Persistent (постоянное)</td></tr>
 <tr><td>Направление</td><td>Однонаправленное</td><td>Двунаправленное</td></tr>
 <tr><td>Заголовки</td><td>Требуются (Content-Type, status code)</td><td>Не используются</td></tr>
 <tr><td>Состояние</td><td>Stateless</td><td>Stateful</td></tr>
 <tr><td>Объекты Node.js</td><td>IncomingMessage + ServerResponse</td><td>WebSocket</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
 <p>Паттерн Strategy позволяет скрыть эти различия за единым интерфейсом <code>send()</code>, <code>write()</code>, <code>error()</code>.</p>
-<h4 id="какую-проблему-решает"><a class="header" href="#какую-проблему-решает">Какую проблему решает?</a></h4>
+<h4 id="Какую-проблему-решает"><a class="header" href="#Какую-проблему-решает">Какую проблему решает?</a></h4>
 <p><strong>Проблема</strong>: Бизнес-логика RPC-сервера не должна знать, по какому протоколу пришел запрос.</p>
 <p><strong>Решение</strong>:</p>
 <ul>
@@ -405,14 +377,14 @@ const createTransport = (request, responseOrConnection) =&gt; {
 </ul>
 <p><strong>Преимущества в Node.js контексте:</strong></p>
 <ol>
-<li><strong>Упрощение бизнес-логики</strong> - endpoint’ы не содержат if/else для проверки типа протокола</li>
+<li><strong>Упрощение бизнес-логики</strong> - endpoint'ы не содержат if/else для проверки типа протокола</li>
 <li><strong>Открыт для расширения</strong> - новые протоколы добавляются без изменения существующего кода</li>
 <li><strong>Закрыт для модификации</strong> - базовый Transport и клиентский код не меняются</li>
 <li><strong>Тестируемость</strong> - можно создавать mock-транспорты для тестирования</li>
 </ol>
-<hr>
-<h3 id="2-proxy-прокси"><a class="header" href="#2-proxy-прокси">2. Proxy (Прокси)</a></h3>
-<h4 id="академическое-определение-1"><a class="header" href="#академическое-определение-1">Академическое определение</a></h4>
+<hr />
+<h3 id="2-proxy-Прокси"><a class="header" href="#2-proxy-Прокси">2. Proxy (Прокси)</a></h3>
+<h4 id="Академическое-определение-1"><a class="header" href="#Академическое-определение-1">Академическое определение</a></h4>
 <p><strong>Proxy</strong> (Прокси, Заместитель) - структурный паттерн проектирования, который предоставляет объект-заместитель вместо реального служебного объекта. Прокси контролирует доступ к оригинальному объекту, позволяя выполнить дополнительную логику до или после передачи вызова оригиналу.</p>
 <p><strong>Типы Proxy:</strong></p>
 <ul>
@@ -421,7 +393,7 @@ const createTransport = (request, responseOrConnection) =&gt; {
 <li><strong>Protection Proxy</strong> - контроль прав доступа</li>
 <li><strong>Smart Reference</strong> - дополнительная логика при обращении к объекту</li>
 </ul>
-<h4 id="применение-в-архитектуре-session-state"><a class="header" href="#применение-в-архитектуре-session-state">Применение в архитектуре: Session State</a></h4>
+<h4 id="Применение-в-архитектуре-session-state"><a class="header" href="#Применение-в-архитектуре-session-state">Применение в архитектуре: Session State</a></h4>
 <p>В данной архитектуре используется <strong>Smart Reference Proxy</strong> для перехвата операций чтения и записи свойств состояния сессии.</p>
 <p><strong>Реализация в Метакоме (принцип применим к Node.js проекту):</strong></p>
 <pre><code class="language-javascript">// Создание Proxy для перехвата доступа к состоянию
@@ -460,7 +432,7 @@ class Session {
   }
 }
 </code></pre>
-<h4 id="почему-именно-так-в-nodejs-1"><a class="header" href="#почему-именно-так-в-nodejs-1">Почему именно так в Node.js?</a></h4>
+<h4 id="Почему-именно-так-в-nodejs-1"><a class="header" href="#Почему-именно-так-в-nodejs-1">Почему именно так в Node.js?</a></h4>
 <p><strong>1. JavaScript Proxy API</strong></p>
 <p>JavaScript предоставляет встроенный механизм <strong>Proxy</strong> (ES6), который является мощным метапрограммированием:</p>
 <pre><code class="language-javascript">const handler = {
@@ -486,7 +458,7 @@ const proxy = new Proxy(target, handler);
 <li><strong>Универсальный</strong> - перехватывает все операции, включая динамически добавляемые свойства</li>
 <li><strong>Минимальный код</strong> - не нужно явно делегировать каждый метод</li>
 </ul>
-<h4 id="какую-проблему-решает-1"><a class="header" href="#какую-проблему-решает-1">Какую проблему решает?</a></h4>
+<h4 id="Какую-проблему-решает-1"><a class="header" href="#Какую-проблему-решает-1">Какую проблему решает?</a></h4>
 <p><strong>Проблема</strong>: Необходимо отслеживать изменения состояния сессии для сохранения в persistent storage (Redis, PostgreSQL).</p>
 <p><strong>Наивное решение (неправильное):</strong></p>
 <pre><code class="language-javascript">// Плохо: требует явного вызова save()
@@ -539,7 +511,7 @@ session.state.role = 'admin';       // Автоматический save()
   return target[property];
 }
 </code></pre>
-<h4 id="архитектурное-значение"><a class="header" href="#архитектурное-значение">Архитектурное значение</a></h4>
+<h4 id="Архитектурное-значение"><a class="header" href="#Архитектурное-значение">Архитектурное значение</a></h4>
 <p>Proxy в контексте сессий обеспечивает:</p>
 <ol>
 <li><strong>Автоматическая персистентность</strong> - состояние сохраняется без явных вызовов</li>
@@ -548,9 +520,9 @@ session.state.role = 'admin';       // Автоматический save()
 <li><strong>Отложенная запись</strong> - можно дебаунсить save() для уменьшения нагрузки на БД</li>
 </ol>
 <p><strong>Примечание</strong>: В текущей учебной реализации Node.js проекта Proxy еще не используется, но в production (Метаком) он активно применяется именно таким образом.</p>
-<hr>
-<h3 id="3-facade-фасад"><a class="header" href="#3-facade-фасад">3. Facade (Фасад)</a></h3>
-<h4 id="академическое-определение-2"><a class="header" href="#академическое-определение-2">Академическое определение</a></h4>
+<hr />
+<h3 id="3-facade-Фасад"><a class="header" href="#3-facade-Фасад">3. Facade (Фасад)</a></h3>
+<h4 id="Академическое-определение-2"><a class="header" href="#Академическое-определение-2">Академическое определение</a></h4>
 <p><strong>Facade</strong> (Фасад) - структурный паттерн проектирования, который предоставляет упрощенный интерфейс к сложной подсистеме, содержащей множество взаимосвязанных классов и объектов.</p>
 <p><strong>Назначение паттерна:</strong></p>
 <ul>
@@ -558,7 +530,7 @@ session.state.role = 'admin';       // Автоматический save()
 <li>Уменьшение зависимостей клиента от внутренних классов подсистемы</li>
 <li>Создание единой точки входа в подсистему</li>
 </ul>
-<h4 id="применение-в-архитектуре-client"><a class="header" href="#применение-в-архитектуре-client">Применение в архитектуре: Client</a></h4>
+<h4 id="Применение-в-архитектуре-client"><a class="header" href="#Применение-в-архитектуре-client">Применение в архитектуре: Client</a></h4>
 <p>Класс <strong>Client</strong> является фасадом, который скрывает сложную машинерию сетевых протоколов от бизнес-логики.</p>
 <p><strong>Что скрывает Client:</strong></p>
 <pre><code class="language-javascript">class Client {
@@ -594,7 +566,7 @@ session.state.role = 'admin';       // Автоматический save()
   }
 }
 </code></pre>
-<h4 id="почему-именно-так-в-nodejs-2"><a class="header" href="#почему-именно-так-в-nodejs-2">Почему именно так в Node.js?</a></h4>
+<h4 id="Почему-именно-так-в-nodejs-2"><a class="header" href="#Почему-именно-так-в-nodejs-2">Почему именно так в Node.js?</a></h4>
 <p><strong>1. Приватные поля (#syntax)</strong></p>
 <p>JavaScript/TypeScript поддерживают приватные поля через <code>#</code> синтаксис (ES2022):</p>
 <pre><code class="language-javascript">class Client {
@@ -629,7 +601,7 @@ class Client extends Transport {
   // client.write(), client.response, client.connection
 }
 </code></pre>
-<h4 id="какую-проблему-решает-2"><a class="header" href="#какую-проблему-решает-2">Какую проблему решает?</a></h4>
+<h4 id="Какую-проблему-решает-2"><a class="header" href="#Какую-проблему-решает-2">Какую проблему решает?</a></h4>
 <p><strong>Проблема</strong>: Бизнес-логика не должна иметь доступ к низкоуровневым деталям HTTP/WebSocket.</p>
 <p><strong>Опасности прямого доступа:</strong></p>
 <ol>
@@ -674,7 +646,7 @@ async function endpoint(context) {
   // Нет возможности для race conditions
 }
 </code></pre>
-<h4 id="архитектурное-значение-1"><a class="header" href="#архитектурное-значение-1">Архитектурное значение</a></h4>
+<h4 id="Архитектурное-значение-1"><a class="header" href="#Архитектурное-значение-1">Архитектурное значение</a></h4>
 <p>Facade (Client) обеспечивает:</p>
 <ol>
 <li><strong>Инкапсуляция</strong> - детали протокола скрыты</li>
@@ -689,9 +661,9 @@ async function endpoint(context) {
 <li>Transport → Connection/Response/Request (приватные ссылки)</li>
 </ul>
 <p>Бизнес-логика видит только Client, но не то, что за ним скрыто.</p>
-<hr>
-<h3 id="4-chain-of-responsibility-цепочка-ответственности"><a class="header" href="#4-chain-of-responsibility-цепочка-ответственности">4. Chain of Responsibility (Цепочка ответственности)</a></h3>
-<h4 id="академическое-определение-3"><a class="header" href="#академическое-определение-3">Академическое определение</a></h4>
+<hr />
+<h3 id="4-chain-of-responsibility-Цепочка-ответственности"><a class="header" href="#4-chain-of-responsibility-Цепочка-ответственности">4. Chain of Responsibility (Цепочка ответственности)</a></h3>
+<h4 id="Академическое-определение-3"><a class="header" href="#Академическое-определение-3">Академическое определение</a></h4>
 <p><strong>Chain of Responsibility</strong> (Цепочка обязанностей, Цепочка ответственности) - поведенческий паттерн проектирования, который позволяет передавать запросы последовательно по цепочке обработчиков. Каждый обработчик решает, может ли он обработать запрос, и стоит ли передавать запрос дальше по цепочке.</p>
 <p><strong>Ключевые характеристики классического паттерна:</strong></p>
 <ol>
@@ -717,7 +689,7 @@ async function endpoint(context) {
   }
 }
 </code></pre>
-<h4 id="проблемы-адаптации-для-httpnodejs-middleware"><a class="header" href="#проблемы-адаптации-для-httpnodejs-middleware">Проблемы адаптации для HTTP/Node.js: Middleware</a></h4>
+<h4 id="Проблемы-адаптации-для-httpnodejs-middleware"><a class="header" href="#Проблемы-адаптации-для-httpnodejs-middleware">Проблемы адаптации для HTTP/Node.js: Middleware</a></h4>
 <p>В Node.js/Express экосистеме широко распространен паттерн <strong>Middleware</strong>, который является <strong>нарушенной реализацией</strong> Chain of Responsibility.</p>
 <p><strong>Что такое Middleware?</strong></p>
 <pre><code class="language-javascript">// Express/Connect middleware
@@ -737,7 +709,7 @@ app.use((req, res, next) =&gt; {
   res.send('Done');
 });
 </code></pre>
-<h4 id="почему-middleware---это-сломанный-chain-of-responsibility"><a class="header" href="#почему-middleware---это-сломанный-chain-of-responsibility">Почему Middleware - это “сломанный” Chain of Responsibility?</a></h4>
+<h4 id="Почему-middleware---это-сломанный-chain-of-responsibility"><a class="header" href="#Почему-middleware---это-сломанный-chain-of-responsibility">Почему Middleware - это "сломанный" Chain of Responsibility?</a></h4>
 <p><strong>Проблема 1: Все обрабатывают запрос, а не один</strong></p>
 <pre><code class="language-javascript">// Chain of Responsibility: ОДИН обработчик
 handler1.handle(request);  // Если обработал, цепочка прерывается
@@ -779,7 +751,7 @@ app.use((req, res, next) =&gt; {
   next();
 });
 </code></pre>
-<h4 id="решение-в-данной-архитектуре-map-based-routing"><a class="header" href="#решение-в-данной-архитектуре-map-based-routing">Решение в данной архитектуре: Map-based Routing</a></h4>
+<h4 id="Решение-в-данной-архитектуре-map-based-routing"><a class="header" href="#Решение-в-данной-архитектуре-map-based-routing">Решение в данной архитектуре: Map-based Routing</a></h4>
 <p>Вместо Chain of Responsibility или Middleware, используется <strong>прямой роутинг</strong> через коллекцию:</p>
 <pre><code class="language-javascript">// Роутинг через Map (или Object)
 const routes = new Map();
@@ -808,7 +780,7 @@ if (handler) {
 <li><strong>Нет мутации общего состояния</strong> - каждый endpoint изолирован</li>
 <li><strong>Производительность</strong> - O(1) поиск обработчика вместо O(n)</li>
 </ol>
-<h4 id="альтернатива-middleware-hooks-fastify"><a class="header" href="#альтернатива-middleware-hooks-fastify">Альтернатива Middleware: Hooks (Fastify)</a></h4>
+<h4 id="Альтернатива-middleware-hooks-fastify"><a class="header" href="#Альтернатива-middleware-hooks-fastify">Альтернатива Middleware: Hooks (Fastify)</a></h4>
 <p><strong>Hooks</strong> - это событийная модель, которая безопаснее Middleware:</p>
 <pre><code class="language-javascript">// Fastify hooks
 fastify.addHook('onRequest', async (request, reply) =&gt; {
@@ -839,7 +811,7 @@ fastify.get('/route', async (request, reply) =&gt; {
 <li><strong>Нет race conditions</strong> - hooks не могут случайно отправить несколько ответов</li>
 <li><strong>Изоляция</strong> - hooks для разных маршрутов не влияют друг на друга</li>
 </ol>
-<h4 id="рекомендации-для-архитектуры"><a class="header" href="#рекомендации-для-архитектуры">Рекомендации для архитектуры</a></h4>
+<h4 id="Рекомендации-для-архитектуры"><a class="header" href="#Рекомендации-для-архитектуры">Рекомендации для архитектуры</a></h4>
 <p>Для добавления cross-cutting concerns (логирование, аутентификация, валидация):</p>
 <p><strong>Используйте Hooks, не Middleware:</strong></p>
 <pre><code class="language-javascript">// Хорошо: Hook для проверки аутентификации
@@ -871,11 +843,11 @@ routes.set('user.profile', requireAuth(async (context) =&gt; {
   return { profile: context.session.user };
 }));
 </code></pre>
-<hr>
-<h3 id="5-singleton-синглтон"><a class="header" href="#5-singleton-синглтон">5. Singleton (Синглтон)</a></h3>
-<h4 id="академическое-определение-4"><a class="header" href="#академическое-определение-4">Академическое определение</a></h4>
+<hr />
+<h3 id="5-singleton-Синглтон"><a class="header" href="#5-singleton-Синглтон">5. Singleton (Синглтон)</a></h3>
+<h4 id="Академическое-определение-4"><a class="header" href="#Академическое-определение-4">Академическое определение</a></h4>
 <p><strong>Singleton</strong> (Одиночка) - порождающий паттерн проектирования, который гарантирует, что у класса есть только один экземпляр, и предоставляет глобальную точку доступа к этому экземпляру.</p>
-<h4 id="применение-в-архитектуре-server"><a class="header" href="#применение-в-архитектуре-server">Применение в архитектуре: Server</a></h4>
+<h4 id="Применение-в-архитектуре-server"><a class="header" href="#Применение-в-архитектуре-server">Применение в архитектуре: Server</a></h4>
 <p>Класс <strong>Server</strong> функционирует как синглтон в контексте одного процесса Node.js:</p>
 <pre><code class="language-javascript">class Server {
   constructor(config) {
@@ -898,7 +870,7 @@ routes.set('user.profile', requireAuth(async (context) =&gt; {
 const server = new Server(config);
 server.listen(8000);
 </code></pre>
-<h4 id="почему-почти-синглтон"><a class="header" href="#почему-почти-синглтон">Почему “почти” синглтон?</a></h4>
+<h4 id="Почему-почти-синглтон"><a class="header" href="#Почему-почти-синглтон">Почему "почти" синглтон?</a></h4>
 <p><strong>Формально не синглтон:</strong></p>
 <ul>
 <li>Можно создать несколько экземпляров <code>new Server()</code></li>
@@ -921,11 +893,11 @@ module.exports = new Server(config);
 const server = require('./server');  // Всегда один и тот же объект
 </code></pre>
 <p>Node.js кеширует модули - <code>require()</code> для одного модуля возвращает один и тот же экспортированный объект.</p>
-<hr>
+<hr />
 <h2 id="javascript-специфичные-паттерны"><a class="header" href="#javascript-специфичные-паттерны">JavaScript-специфичные паттерны</a></h2>
 <h3 id="eventemitter-vs-publisher-subscriber"><a class="header" href="#eventemitter-vs-publisher-subscriber">EventEmitter vs Publisher-Subscriber</a></h3>
-<h4 id="классический-publisher-subscriber-gof"><a class="header" href="#классический-publisher-subscriber-gof">Классический Publisher-Subscriber (GoF)</a></h4>
-<p><strong>Publisher-Subscriber</strong> (Издатель-Подписчик, Observer) - поведенческий паттерн, который определяет зависимость “один-ко-многим” между объектами таким образом, что при изменении состояния одного объекта все зависящие от него оповещаются автоматически.</p>
+<h4 id="Классический-publisher-subscriber-gof"><a class="header" href="#Классический-publisher-subscriber-gof">Классический Publisher-Subscriber (GoF)</a></h4>
+<p><strong>Publisher-Subscriber</strong> (Издатель-Подписчик, Observer) - поведенческий паттерн, который определяет зависимость "один-ко-многим" между объектами таким образом, что при изменении состояния одного объекта все зависящие от него оповещаются автоматически.</p>
 <p><strong>Классическая реализация в ООП:</strong></p>
 <pre><code class="language-java">// Java пример
 interface Subscriber {
@@ -1027,7 +999,7 @@ const listeners = server.listeners('connection');
 // Установка максимума подписчиков (memory leak warning)
 server.setMaxListeners(20);
 </code></pre>
-<h4 id="использование-в-архитектуре"><a class="header" href="#использование-в-архитектуре">Использование в архитектуре</a></h4>
+<h4 id="Использование-в-архитектуре"><a class="header" href="#Использование-в-архитектуре">Использование в архитектуре</a></h4>
 <p><strong>Client с EventEmitter:</strong></p>
 <pre><code class="language-javascript">const EventEmitter = require('events');
 
@@ -1062,25 +1034,19 @@ client.on('disconnect', () =&gt; {
   console.log('Client disconnected');
 });
 </code></pre>
-<h4 id="сравнительная-таблица"><a class="header" href="#сравнительная-таблица">Сравнительная таблица</a></h4>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Publisher-Subscriber (классический)</th><th>EventEmitter (Node.js)</th></tr>
-</thead>
-<tbody>
+<h4 id="Сравнительная-таблица"><a class="header" href="#Сравнительная-таблица">Сравнительная таблица</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Publisher-Subscriber (классический)</th><th>EventEmitter (Node.js)</th></tr></thead><tbody>
 <tr><td>Подписчик</td><td>Объект с методом <code>update()</code></td><td>Любая функция</td></tr>
 <tr><td>Интерфейс</td><td>Требуется</td><td>Не требуется</td></tr>
 <tr><td>Типы событий</td><td>Обычно один тип (или enum)</td><td>Именованные строки</td></tr>
 <tr><td>Язык</td><td>Типичен для Java, C#, C++</td><td>Идиоматичен для JavaScript</td></tr>
 <tr><td>Отписка</td><td>Вручную удаление из списка</td><td><code>off()</code>, <code>removeListener()</code></td></tr>
 <tr><td>Одноразовые подписки</td><td>Требуют дополнительной логики</td><td><code>once()</code></td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<hr>
+<hr />
 <h3 id="hooks-как-альтернатива-middleware"><a class="header" href="#hooks-как-альтернатива-middleware">Hooks как альтернатива Middleware</a></h3>
-<h4 id="проблема-паттерна-middleware"><a class="header" href="#проблема-паттерна-middleware">Проблема паттерна Middleware</a></h4>
+<h4 id="Проблема-паттерна-middleware"><a class="header" href="#Проблема-паттерна-middleware">Проблема паттерна Middleware</a></h4>
 <p>Как обсуждалось ранее, Middleware имеет фундаментальные проблемы:</p>
 <ol>
 <li>Все обработчики выполняются, а не один</li>
@@ -1088,24 +1054,18 @@ client.on('disconnect', () =&gt; {
 <li>Мутация общего состояния (request/response)</li>
 <li>Неявная ответственность</li>
 </ol>
-<h4 id="паттерн-hook"><a class="header" href="#паттерн-hook">Паттерн Hook</a></h4>
+<h4 id="Паттерн-hook"><a class="header" href="#Паттерн-hook">Паттерн Hook</a></h4>
 <p><strong>Hook</strong> (Перехватчик, Крючок) - паттерн, при котором в определенных точках жизненного цикла объекта вызываются зарегистрированные обработчики событий.</p>
 <p><strong>Отличия от Middleware:</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Middleware</th><th>Hooks</th></tr>
-</thead>
-<tbody>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Middleware</th><th>Hooks</th></tr></thead><tbody>
 <tr><td>Концепция</td><td>Цепочка обработчиков</td><td>События жизненного цикла</td></tr>
 <tr><td>Ответственность</td><td>Все обрабатывают</td><td>Каждый hook - свою фазу</td></tr>
 <tr><td>Ответ клиенту</td><td>Любой middleware может отправить</td><td>Только основной handler</td></tr>
 <tr><td>Порядок</td><td>Важен</td><td>Определен жизненным циклом</td></tr>
 <tr><td>Изоляция</td><td>Общий request/response</td><td>Четкие границы</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h4 id="реализация-hooks-в-fastify"><a class="header" href="#реализация-hooks-в-fastify">Реализация Hooks в Fastify</a></h4>
+<h4 id="Реализация-hooks-в-fastify"><a class="header" href="#Реализация-hooks-в-fastify">Реализация Hooks в Fastify</a></h4>
 <pre><code class="language-javascript">const fastify = require('fastify')();
 
 // Хуки жизненного цикла запроса в Fastify
@@ -1158,7 +1118,7 @@ fastify.addHook('onError', async (request, reply, error) =&gt; {
   console.error('Error occurred:', error);
 });
 </code></pre>
-<h4 id="жизненный-цикл-запроса-с-hooks"><a class="header" href="#жизненный-цикл-запроса-с-hooks">Жизненный цикл запроса с Hooks</a></h4>
+<h4 id="Жизненный-цикл-запроса-с-hooks"><a class="header" href="#Жизненный-цикл-запроса-с-hooks">Жизненный цикл запроса с Hooks</a></h4>
 <pre><code>Incoming Request
       ↓
 ┌─────────────┐
@@ -1201,7 +1161,7 @@ fastify.addHook('onError', async (request, reply, error) =&gt; {
 │   onError   │ ← Обработка ошибок
 └─────────────┘
 </code></pre>
-<h4 id="преимущества-hooks"><a class="header" href="#преимущества-hooks">Преимущества Hooks</a></h4>
+<h4 id="Преимущества-hooks"><a class="header" href="#Преимущества-hooks">Преимущества Hooks</a></h4>
 <p><strong>1. Четкая ответственность</strong></p>
 <pre><code class="language-javascript">// Каждый hook знает свою роль
 fastify.addHook('preHandler', checkAuth);      // Только аутентификация
@@ -1257,7 +1217,7 @@ test('getUserHandler', async (t) =&gt; {
   t.equal(result.id, '123');
 });
 </code></pre>
-<h4 id="реализация-простого-hook-системы-для-nodejs-проекта"><a class="header" href="#реализация-простого-hook-системы-для-nodejs-проекта">Реализация простого Hook системы для Node.js проекта</a></h4>
+<h4 id="Реализация-простого-hook-системы-для-nodejs-проекта"><a class="header" href="#Реализация-простого-hook-системы-для-nodejs-проекта">Реализация простого Hook системы для Node.js проекта</a></h4>
 <pre><code class="language-javascript">// Простая реализация hook системы
 class HookSystem {
   constructor() {
@@ -1310,9 +1270,9 @@ server.addHook('onSend', async (context, result) =&gt; {
   console.log('Sending response:', result);
 });
 </code></pre>
-<hr>
-<h2 id="принципы-проектирования-архитектуры"><a class="header" href="#принципы-проектирования-архитектуры">Принципы проектирования архитектуры</a></h2>
-<h3 id="1-separation-of-concerns-разделение-ответственности"><a class="header" href="#1-separation-of-concerns-разделение-ответственности">1. Separation of Concerns (Разделение ответственности)</a></h3>
+<hr />
+<h2 id="Принципы-проектирования-архитектуры"><a class="header" href="#Принципы-проектирования-архитектуры">Принципы проектирования архитектуры</a></h2>
+<h3 id="1-separation-of-concerns-Разделение-ответственности"><a class="header" href="#1-separation-of-concerns-Разделение-ответственности">1. Separation of Concerns (Разделение ответственности)</a></h3>
 <p><strong>Принцип</strong>: Различные аспекты функциональности должны быть изолированы в отдельных компонентах.</p>
 <p><strong>Применение в архитектуре:</strong></p>
 <pre><code>System Layer (протоколы)     ┃ Userland (бизнес-логика)
@@ -1328,7 +1288,7 @@ Request, Response, Connection ┃ Client
 <li>Смена протокола не требует изменения бизнес-логики</li>
 <li>Можно тестировать бизнес-логику без сети</li>
 </ul>
-<h3 id="2-dependency-inversion-principle-принцип-инверсии-зависимостей"><a class="header" href="#2-dependency-inversion-principle-принцип-инверсии-зависимостей">2. Dependency Inversion Principle (Принцип инверсии зависимостей)</a></h3>
+<h3 id="2-dependency-inversion-principle-Принцип-инверсии-зависимостей"><a class="header" href="#2-dependency-inversion-principle-Принцип-инверсии-зависимостей">2. Dependency Inversion Principle (Принцип инверсии зависимостей)</a></h3>
 <p><strong>Принцип</strong>: Модули верхнего уровня не должны зависеть от модулей нижнего уровня. Оба должны зависеть от абстракций.</p>
 <p><strong>Применение:</strong></p>
 <pre><code class="language-javascript">// Плохо: прямая зависимость от конкретной реализации
@@ -1345,7 +1305,7 @@ class Handler {
   }
 }
 </code></pre>
-<h3 id="3-principle-of-least-privilege-принцип-минимальных-привилегий"><a class="header" href="#3-principle-of-least-privilege-принцип-минимальных-привилегий">3. Principle of Least Privilege (Принцип минимальных привилегий)</a></h3>
+<h3 id="3-principle-of-least-privilege-Принцип-минимальных-привилегий"><a class="header" href="#3-principle-of-least-privilege-Принцип-минимальных-привилегий">3. Principle of Least Privilege (Принцип минимальных привилегий)</a></h3>
 <p><strong>Принцип</strong>: Код должен иметь доступ только к тому, что ему необходимо для работы.</p>
 <p><strong>Применение:</strong></p>
 <pre><code class="language-javascript">// Бизнес-логика получает только Context
@@ -1360,7 +1320,7 @@ async function endpoint(context) {
   // - connection (изолирован)
 }
 </code></pre>
-<h3 id="4-fail-safe-defaults-безопасные-значения-по-умолчанию"><a class="header" href="#4-fail-safe-defaults-безопасные-значения-по-умолчанию">4. Fail-Safe Defaults (Безопасные значения по умолчанию)</a></h3>
+<h3 id="4-fail-safe-defaults-Безопасные-значения-по-умолчанию"><a class="header" href="#4-fail-safe-defaults-Безопасные-значения-по-умолчанию">4. Fail-Safe Defaults (Безопасные значения по умолчанию)</a></h3>
 <p><strong>Принцип</strong>: По умолчанию система должна быть в безопасном состоянии.</p>
 <p><strong>Применение:</strong></p>
 <pre><code class="language-javascript">// HTTP transport всегда возвращает 200 и JSON по умолчанию
@@ -1376,7 +1336,7 @@ class Context {
   }
 }
 </code></pre>
-<h3 id="5-single-responsibility-principle-принцип-единственной-ответственности"><a class="header" href="#5-single-responsibility-principle-принцип-единственной-ответственности">5. Single Responsibility Principle (Принцип единственной ответственности)</a></h3>
+<h3 id="5-single-responsibility-principle-Принцип-единственной-ответственности"><a class="header" href="#5-single-responsibility-principle-Принцип-единственной-ответственности">5. Single Responsibility Principle (Принцип единственной ответственности)</a></h3>
 <p><strong>Принцип</strong>: Каждый класс должен иметь одну причину для изменения.</p>
 <p><strong>Применение:</strong></p>
 <ul>
@@ -1386,7 +1346,7 @@ class Context {
 <li><strong>Session</strong> - управление состоянием пользователя</li>
 <li><strong>Context</strong> - контейнер данных для RPC вызова</li>
 </ul>
-<h3 id="6-openclosed-principle-принцип-открытостизакрытости"><a class="header" href="#6-openclosed-principle-принцип-открытостизакрытости">6. Open/Closed Principle (Принцип открытости/закрытости)</a></h3>
+<h3 id="6-openclosed-principle-Принцип-открытостизакрытости"><a class="header" href="#6-openclosed-principle-Принцип-открытостизакрытости">6. Open/Closed Principle (Принцип открытости/закрытости)</a></h3>
 <p><strong>Принцип</strong>: Классы должны быть открыты для расширения, но закрыты для модификации.</p>
 <p><strong>Применение:</strong></p>
 <pre><code class="language-javascript">// Добавление нового транспорта не требует изменения существующих классов
@@ -1398,9 +1358,9 @@ class GrpcTransport extends Transport {
 
 // Server и Client работают с любым Transport
 </code></pre>
-<hr>
-<h2 id="управление-состоянием-и-изоляция-контекстов"><a class="header" href="#управление-состоянием-и-изоляция-контекстов">Управление состоянием и изоляция контекстов</a></h2>
-<h3 id="три-типа-состояния"><a class="header" href="#три-типа-состояния">Три типа состояния</a></h3>
+<hr />
+<h2 id="Управление-состоянием-и-изоляция-контекстов"><a class="header" href="#Управление-состоянием-и-изоляция-контекстов">Управление состоянием и изоляция контекстов</a></h2>
+<h3 id="Три-типа-состояния"><a class="header" href="#Три-типа-состояния">Три типа состояния</a></h3>
 <h4 id="1-state-rpc-вызова-context-state"><a class="header" href="#1-state-rpc-вызова-context-state">1. State RPC-вызова (Context State)</a></h4>
 <p><strong>Характеристики:</strong></p>
 <ul>
@@ -1529,22 +1489,16 @@ async function rateLimit(context) {
 session.state.cart.push({ productId: 'xyz', quantity: 1 });
 // Proxy перехватывает изменение и вызывает save()
 </code></pre>
-<h3 id="сравнительная-таблица-1"><a class="header" href="#сравнительная-таблица-1">Сравнительная таблица</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Context State</th><th>Client State</th><th>Session State</th></tr>
-</thead>
-<tbody>
+<h3 id="Сравнительная-таблица-1"><a class="header" href="#Сравнительная-таблица-1">Сравнительная таблица</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Context State</th><th>Client State</th><th>Session State</th></tr></thead><tbody>
 <tr><td>Время жизни</td><td>Вызов</td><td>Соединение</td><td>До expiration</td></tr>
 <tr><td>Персистентность</td><td>Нет</td><td>Нет</td><td>Да (БД)</td></tr>
 <tr><td>Общий между вызовами</td><td>Нет</td><td>Да (одно соединение)</td><td>Да (все соединения)</td></tr>
 <tr><td>Пример данных</td><td>UUID, timestamp</td><td>Request count, cache</td><td>User data, cart</td></tr>
 <tr><td>Уничтожается при</td><td>Ответ отправлен</td><td>Отключение</td><td>Logout/Expiration</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="изоляция-контекстов"><a class="header" href="#изоляция-контекстов">Изоляция контекстов</a></h3>
+<h3 id="Изоляция-контекстов"><a class="header" href="#Изоляция-контекстов">Изоляция контекстов</a></h3>
 <p><strong>Проблема</strong>: В многопользовательском сервере критически важно, чтобы один пользователь не мог получить доступ к данным другого.</p>
 <p><strong>Решение в архитектуре:</strong></p>
 <p><strong>1. Каждый запрос создает новый Context</strong></p>
@@ -1599,7 +1553,7 @@ async function goodEndpoint(context) {
   // Изолировано
 }
 </code></pre>
-<h3 id="предотвращение-утечек-состояния"><a class="header" href="#предотвращение-утечек-состояния">Предотвращение утечек состояния</a></h3>
+<h3 id="Предотвращение-утечек-состояния"><a class="header" href="#Предотвращение-утечек-состояния">Предотвращение утечек состояния</a></h3>
 <p><strong>1. Замыкания для приватного доступа</strong></p>
 <pre><code class="language-javascript">// В server.js
 function createServer(config) {
@@ -1648,10 +1602,10 @@ const config = Object.freeze({
 config.port = 9000;  // Ошибка в strict mode, игнорируется в sloppy
 console.log(config.port);  // 8000
 </code></pre>
-<hr>
-<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
-<h3 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h3>
-<h4 id="1-javascript---не-классический-ооп"><a class="header" href="#1-javascript---не-классический-ооп">1. JavaScript - не классический ООП</a></h4>
+<hr />
+<h2 id="Заключение"><a class="header" href="#Заключение">Заключение</a></h2>
+<h3 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h3>
+<h4 id="1-javascript---не-классический-ООП"><a class="header" href="#1-javascript---не-классический-ООП">1. JavaScript - не классический ООП</a></h4>
 <p>Паттерны GoF созданы для статически типизированных классических ООП языков. В JavaScript:</p>
 <ul>
 <li><strong>Функции первого класса</strong> упрощают Observer → EventEmitter</li>
@@ -1660,7 +1614,7 @@ console.log(config.port);  // 8000
 <li><strong>Динамическая типизация</strong> позволяет обойтись без интерфейсов</li>
 <li><strong>Proxy API</strong> делает паттерн Proxy тривиальным</li>
 </ul>
-<h4 id="2-не-все-gof-паттерны-полезны-в-nodejs"><a class="header" href="#2-не-все-gof-паттерны-полезны-в-nodejs">2. Не все GoF паттерны полезны в Node.js</a></h4>
+<h4 id="2-Не-все-gof-паттерны-полезны-в-nodejs"><a class="header" href="#2-Не-все-gof-паттерны-полезны-в-nodejs">2. Не все GoF паттерны полезны в Node.js</a></h4>
 <p><strong>Полезные паттерны:</strong></p>
 <ul>
 <li><strong>Strategy</strong> - для абстракций (Transport)</li>
@@ -1674,7 +1628,7 @@ console.log(config.port);  // 8000
 <li><strong>Publisher-Subscriber</strong> → используйте EventEmitter</li>
 <li><strong>Middleware</strong> → используйте Hooks (Fastify)</li>
 </ul>
-<h4 id="3-архитектурные-принципы-важнее-паттернов"><a class="header" href="#3-архитектурные-принципы-важнее-паттернов">3. Архитектурные принципы важнее паттернов</a></h4>
+<h4 id="3-Архитектурные-принципы-важнее-паттернов"><a class="header" href="#3-Архитектурные-принципы-важнее-паттернов">3. Архитектурные принципы важнее паттернов</a></h4>
 <p>Паттерны - это средство, а не цель. Важнее:</p>
 <ol>
 <li><strong>Separation of Concerns</strong> - System Layer vs Userland</li>
@@ -1683,7 +1637,7 @@ console.log(config.port);  // 8000
 <li><strong>Principle of Least Privilege</strong> - минимальный доступ</li>
 <li><strong>Изоляция</strong> - контексты не должны пересекаться</li>
 </ol>
-<h4 id="4-управление-состоянием---критично-для-безопасности"><a class="header" href="#4-управление-состоянием---критично-для-безопасности">4. Управление состоянием - критично для безопасности</a></h4>
+<h4 id="4-Управление-состоянием---критично-для-безопасности"><a class="header" href="#4-Управление-состоянием---критично-для-безопасности">4. Управление состоянием - критично для безопасности</a></h4>
 <p>Три типа state (Context, Client, Session) должны быть четко разделены:</p>
 <ul>
 <li><strong>Context</strong> - временный, одноразовый</li>
@@ -1706,7 +1660,7 @@ console.log(config.port);  // 8000
 <li><strong>Proxy API</strong> для метапрограммирования</li>
 <li><strong>Замыкания</strong> для инкапсуляции</li>
 </ul>
-<h3 id="следующие-шаги"><a class="header" href="#следующие-шаги">Следующие шаги</a></h3>
+<h3 id="Следующие-шаги"><a class="header" href="#Следующие-шаги">Следующие шаги</a></h3>
 <p>Следующие темы для изучения в контексте данной архитектуры:</p>
 <ol>
 <li>
@@ -1747,12 +1701,12 @@ console.log(config.port);  // 8000
 </ul>
 </li>
 </ol>
-<h3 id="рекомендуемая-литература"><a class="header" href="#рекомендуемая-литература">Рекомендуемая литература</a></h3>
+<h3 id="Рекомендуемая-литература"><a class="header" href="#Рекомендуемая-литература">Рекомендуемая литература</a></h3>
 <p><strong>Книги:</strong></p>
 <ul>
-<li>“Design Patterns: Elements of Reusable Object-Oriented Software” (GoF) - для понимания классических паттернов</li>
-<li>“JavaScript Patterns” by Stoyan Stefanov - паттерны специфичные для JavaScript</li>
-<li>“Node.js Design Patterns” by Mario Casciaro - паттерны для Node.js</li>
+<li>"Design Patterns: Elements of Reusable Object-Oriented Software" (GoF) - для понимания классических паттернов</li>
+<li>"JavaScript Patterns" by Stoyan Stefanov - паттерны специфичные для JavaScript</li>
+<li>"Node.js Design Patterns" by Mario Casciaro - паттерны для Node.js</li>
 </ul>
 <p><strong>Документация:</strong></p>
 <ul>
@@ -1765,7 +1719,7 @@ console.log(config.port);  // 8000
 <li><a href="https://github.com/metarhia/metacom">Metarhia/Metaсom</a> - production реализация</li>
 <li>Текущий проект - учебная реализация</li>
 </ul>
-<hr>
+<hr />
 <p><strong>Автор конспекта</strong>: Академический анализ лекции
 <strong>Дата</strong>: 2025-12-06
 <strong>Версия</strong>: 1.0</p>
@@ -1775,11 +1729,11 @@ console.log(config.port);  // 8000
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week1/grasp-principles-part2-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week1/monomorphism_polymorphism_explained.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1789,38 +1743,17 @@ console.log(config.port);  // 8000
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week1/grasp-principles-part2-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week1/monomorphism_polymorphism_explained.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1828,16 +1761,15 @@ console.log(config.port);  // 8000
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

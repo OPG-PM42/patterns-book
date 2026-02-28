@@ -1,0 +1,850 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Context и Async Context — асинхронный контекст на JavaScript - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Паттерн-Контекст-и-Асинхронный-контекст-в-javascript"><a class="header" href="#Паттерн-Контекст-и-Асинхронный-контекст-в-javascript">Паттерн Контекст и Асинхронный контекст в JavaScript</a></h1>
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Паттерн <strong>Контекст</strong> не входит в классический список паттернов «Банды четырёх», однако является одним из наиболее практичных и широко применяемых приёмов в современной JavaScript-разработке. Его цель — передавать зависимости и состояние между различными абстракциями системы без использования глобальных переменных, глобальных событийных шин (EventEmitter/Observer) или глобальных коллекций.</p>
+<p>Контекст позволяет ограничить видимость данных определённой областью: подсистемой, сессией пользователя, одним HTTP-запросом или одним бизнес-процессом. Именно это делает его безопасным и предсказуемым инструментом в отличие от глобального состояния.</p>
+<hr />
+<h2 id="Что-такое-Контекст"><a class="header" href="#Что-такое-Контекст">Что такое Контекст</a></h2>
+<p>Контекст — это структура данных (объект, Map, экземпляр класса), которая содержит зависимости и состояние, необходимые для выполнения некоторой логики. Он передаётся явно — через параметры функций, конструкторы классов или специальные фабрики.</p>
+<h3 id="Проблемы-без-контекста"><a class="header" href="#Проблемы-без-контекста">Проблемы без контекста</a></h3>
+<p>Без паттерна Контекст разработчики вынуждены:</p>
+<ul>
+<li>Использовать глобальные переменные (загрязняют пространство имён, провоцируют гонки данных).</li>
+<li>Создавать глобальный EventEmitter/Observer для передачи данных между модулями.</li>
+<li>Записывать состояние в <code>global</code> или в статические свойства классов.</li>
+</ul>
+<p>Все эти подходы приводят к хрупкому, трудно тестируемому коду.</p>
+<hr />
+<h2 id="Ручная-реализация-контекста"><a class="header" href="#Ручная-реализация-контекста">Ручная реализация контекста</a></h2>
+<h3 id="Вариант-1-Замыкания-функциональный-подход"><a class="header" href="#Вариант-1-Замыкания-функциональный-подход">Вариант 1: Замыкания (функциональный подход)</a></h3>
+<p>Фабричная функция принимает контекст и возвращает экземпляр функции, который «захватывает» нужные зависимости через замыкание.</p>
+<pre><code class="language-javascript">// Вспомогательный объект для проверки прав доступа (RBAC)
+const createAccessPolicy = (roles) =&gt; ({
+  check(user, operation) {
+    const allowed = roles[user.role];
+    if (!allowed || !allowed.includes(operation)) {
+      throw new Error(
+        `Access denied: user "${user.name}" cannot perform "${operation}"`
+      );
+    }
+  },
+});
+
+// Фабрика: создаёт функцию getBalance с доступом к контексту через замыкание
+const createGetBalance = (context) =&gt; {
+  // Деструктурируем контекст один раз — все вложенные функции его видят
+  const { console: log, access, user } = context;
+
+  return async (account) =&gt; {
+    // Проверяем права доступа
+    access.check(user, 'read:balance');
+    log.log(`[getBalance] User "${user.name}" reads balance for account ${account}`);
+
+    // В реальном приложении здесь был бы запрос к базе данных
+    const balances = { acc001: 1500, acc002: 3200 };
+    const balance = balances[account] ?? 0;
+
+    return { account, balance };
+  };
+};
+
+// --- Использование ---
+const accessPolicy = createAccessPolicy({
+  guest: [],
+  user: ['read:balance'],
+  admin: ['read:balance', 'read:transactions'],
+});
+
+const context = {
+  console,           // зависимость: логгер
+  access: accessPolicy, // зависимость: политика доступа
+  user: { name: 'Markus', role: 'user' }, // состояние: текущий пользователь
+};
+
+const getBalance = createGetBalance(context);
+
+getBalance('acc001').then((result) =&gt; {
+  console.log('Result:', result);
+  // Result: { account: 'acc001', balance: 1500 }
+});
+</code></pre>
+<h3 id="Вариант-2-ООП--контекст-через-конструктор-revealing-constructor"><a class="header" href="#Вариант-2-ООП--контекст-через-конструктор-revealing-constructor">Вариант 2: ООП — контекст через конструктор (Revealing Constructor)</a></h3>
+<p>Паттерн «Открытый конструктор» (Revealing Constructor): контекст передаётся в конструктор и сохраняется как приватное состояние экземпляра.</p>
+<pre><code class="language-javascript">class AccessPolicy {
+  #roles;
+  constructor(roles) {
+    this.#roles = roles;
+  }
+  check(user, operation) {
+    const allowed = this.#roles[user.role];
+    if (!allowed || !allowed.includes(operation)) {
+      throw new Error(`Access denied for "${user.name}" on "${operation}"`);
+    }
+  }
+}
+
+class AccountService {
+  // Контекст сохраняется при создании — это и есть Revealing Constructor
+  #context;
+
+  constructor(context) {
+    this.#context = context;
+  }
+
+  async getBalance(account) {
+    const { console: log, access, user } = this.#context;
+    access.check(user, 'read:balance');
+    log.log(`[AccountService.getBalance] user=${user.name}, account=${account}`);
+
+    const balances = { acc001: 1500, acc002: 3200 };
+    return { account, balance: balances[account] ?? 0 };
+  }
+
+  async getTransactions(account) {
+    const { console: log, access, user } = this.#context;
+    access.check(user, 'read:transactions');
+    log.log(`[AccountService.getTransactions] user=${user.name}, account=${account}`);
+
+    return { account, transactions: [{ id: 't1', amount: -100 }, { id: 't2', amount: 500 }] };
+  }
+}
+
+// --- Использование ---
+const policy = new AccessPolicy({
+  user: ['read:balance'],
+  admin: ['read:balance', 'read:transactions'],
+});
+
+const ctx = {
+  console,
+  access: policy,
+  user: { name: 'Alice', role: 'admin' },
+};
+
+const service = new AccountService(ctx);
+
+service.getBalance('acc001').then(console.log);
+service.getTransactions('acc001').then(console.log);
+</code></pre>
+<h3 id="Вариант-3-Фабрика-сервисов"><a class="header" href="#Вариант-3-Фабрика-сервисов">Вариант 3: Фабрика сервисов</a></h3>
+<p>Когда сервис состоит из нескольких функций, удобно обернуть их в единую фабрику. Внутри фабрики все функции разделяют один лексический контекст.</p>
+<pre><code class="language-javascript">const createAccountService = (context) =&gt; {
+  // Деструктурируем один раз для всего модуля/фабрики
+  const { console: log, access, user } = context;
+
+  const getBalance = async (account) =&gt; {
+    access.check(user, 'read:balance');
+    log.log(`getBalance: ${user.name} -&gt; ${account}`);
+    return { account, balance: 1500 };
+  };
+
+  const getTransactions = async (account) =&gt; {
+    access.check(user, 'read:transactions');
+    log.log(`getTransactions: ${user.name} -&gt; ${account}`);
+    return { account, transactions: [] };
+  };
+
+  // Возвращаем публичный интерфейс сервиса
+  return { getBalance, getTransactions };
+};
+
+// --- Использование ---
+const ctx = {
+  console,
+  access: { check: () =&gt; {} }, // упрощённая заглушка
+  user: { name: 'Bob', role: 'admin' },
+};
+
+const accountService = createAccountService(ctx);
+accountService.getBalance('acc002').then(console.log);
+</code></pre>
+<hr />
+<h2 id="Функциональный-подход-pipeline-с-контекстом-и-трассировкой"><a class="header" href="#Функциональный-подход-pipeline-с-контекстом-и-трассировкой">Функциональный подход: Pipeline с контекстом и трассировкой</a></h2>
+<p>Функциональное программирование позволяет выстроить цепочку асинхронных шагов, каждый из которых получает контекст и возвращает обновлённый контекст внутри Promise. Это напоминает композицию функций, но в прямом (слева направо) порядке.</p>
+<pre><code class="language-javascript">import { randomUUID } from 'node:crypto';
+
+// Генерирует уникальный идентификатор запроса
+const makeRequestId = () =&gt; `${Date.now()}-${randomUUID()}`;
+
+// Добавляет текущий шаг в массив трассировки внутри контекста
+const appendTrace = (context, stepName) =&gt; {
+  const trace = context.trace ?? [];
+  return { ...context, trace: [...trace, stepName] };
+};
+
+// Pipeline: принимает массив асинхронных шагов и контекст,
+// последовательно прогоняет контекст через каждый шаг
+const pipeline =
+  (...steps) =&gt;
+  (context) =&gt;
+    steps.reduce(
+      (promise, step) =&gt; promise.then((ctx) =&gt; step(ctx)),
+      Promise.resolve(context)
+    );
+
+// --- Шаги пайплайна ---
+
+// Шаг 1: трассировка — добавляет request ID и логирует
+const trace = async (context) =&gt; {
+  const { console: log } = context;
+  const requestId = context.requestId ?? makeRequestId();
+  const next = appendTrace({ ...context, requestId }, 'trace');
+  log.log(`[trace] requestId=${requestId}`);
+  return next;
+};
+
+// Шаг 2: аутентификация — определяет роль пользователя
+const authenticate = async (context) =&gt; {
+  const { console: log, headers } = context;
+  const user = headers?.user
+    ? { name: headers.user, role: 'user' }
+    : { name: 'anonymous', role: 'guest' };
+  log.log(`[authenticate] user=${user.name}, role=${user.role}`);
+  return appendTrace({ ...context, user }, 'authenticate');
+};
+
+// Шаг 3: проверка прав доступа
+const checkAccess = async (context) =&gt; {
+  const { console: log, user, accessRules } = context;
+  const allowed = accessRules[user.role] ?? [];
+  if (!allowed.includes('read:balance')) {
+    throw new Error(`Access denied for role "${user.role}"`);
+  }
+  log.log(`[checkAccess] OK for ${user.name}`);
+  return appendTrace(context, 'checkAccess');
+};
+
+// Шаг 4: получение баланса (бизнес-логика)
+const fetchBalance = async (context) =&gt; {
+  const { console: log, account, user } = context;
+  const balance = 1500; // в реальности — запрос к БД
+  log.log(`[fetchBalance] account=${account}, balance=${balance}`);
+  const result = { status: 200, body: { balance } };
+  return appendTrace({ ...context, result }, 'fetchBalance');
+};
+
+// --- Сборка и запуск ---
+const execute = pipeline(trace, authenticate, checkAccess, fetchBalance);
+
+const initialContext = {
+  console,
+  headers: { user: 'Markus' },
+  account: 'acc001',
+  accessRules: {
+    guest: [],
+    user: ['read:balance'],
+    admin: ['read:balance', 'read:transactions'],
+  },
+};
+
+execute(initialContext).then((finalCtx) =&gt; {
+  console.log('Trace:', finalCtx.trace);
+  console.log('Result:', finalCtx.result);
+});
+/*
+[trace] requestId=1700000000000-xxxxxxxx-...
+[authenticate] user=Markus, role=user
+[checkAccess] OK for Markus
+[fetchBalance] account=acc001, balance=1500
+Trace: [ 'trace', 'authenticate', 'checkAccess', 'fetchBalance' ]
+Result: { status: 200, body: { balance: 1500 } }
+*/
+</code></pre>
+<hr />
+<h2 id="Асинхронный-контекст"><a class="header" href="#Асинхронный-контекст">Асинхронный контекст</a></h2>
+<p>Ручная передача контекста через параметры функций удобна, но требует явного пробрасывания через каждый вызов. В глубоко вложенных или распределённых системах это становится обременительным. Для решения этой проблемы в Node.js существует механизм <strong>асинхронного контекста</strong>.</p>
+<p>Исторически в Node.js для этого применялись:</p>
+<ul>
+<li><code>domains</code> — устаревший модуль, эмулировавший контексты (deprecated).</li>
+<li>Сторонние библиотеки «зон» (Zone.js для Angular, аналоги для браузера).</li>
+</ul>
+<p>Современное и официальное решение — <strong><code>AsyncLocalStorage</code></strong> из модуля <code>node:async_hooks</code>.</p>
+<hr />
+<h2 id="asynclocalstorage"><a class="header" href="#asynclocalstorage">AsyncLocalStorage</a></h2>
+<p><code>AsyncLocalStorage</code> позволяет хранить данные, которые автоматически доступны во всех асинхронных операциях, запущенных в рамках одного «контекстного запуска» (<code>run</code>). Это работает благодаря тому, что Node.js отслеживает «дерево» асинхронных ресурсов и знает, к какому корневому <code>run</code>-вызову относится каждый колбэк.</p>
+<h3 id="Ключевые-методы"><a class="header" href="#Ключевые-методы">Ключевые методы</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Метод</th><th>Описание</th></tr></thead><tbody>
+<tr><td><code>new AsyncLocalStorage()</code></td><td>Создаёт хранилище</td></tr>
+<tr><td><code>.run(store, callback)</code></td><td>Запускает <code>callback</code>, связывая с ним <code>store</code></td></tr>
+<tr><td><code>.getStore()</code></td><td>Возвращает <code>store</code> текущего контекста из любого вложенного вызова</td></tr>
+<tr><td><code>.enterWith(store)</code></td><td>Устанавливает <code>store</code> для текущего асинхронного контекста без запуска колбэка</td></tr>
+</tbody></table>
+</div>
+<h3 id="Принцип-работы"><a class="header" href="#Принцип-работы">Принцип работы</a></h3>
+<pre><code>asyncLocalStorage.run(store, () =&gt; {
+  // Здесь и во ВСЕХ вложенных вызовах (даже асинхронных)
+  // asyncLocalStorage.getStore() вернёт этот store
+});
+</code></pre>
+<hr />
+<h2 id="Реализация-с-asynclocalstorage"><a class="header" href="#Реализация-с-asynclocalstorage">Реализация с AsyncLocalStorage</a></h2>
+<h3 id="Базовый-пример-хранение-контекста-запроса"><a class="header" href="#Базовый-пример-хранение-контекста-запроса">Базовый пример: хранение контекста запроса</a></h3>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from 'node:async_hooks';
+
+// Создаём хранилище — один экземпляр на всё приложение
+const requestContext = new AsyncLocalStorage();
+
+// Имитация middleware в HTTP-сервере
+const handleRequest = (req) =&gt; {
+  // Формируем контекст запроса
+  const store = {
+    requestId: `req-${Date.now()}`,
+    user: req.user ?? { name: 'anonymous', role: 'guest' },
+    console, // логгер (можно заменить на winston, pino и т.д.)
+  };
+
+  // Запускаем обработчик внутри контекста
+  requestContext.run(store, () =&gt; {
+    processRequest(req.account);
+  });
+};
+
+// Вспомогательная функция доступа к контексту — вызывается из любого места
+const getContext = () =&gt; {
+  const store = requestContext.getStore();
+  if (!store) throw new Error('No request context found');
+  return store;
+};
+
+// Функция бизнес-логики — НЕ принимает контекст через параметры
+const getBalance = async (account) =&gt; {
+  const { console: log, user, requestId } = getContext();
+  log.log(`[${requestId}] getBalance: user=${user.name}, account=${account}`);
+  // Запрос к базе данных...
+  return { account, balance: 1500 };
+};
+
+// Ещё одна функция, которая тоже читает из контекста
+const getTransactions = async (account) =&gt; {
+  const { console: log, user, requestId } = getContext();
+  log.log(`[${requestId}] getTransactions: user=${user.name}, account=${account}`);
+  return { account, transactions: [] };
+};
+
+const processRequest = async (account) =&gt; {
+  const balance = await getBalance(account);
+  const transactions = await getTransactions(account);
+  console.log({ balance, transactions });
+};
+
+// --- Имитация двух одновременных запросов ---
+handleRequest({ user: { name: 'Markus', role: 'user' }, account: 'acc001' });
+handleRequest({ user: { name: 'Alice', role: 'admin' }, account: 'acc002' });
+
+// Каждый вызов handleRequest создаёт свой изолированный store.
+// Функции getBalance и getTransactions читают именно свой store,
+// даже если запросы выполняются одновременно.
+</code></pre>
+<h3 id="Реалистичный-пример-http-сервер-с-трассировкой"><a class="header" href="#Реалистичный-пример-http-сервер-с-трассировкой">Реалистичный пример: HTTP-сервер с трассировкой</a></h3>
+<pre><code class="language-javascript">import { createServer } from 'node:http';
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { randomUUID } from 'node:crypto';
+
+const als = new AsyncLocalStorage();
+
+// Функция-хелпер: получить store или бросить ошибку
+const ctx = () =&gt; {
+  const store = als.getStore();
+  if (!store) throw new Error('AsyncLocalStorage store is not initialized');
+  return store;
+};
+
+// Логгер, который автоматически добавляет requestId из контекста
+const logger = {
+  log: (message) =&gt; {
+    const store = als.getStore();
+    const prefix = store ? `[${store.requestId}]` : '[no-ctx]';
+    console.log(`${prefix} ${message}`);
+  },
+};
+
+// Сервис — не знает ни о каком контексте напрямую
+class UserService {
+  async getUser(userId) {
+    logger.log(`UserService.getUser(${userId})`);
+    // Имитация обращения к БД
+    return { id: userId, name: 'Markus', role: 'user' };
+  }
+}
+
+class BalanceService {
+  #userService;
+  constructor(userService) {
+    this.#userService = userService;
+  }
+
+  async getBalance(userId, account) {
+    logger.log(`BalanceService.getBalance(${userId}, ${account})`);
+    const user = await this.#userService.getUser(userId);
+    logger.log(`  -&gt; resolved user: ${user.name}`);
+    return { user, account, balance: 2500 };
+  }
+}
+
+// Middleware: устанавливает контекст для каждого запроса
+const withRequestContext = (req, res, next) =&gt; {
+  const store = {
+    requestId: randomUUID(),
+    method: req.method,
+    url: req.url,
+    startTime: Date.now(),
+  };
+
+  als.run(store, () =&gt; {
+    logger.log(`Incoming ${req.method} ${req.url}`);
+    next();
+  });
+};
+
+// Обработчик запроса
+const userService = new UserService();
+const balanceService = new BalanceService(userService);
+
+const server = createServer((req, res) =&gt; {
+  withRequestContext(req, res, async () =&gt; {
+    try {
+      const result = await balanceService.getBalance('user-1', 'acc001');
+      const duration = Date.now() - ctx().startTime;
+      logger.log(`Request completed in ${duration}ms`);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result));
+    } catch (error) {
+      logger.log(`Error: ${error.message}`);
+      res.writeHead(500);
+      res.end(JSON.stringify({ error: error.message }));
+    }
+  });
+});
+
+server.listen(3000, () =&gt; {
+  console.log('Server listening on http://localhost:3000');
+});
+
+/*
+Пример вывода при двух одновременных запросах:
+
+[a1b2c3d4-...] Incoming GET /balance
+[e5f6g7h8-...] Incoming GET /balance
+[a1b2c3d4-...] BalanceService.getBalance(user-1, acc001)
+[e5f6g7h8-...] BalanceService.getBalance(user-1, acc001)
+[a1b2c3d4-...] UserService.getUser(user-1)
+[e5f6g7h8-...] UserService.getUser(user-1)
+[a1b2c3d4-...]   -&gt; resolved user: Markus
+[e5f6g7h8-...]   -&gt; resolved user: Markus
+[a1b2c3d4-...] Request completed in 12ms
+[e5f6g7h8-...] Request completed in 14ms
+
+Каждый запрос видит только свой requestId — изоляция гарантирована.
+*/
+</code></pre>
+<hr />
+<h2 id="Вложенные-и-наследуемые-контексты"><a class="header" href="#Вложенные-и-наследуемые-контексты">Вложенные и наследуемые контексты</a></h2>
+<p>Иногда нужно создать «дочерний» контекст, который расширяет родительский, не мутируя его. Это важно, когда два бизнес-процесса работают параллельно и используют общий базовый контекст: если один процесс изменит объект контекста, это может повлиять на другой (race condition / data corruption).</p>
+<h3 id="Безопасный-паттерн-иммутабельное-расширение-контекста"><a class="header" href="#Безопасный-паттерн-иммутабельное-расширение-контекста">Безопасный паттерн: иммутабельное расширение контекста</a></h3>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from 'node:async_hooks';
+
+const als = new AsyncLocalStorage();
+
+// Создаём базовый контекст (только зависимости, без состояния пользователя)
+const createBaseContext = () =&gt;
+  Object.freeze({
+    console,
+    accessRules: {
+      guest: [],
+      user: ['read:balance'],
+      admin: ['read:balance', 'read:transactions'],
+    },
+  });
+
+// Расширяем базовый контекст пользователем — возвращаем НОВЫЙ объект
+const withUser = (baseContext, user) =&gt;
+  Object.freeze({ ...baseContext, user });
+
+// Расширяем контекст идентификатором запроса
+const withRequestId = (context, requestId) =&gt;
+  Object.freeze({ ...context, requestId });
+
+// --- Использование ---
+const baseCtx = createBaseContext();
+
+// Контекст для пользователя Alice
+const aliceCtx = withUser(baseCtx, { name: 'Alice', role: 'admin' });
+
+// Контекст для конкретного запроса Alice
+const requestCtx = withRequestId(aliceCtx, 'req-001');
+
+// Запускаем бизнес-логику в изолированном контексте
+als.run(requestCtx, async () =&gt; {
+  const store = als.getStore();
+  store.console.log(`[${store.requestId}] User: ${store.user.name}`);
+
+  // Параллельный запуск двух долгих операций
+  // Каждая получает собственный дочерний контекст — они не мешают друг другу
+  const childCtx1 = withRequestId(store, 'req-001-transactions');
+  const childCtx2 = withRequestId(store, 'req-001-passport');
+
+  await Promise.all([
+    als.run(childCtx1, async () =&gt; {
+      const s = als.getStore();
+      // Долгая операция: сбор транзакций за 2 года
+      s.console.log(`[${s.requestId}] Collecting transactions...`);
+      await new Promise((r) =&gt; setTimeout(r, 100)); // имитация задержки
+      s.console.log(`[${s.requestId}] Transactions done`);
+    }),
+    als.run(childCtx2, async () =&gt; {
+      const s = als.getStore();
+      // Быстрая операция: паспортные данные
+      s.console.log(`[${s.requestId}] Fetching passport data...`);
+      // Даже если эта операция изменит что-то в своём store,
+      // это не затронет store первой операции
+      s.console.log(`[${s.requestId}] Passport data done`);
+    }),
+  ]);
+});
+
+/*
+[req-001] User: Alice
+[req-001-transactions] Collecting transactions...
+[req-001-passport] Fetching passport data...
+[req-001-passport] Passport data done
+[req-001-transactions] Transactions done
+*/
+</code></pre>
+<hr />
+<h2 id="Применение-в-nodejs"><a class="header" href="#Применение-в-nodejs">Применение в Node.js</a></h2>
+<h3 id="Типичные-сценарии-использования-контекста-и-asynclocalstorage"><a class="header" href="#Типичные-сценарии-использования-контекста-и-asynclocalstorage">Типичные сценарии использования контекста и AsyncLocalStorage</a></h3>
+<p><strong>1. Трассировка запросов (Request Tracing)</strong></p>
+<p>В микросервисной архитектуре один бизнес-процесс может охватывать несколько сервисов. Контекст хранит <code>traceId</code> / <code>spanId</code>, которые передаются между сервисами через HTTP-заголовки (например, <code>X-Request-ID</code>, <code>X-Trace-ID</code>) и автоматически добавляются во все логи.</p>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from 'node:async_hooks';
+import { randomUUID } from 'node:crypto';
+
+const traceStorage = new AsyncLocalStorage();
+
+// Обёртка над fetch, которая автоматически добавляет trace-заголовки
+const tracedFetch = (url, options = {}) =&gt; {
+  const store = traceStorage.getStore();
+  const headers = {
+    ...options.headers,
+    ...(store ? { 'X-Trace-ID': store.traceId, 'X-Span-ID': store.spanId } : {}),
+  };
+  return fetch(url, { ...options, headers });
+};
+
+// Запуск обработки запроса с трассировкой
+const handleIncomingRequest = (incomingTraceId) =&gt; {
+  const store = {
+    traceId: incomingTraceId ?? randomUUID(), // берём от клиента или создаём новый
+    spanId: randomUUID(),                     // spanId уникален для каждого сервиса
+  };
+
+  traceStorage.run(store, async () =&gt; {
+    // Все вызовы tracedFetch внутри автоматически получат заголовки трассировки
+    await tracedFetch('http://user-service/api/user/1');
+    await tracedFetch('http://balance-service/api/balance/acc001');
+  });
+};
+</code></pre>
+<p><strong>2. Контекст транзакции базы данных</strong></p>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from 'node:async_hooks';
+
+const dbTransactionStorage = new AsyncLocalStorage();
+
+// Получить текущее соединение/транзакцию из контекста
+const getDbConnection = () =&gt; {
+  const store = dbTransactionStorage.getStore();
+  return store?.connection ?? globalDbPool;
+};
+
+// Запустить блок кода внутри транзакции БД
+const withTransaction = async (globalDbPool, callback) =&gt; {
+  const connection = await globalDbPool.getConnection();
+  await connection.beginTransaction();
+
+  return dbTransactionStorage.run({ connection }, async () =&gt; {
+    try {
+      const result = await callback();
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  });
+};
+
+// Репозитории используют getDbConnection() — не знают о транзакции напрямую
+const userRepository = {
+  async findById(id) {
+    const conn = getDbConnection();
+    return conn.query('SELECT * FROM users WHERE id = ?', [id]);
+  },
+  async update(id, data) {
+    const conn = getDbConnection();
+    return conn.query('UPDATE users SET ? WHERE id = ?', [data, id]);
+  },
+};
+</code></pre>
+<p><strong>3. Мультитенантность (multi-tenancy)</strong></p>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from 'node:async_hooks';
+
+const tenantStorage = new AsyncLocalStorage();
+
+const getTenantId = () =&gt; {
+  const store = tenantStorage.getStore();
+  if (!store) throw new Error('Tenant context not set');
+  return store.tenantId;
+};
+
+// Middleware для Express
+const tenantMiddleware = (req, res, next) =&gt; {
+  const tenantId = req.headers['x-tenant-id'];
+  if (!tenantId) {
+    res.status(400).json({ error: 'Missing X-Tenant-ID header' });
+    return;
+  }
+  tenantStorage.run({ tenantId }, next);
+};
+
+// Сервис автоматически получает tenantId без явной передачи
+class ProductService {
+  async getProducts() {
+    const tenantId = getTenantId();
+    // Запрос данных только для текущего тенанта
+    console.log(`Fetching products for tenant: ${tenantId}`);
+    return []; // результат из БД
+  }
+}
+</code></pre>
+<hr />
+<h2 id="Итог"><a class="header" href="#Итог">Итог</a></h2>
+<h3 id="Когда-использовать-ручной-контекст-параметры--замыкания--конструктор"><a class="header" href="#Когда-использовать-ручной-контекст-параметры--замыкания--конструктор">Когда использовать ручной контекст (параметры / замыкания / конструктор)</a></h3>
+<ul>
+<li>Небольшие модули с предсказуемой глубиной вызовов.</li>
+<li>Когда важна явность: читатель кода сразу видит, какие зависимости используются.</li>
+<li>В функциональных пайплайнах, где контекст передаётся как иммутабельный объект между шагами.</li>
+</ul>
+<h3 id="Когда-использовать-asynclocalstorage"><a class="header" href="#Когда-использовать-asynclocalstorage">Когда использовать AsyncLocalStorage</a></h3>
+<ul>
+<li>HTTP-серверы: контекст запроса (requestId, user, tenant) нужен во множестве вложенных функций.</li>
+<li>Логирование с автоматическим добавлением trace ID без передачи его через все слои.</li>
+<li>Транзакции БД: соединение/транзакция должны быть доступны в любом репозитории без явной передачи.</li>
+<li>Микросервисная архитектура: распределённая трассировка через сервисные границы.</li>
+</ul>
+<h3 id="Риски-и-как-их-избежать"><a class="header" href="#Риски-и-как-их-избежать">Риски и как их избежать</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Риск</th><th>Решение</th></tr></thead><tbody>
+<tr><td>Гонка данных (race condition): два бизнес-процесса используют один контекст</td><td>Создавать дочерние контексты через <code>Object.freeze({ ...parentCtx, ...extra })</code> и <code>als.run(childCtx, ...)</code></td></tr>
+<tr><td>Утечки памяти: store удерживает объекты дольше необходимого</td><td>Хранить в store только ссылки, очищать при завершении обработки запроса</td></tr>
+<tr><td>Неявность: разработчик не видит, что функция читает глобальный store</td><td>Документировать предполагаемый контекст, использовать TypeScript типы для store</td></tr>
+<tr><td>Производительность: накладные расходы AsyncLocalStorage</td><td>Минимальны в современном Node.js (v12.17+); не критичны для I/O-bound нагрузки</td></tr>
+</tbody></table>
+</div>
+<h3 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h3>
+<ol>
+<li><strong>Контекст</strong> — это инструмент передачи зависимостей и состояния без глобальных переменных, ограниченный определённой областью выполнения.</li>
+<li><strong>Ручная передача</strong> через замыкания или конструктор — явная, понятная, но требует пробрасывания через каждый уровень.</li>
+<li><strong>Функциональный Pipeline</strong> позволяет элегантно компоновать асинхронные шаги, передавая иммутабельный контекст между ними.</li>
+<li><strong>AsyncLocalStorage</strong> решает проблему «пробрасывания» автоматически: store доступен из любой глубины вложенности асинхронных вызовов.</li>
+<li><strong>Иммутабельность контекста</strong> (<code>Object.freeze</code>, spread-копирование) защищает от гонок данных при параллельном выполнении.</li>
+<li>Паттерн активно применяется в популярных фреймворках: Express, Fastify, Nest.js используют аналогичные механизмы для хранения контекста запроса.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week11.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week11.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

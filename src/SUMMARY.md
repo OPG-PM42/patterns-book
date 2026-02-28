@@ -53,7 +53,7 @@
   - [Week 6](week6.md)
     - [События: EventTarget, EventEmitter](week6/lecture-1-events-eventemitter.md)
     - [Pattern Observer](week6/lecture-2-observer.md)
-    - GRASP: [Чистая выдумка — Pure fabrication](week6/lecture-3-pure-fabrication.md)
+    - [GRASP: Чистая выдумка — Pure fabrication](week6/lecture-3-pure-fabrication.md)
   - [Week 7](week7.md)
     - [Node.js Streams: Readable, Writable, Transform, backpressure, pipeline](week7/lecture-1-node-streams.md)
     - [Web Streams — потоки событий в браузере](week7/lecture-2-web-streams.md)

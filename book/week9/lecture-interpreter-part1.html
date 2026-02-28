@@ -1,0 +1,639 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Паттерн «Интерпретатор» — AST, DSL, LISP (часть 1) - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Паттерн-Интерпретатор-interpreter--Часть-1-ast-dsl-lisp"><a class="header" href="#Паттерн-Интерпретатор-interpreter--Часть-1-ast-dsl-lisp">Паттерн «Интерпретатор» (Interpreter) — Часть 1: AST, DSL, LISP</a></h1>
+<blockquote>
+<p>Лекция по курсу «Паттерны проектирования GoF».
+Тема: доменные языки (DSL), абстрактное синтаксическое дерево (AST),
+язык LISP и поведенческий паттерн Interpreter из «Банды четырёх».</p>
+</blockquote>
+<hr />
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>В этой лекции мы разберём понятие <strong>доменного языка (DSL — Domain-Specific Language)</strong> и посмотрим на несколько конкретных примеров таких языков:</p>
+<ul>
+<li><strong>LISP</strong> — один из старейших и самых элегантных функциональных языков;</li>
+<li><strong>MetaSequoia</strong> — внутренний DSL фреймворка для описания схем данных, API и экранных форм;</li>
+<li>DSL для описания <strong>бизнес-процессов</strong> на базе Markdown;</li>
+<li>DSL для <strong>электронных таблиц</strong> (формульный движок поверх JavaScript);</li>
+<li>DSL для построения <strong>SQL-запросов</strong> через шаблонные строки и query-builder.</li>
+</ul>
+<p>Все эти языки объединяет одно: за ними стоит поведенческий паттерн <strong>Interpreter</strong> («Интерпретатор») из книги «Банды четырёх» (GoF). В следующей части лекции мы реализуем интерпретатор LISP глубоко и подробно.</p>
+<hr />
+<h2 id="Что-такое-dsl"><a class="header" href="#Что-такое-dsl">Что такое DSL</a></h2>
+<p><strong>DSL (Domain-Specific Language)</strong> — это язык программирования или спецификации, заточенный под конкретную предметную область. В отличие от универсальных языков (JavaScript, Python, Java), DSL:</p>
+<ul>
+<li>выражает понятия предметной области напрямую;</li>
+<li>читается и пишется специалистами этой области, а не только разработчиками;</li>
+<li>снижает количество кода и риск ошибок для типовых задач домена.</li>
+</ul>
+<p>DSL бывают двух видов:</p>
+<div class="table-wrapper"><table><thead><tr><th>Вид</th><th>Описание</th><th>Пример</th></tr></thead><tbody>
+<tr><td><strong>Внешний (External DSL)</strong></td><td>Отдельный синтаксис, требует парсера</td><td>SQL, Markdown, регулярные выражения</td></tr>
+<tr><td><strong>Внутренний (Internal DSL)</strong></td><td>Надстройка над существующим языком</td><td>Query-builder в JavaScript, Fluent API</td></tr>
+</tbody></table>
+</div>
+<p>В лекции рассматриваются преимущественно <strong>внутренние DSL</strong> на базе JavaScript/TypeScript.</p>
+<hr />
+<h2 id="Что-такое-ast"><a class="header" href="#Что-такое-ast">Что такое AST</a></h2>
+<p><strong>AST (Abstract Syntax Tree — абстрактное синтаксическое дерево)</strong> — промежуточное представление программы в виде дерева узлов, которое компилятор или интерпретатор строит из исходного текста.</p>
+<p>Любой язык программирования при вычислении выражения обязан:</p>
+<ol>
+<li>Прочитать текст программы (строку).</li>
+<li>Разобрать (распарсить) её в AST.</li>
+<li>Либо скомпилировать AST в машинный код, либо интерпретировать обход дерева.</li>
+</ol>
+<pre><code>Исходный текст          Токены               AST
+─────────────────       ──────────────────   ─────────────────
+"(+ 2 (* 3 4))"  ──►   +, 2, *, 3, 4  ──►      (+)
+                                              /     \
+                                             2      (*)
+                                                   /   \
+                                                  3     4
+</code></pre>
+<p>Именно поэтому запись LISP <strong>и есть</strong> практически готовое AST: структура выражения явно видна в тексте через вложенные скобки.</p>
+<h3 id="Связь-javascript-с-ast"><a class="header" href="#Связь-javascript-с-ast">Связь JavaScript с AST</a></h3>
+<p>Когда движок V8 исполняет JavaScript, он строит AST из вашего кода. Это значит, что <strong>любое JavaScript-выражение можно рассматривать как фрагмент AST</strong>. Инструменты вроде Babel, ESLint и TypeScript работают именно с AST.</p>
+<pre><code class="language-typescript">// Посмотреть AST любого JS-кода можно на https://astexplorer.net/
+// Выражение:
+const x = 2 + 3 * 4;
+
+// Соответствующий узел AST (упрощённо):
+// {
+//   type: "BinaryExpression",
+//   operator: "+",
+//   left:  { type: "NumericLiteral", value: 2 },
+//   right: {
+//     type: "BinaryExpression",
+//     operator: "*",
+//     left:  { type: "NumericLiteral", value: 3 },
+//     right: { type: "NumericLiteral", value: 4 }
+//   }
+// }
+</code></pre>
+<hr />
+<h2 id="Что-такое-lisp"><a class="header" href="#Что-такое-lisp">Что такое LISP</a></h2>
+<p><strong>LISP (LISt Processing)</strong> — один из старейших языков программирования (1958, Джон Маккарти). Его главная особенность — <strong>префиксная нотация</strong> и единообразная структура: весь код и данные представлены как <strong>списки</strong>.</p>
+<h3 id="Синтаксис-lisp"><a class="header" href="#Синтаксис-lisp">Синтаксис LISP</a></h3>
+<pre><code class="language-lisp">; Форма: (оператор аргумент1 аргумент2 ...)
+(+ 2 3)           ; =&gt; 5  (сложение)
+(* 3 4)           ; =&gt; 12 (умножение)
+(+ 2 (* 3 4))     ; =&gt; 14 (вложенность = рекурсия)
+(+ x (* y 4))     ; =&gt; вычисляет с переменными x и y
+</code></pre>
+<p>Каждая скобка определяет <strong>список</strong>. Первый элемент списка — это <strong>оператор</strong> (что делаем), остальные элементы — <strong>операнды</strong> (над чем делаем). Вложенность произвольная, вычисление рекурсивное.</p>
+<p>Такая форма записи <strong>идентична AST</strong>:</p>
+<pre><code>(+ 2 (* 3 4))
+
+       +
+      / \
+     2   *
+        / \
+       3   4
+</code></pre>
+<h3 id="Трансляция-lisp--javascript"><a class="header" href="#Трансляция-lisp--javascript">Трансляция LISP ↔ JavaScript</a></h3>
+<p>LISP-выражения легко транслируются в JavaScript и обратно:</p>
+<pre><code class="language-typescript">// LISP:  (+ 2 (* 3 4))
+// JS:    2 + 3 * 4
+//
+// LISP:  (+ x (* y 4))
+// JS:    x + y * 4
+
+// Если нам нужно только подмножество JS с математическими операторами,
+// его можно разобрать в AST — и мы сразу получим LISP.
+</code></pre>
+<p>V8 предоставляет API <code>vm.Script</code> / <code>vm.createContext</code>, с помощью которого
+можно исполнять JavaScript-выражения в изолированном контексте:</p>
+<pre><code class="language-typescript">import vm from 'node:vm';
+
+// Безопасное вычисление выражения в изолированном контексте
+function evalExpression(expression: string, context: Record&lt;string, unknown&gt;): unknown {
+  const script = new vm.Script(`(${expression})`);
+  const sandbox = vm.createContext({ ...context });
+  return script.runInContext(sandbox);
+}
+
+// Использование
+const result = evalExpression('x + y * 4', { x: 2, y: 3 });
+console.log(result); // 14
+</code></pre>
+<hr />
+<h2 id="Паттерн-Интерпретатор-interpreter"><a class="header" href="#Паттерн-Интерпретатор-interpreter">Паттерн «Интерпретатор» (Interpreter)</a></h2>
+<h3 id="Описание-паттерна"><a class="header" href="#Описание-паттерна">Описание паттерна</a></h3>
+<p><strong>Interpreter</strong> — поведенческий паттерн GoF. Он задаёт <strong>грамматику</strong> некоторого языка и предоставляет <strong>интерпретатор</strong> для работы с предложениями этого языка.</p>
+<p><strong>Участники:</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Роль</th><th>Описание</th></tr></thead><tbody>
+<tr><td><code>AbstractExpression</code></td><td>Интерфейс с методом <code>interpret(context)</code></td></tr>
+<tr><td><code>TerminalExpression</code></td><td>Терминальный узел (переменная, литерал)</td></tr>
+<tr><td><code>NonTerminalExpression</code></td><td>Составной узел (операция над подвыражениями)</td></tr>
+<tr><td><code>Context</code></td><td>Содержит глобальную информацию для интерпретатора</td></tr>
+<tr><td><code>Client</code></td><td>Строит AST и запускает интерпретацию</td></tr>
+</tbody></table>
+</div>
+<p><strong>Когда применять:</strong></p>
+<ul>
+<li>Грамматика языка простая и стабильная.</li>
+<li>Эффективность не критична (паттерн не оптимален для сложных грамматик).</li>
+<li>Нужно расширять набор выражений без изменения существующих классов.</li>
+</ul>
+<h3 id="uml-структура"><a class="header" href="#uml-структура">UML-структура</a></h3>
+<pre><code>«interface»
+AbstractExpression
+────────────────────
++ interpret(ctx): T
+       ▲
+       │
+  ┌────┴──────────────────────┐
+  │                           │
+TerminalExpression     NonTerminalExpression
+──────────────────     ─────────────────────
++ interpret(ctx): T    - left: AbstractExpression
+                       - right: AbstractExpression
+                       + interpret(ctx): T
+</code></pre>
+<hr />
+<h2 id="Реализация"><a class="header" href="#Реализация">Реализация</a></h2>
+<h3 id="1-Типы-узлов-ast"><a class="header" href="#1-Типы-узлов-ast">1. Типы узлов AST</a></h3>
+<pre><code class="language-typescript">// Типы узлов нашего мини-AST
+type NumberLiteral = {
+  type: 'number';
+  value: number;
+};
+
+type Variable = {
+  type: 'variable';
+  name: string;
+};
+
+type BinaryOp = {
+  type: 'binary';
+  operator: '+' | '-' | '*' | '/';
+  left: ASTNode;
+  right: ASTNode;
+};
+
+type ASTNode = NumberLiteral | Variable | BinaryOp;
+</code></pre>
+<h3 id="2-Контекст-переменные"><a class="header" href="#2-Контекст-переменные">2. Контекст (переменные)</a></h3>
+<pre><code class="language-typescript">// Контекст хранит значения переменных
+type Context = Record&lt;string, number&gt;;
+</code></pre>
+<h3 id="3-Интерпретатор"><a class="header" href="#3-Интерпретатор">3. Интерпретатор</a></h3>
+<pre><code class="language-typescript">/**
+ * Рекурсивно интерпретирует AST-узел в числовое значение.
+ * Реализует паттерн Interpreter: обход дерева с вычислением.
+ */
+function interpret(node: ASTNode, ctx: Context): number {
+  switch (node.type) {
+    // Терминальные выражения
+    case 'number':
+      return node.value;
+
+    case 'variable': {
+      const val = ctx[node.name];
+      if (val === undefined) {
+        throw new Error(`Неизвестная переменная: ${node.name}`);
+      }
+      return val;
+    }
+
+    // Нетерминальное выражение
+    case 'binary': {
+      const left  = interpret(node.left,  ctx);
+      const right = interpret(node.right, ctx);
+      switch (node.operator) {
+        case '+': return left + right;
+        case '-': return left - right;
+        case '*': return left * right;
+        case '/':
+          if (right === 0) throw new Error('Деление на ноль');
+          return left / right;
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="4-Простой-парсер-lisp-выражений"><a class="header" href="#4-Простой-парсер-lisp-выражений">4. Простой парсер LISP-выражений</a></h3>
+<pre><code class="language-typescript">/**
+ * Токенизатор: разбивает строку LISP-выражения на токены.
+ * Пример: "(+ 2 (* x 4))" =&gt; ["(", "+", "2", "(", "*", "x", "4", ")", ")"]
+ */
+function tokenize(input: string): string[] {
+  return input
+    .replace(/\(/g, ' ( ')
+    .replace(/\)/g, ' ) ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+/**
+ * Рекурсивный парсер: строит AST из списка токенов.
+ */
+function parse(tokens: string[]): ASTNode {
+  const token = tokens.shift()!;
+
+  // Начало списка — нетерминальное выражение
+  if (token === '(') {
+    const operator = tokens.shift() as BinaryOp['operator'];
+    const left  = parse(tokens);
+    const right = parse(tokens);
+    tokens.shift(); // убираем закрывающую ')'
+    return { type: 'binary', operator, left, right };
+  }
+
+  // Число
+  const num = Number(token);
+  if (!isNaN(num)) {
+    return { type: 'number', value: num };
+  }
+
+  // Переменная
+  return { type: 'variable', name: token };
+}
+
+/**
+ * Объединяет токенизацию и парсинг.
+ */
+function parseLisp(source: string): ASTNode {
+  const tokens = tokenize(source);
+  return parse(tokens);
+}
+</code></pre>
+<h3 id="5-Полный-пример-использования"><a class="header" href="#5-Полный-пример-использования">5. Полный пример использования</a></h3>
+<pre><code class="language-typescript">// Вычисляем: (+ 2 (* x 4))  при x = 3
+// Ожидаем:   2 + 3 * 4 = 14
+
+const source  = '(+ 2 (* x 4))';
+const context: Context = { x: 3 };
+
+const ast    = parseLisp(source);
+const result = interpret(ast, context);
+
+console.log(`Выражение: ${source}`);
+console.log(`Контекст:  x = ${context.x}`);
+console.log(`Результат: ${result}`);
+// Выражение: (+ 2 (* x 4))
+// Контекст:  x = 3
+// Результат: 14
+</code></pre>
+<h3 id="6-Расширяемый-lisp-интерпретатор-на-основе-таблицы-операторов"><a class="header" href="#6-Расширяемый-lisp-интерпретатор-на-основе-таблицы-операторов">6. Расширяемый LISP-интерпретатор на основе таблицы операторов</a></h3>
+<p>Лектор подчёркивает: операторы LISP удобно добавлять как <strong>записи в объект</strong> (структуру данных). Ключ — имя оператора, значение — функция-реализация. Это делает интерпретатор легко расширяемым без изменения его ядра.</p>
+<pre><code class="language-typescript">// Таблица операторов: имя -&gt; реализация
+type OperatorFn = (args: number[]) =&gt; number;
+
+const operators: Record&lt;string, OperatorFn&gt; = {
+  '+': (args) =&gt; args.reduce((acc, v) =&gt; acc + v, 0),
+  '-': (args) =&gt; args.reduce((acc, v, i) =&gt; i === 0 ? v : acc - v),
+  '*': (args) =&gt; args.reduce((acc, v) =&gt; acc * v, 1),
+  '/': (args) =&gt; args.reduce((acc, v, i) =&gt; i === 0 ? v : acc / v),
+  'max': (args) =&gt; Math.max(...args),
+  'min': (args) =&gt; Math.min(...args),
+  'abs': ([a]) =&gt; Math.abs(a),
+};
+
+// Узел расширенного AST поддерживает произвольное число аргументов
+type LispNode =
+  | { type: 'num'; value: number }
+  | { type: 'var'; name: string }
+  | { type: 'call'; op: string; args: LispNode[] };
+
+function evalLisp(node: LispNode, ctx: Context): number {
+  if (node.type === 'num') return node.value;
+  if (node.type === 'var') {
+    const val = ctx[node.name];
+    if (val === undefined) throw new Error(`Неизвестная переменная: ${node.name}`);
+    return val;
+  }
+  // node.type === 'call'
+  const fn = operators[node.op];
+  if (!fn) throw new Error(`Неизвестный оператор: ${node.op}`);
+  const evaluatedArgs = node.args.map((arg) =&gt; evalLisp(arg, ctx));
+  return fn(evaluatedArgs);
+}
+
+// Пример: (max (* x 2) (+ y 1))  при x=3, y=5
+const tree: LispNode = {
+  type: 'call',
+  op: 'max',
+  args: [
+    { type: 'call', op: '*', args: [{ type: 'var', name: 'x' }, { type: 'num', value: 2 }] },
+    { type: 'call', op: '+', args: [{ type: 'var', name: 'y' }, { type: 'num', value: 1 }] },
+  ],
+};
+
+console.log(evalLisp(tree, { x: 3, y: 5 })); // max(6, 6) = 6
+
+// Добавить новый оператор — одна строка:
+operators['sum-of-squares'] = (args) =&gt; args.reduce((acc, v) =&gt; acc + v * v, 0);
+</code></pre>
+<hr />
+<h2 id="Применение"><a class="header" href="#Применение">Применение</a></h2>
+<p>В лекции показано, что паттерн Interpreter и идея DSL используются повсеместно.</p>
+<h3 id="query-builder-sql-dsl"><a class="header" href="#query-builder-sql-dsl">Query Builder (SQL DSL)</a></h3>
+<p>Вместо написания строк SQL вручную используется <strong>цепочка методов</strong> (Fluent API / Builder) — это тоже форма DSL поверх JavaScript:</p>
+<pre><code class="language-typescript">// Внутренний DSL для построения SQL (пример MetaSQL / Knex-подобного API)
+const query = db
+  .insert({ name: 'Alice', age: 30 })
+  .into('users')
+  .returning(['id', 'name']);
+
+// Внутри библиотеки это выражение транслируется в SQL:
+// INSERT INTO users (name, age) VALUES ('Alice', 30) RETURNING id, name;
+</code></pre>
+<h3 id="sql-через-шаблонные-строки-tagged-template-literals"><a class="header" href="#sql-через-шаблонные-строки-tagged-template-literals">SQL через шаблонные строки (Tagged Template Literals)</a></h3>
+<pre><code class="language-typescript">// Tagged template literal — ещё один вид внутреннего DSL
+// Функция-тег получает массив строк и массив вставленных значений
+function sql(strings: TemplateStringsArray, ...values: unknown[]): { query: string; params: unknown[] } {
+  const query  = strings.raw.join('$' + (strings.length)); // упрощённо
+  return { query, params: values };
+}
+
+const userId = 42;
+const minAge = 18;
+
+// Значения НЕ интерполируются напрямую — они передаются как параметры,
+// что защищает от SQL-инъекций
+const result = sql`SELECT * FROM users WHERE id = ${userId} AND age &gt; ${minAge}`;
+// result.query  = "SELECT * FROM users WHERE id = $1 AND age &gt; $2"
+// result.params = [42, 18]
+</code></pre>
+<h3 id="Формульный-движок-dsl-для-электронных-таблиц"><a class="header" href="#Формульный-движок-dsl-для-электронных-таблиц">Формульный движок (DSL для электронных таблиц)</a></h3>
+<pre><code class="language-typescript">// Мини-движок электронных таблиц: каждая ячейка — выражение на JavaScript
+// Ячейки ссылаются друг на друга по имени (A1, B1, C1 или произвольно)
+
+type CellDef = {
+  [cellName: string]: string; // имя ячейки -&gt; выражение
+};
+
+class Spreadsheet {
+  private cache = new Map&lt;string, number&gt;();
+
+  constructor(private cells: CellDef) {}
+
+  // Ленивое вычисление с кэшированием
+  get(name: string): number {
+    if (this.cache.has(name)) return this.cache.get(name)!;
+
+    const expr = this.cells[name];
+    if (expr === undefined) throw new Error(`Ячейка не найдена: ${name}`);
+
+    // Строим контекст: все остальные ячейки доступны по имени
+    const ctx = new Proxy({} as Record&lt;string, number&gt;, {
+      get: (_, key: string) =&gt; this.get(key),
+    });
+
+    // Вычисляем выражение через Function (в реальности — через vm.Script)
+    const fn = new Function(...Object.keys(ctx), `return (${expr})`);
+    const value = fn(...Object.keys(ctx).map((k) =&gt; this.get(k)));
+    this.cache.set(name, value);
+    return value;
+  }
+}
+
+// Использование
+const sheet = new Spreadsheet({
+  A1: '10',
+  B1: '3',
+  C1: 'A1 * B1',           // 10 * 3 = 30
+  D1: 'Math.log(C1)',       // Math.log(30) ≈ 3.401
+});
+
+console.log(sheet.get('C1')); // 30
+console.log(sheet.get('D1')); // ~3.401
+</code></pre>
+<h3 id="dsl-для-описания-бизнес-процессов"><a class="header" href="#dsl-для-описания-бизнес-процессов">DSL для описания бизнес-процессов</a></h3>
+<p>В лекции показан пример описания бизнес-процессов на Markdown-подобном синтаксисе:</p>
+<pre><code class="language-markdown"># Процесс: Бронирование (Reservation)
+
+* validateOrder(order) -&gt; balance
+* checkBalance(order, balance) -&gt; instances
+* createReservation(order, balance, instances) -&gt; reservation
+</code></pre>
+<p>Каждый шаг — вызов функции. Результат предыдущего шага передаётся в следующий.
+Диаграмма рендерится любым Markdown-совместимым инструментом (GitHub, IDE).
+Внутри каждый блок может быть реализован на JavaScript, WebAssembly или
+подключён как плагин.</p>
+<hr />
+<h2 id="Итог"><a class="header" href="#Итог">Итог</a></h2>
+<p><strong>Паттерн Interpreter</strong> решает задачу интерпретации языка через дерево объектов, каждый из которых умеет «вычислить» себя. Ключевые выводы лекции:</p>
+<ol>
+<li>
+<p><strong>AST — основа всего.</strong> Любой язык строит AST перед исполнением. Понимание AST открывает дорогу к написанию парсеров, трансформеров и интерпретаторов.</p>
+</li>
+<li>
+<p><strong>LISP — это «живое» AST.</strong> Синтаксис LISP с префиксными списками буквально отражает структуру дерева, что делает его идеальной учебной моделью паттерна Interpreter.</p>
+</li>
+<li>
+<p><strong>DSL повышают выразительность.</strong> Вместо императивного кода предметная область описывается декларативно. Пользователи (не только разработчики) могут писать формулы, бизнес-правила, схемы.</p>
+</li>
+<li>
+<p><strong>Расширяемость через таблицу операторов.</strong> Добавить новый оператор в интерпретатор = добавить одну запись в объект. Это классический пример открытости для расширения без модификации существующего кода (Open/Closed Principle).</p>
+</li>
+<li>
+<p><strong>JavaScript — мощная база для DSL.</strong> Tagged template literals, Proxy, vm.Script, Fluent API — все эти механизмы позволяют строить богатые внутренние DSL на чистом JavaScript/TypeScript.</p>
+</li>
+</ol>
+<p>В следующей части лекции будет реализован <strong>полноценный интерпретатор LISP</strong>: лексер, парсер, evaluator с несколькими стратегиями и поддержкой переменных.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week9/lecture-command-part2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week9/lecture-interpreter-part2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week9/lecture-command-part2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week9/lecture-interpreter-part2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

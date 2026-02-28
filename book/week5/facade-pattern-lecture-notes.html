@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,46 +124,41 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="паттерн-facade-фасад"><a class="header" href="#паттерн-facade-фасад">Паттерн Facade (Фасад)</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Паттерн-facade-Фасад"><a class="header" href="#Паттерн-facade-Фасад">Паттерн Facade (Фасад)</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p><strong>Фасад</strong> — это структурный паттерн проектирования, который предоставляет простой интерфейс к сложной подсистеме, содержащей множество взаимосвязанных классов. Фасад изолирует внутреннюю сложность подсистемы, предоставляя наружу простой и понятный API.</p>
 <p><strong>Основная идея</strong>: Скрыть сложность внутренней реализации за простым, стабильным интерфейсом.</p>
-<hr>
-<h2 id="отличие-от-похожих-паттернов"><a class="header" href="#отличие-от-похожих-паттернов">Отличие от похожих паттернов</a></h2>
-<h3 id="фасад-vs-адаптер"><a class="header" href="#фасад-vs-адаптер">Фасад vs Адаптер</a></h3>
+<hr />
+<h2 id="Отличие-от-похожих-паттернов"><a class="header" href="#Отличие-от-похожих-паттернов">Отличие от похожих паттернов</a></h2>
+<h3 id="Фасад-vs-Адаптер"><a class="header" href="#Фасад-vs-Адаптер">Фасад vs Адаптер</a></h3>
 <p><strong>Адаптер</strong>:</p>
 <ul>
 <li>Закрывает <strong>одну абстракцию</strong> (один класс или объект)</li>
@@ -191,7 +169,7 @@
 <li>Закрывает и изолирует <strong>целую подсистему</strong> (много классов)</li>
 <li>Упрощает работу со множеством взаимосвязанных компонентов</li>
 </ul>
-<h3 id="фасад-vs-прокси"><a class="header" href="#фасад-vs-прокси">Фасад vs Прокси</a></h3>
+<h3 id="Фасад-vs-Прокси"><a class="header" href="#Фасад-vs-Прокси">Фасад vs Прокси</a></h3>
 <p><strong>Прокси</strong>:</p>
 <ul>
 <li>Контролирует доступ к одному объекту</li>
@@ -201,10 +179,10 @@
 <li>Похож на прокси, но для <strong>больших подсистем</strong></li>
 <li>Создаёт архитектурную границу между модулями</li>
 </ul>
-<hr>
-<h2 id="зачем-нужен-паттерн-фасад"><a class="header" href="#зачем-нужен-паттерн-фасад">Зачем нужен паттерн Фасад?</a></h2>
-<h3 id="1-создание-архитектурной-границы"><a class="header" href="#1-создание-архитектурной-границы">1. Создание архитектурной границы</a></h3>
-<p>Фасад <strong>не позволяет “рыться в кишках” подсистемы</strong>. Он создаёт чёткую архитектурную границу, которую нельзя пересекать.</p>
+<hr />
+<h2 id="Зачем-нужен-паттерн-Фасад"><a class="header" href="#Зачем-нужен-паттерн-Фасад">Зачем нужен паттерн Фасад?</a></h2>
+<h3 id="1-Создание-архитектурной-границы"><a class="header" href="#1-Создание-архитектурной-границы">1. Создание архитектурной границы</a></h3>
+<p>Фасад <strong>не позволяет "рыться в кишках" подсистемы</strong>. Он создаёт чёткую архитектурную границу, которую нельзя пересекать.</p>
 <pre><code class="language-javascript">// ❌ Без фасада - доступ ко всем внутренним компонентам
 const logger = new EventLogger();
 const task = new Task('myTask', 5000, () =&gt; {});
@@ -217,7 +195,7 @@ scheduler.task('myTask', 5000, () =&gt; {
   console.log('Task executed');
 });
 </code></pre>
-<h3 id="2-изоляция-сложности"><a class="header" href="#2-изоляция-сложности">2. Изоляция сложности</a></h3>
+<h3 id="2-Изоляция-сложности"><a class="header" href="#2-Изоляция-сложности">2. Изоляция сложности</a></h3>
 <p>Подсистемой становится <strong>проще пользоваться</strong>. Вся внутренняя сложность скрыта за простым интерфейсом.</p>
 <p><strong>Пример</strong>: Внутри планировщика (scheduler) может быть:</p>
 <ul>
@@ -227,7 +205,7 @@ scheduler.task('myTask', 5000, () =&gt; {
 <li>Выполнение на отдельных процессах/потоках</li>
 </ul>
 <p><strong>Снаружи</strong>: Всего одна функция <code>scheduler.task()</code> для добавления задачи.</p>
-<h3 id="3-контрактное-программирование"><a class="header" href="#3-контрактное-программирование">3. Контрактное программирование</a></h3>
+<h3 id="3-Контрактное-программирование"><a class="header" href="#3-Контрактное-программирование">3. Контрактное программирование</a></h3>
 <p>Одна подсистема взаимодействует с другой <strong>через определённый контракт</strong>, от которого нельзя отступать.</p>
 <p><strong>Архитектурная граница должна быть</strong>:</p>
 <ul>
@@ -235,7 +213,7 @@ scheduler.task('myTask', 5000, () =&gt; {
 <li>Покрыта типизацией (TypeScript)</li>
 <li>Воспринимается программистами как <strong>рубеж, который нельзя пересекать</strong></li>
 </ul>
-<h3 id="4-стабильность-интерфейса"><a class="header" href="#4-стабильность-интерфейса">4. Стабильность интерфейса</a></h3>
+<h3 id="4-Стабильность-интерфейса"><a class="header" href="#4-Стабильность-интерфейса">4. Стабильность интерфейса</a></h3>
 <p>Создаётся <strong>простой и стабильный интерфейс</strong>. Внутри подсистемы можно свободно менять реализацию, <strong>не меняя внешнего интерфейса</strong>.</p>
 <p><strong>Возможные изменения внутри</strong>:</p>
 <ul>
@@ -245,9 +223,9 @@ scheduler.task('myTask', 5000, () =&gt; {
 <li>Замена хранилища данных</li>
 </ul>
 <p><strong>Клиентский код при этом не изменяется!</strong></p>
-<hr>
-<h2 id="недостатки-паттерна-фасад"><a class="header" href="#недостатки-паттерна-фасад">Недостатки паттерна Фасад</a></h2>
-<h3 id="1-потери-производительности-performance-penalty"><a class="header" href="#1-потери-производительности-performance-penalty">1. Потери производительности (Performance Penalty)</a></h3>
+<hr />
+<h2 id="Недостатки-паттерна-Фасад"><a class="header" href="#Недостатки-паттерна-Фасад">Недостатки паттерна Фасад</a></h2>
+<h3 id="1-Потери-производительности-performance-penalty"><a class="header" href="#1-Потери-производительности-performance-penalty">1. Потери производительности (Performance Penalty)</a></h3>
 <p>Дополнительный уровень абстракции <strong>забирает ресурсы</strong>:</p>
 <ul>
 <li>Дополнительные вызовы функций</li>
@@ -260,7 +238,7 @@ task.execute();
 // Через фасад (медленнее, но проще и безопаснее)
 scheduler.task('myTask', 1000, () =&gt; task.execute());
 </code></pre>
-<h3 id="2-технический-долг-антипаттерн-god-object"><a class="header" href="#2-технический-долг-антипаттерн-god-object">2. Технический долг: антипаттерн God Object</a></h3>
+<h3 id="2-Технический-долг-антипаттерн-god-object"><a class="header" href="#2-Технический-долг-антипаттерн-god-object">2. Технический долг: антипаттерн God Object</a></h3>
 <p>Фасады имеют <strong>тенденцию разрастаться</strong> в антипаттерн <strong>God Object</strong> (Божественный объект).</p>
 <p><strong>Как это происходит</strong>:</p>
 <pre><code class="language-javascript">// Начало - простой фасад
@@ -283,10 +261,10 @@ class Scheduler {
 </code></pre>
 <p><strong>Проблема</strong>: Когда подсистемы имеют <strong>большое зацепление</strong> (coupling), фасад разрастается.</p>
 <p><strong>Решение</strong>: Периодически извлекать абстракции из подсистемы, чтобы уменьшить объём фасада.</p>
-<hr>
-<h2 id="практический-пример-scheduler-планировщик-задач"><a class="header" href="#практический-пример-scheduler-планировщик-задач">Практический пример: Scheduler (Планировщик задач)</a></h2>
+<hr />
+<h2 id="Практический-пример-scheduler-Планировщик-задач"><a class="header" href="#Практический-пример-scheduler-Планировщик-задач">Практический пример: Scheduler (Планировщик задач)</a></h2>
 <p>Рассмотрим реализацию простого планировщика задач, похожего на cron, но работающего in-memory.</p>
-<h3 id="структура-подсистемы"><a class="header" href="#структура-подсистемы">Структура подсистемы</a></h3>
+<h3 id="Структура-подсистемы"><a class="header" href="#Структура-подсистемы">Структура подсистемы</a></h3>
 <pre><code>Scheduler (Фасад)
 ├── EventLogger (логирование событий)
 ├── Task (базовый класс задачи)
@@ -295,7 +273,7 @@ class Scheduler {
 │   └── Может выполняться по interval
 └── TaskRunner (управление задачами)
 </code></pre>
-<h3 id="компонент-1-eventlogger"><a class="header" href="#компонент-1-eventlogger">Компонент 1: EventLogger</a></h3>
+<h3 id="Компонент-1-eventlogger"><a class="header" href="#Компонент-1-eventlogger">Компонент 1: EventLogger</a></h3>
 <pre><code class="language-javascript">// EventLogger - логирование событий планировщика
 class EventLogger {
   log(message) {
@@ -312,7 +290,7 @@ class EventLogger {
 }
 </code></pre>
 <p><strong>Важно</strong>: Logger может быть заменён — может писать в базу данных, в файл, отправлять в систему мониторинга и т.д.</p>
-<h3 id="компонент-2-task-задача"><a class="header" href="#компонент-2-task-задача">Компонент 2: Task (Задача)</a></h3>
+<h3 id="Компонент-2-task-Задача"><a class="header" href="#Компонент-2-task-Задача">Компонент 2: Task (Задача)</a></h3>
 <pre><code class="language-javascript">const { EventEmitter } = require('events');
 
 // Task - базовый класс для задач планировщика
@@ -371,7 +349,7 @@ class Task extends EventEmitter {
 <li><code>TimeoutTask</code> — для одноразовых задач</li>
 </ul>
 <p>Однако текущая реализация показывает, что мы можем <strong>рефакторить внутреннюю структуру, не меняя внешнего интерфейса фасада</strong>.</p>
-<h3 id="компонент-3-scheduler-фасад"><a class="header" href="#компонент-3-scheduler-фасад">Компонент 3: Scheduler (Фасад)</a></h3>
+<h3 id="Компонент-3-scheduler-Фасад"><a class="header" href="#Компонент-3-scheduler-Фасад">Компонент 3: Scheduler (Фасад)</a></h3>
 <pre><code class="language-javascript">// Scheduler - фасад для управления задачами
 class Scheduler extends EventEmitter {
   constructor() {
@@ -427,7 +405,7 @@ class Scheduler extends EventEmitter {
   }
 }
 </code></pre>
-<h3 id="использование-фасада-usage"><a class="header" href="#использование-фасада-usage">Использование фасада (Usage)</a></h3>
+<h3 id="Использование-фасада-usage"><a class="header" href="#Использование-фасада-usage">Использование фасада (Usage)</a></h3>
 <pre><code class="language-javascript">// ============================================
 // USAGE SECTION (находится в другом файле)
 // ============================================
@@ -471,9 +449,9 @@ process.on('SIGINT', () =&gt; {
   process.exit(0);
 });
 </code></pre>
-<hr>
-<h2 id="ключевые-наблюдения-из-примера"><a class="header" href="#ключевые-наблюдения-из-примера">Ключевые наблюдения из примера</a></h2>
-<h3 id="1-изоляция-сложности"><a class="header" href="#1-изоляция-сложности">1. Изоляция сложности</a></h3>
+<hr />
+<h2 id="Ключевые-наблюдения-из-примера"><a class="header" href="#Ключевые-наблюдения-из-примера">Ключевые наблюдения из примера</a></h2>
+<h3 id="1-Изоляция-сложности"><a class="header" href="#1-Изоляция-сложности">1. Изоляция сложности</a></h3>
 <p><strong>Клиентский код не знает</strong>:</p>
 <ul>
 <li>Что внутри есть класс <code>Task</code></li>
@@ -484,9 +462,9 @@ process.on('SIGINT', () =&gt; {
 <p><strong>Клиентский код видит только</strong>:</p>
 <pre><code class="language-javascript">scheduler.task(name, time, fn);
 </code></pre>
-<h3 id="2-свобода-рефакторинга"><a class="header" href="#2-свобода-рефакторинга">2. Свобода рефакторинга</a></h3>
+<h3 id="2-Свобода-рефакторинга"><a class="header" href="#2-Свобода-рефакторинга">2. Свобода рефакторинга</a></h3>
 <p>Мы можем изменить внутреннюю реализацию:</p>
-<h4 id="рефакторинг-1-использование-strategy"><a class="header" href="#рефакторинг-1-использование-strategy">Рефакторинг 1: Использование Strategy</a></h4>
+<h4 id="Рефакторинг-1-Использование-strategy"><a class="header" href="#Рефакторинг-1-Использование-strategy">Рефакторинг 1: Использование Strategy</a></h4>
 <pre><code class="language-javascript">// Базовый класс задачи
 class Task extends EventEmitter {
   constructor(name, strategy, fn) {
@@ -530,7 +508,7 @@ class IntervalStrategy {
 }
 </code></pre>
 <p><strong>Важно</strong>: Интерфейс фасада <code>scheduler.task(name, time, fn)</code> <strong>остаётся неизменным</strong>!</p>
-<h4 id="рефакторинг-2-использование-worker-threads"><a class="header" href="#рефакторинг-2-использование-worker-threads">Рефакторинг 2: Использование Worker Threads</a></h4>
+<h4 id="Рефакторинг-2-Использование-worker-threads"><a class="header" href="#Рефакторинг-2-Использование-worker-threads">Рефакторинг 2: Использование Worker Threads</a></h4>
 <pre><code class="language-javascript">const { Worker } = require('worker_threads');
 
 class Scheduler extends EventEmitter {
@@ -550,7 +528,7 @@ class Scheduler extends EventEmitter {
   }
 }
 </code></pre>
-<h3 id="3-архитектурная-граница"><a class="header" href="#3-архитектурная-граница">3. Архитектурная граница</a></h3>
+<h3 id="3-Архитектурная-граница"><a class="header" href="#3-Архитектурная-граница">3. Архитектурная граница</a></h3>
 <pre><code>┌─────────────────────────────────────────┐
 │         Клиентский код                  │
 │  (бизнес-логика приложения)             │
@@ -580,9 +558,9 @@ class Scheduler extends EventEmitter {
 <li>Упрощается тестирование</li>
 <li>Улучшается читаемость кода</li>
 </ul>
-<hr>
-<h2 id="принцип-проектирования-интерфейса-фасада"><a class="header" href="#принцип-проектирования-интерфейса-фасада">Принцип проектирования интерфейса фасада</a></h2>
-<h3 id="интерфейс-принадлежит-клиенту"><a class="header" href="#интерфейс-принадлежит-клиенту">Интерфейс принадлежит клиенту</a></h3>
+<hr />
+<h2 id="Принцип-проектирования-интерфейса-фасада"><a class="header" href="#Принцип-проектирования-интерфейса-фасада">Принцип проектирования интерфейса фасада</a></h2>
+<h3 id="Интерфейс-принадлежит-клиенту"><a class="header" href="#Интерфейс-принадлежит-клиенту">Интерфейс принадлежит клиенту</a></h3>
 <blockquote>
 <p><strong>Важный принцип</strong>: Интерфейс фасада — это <strong>атрибут клиентской стороны</strong>, а не реализующей стороны.</p>
 </blockquote>
@@ -602,7 +580,7 @@ class Scheduler {
   // Этот метод отражает то, что НУЖНО клиенту
 }
 </code></pre>
-<h3 id="клиент-серверное-взаимодействие-в-контексте-архитектуры"><a class="header" href="#клиент-серверное-взаимодействие-в-контексте-архитектуры">Клиент-серверное взаимодействие (в контексте архитектуры)</a></h3>
+<h3 id="Клиент-серверное-взаимодействие-в-контексте-архитектуры"><a class="header" href="#Клиент-серверное-взаимодействие-в-контексте-архитектуры">Клиент-серверное взаимодействие (в контексте архитектуры)</a></h3>
 <p><strong>Это не про сетевое взаимодействие!</strong></p>
 <p>Это про разделение ответственности:</p>
 <ul>
@@ -612,7 +590,7 @@ class Scheduler {
 <p><strong>Архитектурная граница</strong> между ними:</p>
 <ol>
 <li>Сохраняет сложность внутри</li>
-<li>Не позволяет сложности “просочиться” в клиентский код</li>
+<li>Не позволяет сложности "просочиться" в клиентский код</li>
 <li>Фасад может спокойно использоваться в бизнес-логике</li>
 </ol>
 <pre><code class="language-javascript">// Бизнес-логика (клиент)
@@ -627,9 +605,9 @@ class OrderService {
   }
 }
 </code></pre>
-<hr>
-<h2 id="когда-использовать-паттерн-фасад"><a class="header" href="#когда-использовать-паттерн-фасад">Когда использовать паттерн Фасад</a></h2>
-<h3 id="-используйте-фасад-когда"><a class="header" href="#-используйте-фасад-когда">✅ Используйте Фасад, когда:</a></h3>
+<hr />
+<h2 id="Когда-использовать-паттерн-Фасад"><a class="header" href="#Когда-использовать-паттерн-Фасад">Когда использовать паттерн Фасад</a></h2>
+<h3 id="-Используйте-Фасад-когда"><a class="header" href="#-Используйте-Фасад-когда">✅ Используйте Фасад, когда:</a></h3>
 <ol>
 <li>
 <p><strong>Нужно упростить работу со сложной подсистемой</strong></p>
@@ -665,7 +643,7 @@ dataProcessor.process(data);
 </ul>
 </li>
 </ol>
-<h3 id="-не-используйте-фасад-когда"><a class="header" href="#-не-используйте-фасад-когда">❌ Не используйте Фасад, когда:</a></h3>
+<h3 id="-Не-используйте-Фасад-когда"><a class="header" href="#-Не-используйте-Фасад-когда">❌ Не используйте Фасад, когда:</a></h3>
 <ol>
 <li>
 <p><strong>Подсистема уже проста</strong></p>
@@ -686,9 +664,9 @@ dataProcessor.process(data);
 </ul>
 </li>
 </ol>
-<hr>
-<h2 id="связь-с-другими-паттернами"><a class="header" href="#связь-с-другими-паттернами">Связь с другими паттернами</a></h2>
-<h3 id="фасад--singleton"><a class="header" href="#фасад--singleton">Фасад + Singleton</a></h3>
+<hr />
+<h2 id="Связь-с-другими-паттернами"><a class="header" href="#Связь-с-другими-паттернами">Связь с другими паттернами</a></h2>
+<h3 id="Фасад--singleton"><a class="header" href="#Фасад--singleton">Фасад + Singleton</a></h3>
 <pre><code class="language-javascript">// Часто фасад реализуется как одиночка
 class Scheduler {
   static #instance = null;
@@ -706,7 +684,7 @@ class Scheduler {
 // Использование
 const scheduler = Scheduler.getInstance();
 </code></pre>
-<h3 id="фасад--factory"><a class="header" href="#фасад--factory">Фасад + Factory</a></h3>
+<h3 id="Фасад--factory"><a class="header" href="#Фасад--factory">Фасад + Factory</a></h3>
 <pre><code class="language-javascript">class Scheduler {
   task(name, time, fn) {
     // Фасад использует фабрику для создания задач
@@ -715,7 +693,7 @@ const scheduler = Scheduler.getInstance();
   }
 }
 </code></pre>
-<h3 id="фасад--strategy"><a class="header" href="#фасад--strategy">Фасад + Strategy</a></h3>
+<h3 id="Фасад--strategy"><a class="header" href="#Фасад--strategy">Фасад + Strategy</a></h3>
 <pre><code class="language-javascript">class Scheduler {
   constructor(executionStrategy) {
     this.strategy = executionStrategy; // Можно менять стратегию
@@ -726,11 +704,11 @@ const scheduler = Scheduler.getInstance();
   }
 }
 </code></pre>
-<hr>
-<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
-<h3 id="1-основная-цель-фасада"><a class="header" href="#1-основная-цель-фасада">1. Основная цель фасада</a></h3>
+<hr />
+<h2 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="1-Основная-цель-фасада"><a class="header" href="#1-Основная-цель-фасада">1. Основная цель фасада</a></h3>
 <p><strong>Изоляция сложности</strong> подсистемы за <strong>простым и стабильным интерфейсом</strong>.</p>
-<h3 id="2-преимущества"><a class="header" href="#2-преимущества">2. Преимущества</a></h3>
+<h3 id="2-Преимущества"><a class="header" href="#2-Преимущества">2. Преимущества</a></h3>
 <ul>
 <li>✅ Упрощение использования сложных подсистем</li>
 <li>✅ Создание архитектурных границ</li>
@@ -738,28 +716,28 @@ const scheduler = Scheduler.getInstance();
 <li>✅ Уменьшение зависимостей между модулями</li>
 <li>✅ Контрактное программирование</li>
 </ul>
-<h3 id="3-недостатки"><a class="header" href="#3-недостатки">3. Недостатки</a></h3>
+<h3 id="3-Недостатки"><a class="header" href="#3-Недостатки">3. Недостатки</a></h3>
 <ul>
 <li>❌ Снижение производительности (performance penalty)</li>
 <li>❌ Риск превращения в God Object</li>
 <li>❌ Дополнительный уровень абстракции</li>
 </ul>
-<h3 id="4-золотое-правило"><a class="header" href="#4-золотое-правило">4. Золотое правило</a></h3>
+<h3 id="4-Золотое-правило"><a class="header" href="#4-Золотое-правило">4. Золотое правило</a></h3>
 <blockquote>
 <p>Интерфейс фасада должен отражать <strong>потребности клиента</strong>, а не <strong>детали реализации</strong>.</p>
 </blockquote>
-<h3 id="5-архитектурная-граница"><a class="header" href="#5-архитектурная-граница">5. Архитектурная граница</a></h3>
+<h3 id="5-Архитектурная-граница"><a class="header" href="#5-Архитектурная-граница">5. Архитектурная граница</a></h3>
 <p>Фасад — это <strong>рубеж, который нельзя пересекать</strong>:</p>
 <ul>
 <li>Должен быть покрыт тестами</li>
 <li>Должен быть типизирован</li>
 <li>Должен быть стабильным</li>
 </ul>
-<h3 id="6-когда-рефакторить"><a class="header" href="#6-когда-рефакторить">6. Когда рефакторить</a></h3>
+<h3 id="6-Когда-рефакторить"><a class="header" href="#6-Когда-рефакторить">6. Когда рефакторить</a></h3>
 <p>Если фасад разрастается — <strong>извлекайте абстракции</strong> из подсистемы наружу, чтобы уменьшить объём интерфейса.</p>
-<hr>
-<h2 id="дополнительные-примеры-использования"><a class="header" href="#дополнительные-примеры-использования">Дополнительные примеры использования</a></h2>
-<h3 id="пример-1-фасад-для-работы-с-файловой-системой"><a class="header" href="#пример-1-фасад-для-работы-с-файловой-системой">Пример 1: Фасад для работы с файловой системой</a></h3>
+<hr />
+<h2 id="Дополнительные-примеры-использования"><a class="header" href="#Дополнительные-примеры-использования">Дополнительные примеры использования</a></h2>
+<h3 id="Пример-1-Фасад-для-работы-с-файловой-системой"><a class="header" href="#Пример-1-Фасад-для-работы-с-файловой-системой">Пример 1: Фасад для работы с файловой системой</a></h3>
 <pre><code class="language-javascript">class FileSystem {
   async saveFile(path, content) {
     // Внутри: валидация, создание директорий, запись, логирование
@@ -788,7 +766,7 @@ const scheduler = Scheduler.getInstance();
 const fs = new FileSystem();
 await fs.saveFile('/data/user.json', JSON.stringify(user));
 </code></pre>
-<h3 id="пример-2-фасад-для-http-клиента"><a class="header" href="#пример-2-фасад-для-http-клиента">Пример 2: Фасад для HTTP-клиента</a></h3>
+<h3 id="Пример-2-Фасад-для-http-клиента"><a class="header" href="#Пример-2-Фасад-для-http-клиента">Пример 2: Фасад для HTTP-клиента</a></h3>
 <pre><code class="language-javascript">class ApiClient {
   async get(endpoint) {
     // Внутри: добавление заголовков, обработка ошибок, retry логика
@@ -808,9 +786,9 @@ await fs.saveFile('/data/user.json', JSON.stringify(user));
 const api = new ApiClient();
 const users = await api.get('/users');
 </code></pre>
-<hr>
-<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
-<h3 id="1-держите-фасад-простым"><a class="header" href="#1-держите-фасад-простым">1. Держите фасад простым</a></h3>
+<hr />
+<h2 id="Практические-рекомендации"><a class="header" href="#Практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="1-Держите-фасад-простым"><a class="header" href="#1-Держите-фасад-простым">1. Держите фасад простым</a></h3>
 <pre><code class="language-javascript">// ✅ Хорошо
 class Scheduler {
   task(name, time, fn) { /* ... */ }
@@ -828,7 +806,7 @@ class Scheduler {
   // ... ещё 20 методов
 }
 </code></pre>
-<h3 id="2-используйте-typescript-для-контракта"><a class="header" href="#2-используйте-typescript-для-контракта">2. Используйте TypeScript для контракта</a></h3>
+<h3 id="2-Используйте-typescript-для-контракта"><a class="header" href="#2-Используйте-typescript-для-контракта">2. Используйте TypeScript для контракта</a></h3>
 <pre><code class="language-typescript">interface IScheduler {
   task(name: string, time: number, fn: () =&gt; void): void;
   stop(name: string): void;
@@ -838,7 +816,7 @@ class Scheduler implements IScheduler {
   // Реализация гарантированно соответствует контракту
 }
 </code></pre>
-<h3 id="3-покрывайте-тестами"><a class="header" href="#3-покрывайте-тестами">3. Покрывайте тестами</a></h3>
+<h3 id="3-Покрывайте-тестами"><a class="header" href="#3-Покрывайте-тестами">3. Покрывайте тестами</a></h3>
 <pre><code class="language-javascript">describe('Scheduler Facade', () =&gt; {
   it('should execute task after specified time', (done) =&gt; {
     const scheduler = new Scheduler();
@@ -860,7 +838,7 @@ class Scheduler implements IScheduler {
   });
 });
 </code></pre>
-<h3 id="4-документируйте-контракт"><a class="header" href="#4-документируйте-контракт">4. Документируйте контракт</a></h3>
+<h3 id="4-Документируйте-контракт"><a class="header" href="#4-Документируйте-контракт">4. Документируйте контракт</a></h3>
 <pre><code class="language-javascript">/**
  * Планировщик задач - фасад для управления отложенным выполнением функций
  *
@@ -880,8 +858,8 @@ class Scheduler {
   task(name, time, fn) { /* ... */ }
 }
 </code></pre>
-<hr>
-<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<hr />
+<h2 id="Заключение"><a class="header" href="#Заключение">Заключение</a></h2>
 <p>Паттерн <strong>Фасад</strong> — это мощный инструмент для создания <strong>простых интерфейсов</strong> к <strong>сложным подсистемам</strong>. Он позволяет:</p>
 <ol>
 <li><strong>Изолировать</strong> внутреннюю сложность</li>
@@ -891,27 +869,27 @@ class Scheduler {
 </ol>
 <p>При правильном применении фасад делает код более <strong>понятным</strong>, <strong>поддерживаемым</strong> и <strong>гибким</strong> к изменениям.</p>
 <p><strong>Главное правило</strong>: Проектируйте интерфейс фасада исходя из <strong>потребностей клиента</strong>, а не из <strong>деталей реализации</strong>.</p>
-<hr>
-<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
-<h3 id="связанные-паттерны"><a class="header" href="#связанные-паттерны">Связанные паттерны</a></h3>
+<hr />
+<h2 id="Дополнительные-материалы"><a class="header" href="#Дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="Связанные-паттерны"><a class="header" href="#Связанные-паттерны">Связанные паттерны</a></h3>
 <ul>
 <li><strong>Adapter</strong> — преобразование интерфейса одного класса</li>
 <li><strong>Proxy</strong> — контроль доступа к объекту</li>
 <li><strong>Mediator</strong> — координация взаимодействия между объектами</li>
 <li><strong>Strategy</strong> — инкапсуляция алгоритмов</li>
 </ul>
-<h3 id="принципы-проектирования"><a class="header" href="#принципы-проектирования">Принципы проектирования</a></h3>
+<h3 id="Принципы-проектирования"><a class="header" href="#Принципы-проектирования">Принципы проектирования</a></h3>
 <ul>
 <li><strong>Low Coupling</strong> — низкое зацепление между модулями</li>
 <li><strong>High Cohesion</strong> — высокая связность внутри модуля</li>
 <li><strong>Interface Segregation Principle</strong> — клиенты не должны зависеть от методов, которые не используют</li>
 <li><strong>Dependency Inversion Principle</strong> — зависимость от абстракций, а не от конкретных реализаций</li>
 </ul>
-<h3 id="рекомендуемая-литература"><a class="header" href="#рекомендуемая-литература">Рекомендуемая литература</a></h3>
+<h3 id="Рекомендуемая-литература"><a class="header" href="#Рекомендуемая-литература">Рекомендуемая литература</a></h3>
 <ul>
-<li>“Design Patterns: Elements of Reusable Object-Oriented Software” (GoF)</li>
-<li>“Clean Architecture” by Robert C. Martin</li>
-<li>“Patterns of Enterprise Application Architecture” by Martin Fowler</li>
+<li>"Design Patterns: Elements of Reusable Object-Oriented Software" (GoF)</li>
+<li>"Clean Architecture" by Robert C. Martin</li>
+<li>"Patterns of Enterprise Application Architecture" by Martin Fowler</li>
 </ul>
 
                     </main>
@@ -919,11 +897,11 @@ class Scheduler {
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week5/proxy-pattern-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week5/composite-pattern-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -933,38 +911,17 @@ class Scheduler {
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week5/proxy-pattern-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week5/composite-pattern-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -972,16 +929,15 @@ class Scheduler {
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

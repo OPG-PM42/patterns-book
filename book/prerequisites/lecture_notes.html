@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,46 +124,41 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="конспект-лекции-javascript-оптимизация-и-паттерны"><a class="header" href="#конспект-лекции-javascript-оптимизация-и-паттерны">Конспект лекции: JavaScript оптимизация и паттерны</a></h1>
-<hr>
-<h2 id="введение-философия-разработки"><a class="header" href="#введение-философия-разработки">Введение: Философия разработки</a></h2>
-<h3 id="суть-работы-программиста"><a class="header" href="#суть-работы-программиста">Суть работы программиста</a></h3>
+                        <h1 id="Конспект-лекции-javascript-оптимизация-и-паттерны"><a class="header" href="#Конспект-лекции-javascript-оптимизация-и-паттерны">Конспект лекции: JavaScript оптимизация и паттерны</a></h1>
+<hr />
+<h2 id="Введение-Философия-разработки"><a class="header" href="#Введение-Философия-разработки">Введение: Философия разработки</a></h2>
+<h3 id="Суть-работы-программиста"><a class="header" href="#Суть-работы-программиста">Суть работы программиста</a></h3>
 <p>Лектор начинает с социальной аналогии: работа программиста схожа с работой заводского рабочего, которому нужно повторять одно и то же. Но программистам спасает <strong>интеллект</strong> — они разбираются в сложных системах (Event Loop, асинхронность, контракты типов).</p>
 <p><strong>Ключевая идея</strong>: Интересное время требует постоянного изучения и понимания внутреннего устройства систем. Это невозможно ограничить линиями кода в день — нельзя писать ни обязательно 1000 строк, ни обязательно менее 10 строк. Решение зависит от задачи, памяти и оптимизации компилятора.</p>
-<h3 id="баланс-красоты-и-производительности"><a class="header" href="#баланс-красоты-и-производительности">Баланс красоты и производительности</a></h3>
+<h3 id="Баланс-красоты-и-производительности"><a class="header" href="#Баланс-красоты-и-производительности">Баланс красоты и производительности</a></h3>
 <ul>
 <li><strong>Желаемое состояние</strong>: Производительность кода зависит от качества <strong>компилятора/интерпретатора</strong>, а не от качества кода программиста</li>
 <li><strong>Реальность</strong>: Часто нужно писать код, понимая его производительность</li>
@@ -191,10 +169,10 @@
 </ul>
 </li>
 </ul>
-<hr>
-<h2 id="различие-javascript-и-java"><a class="header" href="#различие-javascript-и-java">Различие JavaScript и Java</a></h2>
-<h3 id="культурные-особенности-javascript"><a class="header" href="#культурные-особенности-javascript">Культурные особенности JavaScript</a></h3>
-<p><strong>JavaScript имеет множество “первоклассных” сущностей:</strong></p>
+<hr />
+<h2 id="Различие-javascript-и-java"><a class="header" href="#Различие-javascript-и-java">Различие JavaScript и Java</a></h2>
+<h3 id="Культурные-особенности-javascript"><a class="header" href="#Культурные-особенности-javascript">Культурные особенности JavaScript</a></h3>
+<p><strong>JavaScript имеет множество "первоклассных" сущностей:</strong></p>
 <ul>
 <li>Функции как первоклассные объекты</li>
 <li>Типы как первоклассные объекты</li>
@@ -204,13 +182,13 @@
 <p><strong>Java ограничена архитектурой:</strong></p>
 <ul>
 <li>Нет первоклассных типов/классов</li>
-<li>Строгая типизация была введена для того, чтобы “ломать руки” разработчикам, пишущим неправильный код</li>
+<li>Строгая типизация была введена для того, чтобы "ломать руки" разработчикам, пишущим неправильный код</li>
 <li>Это позволило быстро писать промышленный код с гарантиями надежности</li>
 </ul>
 <p><strong>Вывод</strong>: JavaScript дает большую свободу, но требует большей ответственности разработчика. Java ограничивает, зато гарантирует определенные стандарты.</p>
-<hr>
-<h2 id="классы-в-javascript-и-замыкания"><a class="header" href="#классы-в-javascript-и-замыкания">Классы в JavaScript и замыкания</a></h2>
-<h3 id="реальность-приватных-полей"><a class="header" href="#реальность-приватных-полей">Реальность приватных полей</a></h3>
+<hr />
+<h2 id="Классы-в-javascript-и-замыкания"><a class="header" href="#Классы-в-javascript-и-замыкания">Классы в JavaScript и замыкания</a></h2>
+<h3 id="Реальность-приватных-полей"><a class="header" href="#Реальность-приватных-полей">Реальность приватных полей</a></h3>
 <p>До появления приватных полей (<code>#field</code>) в JavaScript классы практически ничем не отличались от обычных объектов с замыканиями:</p>
 <pre><code class="language-javascript">// Классический способ с замыканиями (эмуляция приватных полей)
 function createCounter() {
@@ -230,17 +208,17 @@ class Counter {
   getCount() { return this.#count; }
 }
 </code></pre>
-<h3 id="проблемы-приватных-полей"><a class="header" href="#проблемы-приватных-полей">Проблемы приватных полей</a></h3>
+<h3 id="Проблемы-приватных-полей"><a class="header" href="#Проблемы-приватных-полей">Проблемы приватных полей</a></h3>
 <ol>
 <li><strong>Внутренняя реализация</strong>: Приватные поля добавляют дополнительное окружение, что усложняет наследование</li>
 <li><strong>Потеря видимости при наследовании</strong>: Если вы добавляете метод через <code>prototype</code> (вне класса), он не видит приватные поля класса</li>
 <li><strong>Типизация в TypeScript</strong>: TypeScript приватные поля — это фикция (исчезают при компиляции), JavaScript приватные поля — это реальность</li>
 </ol>
 <p><strong>Рекомендация лектора</strong>: Использовать приватные поля только в конечных классах (которые не наследуются), или придерживаться замыканий.</p>
-<hr>
-<h2 id="практический-проект-построение-интерпретатора-выражений"><a class="header" href="#практический-проект-построение-интерпретатора-выражений">Практический проект: Построение интерпретатора выражений</a></h2>
-<h3 id="эволюция-архитектуры"><a class="header" href="#эволюция-архитектуры">Эволюция архитектуры</a></h3>
-<h4 id="1-паттерн-iterator-простые-выражения"><a class="header" href="#1-паттерн-iterator-простые-выражения">1. Паттерн Iterator (простые выражения)</a></h4>
+<hr />
+<h2 id="Практический-проект-Построение-интерпретатора-выражений"><a class="header" href="#Практический-проект-Построение-интерпретатора-выражений">Практический проект: Построение интерпретатора выражений</a></h2>
+<h3 id="Эволюция-архитектуры"><a class="header" href="#Эволюция-архитектуры">Эволюция архитектуры</a></h3>
+<h4 id="1-Паттерн-iterator-простые-выражения"><a class="header" href="#1-Паттерн-iterator-простые-выражения">1. Паттерн Iterator (простые выражения)</a></h4>
 <p><strong>Задача</strong>: Парсить и интерпретировать математические выражения вида <code>x + y</code></p>
 <p>Начиная с простого подхода:</p>
 <pre><code class="language-javascript">// Начальный вариант: классы для каждого типа выражения
@@ -256,7 +234,7 @@ class Variable {
   toJavaScript() { return this.name; }
 }
 </code></pre>
-<h4 id="2-паттерн-composite-сложные-структуры"><a class="header" href="#2-паттерн-composite-сложные-структуры">2. Паттерн Composite (сложные структуры)</a></h4>
+<h4 id="2-Паттерн-composite-сложные-структуры"><a class="header" href="#2-Паттерн-composite-сложные-структуры">2. Паттерн Composite (сложные структуры)</a></h4>
 <p><strong>Проблема</strong>: Выражение может быть вложенным: <code>(x + y) * z</code>
 <strong>Решение</strong>: Классы для операций</p>
 <pre><code class="language-javascript">class BinaryOp {
@@ -273,7 +251,7 @@ class Variable {
   }
 }
 </code></pre>
-<h4 id="3-паттерн-strategy-гибкие-операторы"><a class="header" href="#3-паттерн-strategy-гибкие-операторы">3. Паттерн Strategy (гибкие операторы)</a></h4>
+<h4 id="3-Паттерн-strategy-гибкие-операторы"><a class="header" href="#3-Паттерн-strategy-гибкие-операторы">3. Паттерн Strategy (гибкие операторы)</a></h4>
 <p><strong>Проблема</strong>: Жестко закодировать операторы в классе
 <strong>Решение</strong>: Коллекция операторов</p>
 <pre><code class="language-javascript">const operators = {
@@ -285,7 +263,7 @@ class Variable {
 // Для добавления нового оператора просто добавьте в коллекцию
 operators['%'] = { name: '%', evaluate: (a, b) =&gt; a % b };
 </code></pre>
-<h4 id="4-рефакторинг-от-классов-к-функциям"><a class="header" href="#4-рефакторинг-от-классов-к-функциям">4. Рефакторинг: от классов к функциям</a></h4>
+<h4 id="4-Рефакторинг-от-классов-к-функциям"><a class="header" href="#4-Рефакторинг-от-классов-к-функциям">4. Рефакторинг: от классов к функциям</a></h4>
 <p><strong>Наблюдение</strong>: Не все нужно делать классами
 <strong>Новый подход</strong>: Использовать классы только где они действительно нужны</p>
 <pre><code class="language-javascript">// Парсер как функция (была классом)
@@ -299,9 +277,9 @@ function evaluate(node, context) {
   // логика вычисления
 }
 </code></pre>
-<hr>
-<h2 id="генерация-javascript-кода"><a class="header" href="#генерация-javascript-кода">Генерация JavaScript кода</a></h2>
-<h3 id="из-дерева-выражений-в-функции"><a class="header" href="#из-дерева-выражений-в-функции">Из дерева выражений в функции</a></h3>
+<hr />
+<h2 id="Генерация-javascript-кода"><a class="header" href="#Генерация-javascript-кода">Генерация JavaScript кода</a></h2>
+<h3 id="Из-дерева-выражений-в-функции"><a class="header" href="#Из-дерева-выражений-в-функции">Из дерева выражений в функции</a></h3>
 <p><strong>Идея</strong>: На основе AST (абстрактного синтаксического дерева) сгенерировать JavaScript код, который можно выполнить</p>
 <pre><code class="language-javascript">// Входное дерево (AST)
 const ast = new BinaryOp(
@@ -316,7 +294,7 @@ const code = `(x, y) =&gt; x + y`;
 // Выполнение через V8
 const result = eval(code)(10, 20); // 30
 </code></pre>
-<h3 id="сбор-идентификаторов"><a class="header" href="#сбор-идентификаторов">Сбор идентификаторов</a></h3>
+<h3 id="Сбор-идентификаторов"><a class="header" href="#Сбор-идентификаторов">Сбор идентификаторов</a></h3>
 <p>Интерпретатор может автоматически определять, какие переменные нужны:</p>
 <pre><code class="language-javascript">// Из дерева (x + y) * z извлекаются идентификаторы: x, y, z
 // Генерируется: (x, y, z) =&gt; (x + y) * z
@@ -326,9 +304,9 @@ const result = eval(code)(10, 20); // 30
 // 2. Проверять доступность переменных
 // 3. Оптимизировать замыкания
 </code></pre>
-<hr>
-<h2 id="паттерн-template-string-и-производительность"><a class="header" href="#паттерн-template-string-и-производительность">Паттерн Template String и производительность</a></h2>
-<h3 id="использование-бэккотов-vs-кавычек"><a class="header" href="#использование-бэккотов-vs-кавычек">Использование бэккотов vs кавычек</a></h3>
+<hr />
+<h2 id="Паттерн-template-string-и-производительность"><a class="header" href="#Паттерн-template-string-и-производительность">Паттерн Template String и производительность</a></h2>
+<h3 id="Использование-бэккотов-vs-кавычек"><a class="header" href="#Использование-бэккотов-vs-кавычек">Использование бэккотов vs кавычек</a></h3>
 <p><strong>Важное уточнение</strong>: С точки зрения производительности в V8, использование обычных строк и template strings эквивалентно:</p>
 <pre><code class="language-javascript">// Эти два варианта работают одинаково быстро
 const str1 = 'x + y';
@@ -342,9 +320,9 @@ const code = `(${params}) =&gt; ${expression}`;
 <li>Если перед бэккотом стоит функция (tagged template), тогда это вызов функции с параметрами</li>
 <li>V8 может собрать строку заранее, не интерпретируя в реальности</li>
 </ul>
-<hr>
-<h2 id="приватные-поля-и-наследование"><a class="header" href="#приватные-поля-и-наследование">Приватные поля и наследование</a></h2>
-<h3 id="проблема-наследования"><a class="header" href="#проблема-наследования">Проблема наследования</a></h3>
+<hr />
+<h2 id="Приватные-поля-и-наследование"><a class="header" href="#Приватные-поля-и-наследование">Приватные поля и наследование</a></h2>
+<h3 id="Проблема-наследования"><a class="header" href="#Проблема-наследования">Проблема наследования</a></h3>
 <pre><code class="language-javascript">class Base {
   #privateField = 10;
   
@@ -362,15 +340,15 @@ Derived.prototype.newMethod = function() {
 };
 </code></pre>
 <p><strong>Решение</strong>: Либо добавлять методы внутри класса, либо использовать замыкания для приватности.</p>
-<hr>
-<h2 id="real-world-пример-паттерн-state-machine-для-заказа-такси"><a class="header" href="#real-world-пример-паттерн-state-machine-для-заказа-такси">Real-world пример: Паттерн State Machine для заказа такси</a></h2>
-<h3 id="проблема"><a class="header" href="#проблема">Проблема</a></h3>
+<hr />
+<h2 id="real-world-пример-Паттерн-state-machine-для-заказа-такси"><a class="header" href="#real-world-пример-Паттерн-state-machine-для-заказа-такси">Real-world пример: Паттерн State Machine для заказа такси</a></h2>
+<h3 id="Проблема"><a class="header" href="#Проблема">Проблема</a></h3>
 <p>Система заказа такси имеет сложное состояние с несколькими переходами:</p>
 <ul>
-<li>“waiting” → “matching” → “en_route” → “arrived” → “completed”</li>
+<li>"waiting" → "matching" → "en_route" → "arrived" → "completed"</li>
 <li>Каждое состояние имеет разные доступные действия</li>
 </ul>
-<h3 id="классический-подход-много-switchcase"><a class="header" href="#классический-подход-много-switchcase">Классический подход (много switch/case)</a></h3>
+<h3 id="Классический-подход-много-switchcase"><a class="header" href="#Классический-подход-много-switchcase">Классический подход (много switch/case)</a></h3>
 <pre><code class="language-javascript">switch(state) {
   case 'waiting':
     // код для состояния waiting
@@ -387,7 +365,7 @@ Derived.prototype.newMethod = function() {
 <li>Логика размазана по коду</li>
 <li>Трудно читать и тестировать</li>
 </ul>
-<h3 id="паттерн-state-machine-рекомендованный-подход"><a class="header" href="#паттерн-state-machine-рекомендованный-подход">Паттерн State Machine (рекомендованный подход)</a></h3>
+<h3 id="Паттерн-state-machine-рекомендованный-подход"><a class="header" href="#Паттерн-state-machine-рекомендованный-подход">Паттерн State Machine (рекомендованный подход)</a></h3>
 <p><strong>Структура</strong>: Каждое состояние — это класс с методами для действий</p>
 <pre><code class="language-javascript">class Order {
   constructor(id) {
@@ -428,7 +406,7 @@ class EnRouteState {
 <li>Ясная логика переходов между состояниями</li>
 <li>Легко тестировать каждое состояние отдельно</li>
 </ol>
-<h3 id="граф-состояний"><a class="header" href="#граф-состояний">Граф состояний</a></h3>
+<h3 id="Граф-состояний"><a class="header" href="#Граф-состояний">Граф состояний</a></h3>
 <pre><code>WaitingState
     ↓
 MatchingState
@@ -439,10 +417,10 @@ ArrivedState
     ↓
 CompletedState
 </code></pre>
-<hr>
-<h2 id="паттерны-gang-of-four-и-их-адаптация"><a class="header" href="#паттерны-gang-of-four-и-их-адаптация">Паттерны Gang of Four и их адаптация</a></h2>
-<h3 id="переработка-классических-паттернов-для-javascript"><a class="header" href="#переработка-классических-паттернов-для-javascript">Переработка классических паттернов для JavaScript</a></h3>
-<p><strong>Наблюдение</strong>: Книга “Design Patterns” (Gang of Four) издана в 1994 году и ориентирована на языки без первоклассных функций.</p>
+<hr />
+<h2 id="Паттерны-gang-of-four-и-их-адаптация"><a class="header" href="#Паттерны-gang-of-four-и-их-адаптация">Паттерны Gang of Four и их адаптация</a></h2>
+<h3 id="Переработка-классических-паттернов-для-javascript"><a class="header" href="#Переработка-классических-паттернов-для-javascript">Переработка классических паттернов для JavaScript</a></h3>
+<p><strong>Наблюдение</strong>: Книга "Design Patterns" (Gang of Four) издана в 1994 году и ориентирована на языки без первоклассных функций.</p>
 <p><strong>Подход лектора</strong>: Переработать паттерны для JavaScript с использованием:</p>
 <ul>
 <li>Объектов вместо классов (где это имеет смысл)</li>
@@ -455,7 +433,7 @@ CompletedState
 <li>Адаптированная реализация для JavaScript</li>
 <li>Примеры использования</li>
 </ol>
-<h3 id="когда-использовать-классы-в-javascript"><a class="header" href="#когда-использовать-классы-в-javascript">Когда использовать классы в JavaScript</a></h3>
+<h3 id="Когда-использовать-классы-в-javascript"><a class="header" href="#Когда-использовать-классы-в-javascript">Когда использовать классы в JavaScript</a></h3>
 <ul>
 <li>Для построения деревьев (AST, DOM, иерархии)</li>
 <li>Когда нужна наследуемая функциональность</li>
@@ -468,58 +446,58 @@ CompletedState
 <li>Когда можно использовать функции</li>
 <li>Где нужна максимальная гибкость</li>
 </ul>
-<hr>
-<h2 id="важные-мысли-о-разработке"><a class="header" href="#важные-мысли-о-разработке">Важные мысли о разработке</a></h2>
-<h3 id="от-задачи-к-решению-не-от-решения-к-задаче"><a class="header" href="#от-задачи-к-решению-не-от-решения-к-задаче">От задачи к решению (не от решения к задаче)</a></h3>
+<hr />
+<h2 id="Важные-мысли-о-разработке"><a class="header" href="#Важные-мысли-о-разработке">Важные мысли о разработке</a></h2>
+<h3 id="От-задачи-к-решению-не-от-решения-к-задаче"><a class="header" href="#От-задачи-к-решению-не-от-решения-к-задаче">От задачи к решению (не от решения к задаче)</a></h3>
 <p><strong>Проблема в academia</strong>: Сначала дают множество информации (паттерны, примеры), потом человек не знает, что с ней делать, пока не столкнется с реальной задачей.</p>
 <p><strong>Правильный подход</strong>:</p>
 <ol>
 <li>Предъявить задачу</li>
-<li>Человек пытается ее решить “в лоб”</li>
+<li>Человек пытается ее решить "в лоб"</li>
 <li>Столкнувшись с проблемой, показать, как паттерн решает эту проблему</li>
 <li>Это становится наглядным и понятным</li>
 </ol>
-<p><strong>Пример</strong>: Сначала показываем заказ такси, потом говорим: “Видишь сложность? Вот для этого нужна State Machine”</p>
-<h3 id="философия-качества-кода"><a class="header" href="#философия-качества-кода">Философия качества кода</a></h3>
+<p><strong>Пример</strong>: Сначала показываем заказ такси, потом говорим: "Видишь сложность? Вот для этого нужна State Machine"</p>
+<h3 id="Философия-качества-кода"><a class="header" href="#Философия-качества-кода">Философия качества кода</a></h3>
 <ul>
 <li><strong>На работе должна быть радость и удовольствие</strong> от происходящего</li>
 <li>Если вы не получаете удовольствия от кодирования, нужно менять профессию</li>
 <li>Красивый код важен, но не если он жертвует функциональностью</li>
 <li>Баланс между читаемостью и производительностью</li>
 </ul>
-<h3 id="глубина-погружения-в-технологии"><a class="header" href="#глубина-погружения-в-технологии">Глубина погружения в технологии</a></h3>
-<p><strong>Метафора “Кольской скважины”</strong>: Чем глубже ты погружаешься в исходный код платформы/языка, тем страшнее становится. Тебе видна работа обыкновенных людей, троечников, которые предпочли “написать и забыть”. Но это помогает понять, что идеальных решений не существует.</p>
+<h3 id="Глубина-погружения-в-технологии"><a class="header" href="#Глубина-погружения-в-технологии">Глубина погружения в технологии</a></h3>
+<p><strong>Метафора "Кольской скважины"</strong>: Чем глубже ты погружаешься в исходный код платформы/языка, тем страшнее становится. Тебе видна работа обыкновенных людей, троечников, которые предпочли "написать и забыть". Но это помогает понять, что идеальных решений не существует.</p>
 <p><strong>Примеры пугающих фактов</strong>:</p>
 <ul>
 <li>В микрокоде процессора случаются ошибки (Spectre, Meltdown и другие уязвимости)</li>
 <li>Даже Assemblly (самый простой язык) может привести к неожиданным результатам</li>
 <li>Глубже = страшнее, но и понятнее</li>
 </ul>
-<hr>
-<h2 id="практические-советы"><a class="header" href="#практические-советы">Практические советы</a></h2>
-<h3 id="использование-тестов-при-переработке-кода"><a class="header" href="#использование-тестов-при-переработке-кода">Использование тестов при переработке кода</a></h3>
+<hr />
+<h2 id="Практические-советы"><a class="header" href="#Практические-советы">Практические советы</a></h2>
+<h3 id="Использование-тестов-при-переработке-кода"><a class="header" href="#Использование-тестов-при-переработке-кода">Использование тестов при переработке кода</a></h3>
 <p>При рефакторинге архитектуры:</p>
 <ol>
-<li>Сначала пишите код “в лоб” с нужной функциональностью</li>
+<li>Сначала пишите код "в лоб" с нужной функциональностью</li>
 <li>Потом пишите тесты</li>
 <li>После тестов можно рефакторить архитектуру</li>
 <li>Тесты подтверждают, что функциональность не изменилась</li>
 </ol>
-<h3 id="оптимизация--последний-шаг"><a class="header" href="#оптимизация--последний-шаг">Оптимизация — последний шаг</a></h3>
+<h3 id="Оптимизация--последний-шаг"><a class="header" href="#Оптимизация--последний-шаг">Оптимизация — последний шаг</a></h3>
 <ul>
 <li>Сначала пишите правильный код</li>
 <li>Потом, если нужна оптимизация, анализируйте узкие места</li>
 <li>Не оптимизируйте раньше времени (premature optimization)</li>
 </ul>
-<h3 id="чтение-специфікації"><a class="header" href="#чтение-специфікації">Чтение специфікації</a></h3>
+<h3 id="Чтение-специфікації"><a class="header" href="#Чтение-специфікації">Чтение специфікації</a></h3>
 <p>Когда что-то непонятно:</p>
 <ul>
 <li>Читайте официальную спецификацию</li>
 <li>Ищите реализацию спецификации на том же языке (например, JavaScript реализация JavaScript)</li>
 <li>Такой код часто более понятен, чем описание в спеке</li>
 </ul>
-<hr>
-<h2 id="выводы"><a class="header" href="#выводы">Выводы</a></h2>
+<hr />
+<h2 id="Выводы"><a class="header" href="#Выводы">Выводы</a></h2>
 <ol>
 <li>
 <p><strong>JavaScript — язык свободы с большой ответственностью</strong>: Много первоклассных сущностей дает гибкость, но требует мудрости в использовании</p>
@@ -537,7 +515,7 @@ CompletedState
 <p><strong>Качество зависит от человека</strong>: Даже базовые инструменты (как State Machine) дают огромное преимущество в сложных системах</p>
 </li>
 <li>
-<p><strong>Будьте честны в коде</strong>: Код должен быть понятным для вашей команды, даже если он не “красивый” по стандартам“</p>
+<p><strong>Будьте честны в коде</strong>: Код должен быть понятным для вашей команды, даже если он не "красивый" по стандартам"</p>
 </li>
 </ol>
 
@@ -546,11 +524,11 @@ CompletedState
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../prerequisites/native-contracts-lecture.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../prerequisites/seminar-patterns-conspect.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -560,38 +538,17 @@ CompletedState
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../prerequisites/native-contracts-lecture.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../prerequisites/seminar-patterns-conspect.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -599,16 +556,15 @@ CompletedState
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

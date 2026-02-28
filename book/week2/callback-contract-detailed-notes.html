@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,41 +124,36 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="callback-контракт-в-javascript-подробный-конспект"><a class="header" href="#callback-контракт-в-javascript-подробный-конспект">Callback контракт в JavaScript: Подробный конспект</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="callback-контракт-в-javascript-Подробный-конспект"><a class="header" href="#callback-контракт-в-javascript-Подробный-конспект">Callback контракт в JavaScript: Подробный конспект</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Callbacks (колбеки) представляют собой первый и наиболее фундаментальный контракт асинхронности в JavaScript и Node.js. Эта лекция детально рассматривает эволюцию от простых синхронных функций к асинхронным колбекам, объясняет контракт <strong>callback-last-error-first</strong>, демонстрирует решение проблемы callback hell и показывает лучшие практики работы с колбеками.</p>
 <p><strong>Ключевые темы лекции:</strong></p>
 <ul>
@@ -187,13 +165,13 @@
 <li>Систематическая обработка ошибок в асинхронном коде</li>
 <li>Восстановление естественного логического порядка операций</li>
 </ul>
-<hr>
-<h2 id="1-что-такое-колбек-эволюция-от-синхронности-к-асинхронности"><a class="header" href="#1-что-такое-колбек-эволюция-от-синхронности-к-асинхронности">1. Что такое колбек? Эволюция от синхронности к асинхронности</a></h2>
-<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<hr />
+<h2 id="1-Что-такое-колбек-Эволюция-от-синхронности-к-асинхронности"><a class="header" href="#1-Что-такое-колбек-Эволюция-от-синхронности-к-асинхронности">1. Что такое колбек? Эволюция от синхронности к асинхронности</a></h2>
+<h3 id="Определение"><a class="header" href="#Определение">Определение</a></h3>
 <p><strong>Callback (колбек)</strong> — это функция, которая передается в качестве аргумента в другую функцию и вызывается этой функцией для передачи результата операции или сигнализации о завершении выполнения.</p>
 <p>Колбеки являются примером паттерна <strong>Inversion of Control</strong> (инверсия управления): вместо того чтобы возвращать результат через <code>return</code>, функция вызывает переданный ей колбек с результатом.</p>
-<h3 id="от-синхронной-функции-к-асинхронному-колбеку"><a class="header" href="#от-синхронной-функции-к-асинхронному-колбеку">От синхронной функции к асинхронному колбеку</a></h3>
-<h4 id="шаг-1-обычная-синхронная-функция"><a class="header" href="#шаг-1-обычная-синхронная-функция">Шаг 1: Обычная синхронная функция</a></h4>
+<h3 id="От-синхронной-функции-к-асинхронному-колбеку"><a class="header" href="#От-синхронной-функции-к-асинхронному-колбеку">От синхронной функции к асинхронному колбеку</a></h3>
+<h4 id="Шаг-1-Обычная-синхронная-функция"><a class="header" href="#Шаг-1-Обычная-синхронная-функция">Шаг 1: Обычная синхронная функция</a></h4>
 <pre><code class="language-javascript">// Простая синхронная функция сложения двух чисел
 function sum(a, b) {
   return a + b;
@@ -228,7 +206,7 @@ console.log('Продолжаем выполнение');
 <li>Невозможность выполнять другие задачи во время ожидания</li>
 <li>Неэффективное использование ресурсов</li>
 </ul>
-<h4 id="шаг-2-простой-колбек-без-обработки-ошибок"><a class="header" href="#шаг-2-простой-колбек-без-обработки-ошибок">Шаг 2: Простой колбек без обработки ошибок</a></h4>
+<h4 id="Шаг-2-Простой-колбек-без-обработки-ошибок"><a class="header" href="#Шаг-2-Простой-колбек-без-обработки-ошибок">Шаг 2: Простой колбек без обработки ошибок</a></h4>
 <pre><code class="language-javascript">// Функция с колбеком - добавляем третий параметр
 function sum(a, b, callback) {
   // Вместо return вызываем колбек с результатом
@@ -271,7 +249,7 @@ console.log('Конец');
 <li>Подготовка к асинхронному выполнению (хотя пока код синхронный)</li>
 </ul>
 <p><strong>Важное замечание:</strong> Сам факт использования колбека не делает функцию асинхронной. Для асинхронности нужны специальные механизмы (таймеры, I/O операции, промисы и т.д.).</p>
-<h4 id="шаг-3-колбек-с-контрактом-error-first"><a class="header" href="#шаг-3-колбек-с-контрактом-error-first">Шаг 3: Колбек с контрактом error-first</a></h4>
+<h4 id="Шаг-3-Колбек-с-контрактом-error-first"><a class="header" href="#Шаг-3-Колбек-с-контрактом-error-first">Шаг 3: Колбек с контрактом error-first</a></h4>
 <pre><code class="language-javascript">// Функция следует контракту callback-last-error-first
 function sum(a, b, callback) {
   // Первый аргумент колбека - ошибка (null, если её нет)
@@ -335,7 +313,7 @@ calculate('divide', 10, 0, (err, res) =&gt; {
 <li>Результаты операции передаются начиная со второго аргумента</li>
 <li>Обработчик <strong>обязан</strong> проверить наличие ошибки перед использованием результата</li>
 </ul>
-<h4 id="шаг-4-передача-ошибки-в-колбек"><a class="header" href="#шаг-4-передача-ошибки-в-колбек">Шаг 4: Передача ошибки в колбек</a></h4>
+<h4 id="Шаг-4-Передача-ошибки-в-колбек"><a class="header" href="#Шаг-4-Передача-ошибки-в-колбек">Шаг 4: Передача ошибки в колбек</a></h4>
 <pre><code class="language-javascript">// Функция с валидацией и генерацией ошибок
 function divide(a, b, callback) {
   // Валидация входных данных
@@ -405,9 +383,9 @@ function divideWithLogging(a, b, callback) {
 <li><strong>Системные ошибки</strong> — ошибки файловой системы, сети и т.д.</li>
 <li><strong>Ошибки парсинга</strong> — некорректный формат данных</li>
 </ol>
-<hr>
-<h2 id="2-контракт-callback-last-error-first"><a class="header" href="#2-контракт-callback-last-error-first">2. Контракт Callback-last-error-first</a></h2>
-<h3 id="полное-определение-контракта"><a class="header" href="#полное-определение-контракта">Полное определение контракта</a></h3>
+<hr />
+<h2 id="2-Контракт-callback-last-error-first"><a class="header" href="#2-Контракт-callback-last-error-first">2. Контракт Callback-last-error-first</a></h2>
+<h3 id="Полное-определение-контракта"><a class="header" href="#Полное-определение-контракта">Полное определение контракта</a></h3>
 <p><strong>Callback-last-error-first (CLF)</strong> — это соглашение (convention) о том, как структурировать асинхронные функции и колбеки в экосистеме Node.js и JavaScript.</p>
 <p><strong>Название контракта состоит из двух частей:</strong></p>
 <ol>
@@ -428,7 +406,7 @@ function divideWithLogging(a, b, callback) {
 </ul>
 </li>
 </ol>
-<h3 id="формальная-структура-контракта"><a class="header" href="#формальная-структура-контракта">Формальная структура контракта</a></h3>
+<h3 id="Формальная-структура-контракта"><a class="header" href="#Формальная-структура-контракта">Формальная структура контракта</a></h3>
 <pre><code class="language-javascript">// Общая форма асинхронной функции с CLF контрактом
 function asyncOperation(param1, param2, ..., paramN, callback) {
   // Выполнение асинхронной операции
@@ -456,7 +434,7 @@ function callback(error, data1, data2, ..., dataN) {
   console.log('Data:', data1, data2, ..., dataN);
 }
 </code></pre>
-<h3 id="примеры-сигнатур-функций-с-clf"><a class="header" href="#примеры-сигнатур-функций-с-clf">Примеры сигнатур функций с CLF</a></h3>
+<h3 id="Примеры-сигнатур-функций-с-clf"><a class="header" href="#Примеры-сигнатур-функций-с-clf">Примеры сигнатур функций с CLF</a></h3>
 <pre><code class="language-javascript">// Чтение файла (Node.js fs module)
 fs.readFile(path, encoding, callback);
 // callback(error, data)
@@ -477,7 +455,7 @@ http.get(url, options, callback);
 someAsyncOperation(param1, param2, callback);
 // callback(error, result1, result2, result3)
 </code></pre>
-<h3 id="почему-контракт-clf-важен"><a class="header" href="#почему-контракт-clf-важен">Почему контракт CLF важен?</a></h3>
+<h3 id="Почему-контракт-clf-важен"><a class="header" href="#Почему-контракт-clf-важен">Почему контракт CLF важен?</a></h3>
 <p><strong>Преимущества следования контракту:</strong></p>
 <ol>
 <li>
@@ -492,7 +470,7 @@ someAsyncOperation(param1, param2, callback);
 <p><strong>Обязательная обработка ошибок</strong></p>
 <ul>
 <li>Первый аргумент напоминает о необходимости проверки ошибок</li>
-<li>Ошибки нельзя “случайно” проигнорировать</li>
+<li>Ошибки нельзя "случайно" проигнорировать</li>
 <li>Явная обработка ошибок на каждом уровне</li>
 </ul>
 </li>
@@ -521,7 +499,7 @@ someAsyncOperation(param1, param2, callback);
 </ul>
 </li>
 </ol>
-<h3 id="пример-универсального-обработчика"><a class="header" href="#пример-универсального-обработчика">Пример универсального обработчика</a></h3>
+<h3 id="Пример-универсального-обработчика"><a class="header" href="#Пример-универсального-обработчика">Пример универсального обработчика</a></h3>
 <pre><code class="language-javascript">// Универсальная функция для логирования операций
 function withLogging(operationName, asyncFunction) {
   return function(...args) {
@@ -562,7 +540,7 @@ readFileWithLogging('./config.json', 'utf8', (error, data) =&gt; {
 // [ReadFile] SUCCESS: ['{"port": 3000}']
 // File content: {"port": 3000}
 </code></pre>
-<h3 id="нарушение-контракта-и-его-последствия"><a class="header" href="#нарушение-контракта-и-его-последствия">Нарушение контракта и его последствия</a></h3>
+<h3 id="Нарушение-контракта-и-его-последствия"><a class="header" href="#Нарушение-контракта-и-его-последствия">Нарушение контракта и его последствия</a></h3>
 <pre><code class="language-javascript">// ПЛОХО: Колбек не последний аргумент
 function badFunction(callback, param1, param2) {
   // Непривычный порядок - легко ошибиться
@@ -584,9 +562,9 @@ function goodFunction(param1, param2, callback) {
   callback(null, result);
 }
 </code></pre>
-<hr>
-<h2 id="3-синхронные-и-асинхронные-колбеки"><a class="header" href="#3-синхронные-и-асинхронные-колбеки">3. Синхронные и асинхронные колбеки</a></h2>
-<h3 id="важное-различие"><a class="header" href="#важное-различие">Важное различие</a></h3>
+<hr />
+<h2 id="3-Синхронные-и-асинхронные-колбеки"><a class="header" href="#3-Синхронные-и-асинхронные-колбеки">3. Синхронные и асинхронные колбеки</a></h2>
+<h3 id="Важное-различие"><a class="header" href="#Важное-различие">Важное различие</a></h3>
 <p><strong>Критическое понимание:</strong> Сам по себе паттерн колбеков <strong>не гарантирует асинхронность</strong>. Колбеки — это просто способ передачи функции в качестве аргумента. Колбек может быть вызван как синхронно, так и асинхронно.</p>
 <p><strong>Асинхронность зависит от:</strong></p>
 <ul>
@@ -596,9 +574,9 @@ function goodFunction(param1, param2, callback) {
 <li>Web APIs (в браузере)</li>
 <li>Worker threads, child processes</li>
 </ul>
-<h3 id="синхронные-колбеки"><a class="header" href="#синхронные-колбеки">Синхронные колбеки</a></h3>
+<h3 id="Синхронные-колбеки"><a class="header" href="#Синхронные-колбеки">Синхронные колбеки</a></h3>
 <p>Синхронные колбеки выполняются немедленно, в рамках текущего выполнения, до того как управление вернется к следующей строке кода.</p>
-<h4 id="пример-1-методы-массивов"><a class="header" href="#пример-1-методы-массивов">Пример 1: Методы массивов</a></h4>
+<h4 id="Пример-1-Методы-массивов"><a class="header" href="#Пример-1-Методы-массивов">Пример 1: Методы массивов</a></h4>
 <pre><code class="language-javascript">const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 console.log('Начало');
@@ -655,7 +633,7 @@ console.log('Конец');
 </ul>
 </li>
 </ul>
-<h4 id="пример-2-пользовательские-синхронные-колбеки"><a class="header" href="#пример-2-пользовательские-синхронные-колбеки">Пример 2: Пользовательские синхронные колбеки</a></h4>
+<h4 id="Пример-2-Пользовательские-синхронные-колбеки"><a class="header" href="#Пример-2-Пользовательские-синхронные-колбеки">Пример 2: Пользовательские синхронные колбеки</a></h4>
 <pre><code class="language-javascript">// Функция принимает массив и колбек для обработки каждого элемента
 function forEachSync(array, callback) {
   for (let i = 0; i &lt; array.length; i++) {
@@ -680,7 +658,7 @@ console.log('После forEach');
 //   Элемент 2: 3
 // После forEach
 </code></pre>
-<h4 id="пример-3-обработка-конфигурации"><a class="header" href="#пример-3-обработка-конфигурации">Пример 3: Обработка конфигурации</a></h4>
+<h4 id="Пример-3-Обработка-конфигурации"><a class="header" href="#Пример-3-Обработка-конфигурации">Пример 3: Обработка конфигурации</a></h4>
 <pre><code class="language-javascript">// Синхронная обработка конфигурации
 function processConfig(config, validators) {
   const errors = [];
@@ -710,9 +688,9 @@ const errors = processConfig(config, validators);
 console.log('Конец валидации');
 console.log('Ошибки:', errors); // []
 </code></pre>
-<h3 id="асинхронные-колбеки"><a class="header" href="#асинхронные-колбеки">Асинхронные колбеки</a></h3>
+<h3 id="Асинхронные-колбеки"><a class="header" href="#Асинхронные-колбеки">Асинхронные колбеки</a></h3>
 <p>Асинхронные колбеки выполняются в будущем, после завершения текущего стека вызовов. Они не блокируют выполнение программы.</p>
-<h4 id="пример-1-таймеры"><a class="header" href="#пример-1-таймеры">Пример 1: Таймеры</a></h4>
+<h4 id="Пример-1-Таймеры"><a class="header" href="#Пример-1-Таймеры">Пример 1: Таймеры</a></h4>
 <pre><code class="language-javascript">// Асинхронные колбеки с таймерами
 console.log('1. Начало программы');
 
@@ -736,7 +714,7 @@ console.log('3. Синхронный код');
 // Обратите внимание: даже с задержкой 0 мс,
 // колбек выполняется после синхронного кода!
 </code></pre>
-<h4 id="пример-2-обработка-массива-с-задержкой"><a class="header" href="#пример-2-обработка-массива-с-задержкой">Пример 2: Обработка массива с задержкой</a></h4>
+<h4 id="Пример-2-Обработка-массива-с-задержкой"><a class="header" href="#Пример-2-Обработка-массива-с-задержкой">Пример 2: Обработка массива с задержкой</a></h4>
 <pre><code class="language-javascript">// Асинхронная итерация по массиву
 const data = [
   { id: 1, name: 'Alice', role: 'Admin' },
@@ -775,7 +753,7 @@ console.log('Эта строка выполнится ДО обработки э
 //   [3] Обработка: Charlie - Moderator
 // Обработка завершена
 </code></pre>
-<h4 id="пример-3-имитация-асинхронной-операции"><a class="header" href="#пример-3-имитация-асинхронной-операции">Пример 3: Имитация асинхронной операции</a></h4>
+<h4 id="Пример-3-Имитация-асинхронной-операции"><a class="header" href="#Пример-3-Имитация-асинхронной-операции">Пример 3: Имитация асинхронной операции</a></h4>
 <pre><code class="language-javascript">// Функция имитирует асинхронную операцию (например, API запрос)
 function fetchUserData(userId, callback) {
   console.log(`  [API] Отправка запроса для пользователя ${userId}`);
@@ -842,7 +820,7 @@ console.log('Конец синхронного кода');
 </ul>
 </li>
 </ul>
-<h3 id="опасность-смешивания-синхронного-и-асинхронного-поведения"><a class="header" href="#опасность-смешивания-синхронного-и-асинхронного-поведения">Опасность смешивания синхронного и асинхронного поведения</a></h3>
+<h3 id="Опасность-смешивания-синхронного-и-асинхронного-поведения"><a class="header" href="#Опасность-смешивания-синхронного-и-асинхронного-поведения">Опасность смешивания синхронного и асинхронного поведения</a></h3>
 <pre><code class="language-javascript">// ПЛОХО: Непредсказуемое поведение
 function maybeAsync(useCache, callback) {
   if (useCache) {
@@ -871,11 +849,11 @@ function alwaysAsync(useCache, callback) {
 }
 </code></pre>
 <p><strong>Принцип:</strong> Если функция может быть асинхронной, она должна быть <strong>всегда</strong> асинхронной, даже когда результат доступен немедленно.</p>
-<hr>
-<h2 id="4-асинхронные-операции-ввода-вывода-в-nodejs"><a class="header" href="#4-асинхронные-операции-ввода-вывода-в-nodejs">4. Асинхронные операции ввода-вывода в Node.js</a></h2>
-<h3 id="файловая-система-fs-module"><a class="header" href="#файловая-система-fs-module">Файловая система (fs module)</a></h3>
+<hr />
+<h2 id="4-Асинхронные-операции-ввода-вывода-в-nodejs"><a class="header" href="#4-Асинхронные-операции-ввода-вывода-в-nodejs">4. Асинхронные операции ввода-вывода в Node.js</a></h2>
+<h3 id="Файловая-система-fs-module"><a class="header" href="#Файловая-система-fs-module">Файловая система (fs module)</a></h3>
 <p>Все операции ввода-вывода в Node.js используют контракт callback-last-error-first. Модуль <code>fs</code> предоставляет как синхронные, так и асинхронные версии методов.</p>
-<h4 id="чтение-файла"><a class="header" href="#чтение-файла">Чтение файла</a></h4>
+<h4 id="Чтение-файла"><a class="header" href="#Чтение-файла">Чтение файла</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 const path = require('path');
 
@@ -936,7 +914,7 @@ console.log('Продолжаем выполнение (не ждем чтени
 // Порт: 3000
 // Хост: localhost
 </code></pre>
-<h4 id="запись-в-файл"><a class="header" href="#запись-в-файл">Запись в файл</a></h4>
+<h4 id="Запись-в-файл"><a class="header" href="#Запись-в-файл">Запись в файл</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 const path = require('path');
 
@@ -983,7 +961,7 @@ saveData('report.json', reportData, (error) =&gt; {
   console.log('Отчет сохранен');
 });
 </code></pre>
-<h4 id="проверка-существования-и-создание-директории"><a class="header" href="#проверка-существования-и-создание-директории">Проверка существования и создание директории</a></h4>
+<h4 id="Проверка-существования-и-создание-директории"><a class="header" href="#Проверка-существования-и-создание-директории">Проверка существования и создание директории</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 const path = require('path');
 
@@ -1033,7 +1011,7 @@ ensureDirectoryExists(logsDir, (error) =&gt; {
   });
 });
 </code></pre>
-<h4 id="чтение-содержимого-директории"><a class="header" href="#чтение-содержимого-директории">Чтение содержимого директории</a></h4>
+<h4 id="Чтение-содержимого-директории"><a class="header" href="#Чтение-содержимого-директории">Чтение содержимого директории</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 const path = require('path');
 
@@ -1092,7 +1070,7 @@ listFiles(__dirname, (error, files) =&gt; {
   });
 });
 </code></pre>
-<h3 id="важные-моменты-работы-с-fs"><a class="header" href="#важные-моменты-работы-с-fs">Важные моменты работы с fs</a></h3>
+<h3 id="Важные-моменты-работы-с-fs"><a class="header" href="#Важные-моменты-работы-с-fs">Важные моменты работы с fs</a></h3>
 <p><strong>Параметры колбека в разных операциях:</strong></p>
 <ul>
 <li><code>fs.readFile(path, encoding, callback)</code> → <code>callback(error, data)</code></li>
@@ -1109,9 +1087,9 @@ listFiles(__dirname, (error, files) =&gt; {
 <li>Для операций чтения — второй параметр содержит данные</li>
 <li>Для операций записи/удаления — колбек получает только ошибку</li>
 </ul>
-<hr>
-<h2 id="5-именованные-колбеки-лучшая-практика"><a class="header" href="#5-именованные-колбеки-лучшая-практика">5. Именованные колбеки: лучшая практика</a></h2>
-<h3 id="проблема-анонимных-колбеков"><a class="header" href="#проблема-анонимных-колбеков">Проблема анонимных колбеков</a></h3>
+<hr />
+<h2 id="5-Именованные-колбеки-лучшая-практика"><a class="header" href="#5-Именованные-колбеки-лучшая-практика">5. Именованные колбеки: лучшая практика</a></h2>
+<h3 id="Проблема-анонимных-колбеков"><a class="header" href="#Проблема-анонимных-колбеков">Проблема анонимных колбеков</a></h3>
 <p>Анонимные стрелочные функции удобны для простых случаев, но создают проблемы:</p>
 <pre><code class="language-javascript">const fs = require('fs');
 
@@ -1147,9 +1125,9 @@ fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
 <li><strong>Сложность отладки</strong> — невозможно поставить breakpoint на конкретную функцию</li>
 <li><strong>Невозможность переиспользования</strong> — анонимные функции нельзя вызвать повторно</li>
 <li><strong>Сложность тестирования</strong> — нельзя протестировать отдельные части</li>
-<li><strong>Плохая читаемость</strong> — код превращается в “пирамиду”</li>
+<li><strong>Плохая читаемость</strong> — код превращается в "пирамиду"</li>
 </ol>
-<h3 id="решение-именованные-функции"><a class="header" href="#решение-именованные-функции">Решение: именованные функции</a></h3>
+<h3 id="Решение-именованные-функции"><a class="header" href="#Решение-именованные-функции">Решение: именованные функции</a></h3>
 <p><strong>Преимущества именованных колбеков:</strong></p>
 <ul>
 <li>Понятные stack traces с названиями функций</li>
@@ -1158,7 +1136,7 @@ fs.readFile('./config.json', 'utf8', (error, data) =&gt; {
 <li>Код самодокументируется через имена функций</li>
 <li>Упрощается отладка и профилирование</li>
 </ul>
-<h4 id="пример-1-базовое-использование"><a class="header" href="#пример-1-базовое-использование">Пример 1: Базовое использование</a></h4>
+<h4 id="Пример-1-Базовое-использование"><a class="header" href="#Пример-1-Базовое-использование">Пример 1: Базовое использование</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Именованная функция-обработчик
@@ -1183,9 +1161,9 @@ fs.readFile('./data.txt', 'utf8', handleFileRead);
     at Object.&lt;anonymous&gt; (example.js:5:15)
     at FSReqCallback.readFileCallback (fs.js:280:3)
 </code></pre>
-<h3 id="паттерн-с-замыканием"><a class="header" href="#паттерн-с-замыканием">Паттерн с замыканием</a></h3>
+<h3 id="Паттерн-с-замыканием"><a class="header" href="#Паттерн-с-замыканием">Паттерн с замыканием</a></h3>
 <p>Часто нужно передать в колбек дополнительные параметры. Для этого используют замыкания.</p>
-<h4 id="пример-замыкание-vs-bind"><a class="header" href="#пример-замыкание-vs-bind">Пример: Замыкание vs bind</a></h4>
+<h4 id="Пример-Замыкание-vs-bind"><a class="header" href="#Пример-Замыкание-vs-bind">Пример: Замыкание vs bind</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Функция для вывода содержимого файла с префиксом
@@ -1230,7 +1208,7 @@ fs.readFile('./file3.txt', 'utf8', printFileContent('FILE3'));
 // - Не нужно думать про контекст
 // - Более функциональный подход
 </code></pre>
-<h4 id="пример-создание-обработчиков-с-контекстом"><a class="header" href="#пример-создание-обработчиков-с-контекстом">Пример: Создание обработчиков с контекстом</a></h4>
+<h4 id="Пример-Создание-обработчиков-с-контекстом"><a class="header" href="#Пример-Создание-обработчиков-с-контекстом">Пример: Создание обработчиков с контекстом</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Фабрика обработчиков с логированием
@@ -1263,7 +1241,7 @@ function processData(data) {
 fs.readFile('./config.json', 'utf8', createFileHandler('config.json', processConfig));
 fs.readFile('./data.json', 'utf8', createFileHandler('data.json', processData));
 </code></pre>
-<h4 id="пример-параметризация-обработки-ошибок"><a class="header" href="#пример-параметризация-обработки-ошибок">Пример: Параметризация обработки ошибок</a></h4>
+<h4 id="Пример-Параметризация-обработки-ошибок"><a class="header" href="#Пример-Параметризация-обработки-ошибок">Пример: Параметризация обработки ошибок</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Создаем обработчик с разными стратегиями обработки ошибок
@@ -1318,9 +1296,9 @@ fs.readFile('./config.json', 'utf8', createReader({
   defaultValue: '{"port": 3000}'
 }));
 </code></pre>
-<hr>
-<h2 id="6-адаптация-существующих-api-к-контракту-clf"><a class="header" href="#6-адаптация-существующих-api-к-контракту-clf">6. Адаптация существующих API к контракту CLF</a></h2>
-<h3 id="проблема-settimeout-и-setinterval"><a class="header" href="#проблема-settimeout-и-setinterval">Проблема: setTimeout и setInterval</a></h3>
+<hr />
+<h2 id="6-Адаптация-существующих-api-к-контракту-clf"><a class="header" href="#6-Адаптация-существующих-api-к-контракту-clf">6. Адаптация существующих API к контракту CLF</a></h2>
+<h3 id="Проблема-settimeout-и-setinterval"><a class="header" href="#Проблема-settimeout-и-setinterval">Проблема: setTimeout и setInterval</a></h3>
 <p>Функции таймеров в JavaScript были разработаны до стандартизации контракта CLF и имеют другую сигнатуру:</p>
 <pre><code class="language-javascript">// setTimeout принимает колбек ПЕРВЫМ аргументом (не соответствует CLF)
 setTimeout(callback, delay, ...args);
@@ -1330,7 +1308,7 @@ setInterval(callback, interval, ...args);
 
 // Это несовместимо с паттерном callback-last
 </code></pre>
-<h3 id="решение-адаптеры"><a class="header" href="#решение-адаптеры">Решение: Адаптеры</a></h3>
+<h3 id="Решение-Адаптеры"><a class="header" href="#Решение-Адаптеры">Решение: Адаптеры</a></h3>
 <p>Создаем обертки, которые меняют порядок аргументов:</p>
 <pre><code class="language-javascript">// Адаптер для setTimeout - приводим к CLF
 function delay(timeout, callback) {
@@ -1357,7 +1335,7 @@ delay(3000, () =&gt; {
   console.log('Интервал остановлен');
 });
 </code></pre>
-<h4 id="расширенный-адаптер-с-error-first"><a class="header" href="#расширенный-адаптер-с-error-first">Расширенный адаптер с error-first</a></h4>
+<h4 id="Расширенный-адаптер-с-error-first"><a class="header" href="#Расширенный-адаптер-с-error-first">Расширенный адаптер с error-first</a></h4>
 <pre><code class="language-javascript">// Адаптер с поддержкой error-first (для совместимости)
 function delayWithCallback(timeout, callback) {
   // Валидация
@@ -1395,7 +1373,7 @@ const cancel = delayWithCallback(2000, (error) =&gt; {
 // Можем отменить таймер
 // cancel();
 </code></pre>
-<h3 id="промисификация-таймеров-в-nodejs"><a class="header" href="#промисификация-таймеров-в-nodejs">Промисификация таймеров в Node.js</a></h3>
+<h3 id="Промисификация-таймеров-в-nodejs"><a class="header" href="#Промисификация-таймеров-в-nodejs">Промисификация таймеров в Node.js</a></h3>
 <p>В современном Node.js есть промисифицированные версии таймеров:</p>
 <pre><code class="language-javascript">// Node.js v16+ предоставляет промисифицированные таймеры
 const { setTimeout, setInterval } = require('timers/promises');
@@ -1436,7 +1414,7 @@ async function intervalExample() {
 intervalExample();
 </code></pre>
 <p><strong>Важно понимать:</strong> Промисы используют колбеки внутри себя. Promise — это абстракция над колбеками, но не замена им. Большинство контрактов асинхронности в JavaScript построены на колбеках как на базовом примитиве.</p>
-<h3 id="адаптер-для-приведения-любой-функции-к-clf"><a class="header" href="#адаптер-для-приведения-любой-функции-к-clf">Адаптер для приведения любой функции к CLF</a></h3>
+<h3 id="Адаптер-для-приведения-любой-функции-к-clf"><a class="header" href="#Адаптер-для-приведения-любой-функции-к-clf">Адаптер для приведения любой функции к CLF</a></h3>
 <pre><code class="language-javascript">// Универсальный адаптер
 function toCLF(fn, callbackPosition = 0) {
   return function(...args) {
@@ -1468,12 +1446,12 @@ processDataCLF('hello', { format: 'upper' }, (error, result) =&gt; {
   console.log(result); // HELLO
 });
 </code></pre>
-<hr>
+<hr />
 <h2 id="7-callback-hell-миф-и-реальность"><a class="header" href="#7-callback-hell-миф-и-реальность">7. Callback Hell: миф и реальность</a></h2>
-<h3 id="что-такое-callback-hell"><a class="header" href="#что-такое-callback-hell">Что такое Callback Hell?</a></h3>
-<p><strong>Callback Hell (Пирамида погибели, Ад колбеков)</strong> — это антипаттерн, при котором множественные вложенные колбеки создают “пирамиду” кода, растущую вправо.</p>
+<h3 id="Что-такое-callback-hell"><a class="header" href="#Что-такое-callback-hell">Что такое Callback Hell?</a></h3>
+<p><strong>Callback Hell (Пирамида погибели, Ад колбеков)</strong> — это антипаттерн, при котором множественные вложенные колбеки создают "пирамиду" кода, растущую вправо.</p>
 <p><strong>Важное понимание:</strong> Callback Hell — это НЕ проблема самого паттерна колбеков, а результат <strong>плохой организации кода</strong>. При правильном подходе проблемы не возникает.</p>
-<h4 id="пример-классический-callback-hell"><a class="header" href="#пример-классический-callback-hell">Пример: Классический Callback Hell</a></h4>
+<h4 id="Пример-Классический-callback-hell"><a class="header" href="#Пример-Классический-callback-hell">Пример: Классический Callback Hell</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // ПЛОХО: Глубокая вложенность, "пирамида погибели"
@@ -1529,7 +1507,7 @@ fs.readFile('./config.json', 'utf8', (err1, config) =&gt; {
 </code></pre>
 <p><strong>Проблемы этого кода:</strong></p>
 <ol>
-<li><strong>“Елочка” кода</strong> — вложенность растет вправо</li>
+<li><strong>"Елочка" кода</strong> — вложенность растет вправо</li>
 <li><strong>Плохая читаемость</strong> — сложно понять логику</li>
 <li><strong>Игнорирование ошибок</strong> — некоторые ошибки только логируются</li>
 <li><strong>Дублирование логики</strong> — повторяющийся код обработки ошибок</li>
@@ -1537,7 +1515,7 @@ fs.readFile('./config.json', 'utf8', (err1, config) =&gt; {
 <li><strong>Смешение ответственностей</strong> — всё в одной функции</li>
 <li><strong>Сложность модификации</strong> — трудно добавить новые шаги</li>
 </ol>
-<h3 id="решение-1-именованные-функции-декомпозиция"><a class="header" href="#решение-1-именованные-функции-декомпозиция">Решение 1: Именованные функции (Декомпозиция)</a></h3>
+<h3 id="Решение-1-Именованные-функции-Декомпозиция"><a class="header" href="#Решение-1-Именованные-функции-Декомпозиция">Решение 1: Именованные функции (Декомпозиция)</a></h3>
 <p><strong>Главный принцип:</strong> Каждому колбеку дать имя и вынести в отдельную функцию.</p>
 <pre><code class="language-javascript">const fs = require('fs');
 
@@ -1673,9 +1651,9 @@ fs.readFile('./config.json', 'utf8', readDatabaseConfig);
 <li>Объявление: saveReport → generateReport → fetchDetails → queryUsers → readDB → readConfig</li>
 </ul>
 <p>Это неудобно для чтения и понимания логики.</p>
-<h3 id="решение-2-восстановление-логического-порядка"><a class="header" href="#решение-2-восстановление-логического-порядка">Решение 2: Восстановление логического порядка</a></h3>
+<h3 id="Решение-2-Восстановление-логического-порядка"><a class="header" href="#Решение-2-Восстановление-логического-порядка">Решение 2: Восстановление логического порядка</a></h3>
 <p>Чтобы код читался в естественном порядке выполнения, используем объект или класс.</p>
-<h4 id="вариант-a-использование-объекта"><a class="header" href="#вариант-a-использование-объекта">Вариант A: Использование объекта</a></h4>
+<h4 id="Вариант-a-Использование-объекта"><a class="header" href="#Вариант-a-Использование-объекта">Вариант A: Использование объекта</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Все шаги в логическом порядке выполнения
@@ -1785,7 +1763,7 @@ pipeline.start();
 <li>Логика понятна и последовательна</li>
 <li>Можно добавлять новые шаги без путаницы</li>
 </ul>
-<h4 id="вариант-b-использование-класса"><a class="header" href="#вариант-b-использование-класса">Вариант B: Использование класса</a></h4>
+<h4 id="Вариант-b-Использование-класса"><a class="header" href="#Вариант-b-Использование-класса">Вариант B: Использование класса</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Класс инкапсулирует всю логику обработки
@@ -1909,12 +1887,12 @@ processor.start();
 <li><strong>Тестируемость</strong> — можно тестировать каждый метод отдельно</li>
 </ol>
 <p><strong>Важное замечание:</strong> При использовании методов класса как колбеков нужно не забывать про <code>bind(this)</code>, иначе контекст будет потерян.</p>
-<hr>
-<h2 id="8-систематическая-обработка-ошибок"><a class="header" href="#8-систематическая-обработка-ошибок">8. Систематическая обработка ошибок</a></h2>
-<h3 id="золотое-правило"><a class="header" href="#золотое-правило">Золотое правило</a></h3>
+<hr />
+<h2 id="8-Систематическая-обработка-ошибок"><a class="header" href="#8-Систематическая-обработка-ошибок">8. Систематическая обработка ошибок</a></h2>
+<h3 id="Золотое-правило"><a class="header" href="#Золотое-правило">Золотое правило</a></h3>
 <p><strong>НИКОГДА не игнорируйте ошибки в колбеках!</strong></p>
 <p>Ошибка — это не исключительная ситуация, а нормальная часть работы программы. Задача программиста — предусмотреть и обработать все возможные ошибки.</p>
-<h3 id="антипаттерны-обработки-ошибок"><a class="header" href="#антипаттерны-обработки-ошибок">Антипаттерны обработки ошибок</a></h3>
+<h3 id="Антипаттерны-обработки-ошибок"><a class="header" href="#Антипаттерны-обработки-ошибок">Антипаттерны обработки ошибок</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // ПЛОХО #1: Полное игнорирование ошибки
@@ -1956,8 +1934,8 @@ fs.readFile('./file.txt', 'utf8', (error, data) =&gt; {
   console.log('Содержимое:', data);
 });
 </code></pre>
-<h3 id="паттерны-обработки-ошибок"><a class="header" href="#паттерны-обработки-ошибок">Паттерны обработки ошибок</a></h3>
-<h4 id="паттерн-1-логирование-и-прокидывание"><a class="header" href="#паттерн-1-логирование-и-прокидывание">Паттерн 1: Логирование и прокидывание</a></h4>
+<h3 id="Паттерны-обработки-ошибок"><a class="header" href="#Паттерны-обработки-ошибок">Паттерны обработки ошибок</a></h3>
+<h4 id="Паттерн-1-Логирование-и-прокидывание"><a class="header" href="#Паттерн-1-Логирование-и-прокидывание">Паттерн 1: Логирование и прокидывание</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 
 function readConfigFile(callback) {
@@ -1993,7 +1971,7 @@ readConfigFile((error, config) =&gt; {
 });
 </code></pre>
 <p><strong>Когда использовать:</strong> В промежуточных функциях, где ошибка должна всплыть на уровень выше.</p>
-<h4 id="паттерн-2-обогащение-ошибки-контекстом"><a class="header" href="#паттерн-2-обогащение-ошибки-контекстом">Паттерн 2: Обогащение ошибки контекстом</a></h4>
+<h4 id="Паттерн-2-Обогащение-ошибки-контекстом"><a class="header" href="#Паттерн-2-Обогащение-ошибки-контекстом">Паттерн 2: Обогащение ошибки контекстом</a></h4>
 <pre><code class="language-javascript">function fetchUserData(userId, callback) {
   const filename = `./data/users/${userId}.json`;
 
@@ -2043,7 +2021,7 @@ fetchUserData(42, (error, user) =&gt; {
 });
 </code></pre>
 <p><strong>Когда использовать:</strong> Когда нужно добавить контекст выполнения для упрощения отладки.</p>
-<h4 id="паттерн-3-fallback-значения"><a class="header" href="#паттерн-3-fallback-значения">Паттерн 3: Fallback значения</a></h4>
+<h4 id="Паттерн-3-fallback-значения"><a class="header" href="#Паттерн-3-fallback-значения">Паттерн 3: Fallback значения</a></h4>
 <pre><code class="language-javascript">function loadConfigWithDefaults(callback) {
   const defaultConfig = {
     port: 3000,
@@ -2081,7 +2059,7 @@ fetchUserData(42, (error, user) =&gt; {
 }
 </code></pre>
 <p><strong>Когда использовать:</strong> Для опциональных конфигураций, где можно использовать разумные значения по умолчанию.</p>
-<h4 id="паттерн-4-retry-логика"><a class="header" href="#паттерн-4-retry-логика">Паттерн 4: Retry логика</a></h4>
+<h4 id="Паттерн-4-retry-логика"><a class="header" href="#Паттерн-4-retry-логика">Паттерн 4: Retry логика</a></h4>
 <pre><code class="language-javascript">function readFileWithRetry(filepath, options, callback) {
   const maxRetries = options.maxRetries || 3;
   const retryDelay = options.retryDelay || 1000;
@@ -2138,7 +2116,7 @@ readFileWithRetry('./file.txt', { maxRetries: 5, retryDelay: 2000 }, (error, dat
 });
 </code></pre>
 <p><strong>Когда использовать:</strong> Для операций, которые могут временно не удаваться (сетевые запросы, занятые файлы).</p>
-<h4 id="паттерн-5-централизованная-обработка-ошибок"><a class="header" href="#паттерн-5-централизованная-обработка-ошибок">Паттерн 5: Централизованная обработка ошибок</a></h4>
+<h4 id="Паттерн-5-Централизованная-обработка-ошибок"><a class="header" href="#Паттерн-5-Централизованная-обработка-ошибок">Паттерн 5: Централизованная обработка ошибок</a></h4>
 <pre><code class="language-javascript">// Централизованный обработчик ошибок
 class ErrorHandler {
   constructor(logger) {
@@ -2202,7 +2180,7 @@ function readConfig(callback) {
   });
 }
 </code></pre>
-<h3 id="комплексный-пример-с-полной-обработкой-ошибок"><a class="header" href="#комплексный-пример-с-полной-обработкой-ошибок">Комплексный пример с полной обработкой ошибок</a></h3>
+<h3 id="Комплексный-пример-с-полной-обработкой-ошибок"><a class="header" href="#Комплексный-пример-с-полной-обработкой-ошибок">Комплексный пример с полной обработкой ошибок</a></h3>
 <pre><code class="language-javascript">const fs = require('fs');
 
 // Полная цепочка с обработкой ошибок на каждом шаге
@@ -2374,9 +2352,9 @@ startProcess();
 <li><strong>Различайте типы ошибок</strong> — обрабатывайте по-разному</li>
 <li><strong>Используйте try-catch</strong> — для синхронных операций в асинхронном коде</li>
 </ol>
-<hr>
-<h2 id="9-ключевые-выводы-и-best-practices"><a class="header" href="#9-ключевые-выводы-и-best-practices">9. Ключевые выводы и best practices</a></h2>
-<h3 id="контракт-callback-last-error-first"><a class="header" href="#контракт-callback-last-error-first">Контракт Callback-last-error-first</a></h3>
+<hr />
+<h2 id="9-Ключевые-выводы-и-best-practices"><a class="header" href="#9-Ключевые-выводы-и-best-practices">9. Ключевые выводы и best practices</a></h2>
+<h3 id="Контракт-callback-last-error-first"><a class="header" href="#Контракт-callback-last-error-first">Контракт Callback-last-error-first</a></h3>
 <p><strong>Резюме:</strong></p>
 <ul>
 <li>Колбек передается <strong>последним</strong> аргументом</li>
@@ -2411,7 +2389,7 @@ function asyncOp(callback, param1, param2) { // колбек не последн
 <li>Ошибки обрабатываются систематически</li>
 <li>Код легко тестировать и поддерживать</li>
 </ul>
-<h3 id="именованные-колбеки--обязательная-практика"><a class="header" href="#именованные-колбеки--обязательная-практика">Именованные колбеки — обязательная практика</a></h3>
+<h3 id="Именованные-колбеки--обязательная-практика"><a class="header" href="#Именованные-колбеки--обязательная-практика">Именованные колбеки — обязательная практика</a></h3>
 <p><strong>Преимущества:</strong></p>
 <ol>
 <li><strong>Читаемость</strong> — код самодокументируется</li>
@@ -2450,7 +2428,7 @@ function handleSave(error) {
 
 fs.readFile('./file.txt', 'utf8', handleFileRead);
 </code></pre>
-<h3 id="обработка-ошибок--критически-важна"><a class="header" href="#обработка-ошибок--критически-важна">Обработка ошибок — критически важна</a></h3>
+<h3 id="Обработка-ошибок--критически-важна"><a class="header" href="#Обработка-ошибок--критически-важна">Обработка ошибок — критически важна</a></h3>
 <p><strong>Золотые правила:</strong></p>
 <ol>
 <li><strong>Никогда не игнорируйте</strong> первый аргумент error-first колбеков</li>
@@ -2473,7 +2451,7 @@ function operation(callback) {
   });
 }
 </code></pre>
-<h3 id="колбеки-как-фундамент-асинхронности"><a class="header" href="#колбеки-как-фундамент-асинхронности">Колбеки как фундамент асинхронности</a></h3>
+<h3 id="Колбеки-как-фундамент-асинхронности"><a class="header" href="#Колбеки-как-фундамент-асинхронности">Колбеки как фундамент асинхронности</a></h3>
 <p><strong>Ключевое понимание:</strong></p>
 <p>Колбеки — это <strong>базовый примитив</strong> асинхронности в JavaScript. Все остальные контракты используют колбеки:</p>
 <ul>
@@ -2490,8 +2468,8 @@ function operation(callback) {
 <li>Отладки и оптимизации</li>
 <li>Создания собственных асинхронных абстракций</li>
 </ul>
-<h3 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h3>
-<h4 id="при-написании-функций-с-колбеками"><a class="header" href="#при-написании-функций-с-колбеками">При написании функций с колбеками:</a></h4>
+<h3 id="Практические-рекомендации"><a class="header" href="#Практические-рекомендации">Практические рекомендации</a></h3>
+<h4 id="При-написании-функций-с-колбеками"><a class="header" href="#При-написании-функций-с-колбеками">При написании функций с колбеками:</a></h4>
 <ol>
 <li><strong>Следуйте CLF</strong> — callback-last-error-first</li>
 <li><strong>Документируйте</strong> — особенно структуру ошибок и результатов</li>
@@ -2525,7 +2503,7 @@ function operation(callback) {
   });
 }
 </code></pre>
-<h4 id="при-использовании-колбеков"><a class="header" href="#при-использовании-колбеков">При использовании колбеков:</a></h4>
+<h4 id="При-использовании-колбеков"><a class="header" href="#При-использовании-колбеков">При использовании колбеков:</a></h4>
 <ol>
 <li><strong>Всегда обрабатывайте ошибки</strong> — первым делом проверяйте <code>error</code></li>
 <li><strong>Используйте именованные функции</strong> — для сложных цепочек</li>
@@ -2533,7 +2511,7 @@ function operation(callback) {
 <li><strong>Группируйте связанные операции</strong> — в классы или модули</li>
 <li><strong>Добавляйте логирование</strong> — для отладки асинхронных операций</li>
 </ol>
-<h4 id="при-рефакторинге"><a class="header" href="#при-рефакторинге">При рефакторинге:</a></h4>
+<h4 id="При-рефакторинге"><a class="header" href="#При-рефакторинге">При рефакторинге:</a></h4>
 <ol>
 <li><strong>Начните с именования</strong> — дайте имена анонимным функциям</li>
 <li><strong>Извлеките логику</strong> — каждая функция = одна ответственность</li>
@@ -2541,9 +2519,9 @@ function operation(callback) {
 <li><strong>Используйте классы/объекты</strong> — для восстановления порядка</li>
 <li><strong>Рассмотрите промисы</strong> — для нового кода</li>
 </ol>
-<hr>
-<h2 id="10-дополнительные-материалы-и-связь-с-другими-паттернами"><a class="header" href="#10-дополнительные-материалы-и-связь-с-другими-паттернами">10. Дополнительные материалы и связь с другими паттернами</a></h2>
-<h3 id="эволюция-асинхронных-паттернов"><a class="header" href="#эволюция-асинхронных-паттернов">Эволюция асинхронных паттернов</a></h3>
+<hr />
+<h2 id="10-Дополнительные-материалы-и-связь-с-другими-паттернами"><a class="header" href="#10-Дополнительные-материалы-и-связь-с-другими-паттернами">10. Дополнительные материалы и связь с другими паттернами</a></h2>
+<h3 id="Эволюция-асинхронных-паттернов"><a class="header" href="#Эволюция-асинхронных-паттернов">Эволюция асинхронных паттернов</a></h3>
 <p>Колбеки — это первый шаг в эволюции асинхронного программирования в JavaScript:</p>
 <pre><code>Callbacks (ES5)
     ↓
@@ -2558,7 +2536,7 @@ AsyncIterators (ES2018)
 Top-level await (ES2022)
 </code></pre>
 <p>Каждый следующий паттерн решает проблемы предыдущего, но использует его как основу.</p>
-<h3 id="связь-с-другими-паттернами"><a class="header" href="#связь-с-другими-паттернами">Связь с другими паттернами</a></h3>
+<h3 id="Связь-с-другими-паттернами"><a class="header" href="#Связь-с-другими-паттернами">Связь с другими паттернами</a></h3>
 <h4 id="thenable"><a class="header" href="#thenable">Thenable</a></h4>
 <p><strong>Thenable</strong> — предшественник промисов, объект с методом <code>.then()</code>:</p>
 <pre><code class="language-javascript">// Колбек
@@ -2655,7 +2633,7 @@ async function processFile() {
 
 processFile();
 </code></pre>
-<h3 id="для-самостоятельного-изучения"><a class="header" href="#для-самостоятельного-изучения">Для самостоятельного изучения</a></h3>
+<h3 id="Для-самостоятельного-изучения"><a class="header" href="#Для-самостоятельного-изучения">Для самостоятельного изучения</a></h3>
 <p><strong>Практические задания:</strong></p>
 <ol>
 <li>Напишите 3-4 функции с контрактом CLF для работы с данными</li>
@@ -2677,9 +2655,9 @@ processFile();
 <li><strong>Iterator &amp; AsyncIterator</strong> — для работы с последовательностями</li>
 <li><strong>Disposable</strong> — управление ресурсами с автоматическим освобождением</li>
 </ul>
-<hr>
-<h2 id="итоговое-резюме"><a class="header" href="#итоговое-резюме">Итоговое резюме</a></h2>
-<h3 id="что-мы-изучили"><a class="header" href="#что-мы-изучили">Что мы изучили</a></h3>
+<hr />
+<h2 id="Итоговое-резюме"><a class="header" href="#Итоговое-резюме">Итоговое резюме</a></h2>
+<h3 id="Что-мы-изучили"><a class="header" href="#Что-мы-изучили">Что мы изучили</a></h3>
 <ol>
 <li><strong>Эволюция от sync к async</strong> — как функции превращаются в колбеки</li>
 <li><strong>Контракт CLF</strong> — callback-last-error-first как стандарт Node.js</li>
@@ -2690,7 +2668,7 @@ processFile();
 <li><strong>Решение callback hell</strong> — через декомпозицию и именование</li>
 <li><strong>Обработка ошибок</strong> — систематический подход на каждом уровне</li>
 </ol>
-<h3 id="ключевые-takeaways"><a class="header" href="#ключевые-takeaways">Ключевые takeaways</a></h3>
+<h3 id="Ключевые-takeaways"><a class="header" href="#Ключевые-takeaways">Ключевые takeaways</a></h3>
 <ul>
 <li><strong>Колбеки — фундамент</strong> асинхронности в JavaScript</li>
 <li><strong>CLF контракт</strong> обеспечивает единообразие API</li>
@@ -2699,7 +2677,7 @@ processFile();
 <li><strong>Обработка ошибок</strong> должна быть на каждом уровне</li>
 <li><strong>Все асинхронные паттерны</strong> используют колбеки как основу</li>
 </ul>
-<h3 id="что-дальше"><a class="header" href="#что-дальше">Что дальше</a></h3>
+<h3 id="Что-дальше"><a class="header" href="#Что-дальше">Что дальше</a></h3>
 <p>Колбеки — это база. Понимая их, вы готовы к изучению:</p>
 <ul>
 <li>Промисов и их комбинаторов</li>
@@ -2708,12 +2686,12 @@ processFile();
 <li>Event-driven архитектуры</li>
 <li>Reactive programming с Observables</li>
 </ul>
-<hr>
+<hr />
 <p><strong>Автор лекции:</strong> Тимур Шемсединов
 <strong>Курс:</strong> Асинхронное программирование в Node.js
 <strong>Неделя:</strong> 2 - Native features in language and platforms
 <strong>Ссылка на видео:</strong> https://youtu.be/vcOGCWL-eZc</p>
-<hr>
+<hr />
 <p><strong>Примечание:</strong> Все примеры кода доступны в репозитории курса. Практикуйтесь, экспериментируйте и не бойтесь колбеков — они ваши друзья в асинхронном программировании!</p>
 
                     </main>
@@ -2721,11 +2699,11 @@ processFile();
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week2/Thenable-контракт-конспект.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -2735,38 +2713,17 @@ processFile();
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week2/Thenable-контракт-конспект.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -2774,16 +2731,15 @@ processFile();
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

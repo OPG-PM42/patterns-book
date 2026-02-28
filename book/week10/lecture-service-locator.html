@@ -1,0 +1,405 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Service Locator — паттерн получения и подмены зависимостей - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="service-locator--паттерн-для-получения-и-инверсии-зависимостей"><a class="header" href="#service-locator--паттерн-для-получения-и-инверсии-зависимостей">Service Locator — паттерн для получения и инверсии зависимостей</a></h1>
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Паттерн <strong>Service Locator</strong> — один из способов реализовать инверсию зависимостей (Dependency Inversion) из принципов SOLID.</p>
+<p>Перед изучением этой темы рекомендуется ознакомиться с принципом инверсии зависимостей (буква <strong>D</strong> в SOLID). Его суть в том, что модули не должны напрямую зависеть друг от друга — оба должны зависеть от абстракций (интерфейсов), а не от конкретных реализаций.</p>
+<p>Есть два основных пути развязать модули:</p>
+<ul>
+<li>Через систему модульности (CommonJS, ESM)</li>
+<li>Через паттерн Service Locator</li>
+</ul>
+<hr />
+<h2 id="Паттерн-service-locator"><a class="header" href="#Паттерн-service-locator">Паттерн Service Locator</a></h2>
+<p><strong>Service Locator</strong> — это объект (реестр), который хранит коллекцию зависимостей (классов, функций, модулей) и позволяет получать их по имени. Вместо того чтобы один модуль напрямую импортировал другой, он обращается к локатору и получает нужную реализацию оттуда.</p>
+<p>Ключевая идея: потребитель зависимости не знает, откуда берётся реализация. Локатор скрывает эту деталь.</p>
+<p>Что важно понять сразу — <code>require</code> и <code>import</code> сами по себе являются сервис-локаторами:</p>
+<ul>
+<li><code>require</code> хранит внутренний кэш: ключи — полные пути к файлам, значения — то, что они экспортируют.</li>
+<li>При повторном вызове <code>require('logger')</code> модуль не перезапускается — значение берётся из кэша.</li>
+<li>В кэш <code>require</code> можно вручную записать подменённое значение по имени модуля.</li>
+<li>В случае <code>import</code> (ESM) такой ручной подмены нет — кэш недоступен напрямую.</li>
+</ul>
+<hr />
+<h2 id="Реализация"><a class="header" href="#Реализация">Реализация</a></h2>
+<h3 id="Вариант-1--Простой-экспорт-map"><a class="header" href="#Вариант-1--Простой-экспорт-map">Вариант 1 — Простой экспорт Map</a></h3>
+<p>Самая минимальная реализация: экспортировать экземпляр <code>Map</code> из файла.</p>
+<pre><code class="language-js">// serviceLocator.js
+
+// Создаём общий реестр зависимостей
+const locator = new Map();
+
+export default locator;
+</code></pre>
+<pre><code class="language-js">// bootstrap.js — регистрация зависимостей при старте приложения
+import locator from './serviceLocator.js';
+import Logger from './Logger.js';
+import Database from './Database.js';
+
+locator.set('logger', Logger);
+locator.set('db', Database);
+</code></pre>
+<pre><code class="language-js">// someModule.js — использование зависимости
+import locator from './serviceLocator.js';
+
+const Logger = locator.get('logger');
+const logger = new Logger();
+logger.log('Модуль запущен');
+</code></pre>
+<p>Проблема этого варианта: снаружи открыт полный доступ к <code>Map</code>. Любой модуль может добавлять, удалять или перезаписывать зависимости произвольно.</p>
+<hr />
+<h3 id="Вариант-2--Фасад-через-стрелочные-функции"><a class="header" href="#Вариант-2--Фасад-через-стрелочные-функции">Вариант 2 — Фасад через стрелочные функции</a></h3>
+<p>Чтобы ограничить доступ и выставить наружу только <code>get</code> и <code>set</code>, оборачиваем Map в фасад из двух функций.</p>
+<pre><code class="language-js">// serviceLocator.js
+
+const _registry = new Map();
+
+// Экспортируем только два метода — публичный интерфейс локатора
+export const get = (key) =&gt; _registry.get(key);
+export const set = (key, value) =&gt; _registry.set(key, value);
+</code></pre>
+<pre><code class="language-js">// bootstrap.js
+import { set } from './serviceLocator.js';
+import Logger from './Logger.js';
+
+set('logger', Logger);
+</code></pre>
+<pre><code class="language-js">// someModule.js
+import { get } from './serviceLocator.js';
+
+const Logger = get('logger');
+const logger = new Logger();
+logger.log('Готово');
+</code></pre>
+<hr />
+<h3 id="Вариант-3--Привязка-методов-через-bind-без-новых-функций"><a class="header" href="#Вариант-3--Привязка-методов-через-bind-без-новых-функций">Вариант 3 — Привязка методов через bind (без новых функций)</a></h3>
+<p>Вместо того чтобы создавать новые стрелочные функции, можно взять методы <code>get</code> и <code>set</code> у экземпляра <code>Map</code> и привязать их к самому экземпляру через <code>bind</code>. Новые функции при этом не создаются — переиспользуются встроенные.</p>
+<pre><code class="language-js">// serviceLocator.js
+
+const _registry = new Map();
+
+// bind привязывает метод к конкретному экземпляру Map
+// без этого this внутри get/set не будет указывать на _registry
+export const get = _registry.get.bind(_registry);
+export const set = _registry.set.bind(_registry);
+</code></pre>
+<hr />
+<h3 id="Вариант-4--Класс-обёртка"><a class="header" href="#Вариант-4--Класс-обёртка">Вариант 4 — Класс-обёртка</a></h3>
+<p>Классовая реализация даёт возможность создавать несколько независимых локаторов (например, для фронтенда и бэкенда с разными реализациями одних и тех же зависимостей).</p>
+<pre><code class="language-js">// ServiceLocator.js
+
+class ServiceLocator {
+  constructor() {
+    this._registry = new Map();
+  }
+
+  // Регистрация зависимости по имени
+  set(name, implementation) {
+    this._registry.set(name, implementation);
+    return this; // позволяет chaining: locator.set('a', A).set('b', B)
+  }
+
+  // Получение зависимости по имени
+  get(name) {
+    if (!this._registry.has(name)) {
+      throw new Error(`ServiceLocator: зависимость "${name}" не зарегистрирована`);
+    }
+    return this._registry.get(name);
+  }
+
+  // Получить все зарегистрированные имена
+  keys() {
+    return [...this._registry.keys()];
+  }
+}
+
+export default ServiceLocator;
+</code></pre>
+<pre><code class="language-js">// bootstrap.js — регистрация зависимостей
+import ServiceLocator from './ServiceLocator.js';
+import Logger from './Logger.js';
+import ConsoleLogger from './ConsoleLogger.js';
+
+const locator = new ServiceLocator();
+
+// Регистрируем реализацию для текущей среды
+locator.set('logger', Logger);
+
+export default locator;
+</code></pre>
+<pre><code class="language-js">// someModule.js — получение и подмена зависимости
+import locator from './bootstrap.js';
+import MockLogger from './MockLogger.js';
+
+// Получаем зарегистрированный класс
+const Logger = locator.get('logger');
+const logger = new Logger();
+logger.log('Работаем с основным логгером');
+
+// Подменяем реализацию (например, для тестов)
+locator.set('logger', MockLogger);
+
+const MockLoggerClass = locator.get('logger');
+const mockLogger = new MockLoggerClass();
+mockLogger.log('Работаем с мок-логгером');
+</code></pre>
+<hr />
+<h2 id="Сравнение-с-dependency-injection-di"><a class="header" href="#Сравнение-с-dependency-injection-di">Сравнение с Dependency Injection (DI)</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Критерий</th><th>Service Locator</th><th>Dependency Injection</th></tr></thead><tbody>
+<tr><td>Как получают зависимость</td><td>Активно запрашивают через <code>get</code></td><td>Пассивно получают через конструктор / аргументы</td></tr>
+<tr><td>Кто контролирует создание</td><td>Сам потребитель</td><td>Внешний контейнер / фреймворк</td></tr>
+<tr><td>Видимость зависимостей</td><td>Скрыта (зависит от локатора)</td><td>Явная (видна в сигнатуре)</td></tr>
+<tr><td>Тестируемость</td><td>Требует настройки локатора в тестах</td><td>Зависимости подставляются напрямую</td></tr>
+<tr><td>Сложность</td><td>Ниже (нет контейнера)</td><td>Выше, но явнее</td></tr>
+</tbody></table>
+</div>
+<p>Service Locator иногда называют <strong>антипаттерном</strong>, потому что зависимости модуля становятся неявными — их нет в сигнатуре конструктора или функции. При этом он остаётся полезным инструментом для определённых задач.</p>
+<hr />
+<h2 id="Связь-с-паттерном-Стратегия"><a class="header" href="#Связь-с-паттерном-Стратегия">Связь с паттерном Стратегия</a></h2>
+<p>Service Locator по своей сути очень близок к паттерну <strong>Strategy</strong>, реализованному через коллекции (Map/объект). Вместо явного условного оператора (<code>if/switch</code>) нужная реализация выбирается по имени-ключу. Это тот же принцип: поведение подменяется динамически, без изменения кода потребителя.</p>
+<pre><code class="language-js">// Пример: разные реализации для разных сред
+import ServiceLocator from './ServiceLocator.js';
+import BrowserLogger from './BrowserLogger.js';
+import NodeLogger from './NodeLogger.js';
+
+const locator = new ServiceLocator();
+
+// Выбор реализации в зависимости от среды выполнения
+if (typeof window !== 'undefined') {
+  locator.set('logger', BrowserLogger); // фронтенд
+} else {
+  locator.set('logger', NodeLogger);    // бэкенд
+}
+
+export default locator;
+</code></pre>
+<hr />
+<h2 id="Когда-применять"><a class="header" href="#Когда-применять">Когда применять</a></h2>
+<p><strong>Применять Service Locator стоит, когда:</strong></p>
+<ul>
+<li>Нужно динамически подменять реализации зависимостей в рантайме (например, переключение между реальным и тестовым логгером, между окружениями).</li>
+<li>Система не использует DI-контейнер, но нужна централизованная точка регистрации зависимостей.</li>
+<li>Ведётся работа со старым кодом (<code>require</code>-based), где нет готового DI-фреймворка.</li>
+<li>Нужна несколько изолированных наборов зависимостей для разных частей приложения (несколько экземпляров <code>ServiceLocator</code>).</li>
+</ul>
+<p><strong>Стоит избегать, когда:</strong></p>
+<ul>
+<li>Зависимости модуля должны быть явными и легко читаемыми (предпочтительнее DI через конструктор).</li>
+<li>Важна строгая типизация и IDE-подсказки (TypeScript + DI-контейнер справится лучше).</li>
+<li>Команда незнакома с паттерном — скрытые зависимости усложняют дебаг.</li>
+</ul>
+<hr />
+<h2 id="Итог"><a class="header" href="#Итог">Итог</a></h2>
+<ul>
+<li><strong>Service Locator</strong> — реестр, который хранит зависимости и выдаёт их по имени через <code>get</code>.</li>
+<li><code>require</code> и <code>import</code> — это встроенные сервис-локаторы с кэшированием. В <code>require</code> кэш можно изменить вручную, в ESM — нет.</li>
+<li>Минимальная реализация: экспортировать <code>Map</code> с методами <code>get</code> и <code>set</code>.</li>
+<li>Для инкапсуляции внутреннего реестра используется либо фасад из стрелочных функций, либо <code>bind</code>, либо класс-обёртка.</li>
+<li>Паттерн очень близок к <strong>Strategy через коллекции</strong> — позволяет подменять поведение по имени ключа.</li>
+<li>Альтернативы для инверсии зависимостей: системы модульности (CommonJS, ESM), собственная система модульности с sandboxing.</li>
+<li>Ключевое отличие от DI: при Service Locator потребитель сам запрашивает зависимость, при DI — получает её извне.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week10/lecture-dip-practical.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week11.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week10/lecture-dip-practical.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week11.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

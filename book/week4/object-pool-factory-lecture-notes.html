@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,50 +124,45 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="паттерны-инстанцирования-пул-объектов-и-фабрика"><a class="header" href="#паттерны-инстанцирования-пул-объектов-и-фабрика">Паттерны инстанцирования: Пул объектов и Фабрика</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Паттерны-инстанцирования-Пул-объектов-и-Фабрика"><a class="header" href="#Паттерны-инстанцирования-Пул-объектов-и-Фабрика">Паттерны инстанцирования: Пул объектов и Фабрика</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Эта лекция посвящена изучению двух фундаментальных паттернов создания объектов в JavaScript/TypeScript:</p>
 <ul>
 <li><strong>Factory (Фабрика)</strong> - паттерн для абстрагирования процесса создания объектов</li>
 <li><strong>Object Pool (Пул объектов)</strong> - паттерн для переиспользования объектов и оптимизации памяти</li>
 </ul>
 <p>Оба паттерна являются ключевыми инструментами для эффективного управления инстанцированием объектов в современных JavaScript-приложениях.</p>
-<hr>
-<h2 id="1-инстанцирование-через-конструктор"><a class="header" href="#1-инстанцирование-через-конструктор">1. Инстанцирование через конструктор</a></h2>
-<h3 id="базовый-подход"><a class="header" href="#базовый-подход">Базовый подход</a></h3>
+<hr />
+<h2 id="1-Инстанцирование-через-конструктор"><a class="header" href="#1-Инстанцирование-через-конструктор">1. Инстанцирование через конструктор</a></h2>
+<h3 id="Базовый-подход"><a class="header" href="#Базовый-подход">Базовый подход</a></h3>
 <p>Самый простой способ создания объектов - использование конструктора класса через оператор <code>new</code>:</p>
 <pre><code class="language-javascript">// Простой класс
 class Connection {
@@ -202,12 +180,12 @@ const conn = new Connection(1);
 <li>Каждый вызов создает новый экземпляр в памяти</li>
 <li>Прямое инстанцирование связывает код с конкретным классом</li>
 </ul>
-<hr>
-<h2 id="2-паттерн-factory-фабрика"><a class="header" href="#2-паттерн-factory-фабрика">2. Паттерн Factory (Фабрика)</a></h2>
-<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<hr />
+<h2 id="2-Паттерн-factory-Фабрика"><a class="header" href="#2-Паттерн-factory-Фабрика">2. Паттерн Factory (Фабрика)</a></h2>
+<h3 id="Определение"><a class="header" href="#Определение">Определение</a></h3>
 <p><strong>Фабрика</strong> - это любая функция или метод, который возвращает экземпляр объекта. В JavaScript фабрики более гибкие, чем в других языках, благодаря динамической природе языка.</p>
-<h3 id="варианты-реализации-фабрик"><a class="header" href="#варианты-реализации-фабрик">Варианты реализации фабрик</a></h3>
-<h4 id="21-фабрика-как-обычная-функция"><a class="header" href="#21-фабрика-как-обычная-функция">2.1 Фабрика как обычная функция</a></h4>
+<h3 id="Варианты-реализации-фабрик"><a class="header" href="#Варианты-реализации-фабрик">Варианты реализации фабрик</a></h3>
+<h4 id="21-Фабрика-как-обычная-функция"><a class="header" href="#21-Фабрика-как-обычная-функция">2.1 Фабрика как обычная функция</a></h4>
 <pre><code class="language-javascript">// Простая функция-фабрика, возвращающая литерал объекта
 function createUser(name, age) {
   return {
@@ -227,7 +205,7 @@ const user = createUser('Alice', 30);
 <li>Может возвращать любой тип объекта</li>
 <li>Скрывает детали создания от клиента</li>
 </ul>
-<h4 id="22-статический-метод-класса"><a class="header" href="#22-статический-метод-класса">2.2 Статический метод класса</a></h4>
+<h4 id="22-Статический-метод-класса"><a class="header" href="#22-Статический-метод-класса">2.2 Статический метод класса</a></h4>
 <pre><code class="language-javascript">class Connection {
   static create(index) {
     return new Connection(index);
@@ -247,7 +225,7 @@ const conn = Connection.create(1);
 <li>Логически связан с классом</li>
 <li>Может содержать дополнительную логику инициализации</li>
 </ul>
-<h4 id="23-универсальная-фабрика-высшего-порядка"><a class="header" href="#23-универсальная-фабрика-высшего-порядка">2.3 Универсальная фабрика высшего порядка</a></h4>
+<h4 id="23-Универсальная-фабрика-высшего-порядка"><a class="header" href="#23-Универсальная-фабрика-высшего-порядка">2.3 Универсальная фабрика высшего порядка</a></h4>
 <p>Можно создать универсальную функцию, которая превращает любой класс в фабрику:</p>
 <pre><code class="language-javascript">// Функция factify - превращает класс в фабрику
 const factify = (Class) =&gt; (...args) =&gt; new Class(...args);
@@ -272,7 +250,7 @@ const conn2 = createConnection(2);
 <li>Универсальное решение для любого класса</li>
 <li>Класс передается в замыкание</li>
 </ul>
-<h3 id="24-фабрика-с-состоянием-на-основе-замыкания"><a class="header" href="#24-фабрика-с-состоянием-на-основе-замыкания">2.4 Фабрика с состоянием (на основе замыкания)</a></h3>
+<h3 id="24-Фабрика-с-состоянием-на-основе-замыкания"><a class="header" href="#24-Фабрика-с-состоянием-на-основе-замыкания">2.4 Фабрика с состоянием (на основе замыкания)</a></h3>
 <pre><code class="language-javascript">// Альтернативная фабрика с использованием замыкания
 const alternativeFactory = (() =&gt; {
   let index = 0; // Счетчик в замыкании
@@ -292,7 +270,7 @@ const conn2 = alternativeFactory(); // Connection с index = 1
 <li>Автоматический инкремент счетчика</li>
 <li>Безопасное хранение состояния</li>
 </ul>
-<h4 id="25-фабрика-как-класс"><a class="header" href="#25-фабрика-как-класс">2.5 Фабрика как класс</a></h4>
+<h4 id="25-Фабрика-как-класс"><a class="header" href="#25-Фабрика-как-класс">2.5 Фабрика как класс</a></h4>
 <pre><code class="language-javascript">class ConnectionFactory {
   constructor() {
     this.index = 0;
@@ -314,7 +292,7 @@ const conn2 = factory.create();
 <li>Можно добавлять дополнительные методы</li>
 <li>Легче тестировать и расширять</li>
 </ul>
-<h3 id="метапрограммирование-в-фабриках"><a class="header" href="#метапрограммирование-в-фабриках">Метапрограммирование в фабриках</a></h3>
+<h3 id="Метапрограммирование-в-фабриках"><a class="header" href="#Метапрограммирование-в-фабриках">Метапрограммирование в фабриках</a></h3>
 <p>Фабрики в JavaScript могут использовать различные техники метапрограммирования:</p>
 <pre><code class="language-javascript">// Использование Object.create
 function createWithPrototype(proto, props) {
@@ -342,23 +320,23 @@ function createWithSetPrototype(obj, proto) {
 </code></pre>
 <p><strong>Важное замечание:</strong></p>
 <ul>
-<li>В платформенном коде допустимо использование “магии” и метапрограммирования</li>
+<li>В платформенном коде допустимо использование "магии" и метапрограммирования</li>
 <li>В прикладном коде фабрики должны быть максимально простыми и понятными</li>
 <li>Предпочтительны явные и читаемые решения</li>
 </ul>
-<hr>
-<h2 id="3-паттерн-object-pool-пул-объектов"><a class="header" href="#3-паттерн-object-pool-пул-объектов">3. Паттерн Object Pool (Пул объектов)</a></h2>
-<h3 id="определение-и-назначение"><a class="header" href="#определение-и-назначение">Определение и назначение</a></h3>
+<hr />
+<h2 id="3-Паттерн-object-pool-Пул-объектов"><a class="header" href="#3-Паттерн-object-pool-Пул-объектов">3. Паттерн Object Pool (Пул объектов)</a></h2>
+<h3 id="Определение-и-назначение"><a class="header" href="#Определение-и-назначение">Определение и назначение</a></h3>
 <p><strong>Пул объектов</strong> - это паттерн, который создает и поддерживает коллекцию переиспользуемых объектов. Основная цель - оптимизация производительности и управление памятью.</p>
-<h3 id="основные-принципы-работы"><a class="header" href="#основные-принципы-работы">Основные принципы работы</a></h3>
+<h3 id="Основные-принципы-работы"><a class="header" href="#Основные-принципы-работы">Основные принципы работы</a></h3>
 <ol>
 <li><strong>Предварительное создание</strong> - пул создает определенное количество объектов заранее</li>
 <li><strong>Выдача по запросу</strong> - объекты выдаются из пула по мере необходимости</li>
 <li><strong>Возврат для переиспользования</strong> - использованные объекты возвращаются в пул</li>
 <li><strong>Экономия ресурсов</strong> - избегаем накладных расходов на создание новых объектов</li>
 </ol>
-<h3 id="31-простейший-синхронный-пул"><a class="header" href="#31-простейший-синхронный-пул">3.1 Простейший синхронный пул</a></h3>
-<h4 id="базовая-реализация"><a class="header" href="#базовая-реализация">Базовая реализация</a></h4>
+<h3 id="31-Простейший-синхронный-пул"><a class="header" href="#31-Простейший-синхронный-пул">3.1 Простейший синхронный пул</a></h3>
+<h4 id="Базовая-реализация"><a class="header" href="#Базовая-реализация">Базовая реализация</a></h4>
 <pre><code class="language-javascript">// Простейший пул объектов
 const pool = (factory) =&gt; {
   // Коллекция для хранения объектов
@@ -384,7 +362,7 @@ const pool = (factory) =&gt; {
   };
 };
 </code></pre>
-<h4 id="пример-использования-с-массивами"><a class="header" href="#пример-использования-с-массивами">Пример использования с массивами</a></h4>
+<h4 id="Пример-использования-с-массивами"><a class="header" href="#Пример-использования-с-массивами">Пример использования с массивами</a></h4>
 <pre><code class="language-javascript">// Фабрика для создания массивов из 1000 элементов
 const arrayFactory = () =&gt; new Array(1000).fill(0);
 
@@ -403,15 +381,15 @@ const arr2 = arrayPool();
 arrayPool(arr1);
 </code></pre>
 <p><strong>Ключевая особенность:</strong> Одна и та же функция используется и для получения, и для возврата объектов в пул.</p>
-<h3 id="32-пул-с-использованием-фабрики-классов"><a class="header" href="#32-пул-с-использованием-фабрики-классов">3.2 Пул с использованием фабрики классов</a></h3>
-<h4 id="класс-connection"><a class="header" href="#класс-connection">Класс Connection</a></h4>
+<h3 id="32-Пул-с-использованием-фабрики-классов"><a class="header" href="#32-Пул-с-использованием-фабрики-классов">3.2 Пул с использованием фабрики классов</a></h3>
+<h4 id="Класс-connection"><a class="header" href="#Класс-connection">Класс Connection</a></h4>
 <pre><code class="language-javascript">class Connection {
   constructor(index) {
     this.url = `https://example.com/connection-${index}`;
   }
 }
 </code></pre>
-<h4 id="фабрика-для-connection"><a class="header" href="#фабрика-для-connection">Фабрика для Connection</a></h4>
+<h4 id="Фабрика-для-connection"><a class="header" href="#Фабрика-для-connection">Фабрика для Connection</a></h4>
 <pre><code class="language-javascript">class ConnectionFactory {
   constructor() {
     this.index = 0;
@@ -435,7 +413,7 @@ console.log(conn2.url); // https://example.com/connection-1
 
 connectionPool(conn1); // Возвращаем в пул
 </code></pre>
-<h3 id="33-пул-с-автоматическим-созданием-новых-объектов"><a class="header" href="#33-пул-с-автоматическим-созданием-новых-объектов">3.3 Пул с автоматическим созданием новых объектов</a></h3>
+<h3 id="33-Пул-с-автоматическим-созданием-новых-объектов"><a class="header" href="#33-Пул-с-автоматическим-созданием-новых-объектов">3.3 Пул с автоматическим созданием новых объектов</a></h3>
 <p>Если пул исчерпан, можно автоматически создавать новые объекты:</p>
 <pre><code class="language-javascript">const poolWithFactory = (factory) =&gt; {
   const items = [];
@@ -477,8 +455,8 @@ connectionPool(conn1); // Возвращаем в пул
 <li>Неограниченный рост количества созданных объектов</li>
 <li>Необходимость контроля верхнего лимита</li>
 </ul>
-<h3 id="34-пул-с-ограничениями-размера"><a class="header" href="#34-пул-с-ограничениями-размера">3.4 Пул с ограничениями размера</a></h3>
-<h4 id="концепция-трех-уровней"><a class="header" href="#концепция-трех-уровней">Концепция трех уровней</a></h4>
+<h3 id="34-Пул-с-ограничениями-размера"><a class="header" href="#34-Пул-с-ограничениями-размера">3.4 Пул с ограничениями размера</a></h3>
+<h4 id="Концепция-трех-уровней"><a class="header" href="#Концепция-трех-уровней">Концепция трех уровней</a></h4>
 <p>Современные пулы часто используют три уровня размера:</p>
 <ol>
 <li><strong>Минимальный размер (min)</strong> - гарантированное минимальное количество объектов</li>
@@ -527,7 +505,7 @@ connectionPool(conn1); // Возвращаем в пул
   };
 };
 </code></pre>
-<h4 id="пример-с-типизированными-массивами"><a class="header" href="#пример-с-типизированными-массивами">Пример с типизированными массивами</a></h4>
+<h4 id="Пример-с-типизированными-массивами"><a class="header" href="#Пример-с-типизированными-массивами">Пример с типизированными массивами</a></h4>
 <pre><code class="language-javascript">// Фабрика для буферов 4KB (для обработки видео/криптографии)
 const bufferFactory = () =&gt; new Uint8Array(4096);
 
@@ -555,7 +533,7 @@ for (let i = 0; i &lt; 20; i++) {
 <li>Сетевые буферы для передачи данных</li>
 <li>Любые операции с большими блоками памяти</li>
 </ul>
-<h3 id="35-пул-встроенный-в-класс"><a class="header" href="#35-пул-встроенный-в-класс">3.5 Пул, встроенный в класс</a></h3>
+<h3 id="35-Пул-встроенный-в-класс"><a class="header" href="#35-Пул-встроенный-в-класс">3.5 Пул, встроенный в класс</a></h3>
 <p>Фабрику можно встроить прямо в класс как статический метод:</p>
 <pre><code class="language-javascript">class Connection {
   static index = 0;
@@ -596,16 +574,16 @@ const connPool = poolBound();
 <li>Меньше гибкости, но более простой API</li>
 <li>Фабрика и класс тесно связаны</li>
 </ul>
-<hr>
-<h2 id="4-асинхронные-пулы-объектов"><a class="header" href="#4-асинхронные-пулы-объектов">4. Асинхронные пулы объектов</a></h2>
-<h3 id="зачем-нужны-асинхронные-пулы"><a class="header" href="#зачем-нужны-асинхронные-пулы">Зачем нужны асинхронные пулы?</a></h3>
+<hr />
+<h2 id="4-Асинхронные-пулы-объектов"><a class="header" href="#4-Асинхронные-пулы-объектов">4. Асинхронные пулы объектов</a></h2>
+<h3 id="Зачем-нужны-асинхронные-пулы"><a class="header" href="#Зачем-нужны-асинхронные-пулы">Зачем нужны асинхронные пулы?</a></h3>
 <p>В реальных приложениях часто возникает ситуация, когда:</p>
 <ul>
 <li>Пул временно исчерпан</li>
 <li>Создание нового объекта нежелательно (лимит достигнут)</li>
 <li>Нужно дождаться возврата объекта в пул</li>
 </ul>
-<h3 id="основная-концепция"><a class="header" href="#основная-концепция">Основная концепция</a></h3>
+<h3 id="Основная-концепция"><a class="header" href="#Основная-концепция">Основная концепция</a></h3>
 <pre><code class="language-javascript">const asyncPool = (factory, size = 10) =&gt; {
   const items = [];
   const waiting = []; // Очередь ожидающих
@@ -651,7 +629,7 @@ const connPool = poolBound();
   };
 };
 </code></pre>
-<h4 id="пример-использования"><a class="header" href="#пример-использования">Пример использования</a></h4>
+<h4 id="Пример-использования"><a class="header" href="#Пример-использования">Пример использования</a></h4>
 <pre><code class="language-javascript">const connectionPool = asyncPool(() =&gt; new Connection(Date.now()), 3);
 
 async function useConnection() {
@@ -679,7 +657,7 @@ Promise.all([
   useConnection(), // И этот тоже
 ]);
 </code></pre>
-<h3 id="ключевые-особенности-асинхронных-пулов"><a class="header" href="#ключевые-особенности-асинхронных-пулов">Ключевые особенности асинхронных пулов</a></h3>
+<h3 id="Ключевые-особенности-асинхронных-пулов"><a class="header" href="#Ключевые-особенности-асинхронных-пулов">Ключевые особенности асинхронных пулов</a></h3>
 <p><strong>Преимущества:</strong></p>
 <ul>
 <li>Контролируемое ожидание освобождения ресурсов</li>
@@ -699,9 +677,9 @@ Promise.all([
 <li>Пулы воркеров/тредов</li>
 <li>Любые ограниченные ресурсы</li>
 </ul>
-<hr>
-<h2 id="5-практические-примеры-и-паттерны-использования"><a class="header" href="#5-практические-примеры-и-паттерны-использования">5. Практические примеры и паттерны использования</a></h2>
-<h3 id="51-пул-подключений-к-базе-данных"><a class="header" href="#51-пул-подключений-к-базе-данных">5.1 Пул подключений к базе данных</a></h3>
+<hr />
+<h2 id="5-Практические-примеры-и-паттерны-использования"><a class="header" href="#5-Практические-примеры-и-паттерны-использования">5. Практические примеры и паттерны использования</a></h2>
+<h3 id="51-Пул-подключений-к-базе-данных"><a class="header" href="#51-Пул-подключений-к-базе-данных">5.1 Пул подключений к базе данных</a></h3>
 <pre><code class="language-javascript">class DatabaseConnection {
   constructor(connectionString) {
     this.connectionString = connectionString;
@@ -744,7 +722,7 @@ async function executeQuery(sql) {
   }
 }
 </code></pre>
-<h3 id="52-пул-буферов-для-обработки-данных"><a class="header" href="#52-пул-буферов-для-обработки-данных">5.2 Пул буферов для обработки данных</a></h3>
+<h3 id="52-Пул-буферов-для-обработки-данных"><a class="header" href="#52-Пул-буферов-для-обработки-данных">5.2 Пул буферов для обработки данных</a></h3>
 <pre><code class="language-javascript">// Пул для обработки больших файлов по частям
 const bufferSize = 64 * 1024; // 64 KB
 const bufferPool = pool(() =&gt; Buffer.alloc(bufferSize), 10, 20, 50);
@@ -775,7 +753,7 @@ async function processLargeFile(filePath) {
   }
 }
 </code></pre>
-<h3 id="53-пул-воркеров-для-параллельной-обработки"><a class="header" href="#53-пул-воркеров-для-параллельной-обработки">5.3 Пул воркеров для параллельной обработки</a></h3>
+<h3 id="53-Пул-воркеров-для-параллельной-обработки"><a class="header" href="#53-Пул-воркеров-для-параллельной-обработки">5.3 Пул воркеров для параллельной обработки</a></h3>
 <pre><code class="language-javascript">const { Worker } = require('worker_threads');
 
 function createWorker() {
@@ -806,25 +784,19 @@ async function processTask(data) {
 const tasks = Array.from({ length: 100 }, (_, i) =&gt; ({ id: i, data: '...' }));
 const results = await Promise.all(tasks.map(task =&gt; processTask(task)));
 </code></pre>
-<hr>
-<h2 id="6-сравнение-подходов"><a class="header" href="#6-сравнение-подходов">6. Сравнение подходов</a></h2>
-<h3 id="конструктор-vs-фабрика-vs-пул"><a class="header" href="#конструктор-vs-фабрика-vs-пул">Конструктор vs Фабрика vs Пул</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Конструктор</th><th>Фабрика</th><th>Пул объектов</th></tr>
-</thead>
-<tbody>
+<hr />
+<h2 id="6-Сравнение-подходов"><a class="header" href="#6-Сравнение-подходов">6. Сравнение подходов</a></h2>
+<h3 id="Конструктор-vs-Фабрика-vs-Пул"><a class="header" href="#Конструктор-vs-Фабрика-vs-Пул">Конструктор vs Фабрика vs Пул</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Конструктор</th><th>Фабрика</th><th>Пул объектов</th></tr></thead><tbody>
 <tr><td><strong>Простота</strong></td><td>Очень простой</td><td>Средняя</td><td>Сложная</td></tr>
 <tr><td><strong>Гибкость</strong></td><td>Низкая</td><td>Высокая</td><td>Средняя</td></tr>
 <tr><td><strong>Производительность</strong></td><td>Базовая</td><td>Базовая</td><td>Высокая</td></tr>
 <tr><td><strong>Использование памяти</strong></td><td>Неконтролируемое</td><td>Неконтролируемое</td><td>Контролируемое</td></tr>
 <tr><td><strong>Переиспользование</strong></td><td>Нет</td><td>Нет</td><td>Да</td></tr>
 <tr><td><strong>Сложность кода</strong></td><td>Минимальная</td><td>Низкая</td><td>Средняя/Высокая</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="когда-использовать-каждый-подход"><a class="header" href="#когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
+<h3 id="Когда-использовать-каждый-подход"><a class="header" href="#Когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
 <p><strong>Конструктор (<code>new</code>):</strong></p>
 <ul>
 <li>Простые объекты без сложной инициализации</li>
@@ -845,9 +817,9 @@ const results = await Promise.all(tasks.map(task =&gt; processTask(task)));
 <li>Высокая частота создания/уничтожения объектов</li>
 <li>Необходимо контролировать количество экземпляров</li>
 </ul>
-<hr>
-<h2 id="7-функциональный-стиль-vs-ооп"><a class="header" href="#7-функциональный-стиль-vs-ооп">7. Функциональный стиль vs ООП</a></h2>
-<h3 id="замыкания-vs-классы-для-хранения-состояния"><a class="header" href="#замыкания-vs-классы-для-хранения-состояния">Замыкания vs Классы для хранения состояния</a></h3>
+<hr />
+<h2 id="7-Функциональный-стиль-vs-ООП"><a class="header" href="#7-Функциональный-стиль-vs-ООП">7. Функциональный стиль vs ООП</a></h2>
+<h3 id="Замыкания-vs-Классы-для-хранения-состояния"><a class="header" href="#Замыкания-vs-Классы-для-хранения-состояния">Замыкания vs Классы для хранения состояния</a></h3>
 <p><strong>Подход с замыканием (функциональный):</strong></p>
 <pre><code class="language-javascript">const alternativeFactory = (() =&gt; {
   let index = 0; // Мутируемое состояние в замыкании
@@ -864,28 +836,28 @@ const results = await Promise.all(tasks.map(task =&gt; processTask(task)));
   }
 }
 </code></pre>
-<h3 id="критика-функционального-подхода"><a class="header" href="#критика-функционального-подхода">Критика функционального подхода</a></h3>
+<h3 id="Критика-функционального-подхода"><a class="header" href="#Критика-функционального-подхода">Критика функционального подхода</a></h3>
 <p><strong>Замечание из лекции:</strong></p>
 <blockquote>
-<p>“Настоящие функциональщики скажут: ‘Ну вы же храните тут в замыкании значения. Мутируете. Какое тут может быть функциональное программирование?’”</p>
+<p>"Настоящие функциональщики скажут: 'Ну вы же храните тут в замыкании значения. Мутируете. Какое тут может быть функциональное программирование?'"</p>
 </blockquote>
 <p><strong>Реальность:</strong></p>
 <ul>
 <li>Мутирующее замыкание НЕ является функциональным программированием</li>
 <li>Это просто способ создания контекста с приватным состоянием</li>
 <li>В прикладном коде предпочтительны более явные подходы (классы)</li>
-<li>В платформенном коде допустима большая “магия”</li>
+<li>В платформенном коде допустима большая "магия"</li>
 </ul>
-<hr>
-<h2 id="8-лучшие-практики"><a class="header" href="#8-лучшие-практики">8. Лучшие практики</a></h2>
-<h3 id="для-фабрик"><a class="header" href="#для-фабрик">Для фабрик</a></h3>
+<hr />
+<h2 id="8-Лучшие-практики"><a class="header" href="#8-Лучшие-практики">8. Лучшие практики</a></h2>
+<h3 id="Для-фабрик"><a class="header" href="#Для-фабрик">Для фабрик</a></h3>
 <ol>
 <li><strong>Держите фабрики простыми</strong> в прикладном коде</li>
 <li><strong>Используйте статические методы</strong> для простых случаев</li>
 <li><strong>Создавайте отдельные классы-фабрики</strong> для сложной логики</li>
 <li><strong>Избегайте излишнего метапрограммирования</strong> в бизнес-логике</li>
 </ol>
-<h3 id="для-пулов-объектов"><a class="header" href="#для-пулов-объектов">Для пулов объектов</a></h3>
+<h3 id="Для-пулов-объектов"><a class="header" href="#Для-пулов-объектов">Для пулов объектов</a></h3>
 <ol>
 <li><strong>Всегда устанавливайте лимиты</strong> (min, normal, max)</li>
 <li><strong>Используйте таймауты</strong> в асинхронных пулах</li>
@@ -893,7 +865,7 @@ const results = await Promise.all(tasks.map(task =&gt; processTask(task)));
 <li><strong>Логируйте метрики пула</strong> для мониторинга</li>
 <li><strong>Реализуйте graceful shutdown</strong> для корректного закрытия</li>
 </ol>
-<h3 id="управление-ресурсами"><a class="header" href="#управление-ресурсами">Управление ресурсами</a></h3>
+<h3 id="Управление-ресурсами"><a class="header" href="#Управление-ресурсами">Управление ресурсами</a></h3>
 <pre><code class="language-javascript">// Хорошая практика: очистка при возврате в пул
 const poolWithCleanup = (factory, cleanup) =&gt; {
   const items = [];
@@ -921,9 +893,9 @@ const connPool = poolWithCleanup(
   }
 );
 </code></pre>
-<hr>
-<h2 id="9-заключение"><a class="header" href="#9-заключение">9. Заключение</a></h2>
-<h3 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h3>
+<hr />
+<h2 id="9-Заключение"><a class="header" href="#9-Заключение">9. Заключение</a></h2>
+<h3 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h3>
 <ol>
 <li>
 <p><strong>Фабрики</strong> предоставляют гибкость в создании объектов и абстрагируют детали инстанцирования</p>
@@ -954,7 +926,7 @@ const connPool = poolWithCleanup(
 </ul>
 </li>
 </ol>
-<h3 id="дальнейшее-изучение"><a class="header" href="#дальнейшее-изучение">Дальнейшее изучение</a></h3>
+<h3 id="Дальнейшее-изучение"><a class="header" href="#Дальнейшее-изучение">Дальнейшее изучение</a></h3>
 <p>Темы для углубленного изучения:</p>
 <ul>
 <li>Асинхронные пулы с приоритетами</li>
@@ -963,16 +935,16 @@ const connPool = poolWithCleanup(
 <li>Интеграция пулов с системами управления ресурсами</li>
 <li>Распределенные пулы в микросервисной архитектуре</li>
 </ul>
-<hr>
-<h2 id="дополнительные-ресурсы"><a class="header" href="#дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
-<h3 id="рекомендуемые-материалы"><a class="header" href="#рекомендуемые-материалы">Рекомендуемые материалы</a></h3>
+<hr />
+<h2 id="Дополнительные-ресурсы"><a class="header" href="#Дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
+<h3 id="Рекомендуемые-материалы"><a class="header" href="#Рекомендуемые-материалы">Рекомендуемые материалы</a></h3>
 <ul>
 <li>Отдельная лекция по асинхронным пулам (упоминается в лекции)</li>
 <li>Примеры кода в репозиториях с различными реализациями пулов</li>
 <li>Документация по Worker Threads для пулов воркеров</li>
 <li>Паттерны управления ресурсами в Node.js</li>
 </ul>
-<h3 id="практические-задания"><a class="header" href="#практические-задания">Практические задания</a></h3>
+<h3 id="Практические-задания"><a class="header" href="#Практические-задания">Практические задания</a></h3>
 <ol>
 <li>Реализовать пул с метриками (количество выдач, возвратов, созданий)</li>
 <li>Создать асинхронный пул с очередью приоритетов</li>
@@ -985,11 +957,11 @@ const connPool = poolWithCleanup(
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week4/strategy-pattern-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week4/asyncpool-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -999,38 +971,17 @@ const connPool = poolWithCleanup(
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week4/strategy-pattern-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week4/asyncpool-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1038,16 +989,15 @@ const connPool = poolWithCleanup(
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

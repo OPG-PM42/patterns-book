@@ -1,0 +1,499 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>События: EventTarget, EventEmitter - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Лекция-1-events-eventtarget-eventemitter-в-javascript"><a class="header" href="#Лекция-1-events-eventtarget-eventemitter-в-javascript">Лекция 1. Events, EventTarget, EventEmitter в JavaScript</a></h1>
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>События (Events) — это один из фундаментальных контрактов асинхронности в JavaScript.
+Если колбэки представляют собой одну функцию, которую кто-то вызовет позже, то события
+позволяют хранить <strong>коллекцию таких колбэков</strong> и вызывать их при наступлении определённого
+именованного момента.</p>
+<p>В экосистеме JavaScript существуют две родственные, но различные реализации этой идеи:</p>
+<ul>
+<li><code>EventTarget</code> — родилась в браузере как часть Web API, затем была перенесена в Node.js
+(доступна без флагов начиная с Node.js 19, экспериментально — с версий 16–17)</li>
+<li><code>EventEmitter</code> — нативная реализация Node.js, экспортируется из модуля <code>node:events</code></li>
+</ul>
+<p>Обе абстракции совместимы <strong>по концепции</strong>, но <strong>несовместимы по API</strong>.</p>
+<hr />
+<h2 id="11-eventtarget--браузерная-абстракция"><a class="header" href="#11-eventtarget--браузерная-абстракция">1.1 EventTarget — браузерная абстракция</a></h2>
+<p><code>EventTarget</code> является частью спецификации Web API. Её ключевая особенность: один
+обработчик на одно событие. Если один и тот же обработчик добавлен несколько раз,
+в коллекции он окажется только один раз.</p>
+<pre><code class="language-javascript">// Пример 1. Базовое использование EventTarget
+
+// Создаём экземпляр EventTarget
+const target = new EventTarget();
+
+// Добавляем обработчик события 'data' через addEventListener
+// Второй аргумент — функция-обработчик, принимает объект Event
+target.addEventListener('data', (event) =&gt; {
+  // event.detail содержит переданные данные (для CustomEvent)
+  console.log('Получено событие data:', event.detail);
+});
+
+// Создаём объект события с помощью CustomEvent
+// CustomEvent позволяет передавать произвольные данные через поле detail
+const event = new CustomEvent('data', { detail: { value: 42 } });
+
+// Отправляем событие — вызовутся все зарегистрированные обработчики
+target.dispatchEvent(event);
+// Вывод: Получено событие data: { value: 42 }
+</code></pre>
+<pre><code class="language-javascript">// Пример 2. Дедупликация обработчиков в EventTarget
+// EventTarget НЕ добавляет дублирующиеся обработчики
+
+const target = new EventTarget();
+
+function handler(event) {
+  console.log('Обработчик вызван, значение:', event.detail.value);
+}
+
+// Добавляем один и тот же обработчик три раза
+target.addEventListener('click', handler);
+target.addEventListener('click', handler);
+target.addEventListener('click', handler);
+
+// Несмотря на три вызова addEventListener, обработчик сохранён один раз
+// Поэтому событие обработается ОДИН раз
+target.dispatchEvent(new CustomEvent('click', { detail: { value: 1 } }));
+// Вывод: Обработчик вызван, значение: 1   (только один раз!)
+</code></pre>
+<pre><code class="language-javascript">// Пример 3. Отписка от события через removeEventListener
+
+const target = new EventTarget();
+
+function onData(event) {
+  console.log('data:', event.detail);
+}
+
+// Подписываемся
+target.addEventListener('message', onData);
+
+// Отписываемся — передаём ту же функцию-ссылку
+target.removeEventListener('message', onData);
+
+// После удаления обработчика событие никем не будет обработано
+target.dispatchEvent(new CustomEvent('message', { detail: 'привет' }));
+// Вывод: (пусто — обработчик был удалён)
+</code></pre>
+<pre><code class="language-javascript">// Пример 4. Обработка ошибок в EventTarget
+// ВАЖНО: EventTarget НЕ падает при отсутствии обработчика события 'error'
+// В отличие от EventEmitter, событие 'error' для EventTarget — обычное именованное событие
+
+const target = new EventTarget();
+
+// Если у нас есть обработчик ошибки — ошибка обрабатывается
+target.addEventListener('error', (event) =&gt; {
+  console.log('Ошибка перехвачена:', event.detail.message);
+});
+
+target.dispatchEvent(new CustomEvent('error', { detail: new Error('что-то пошло не так') }));
+// Вывод: Ошибка перехвачена: что-то пошло не так
+
+// Теперь уберём обработчик и снова отправим ошибку
+target.removeEventListener('error', (event) =&gt; {}); // другая ссылка — не удалит!
+// EventTarget просто проигнорирует событие без обработчика — процесс НЕ упадёт
+target.dispatchEvent(new CustomEvent('error', { detail: new Error('ещё одна ошибка') }));
+// Вывод: (пусто — но Node.js не падает!)
+</code></pre>
+<hr />
+<h2 id="12-eventemitter--нативная-абстракция-nodejs"><a class="header" href="#12-eventemitter--нативная-абстракция-nodejs">1.2 EventEmitter — нативная абстракция Node.js</a></h2>
+<p><code>EventEmitter</code> из модуля <code>node:events</code> имеет другой интерфейс и другую семантику.
+Ключевые отличия от <code>EventTarget</code>:</p>
+<ul>
+<li>Позволяет добавлять <strong>несколько экземпляров одного обработчика</strong> (нет дедупликации)</li>
+<li>При отсутствии обработчика события <code>'error'</code> <strong>процесс Node.js аварийно завершится</strong></li>
+<li>Данные передаются напрямую как аргументы, а не через объект <code>Event</code></li>
+</ul>
+<pre><code class="language-javascript">// Пример 5. Базовое использование EventEmitter
+import { EventEmitter } from 'node:events';
+
+// Создаём экземпляр EventEmitter
+const emitter = new EventEmitter();
+
+// Подписываемся на событие 'data' через метод on
+// Первый аргумент — имя события, второй — колбэк
+emitter.on('data', (payload) =&gt; {
+  // Данные приходят напрямую в аргументы колбэка, без обёртки в Event
+  console.log('Получены данные:', payload);
+});
+
+// Отправляем событие через emit
+// Данные передаём как дополнительные аргументы после имени события
+emitter.emit('data', { a: 5 });
+// Вывод: Получены данные: { a: 5 }
+</code></pre>
+<pre><code class="language-javascript">// Пример 6. Дублирование обработчиков в EventEmitter
+// В отличие от EventTarget, EventEmitter ДОПУСКАЕТ дубликаты
+
+import { EventEmitter } from 'node:events';
+
+const emitter = new EventEmitter();
+
+function handler(value) {
+  console.log('Обработчик:', value);
+}
+
+// Добавляем один и тот же обработчик три раза
+emitter.on('name', handler);
+emitter.on('name', handler);
+emitter.on('name', handler);
+
+// Все три экземпляра будут вызваны
+emitter.emit('name', { a: 5 });
+// Вывод:
+// Обработчик: { a: 5 }
+// Обработчик: { a: 5 }
+// Обработчик: { a: 5 }
+
+// Удаляем один экземпляр из трёх
+emitter.removeListener('name', handler);
+
+emitter.emit('name', { a: 10 });
+// Вывод:
+// Обработчик: { a: 10 }
+// Обработчик: { a: 10 }   (осталось два)
+</code></pre>
+<pre><code class="language-javascript">// Пример 7. Обработка ошибок в EventEmitter
+// КРИТИЧНО: если нет обработчика 'error', Node.js аварийно завершает процесс
+
+import { EventEmitter } from 'node:events';
+
+const emitter = new EventEmitter();
+
+// Правильный способ — всегда подписываться на 'error'
+emitter.on('error', (err) =&gt; {
+  console.error('Перехвачена ошибка:', err.message);
+});
+
+// Теперь ошибка будет обработана корректно
+emitter.emit('error', new Error('что-то пошло не так'));
+// Вывод: Перехвачена ошибка: что-то пошло не так
+
+// ОПАСНЫЙ вариант (закомментирован, чтобы не падал процесс):
+// const dangerousEmitter = new EventEmitter();
+// dangerousEmitter.emit('error', new Error('фатальная ошибка'));
+// Результат: процесс Node.js упадёт с необработанным исключением!
+</code></pre>
+<pre><code class="language-javascript">// Пример 8. Метод once — одноразовая подписка
+// once() автоматически отписывается после первого вызова
+
+import { EventEmitter } from 'node:events';
+
+const emitter = new EventEmitter();
+
+// Обработчик сработает только один раз, затем будет автоматически удалён
+emitter.once('connect', (info) =&gt; {
+  console.log('Подключение установлено:', info.host);
+});
+
+emitter.emit('connect', { host: 'localhost' });
+// Вывод: Подключение установлено: localhost
+
+emitter.emit('connect', { host: 'example.com' });
+// Вывод: (пусто — обработчик уже был удалён после первого вызова)
+</code></pre>
+<pre><code class="language-javascript">// Пример 9. Функция events.once — ожидание события как Promise
+// Позволяет await-ить наступление события
+
+import { EventEmitter, once } from 'node:events';
+
+const emitter = new EventEmitter();
+
+// Асинхронная функция, ожидающая события
+async function waitForData() {
+  // once() из 'node:events' возвращает Promise
+  // Он разрешится когда произойдёт событие 'data'
+  const [payload] = await once(emitter, 'data');
+  console.log('Дождались события:', payload);
+}
+
+// Запускаем ожидание
+waitForData();
+
+// Через 100 мс генерируем событие
+setTimeout(() =&gt; {
+  emitter.emit('data', { result: 'готово' });
+}, 100);
+
+// Вывод (через ~100 мс): Дождались события: { result: 'готово' }
+</code></pre>
+<hr />
+<h2 id="13-Наивная-реализация-eventemitter"><a class="header" href="#13-Наивная-реализация-eventemitter">1.3 Наивная реализация EventEmitter</a></h2>
+<p>Понять, как работает EventEmitter изнутри, помогает минималистичная реализация.
+Она показывает главную идею: <strong>коллекция массивов функций, индексированных по имени события</strong>.</p>
+<pre><code class="language-javascript">// Пример 10. Наивная реализация EventEmitter с нуля
+
+class SimpleEmitter {
+  constructor() {
+    // Хранилище обработчиков: { 'eventName': [fn1, fn2, ...] }
+    // Можно использовать Map вместо объекта для большей надёжности
+    this.events = {};
+  }
+
+  // Добавляем обработчик по имени события
+  on(name, fn) {
+    if (this.events[name]) {
+      // Если событие уже зарегистрировано — добавляем ещё один обработчик
+      this.events[name].push(fn);
+    } else {
+      // Создаём новый массив с первым обработчиком
+      this.events[name] = [fn];
+    }
+    return this; // возвращаем this для цепочки вызовов
+  }
+
+  // Удаляем один экземпляр обработчика
+  removeListener(name, fn) {
+    if (!this.events[name]) return this;
+    // Находим первый совпадающий обработчик и удаляем его
+    const index = this.events[name].indexOf(fn);
+    if (index !== -1) {
+      this.events[name].splice(index, 1);
+    }
+    return this;
+  }
+
+  // Генерируем событие — вызываем все обработчики
+  emit(name, ...args) {
+    // В реальной реализации здесь должна быть проверка:
+    // если name === 'error' и нет обработчика — бросить ошибку
+    if (!this.events[name]) return false;
+
+    // Копируем массив, чтобы безопасно итерироваться
+    // даже если обработчики будут добавляться/удаляться во время вызова
+    const listeners = [...this.events[name]];
+
+    for (const listener of listeners) {
+      // Распаковываем аргументы и вызываем каждый обработчик
+      listener(...args);
+    }
+    return true;
+  }
+}
+
+// Демонстрация работы
+const emitter = new SimpleEmitter();
+
+emitter.on('greet', (name) =&gt; console.log(`Привет, ${name}!`));
+emitter.on('greet', (name) =&gt; console.log(`Hello, ${name}!`));
+
+emitter.emit('greet', 'Мир');
+// Вывод:
+// Привет, Мир!
+// Hello, Мир!
+</code></pre>
+<hr />
+<h2 id="14-Сравнительная-таблица-eventtarget-и-eventemitter"><a class="header" href="#14-Сравнительная-таблица-eventtarget-и-eventemitter">1.4 Сравнительная таблица EventTarget и EventEmitter</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Характеристика</th><th><code>EventTarget</code> (Web API)</th><th><code>EventEmitter</code> (Node.js)</th></tr></thead><tbody>
+<tr><td>Метод подписки</td><td><code>addEventListener(name, fn)</code></td><td><code>on(name, fn)</code></td></tr>
+<tr><td>Метод отписки</td><td><code>removeEventListener(name, fn)</code></td><td><code>removeListener(name, fn)</code></td></tr>
+<tr><td>Генерация события</td><td><code>dispatchEvent(new CustomEvent(...))</code></td><td><code>emit(name, ...args)</code></td></tr>
+<tr><td>Дедупликация</td><td>Да (один обработчик на fn-ссылку)</td><td>Нет (допускает дубликаты)</td></tr>
+<tr><td>Ошибка без обработчика <code>error</code></td><td>Игнорируется</td><td>Процесс аварийно завершается</td></tr>
+<tr><td>Передача данных</td><td>Через <code>event.detail</code></td><td>Напрямую как аргументы</td></tr>
+<tr><td>Доступность в Node.js</td><td>С версии 19 (без флагов)</td><td>Всегда</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week6.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week6/lecture-2-observer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week6.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week6/lecture-2-observer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

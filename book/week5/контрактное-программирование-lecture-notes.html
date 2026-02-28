@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,41 +124,36 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="контрактное-программирование-с-примерами-на-javascript-и-nodejs"><a class="header" href="#контрактное-программирование-с-примерами-на-javascript-и-nodejs">Контрактное программирование с примерами на JavaScript и Node.js</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Контрактное-программирование-с-примерами-на-javascript-и-nodejs"><a class="header" href="#Контрактное-программирование-с-примерами-на-javascript-и-nodejs">Контрактное программирование с примерами на JavaScript и Node.js</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Контрактное программирование (Contract Programming) — это подход к разработке программного обеспечения, который позволяет формализовать требования к функциям, методам и компонентам системы через декларативное описание входных параметров, выходных значений и поведения. Контракты проверяются в runtime и обеспечивают дополнительный уровень надёжности и безопасности приложений.</p>
 <p>Эта лекция рассматривает:</p>
 <ul>
@@ -185,9 +163,9 @@
 <li>Примеры из технологического стека MetarhiaJS</li>
 <li>Преимущества контрактного программирования</li>
 </ul>
-<hr>
-<h2 id="протоколы-в-javascript"><a class="header" href="#протоколы-в-javascript">Протоколы в JavaScript</a></h2>
-<h3 id="что-такое-протокол"><a class="header" href="#что-такое-протокол">Что такое протокол?</a></h3>
+<hr />
+<h2 id="Протоколы-в-javascript"><a class="header" href="#Протоколы-в-javascript">Протоколы в JavaScript</a></h2>
+<h3 id="Что-такое-протокол"><a class="header" href="#Что-такое-протокол">Что такое протокол?</a></h3>
 <p>Протокол в JavaScript — это нечто похожее на интерфейс, но более широкое понятие. Протокол включает в себя:</p>
 <ul>
 <li><strong>Сигнатуры методов</strong> (названия, параметры, возвращаемые значения)</li>
@@ -195,8 +173,8 @@
 <li><strong>Конкретное поведение</strong> (не только типы, но и логику выполнения)</li>
 </ul>
 <p>В отличие от классических интерфейсов, протоколы в JavaScript проверяются тестами, а не компилятором.</p>
-<h3 id="примеры-встроенных-протоколов"><a class="header" href="#примеры-встроенных-протоколов">Примеры встроенных протоколов</a></h3>
-<h4 id="1-протокол-iterator-итератор"><a class="header" href="#1-протокол-iterator-итератор">1. Протокол Iterator (Итератор)</a></h4>
+<h3 id="Примеры-встроенных-протоколов"><a class="header" href="#Примеры-встроенных-протоколов">Примеры встроенных протоколов</a></h3>
+<h4 id="1-Протокол-iterator-Итератор"><a class="header" href="#1-Протокол-iterator-Итератор">1. Протокол Iterator (Итератор)</a></h4>
 <p>Итератор — это объект с методом <code>next()</code>, который возвращает структуру <code>{ value, done }</code>.</p>
 <p><strong>Пример базового итератора:</strong></p>
 <pre><code class="language-javascript">// Простейший итератор, возвращающий бесконечную последовательность
@@ -221,7 +199,7 @@ const it3 = iterator.next(); // { value: 2, done: false }
 <li>В примере выше итератор никогда не завершается (бесконечный)</li>
 <li>Протокол определяет структуру возвращаемого объекта</li>
 </ul>
-<h4 id="2-протокол-iterable"><a class="header" href="#2-протокол-iterable">2. Протокол Iterable</a></h4>
+<h4 id="2-Протокол-iterable"><a class="header" href="#2-Протокол-iterable">2. Протокол Iterable</a></h4>
 <p>Iterable — это более высокоуровневый протокол. Объект является iterable, если у него определён символ <code>Symbol.iterator</code>, который возвращает объект, соответствующий протоколу Iterator.</p>
 <p><strong>Пример создания iterable объекта:</strong></p>
 <pre><code class="language-javascript">// Создаём кастомный iterable объект
@@ -254,7 +232,7 @@ for (const value of myIterable) {
 const arr = [...myIterable]; // [10, 20, 30, 40]
 </code></pre>
 <p><strong>Важно:</strong> Это не массив и не коллекция, а просто объект с ключом <code>Symbol.iterator</code>, соответствующий контракту iterable.</p>
-<h4 id="3-протокол-thenable"><a class="header" href="#3-протокол-thenable">3. Протокол Thenable</a></h4>
+<h4 id="3-Протокол-thenable"><a class="header" href="#3-Протокол-thenable">3. Протокол Thenable</a></h4>
 <p>Thenable — это протокол, на базе которого построены Promise. Объект является thenable, если у него есть метод <code>then()</code>.</p>
 <p><strong>Пример:</strong></p>
 <pre><code class="language-javascript">// Простейший thenable объект
@@ -277,7 +255,7 @@ Promise.resolve(thenable).then(result =&gt; {
 <li>Но не каждый Thenable является Promise</li>
 <li>Протокол проверяется через тесты, а не статически</li>
 </ul>
-<h4 id="4-асинхронный-итератор-asynciterable"><a class="header" href="#4-асинхронный-итератор-asynciterable">4. Асинхронный итератор (AsyncIterable)</a></h4>
+<h4 id="4-Асинхронный-итератор-asynciterable"><a class="header" href="#4-Асинхронный-итератор-asynciterable">4. Асинхронный итератор (AsyncIterable)</a></h4>
 <p>Для асинхронных операций существует протокол AsyncIterable, где:</p>
 <ul>
 <li>Метод <code>next()</code> возвращает Promise</li>
@@ -315,9 +293,9 @@ async function processData() {
 
 processData();
 </code></pre>
-<hr>
-<h2 id="что-такое-контракт"><a class="header" href="#что-такое-контракт">Что такое контракт?</a></h2>
-<h3 id="определение"><a class="header" href="#определение">Определение</a></h3>
+<hr />
+<h2 id="Что-такое-контракт"><a class="header" href="#Что-такое-контракт">Что такое контракт?</a></h2>
+<h3 id="Определение"><a class="header" href="#Определение">Определение</a></h3>
 <p><strong>Контракт</strong> — это протокол, который проверяется в runtime (во время выполнения). В отличие от статической типизации (TypeScript), контракты:</p>
 <ul>
 <li>Проверяются динамически во время выполнения</li>
@@ -325,24 +303,18 @@ processData();
 <li>Работают на стыке систем (межпроцессное взаимодействие, API, базы данных)</li>
 <li>Описываются декларативно, а не императивно</li>
 </ul>
-<h3 id="контракт-vs-протокол-vs-интерфейс"><a class="header" href="#контракт-vs-протокол-vs-интерфейс">Контракт vs Протокол vs Интерфейс</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Аспект</th><th>Интерфейс</th><th>Протокол</th><th>Контракт</th></tr>
-</thead>
-<tbody>
+<h3 id="Контракт-vs-Протокол-vs-Интерфейс"><a class="header" href="#Контракт-vs-Протокол-vs-Интерфейс">Контракт vs Протокол vs Интерфейс</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Аспект</th><th>Интерфейс</th><th>Протокол</th><th>Контракт</th></tr></thead><tbody>
 <tr><td>Проверка типов</td><td>Compile-time</td><td>Runtime (тесты)</td><td>Runtime (автоматически)</td></tr>
 <tr><td>Поведение</td><td>Не описывает</td><td>Описывает</td><td>Описывает</td></tr>
 <tr><td>Последовательность</td><td>Не контролирует</td><td>Контролирует</td><td>Контролирует</td></tr>
 <tr><td>Декларативность</td><td>Средняя</td><td>Низкая</td><td>Высокая</td></tr>
 <tr><td>Применение</td><td>Статическая типизация</td><td>Спецификации JS</td><td>API, межсистемное взаимодействие</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<hr>
-<h2 id="императивная-проверка-контракта"><a class="header" href="#императивная-проверка-контракта">Императивная проверка контракта</a></h2>
-<h3 id="проблема-императивного-подхода"><a class="header" href="#проблема-императивного-подхода">Проблема императивного подхода</a></h3>
+<hr />
+<h2 id="Императивная-проверка-контракта"><a class="header" href="#Императивная-проверка-контракта">Императивная проверка контракта</a></h2>
+<h3 id="Проблема-императивного-подхода"><a class="header" href="#Проблема-императивного-подхода">Проблема императивного подхода</a></h3>
 <p>Рассмотрим простую функцию сравнения двух чисел:</p>
 <pre><code class="language-javascript">const assert = require('assert');
 
@@ -380,11 +352,11 @@ try {
 <li>❌ Снижается читаемость</li>
 <li>❌ Трудно поддерживать</li>
 </ol>
-<hr>
-<h2 id="декларативное-описание-контрактов"><a class="header" href="#декларативное-описание-контрактов">Декларативное описание контрактов</a></h2>
-<h3 id="основная-идея"><a class="header" href="#основная-идея">Основная идея</a></h3>
+<hr />
+<h2 id="Декларативное-описание-контрактов"><a class="header" href="#Декларативное-описание-контрактов">Декларативное описание контрактов</a></h2>
+<h3 id="Основная-идея"><a class="header" href="#Основная-идея">Основная идея</a></h3>
 <p>Вместо императивных проверок мы описываем контракт декларативно — в виде метаданных, отделённых от реализации метода.</p>
-<h3 id="пример-из-технологического-стека-metarhiajs"><a class="header" href="#пример-из-технологического-стека-metarhiajs">Пример из технологического стека MetarhiaJS</a></h3>
+<h3 id="Пример-из-технологического-стека-metarhiajs"><a class="header" href="#Пример-из-технологического-стека-metarhiajs">Пример из технологического стека MetarhiaJS</a></h3>
 <pre><code class="language-javascript">// Декларативное описание контракта для метода compare
 const methodContract = {
   // Сам метод — только бизнес-логика!
@@ -407,7 +379,7 @@ const methodContract = {
 <li>✅ Проверки выполняются автоматически</li>
 <li>✅ Легко читать и поддерживать</li>
 </ul>
-<h3 id="сложные-структуры-данных"><a class="header" href="#сложные-структуры-данных">Сложные структуры данных</a></h3>
+<h3 id="Сложные-структуры-данных"><a class="header" href="#Сложные-структуры-данных">Сложные структуры данных</a></h3>
 <p>Контракты могут описывать вложенные объекты:</p>
 <pre><code class="language-javascript">const createUserContract = {
   method: async (name, age, address) =&gt; {
@@ -434,7 +406,7 @@ const methodContract = {
   }
 };
 </code></pre>
-<h3 id="ссылки-на-внешние-схемы"><a class="header" href="#ссылки-на-внешние-схемы">Ссылки на внешние схемы</a></h3>
+<h3 id="Ссылки-на-внешние-схемы"><a class="header" href="#Ссылки-на-внешние-схемы">Ссылки на внешние схемы</a></h3>
 <p>Можно ссылаться на предопределённые типы:</p>
 <pre><code class="language-javascript">// Определение переиспользуемой схемы
 const schemas = {
@@ -467,9 +439,9 @@ const updateAccountContract = {
   returns: 'Account'
 };
 </code></pre>
-<hr>
-<h2 id="проверка-контрактов-в-runtime"><a class="header" href="#проверка-контрактов-в-runtime">Проверка контрактов в Runtime</a></h2>
-<h3 id="механизм-работы"><a class="header" href="#механизм-работы">Механизм работы</a></h3>
+<hr />
+<h2 id="Проверка-контрактов-в-runtime"><a class="header" href="#Проверка-контрактов-в-runtime">Проверка контрактов в Runtime</a></h2>
+<h3 id="Механизм-работы"><a class="header" href="#Механизм-работы">Механизм работы</a></h3>
 <p>Когда метод с контрактом вызывается, специальный <strong>runner</strong> (исполнитель):</p>
 <ol>
 <li>Читает поля <code>parameters</code> и <code>returns</code></li>
@@ -478,7 +450,7 @@ const updateAccountContract = {
 <li>Проверяет возвращаемое значение</li>
 <li>Выбрасывает исключение при нарушении контракта</li>
 </ol>
-<p><strong>Псевдокод runner’а:</strong></p>
+<p><strong>Псевдокод runner'а:</strong></p>
 <pre><code class="language-javascript">function executeWithContract(contractDefinition, ...args) {
   const { method, parameters, returns } = contractDefinition;
 
@@ -513,9 +485,9 @@ function validateResult(result, returnsSchema) {
   }
 }
 </code></pre>
-<hr>
-<h2 id="применение-контрактов-в-распределённых-системах"><a class="header" href="#применение-контрактов-в-распределённых-системах">Применение контрактов в распределённых системах</a></h2>
-<h3 id="проблема-межсистемного-взаимодействия"><a class="header" href="#проблема-межсистемного-взаимодействия">Проблема межсистемного взаимодействия</a></h3>
+<hr />
+<h2 id="Применение-контрактов-в-распределённых-системах"><a class="header" href="#Применение-контрактов-в-распределённых-системах">Применение контрактов в распределённых системах</a></h2>
+<h3 id="Проблема-межсистемного-взаимодействия"><a class="header" href="#Проблема-межсистемного-взаимодействия">Проблема межсистемного взаимодействия</a></h3>
 <p>TypeScript и статическая типизация работают только на этапе компиляции и <strong>не помогают</strong> в следующих случаях:</p>
 <ul>
 <li>API вызовы между клиентом и сервером</li>
@@ -525,7 +497,7 @@ function validateResult(result, returnsSchema) {
 <li>Чтение данных из файлов или очередей</li>
 </ul>
 <p>В этих сценариях контракты <strong>незаменимы</strong>.</p>
-<h3 id="архитектура-клиент-сервер-с-контрактами"><a class="header" href="#архитектура-клиент-сервер-с-контрактами">Архитектура клиент-сервер с контрактами</a></h3>
+<h3 id="Архитектура-клиент-сервер-с-контрактами"><a class="header" href="#Архитектура-клиент-сервер-с-контрактами">Архитектура клиент-сервер с контрактами</a></h3>
 <pre><code class="language-javascript">// ========== СЕРВЕР ==========
 // Сервер описывает и публикует контракт
 const serverAPI = {
@@ -550,7 +522,7 @@ console.log(result); // true
 // 6. Отправка результата клиенту
 // 7. Проверка результата на клиенте (опционально)
 </code></pre>
-<h3 id="двусторонняя-проверка"><a class="header" href="#двусторонняя-проверка">Двусторонняя проверка</a></h3>
+<h3 id="Двусторонняя-проверка"><a class="header" href="#Двусторонняя-проверка">Двусторонняя проверка</a></h3>
 <p><strong>На клиенте:</strong></p>
 <ul>
 <li>Контракт проверяется до отправки запроса</li>
@@ -573,9 +545,9 @@ try {
   // Contract error: parameter "a" expected number, got string
 }
 </code></pre>
-<hr>
-<h2 id="практические-примеры-контрактов"><a class="header" href="#практические-примеры-контрактов">Практические примеры контрактов</a></h2>
-<h3 id="пример-1-регистрация-пользователя"><a class="header" href="#пример-1-регистрация-пользователя">Пример 1: Регистрация пользователя</a></h3>
+<hr />
+<h2 id="Практические-примеры-контрактов"><a class="header" href="#Практические-примеры-контрактов">Практические примеры контрактов</a></h2>
+<h3 id="Пример-1-Регистрация-пользователя"><a class="header" href="#Пример-1-Регистрация-пользователя">Пример 1: Регистрация пользователя</a></h3>
 <pre><code class="language-javascript">const registerUserContract = {
   method: async (name, email, address) =&gt; {
     // Бизнес-логика: создание пользователя, запись в БД
@@ -618,7 +590,7 @@ try {
   }
 };
 </code></pre>
-<h3 id="пример-2-работа-с-внешним-api"><a class="header" href="#пример-2-работа-с-внешним-api">Пример 2: Работа с внешним API</a></h3>
+<h3 id="Пример-2-Работа-с-внешним-api"><a class="header" href="#Пример-2-Работа-с-внешним-api">Пример 2: Работа с внешним API</a></h3>
 <pre><code class="language-javascript">// Описание контракта внешнего API
 const externalAPIContract = {
   getUserData: {
@@ -658,10 +630,10 @@ try {
   }
 }
 </code></pre>
-<hr>
-<h2 id="генерация-на-основе-контрактов"><a class="header" href="#генерация-на-основе-контрактов">Генерация на основе контрактов</a></h2>
+<hr />
+<h2 id="Генерация-на-основе-контрактов"><a class="header" href="#Генерация-на-основе-контрактов">Генерация на основе контрактов</a></h2>
 <p>Контракты — это не только валидация. Они служат <strong>единым источником истины</strong> для множества задач.</p>
-<h3 id="1-генерация-структуры-базы-данных"><a class="header" href="#1-генерация-структуры-базы-данных">1. Генерация структуры базы данных</a></h3>
+<h3 id="1-Генерация-структуры-базы-данных"><a class="header" href="#1-Генерация-структуры-базы-данных">1. Генерация структуры базы данных</a></h3>
 <p>Из контракта можно автоматически создать SQL-схему:</p>
 <pre><code class="language-javascript">// Контракт
 const UserSchema = {
@@ -691,7 +663,7 @@ function generateCreateTable(schemaName, schema) {
 //   createdAt TIMESTAMP
 // )
 </code></pre>
-<h3 id="2-генерация-документации"><a class="header" href="#2-генерация-документации">2. Генерация документации</a></h3>
+<h3 id="2-Генерация-документации"><a class="header" href="#2-Генерация-документации">2. Генерация документации</a></h3>
 <p>Контракты — это готовая документация API:</p>
 <pre><code class="language-javascript">// Автоматическая генерация Markdown документации
 function generateDocs(contracts) {
@@ -709,7 +681,7 @@ ${formatErrors(contract.errors)}
   `).join('\n\n');
 }
 </code></pre>
-<h3 id="3-генерация-тестовых-данных"><a class="header" href="#3-генерация-тестовых-данных">3. Генерация тестовых данных</a></h3>
+<h3 id="3-Генерация-тестовых-данных"><a class="header" href="#3-Генерация-тестовых-данных">3. Генерация тестовых данных</a></h3>
 <p>Контракты позволяют автоматически генерировать данные для тестов:</p>
 <pre><code class="language-javascript">function generateTestData(schema) {
   const generators = {
@@ -750,7 +722,7 @@ console.log(testUser);
 //   address: { city: 'p4q8r1', building: 123 }
 // }
 </code></pre>
-<h3 id="4-автоматическая-генерация-тестов"><a class="header" href="#4-автоматическая-генерация-тестов">4. Автоматическая генерация тестов</a></h3>
+<h3 id="4-Автоматическая-генерация-тестов"><a class="header" href="#4-Автоматическая-генерация-тестов">4. Автоматическая генерация тестов</a></h3>
 <p>На основе контракта можно генерировать:</p>
 <ul>
 <li><strong>Позитивные тесты</strong> (валидные данные)</li>
@@ -787,16 +759,16 @@ console.log(testUser);
   return tests;
 }
 </code></pre>
-<hr>
-<h2 id="преимущества-контрактного-программирования"><a class="header" href="#преимущества-контрактного-программирования">Преимущества контрактного программирования</a></h2>
-<h3 id="1-надёжность-и-безопасность"><a class="header" href="#1-надёжность-и-безопасность">1. Надёжность и безопасность</a></h3>
+<hr />
+<h2 id="Преимущества-контрактного-программирования"><a class="header" href="#Преимущества-контрактного-программирования">Преимущества контрактного программирования</a></h2>
+<h3 id="1-Надёжность-и-безопасность"><a class="header" href="#1-Надёжность-и-безопасность">1. Надёжность и безопасность</a></h3>
 <ul>
 <li>✅ Гарантированная валидация на границах систем</li>
 <li>✅ Защита от некорректных данных</li>
 <li>✅ Предотвращение ошибок в runtime</li>
 <li>✅ Ранняя детекция проблем</li>
 </ul>
-<h3 id="2-разделение-ответственности"><a class="header" href="#2-разделение-ответственности">2. Разделение ответственности</a></h3>
+<h3 id="2-Разделение-ответственности"><a class="header" href="#2-Разделение-ответственности">2. Разделение ответственности</a></h3>
 <pre><code class="language-javascript">// БЕЗ контрактов - смешение логики
 function processPayment(amount, currency, userId) {
   // Валидация смешана с бизнес-логикой
@@ -834,7 +806,7 @@ const processPaymentContract = {
   }
 };
 </code></pre>
-<h3 id="3-культура-разработки"><a class="header" href="#3-культура-разработки">3. Культура разработки</a></h3>
+<h3 id="3-Культура-разработки"><a class="header" href="#3-Культура-разработки">3. Культура разработки</a></h3>
 <p><strong>Контракт как спецификация:</strong></p>
 <ul>
 <li>Контракт можно передать команде до реализации</li>
@@ -850,7 +822,7 @@ const processPaymentContract = {
 5. Backend реализует методы
 6. Интеграция проходит гладко (контракт уже согласован!)
 </code></pre>
-<h3 id="4-оптимизация-производительности"><a class="header" href="#4-оптимизация-производительности">4. Оптимизация производительности</a></h3>
+<h3 id="4-Оптимизация-производительности"><a class="header" href="#4-Оптимизация-производительности">4. Оптимизация производительности</a></h3>
 <p>Контракты можно включать/выключать:</p>
 <pre><code class="language-javascript">const config = {
   enableContracts: process.env.NODE_ENV === 'development'
@@ -876,7 +848,7 @@ function executeMethod(contract, ...args) {
 <li>Отключить контракты в production для производительности</li>
 <li>Прирост производительности может быть значительным (10-30%)</li>
 </ol>
-<h3 id="5-тестирование"><a class="header" href="#5-тестирование">5. Тестирование</a></h3>
+<h3 id="5-Тестирование"><a class="header" href="#5-Тестирование">5. Тестирование</a></h3>
 <p><strong>Без ручного написания базовых тестов:</strong></p>
 <ul>
 <li>Автоматическая генерация тестов на типы</li>
@@ -889,9 +861,9 @@ function executeMethod(contract, ...args) {
 <li>Не нужно тестировать валидацию вручную</li>
 <li>Можно сосредоточиться на сложных edge cases</li>
 </ul>
-<hr>
-<h2 id="ограничения-контрактов"><a class="header" href="#ограничения-контрактов">Ограничения контрактов</a></h2>
-<h3 id="что-контракты-не-делают"><a class="header" href="#что-контракты-не-делают">Что контракты НЕ делают</a></h3>
+<hr />
+<h2 id="Ограничения-контрактов"><a class="header" href="#Ограничения-контрактов">Ограничения контрактов</a></h2>
+<h3 id="Что-контракты-НЕ-делают"><a class="header" href="#Что-контракты-НЕ-делают">Что контракты НЕ делают</a></h3>
 <p>❌ <strong>Не описывают поведение полностью</strong></p>
 <ul>
 <li>Контракты описывают интерфейсы и типы</li>
@@ -920,7 +892,7 @@ const calculateDiscountContract = {
   returns: 'number'  // Тип правильный, но результат — нет!
 };
 </code></pre>
-<h3 id="когда-нужны-дополнительные-инструменты"><a class="header" href="#когда-нужны-дополнительные-инструменты">Когда нужны дополнительные инструменты</a></h3>
+<h3 id="Когда-нужны-дополнительные-инструменты"><a class="header" href="#Когда-нужны-дополнительные-инструменты">Когда нужны дополнительные инструменты</a></h3>
 <p>Для описания сложных протоколов взаимодействия (таких как Thenable, Iterable) нужны специализированные DSL (Domain Specific Languages) или более продвинутые системы контрактов, которые могут описывать:</p>
 <ul>
 <li>Последовательность вызовов методов</li>
@@ -928,9 +900,9 @@ const calculateDiscountContract = {
 <li>Временные зависимости</li>
 <li>Сложные инварианты</li>
 </ul>
-<hr>
-<h2 id="история-и-происхождение"><a class="header" href="#история-и-происхождение">История и происхождение</a></h2>
-<h3 id="язык-eiffel"><a class="header" href="#язык-eiffel">Язык Eiffel</a></h3>
+<hr />
+<h2 id="История-и-происхождение"><a class="header" href="#История-и-происхождение">История и происхождение</a></h2>
+<h3 id="Язык-eiffel"><a class="header" href="#Язык-eiffel">Язык Eiffel</a></h3>
 <p>Контрактное программирование как концепция было впервые встроено в язык программирования <strong>Eiffel</strong> (разработан Бертраном Мейером в 1980-х).</p>
 <p><strong>Особенности Eiffel:</strong></p>
 <ul>
@@ -946,7 +918,7 @@ const calculateDiscountContract = {
   ensure
     balance = old balance + amount  -- Постусловие
 </code></pre>
-<h3 id="применение-в-других-языках"><a class="header" href="#применение-в-других-языках">Применение в других языках</a></h3>
+<h3 id="Применение-в-других-языках"><a class="header" href="#Применение-в-других-языках">Применение в других языках</a></h3>
 <p>С тех пор идеи контрактного программирования распространились на многие языки:</p>
 <ul>
 <li><strong>C#</strong>: Code Contracts</li>
@@ -954,9 +926,9 @@ const calculateDiscountContract = {
 <li><strong>Java</strong>: различные библиотеки (например, Cofoja)</li>
 <li><strong>JavaScript/Node.js</strong>: пользовательские реализации (MetarhiaJS и другие)</li>
 </ul>
-<hr>
-<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
-<h3 id="ключевые-концепции"><a class="header" href="#ключевые-концепции">Ключевые концепции</a></h3>
+<hr />
+<h2 id="Резюме"><a class="header" href="#Резюме">Резюме</a></h2>
+<h3 id="Ключевые-концепции"><a class="header" href="#Ключевые-концепции">Ключевые концепции</a></h3>
 <ol>
 <li><strong>Протоколы</strong> — это более широкое понятие, чем интерфейсы, включающее поведение</li>
 <li><strong>Контракты</strong> — это протоколы с runtime-проверкой</li>
@@ -964,7 +936,7 @@ const calculateDiscountContract = {
 <li><strong>Контракты незаменимы</strong> на границах систем (API, БД, файлы)</li>
 <li><strong>Генерация на основе контрактов</strong> экономит время и снижает ошибки</li>
 </ol>
-<h3 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h3>
+<h3 id="Практические-рекомендации"><a class="header" href="#Практические-рекомендации">Практические рекомендации</a></h3>
 <p>✅ <strong>Используйте контракты для:</strong></p>
 <ul>
 <li>API методов</li>
@@ -990,7 +962,7 @@ const calculateDiscountContract = {
 <li>Отключайте в production после проверки</li>
 <li>Оставляйте возможность включить при необходимости</li>
 </ul>
-<h3 id="дополнительная-ценность-контрактов"><a class="header" href="#дополнительная-ценность-контрактов">Дополнительная ценность контрактов</a></h3>
+<h3 id="Дополнительная-ценность-контрактов"><a class="header" href="#Дополнительная-ценность-контрактов">Дополнительная ценность контрактов</a></h3>
 <p>Контракты — это не просто валидация. Это:</p>
 <ul>
 <li><strong>Документация</strong> (формализованная и точная)</li>
@@ -999,9 +971,9 @@ const calculateDiscountContract = {
 <li><strong>Культура разработки</strong> (согласование интерфейсов заранее)</li>
 <li><strong>Инструмент надёжности</strong> (защита границ системы)</li>
 </ul>
-<hr>
-<h2 id="дополнительные-материалы-для-изучения"><a class="header" href="#дополнительные-материалы-для-изучения">Дополнительные материалы для изучения</a></h2>
-<h3 id="рекомендуемые-темы-для-углубления"><a class="header" href="#рекомендуемые-темы-для-углубления">Рекомендуемые темы для углубления</a></h3>
+<hr />
+<h2 id="Дополнительные-материалы-для-изучения"><a class="header" href="#Дополнительные-материалы-для-изучения">Дополнительные материалы для изучения</a></h2>
+<h3 id="Рекомендуемые-темы-для-углубления"><a class="header" href="#Рекомендуемые-темы-для-углубления">Рекомендуемые темы для углубления</a></h3>
 <ol>
 <li><strong>Design by Contract</strong> (концепция Бертрана Мейера)</li>
 <li><strong>JSON Schema</strong> — стандарт для описания JSON структур</li>
@@ -1009,7 +981,7 @@ const calculateDiscountContract = {
 <li><strong>gRPC и Protocol Buffers</strong> — альтернативный подход к контрактам</li>
 <li><strong>MetarhiaJS</strong> — технологический стек с встроенной поддержкой контрактов</li>
 </ol>
-<h3 id="практические-задания"><a class="header" href="#практические-задания">Практические задания</a></h3>
+<h3 id="Практические-задания"><a class="header" href="#Практические-задания">Практические задания</a></h3>
 <ol>
 <li>Реализуйте простой runner для проверки контрактов</li>
 <li>Создайте генератор тестовых данных на основе схем</li>
@@ -1017,7 +989,7 @@ const calculateDiscountContract = {
 <li>Реализуйте систему включения/выключения контрактов</li>
 <li>Создайте декоратор для автоматической проверки контрактов функций</li>
 </ol>
-<hr>
+<hr />
 <p><strong>Заключение:</strong> Контрактное программирование — это мощный инструмент для создания надёжных, поддерживаемых и хорошо документированных систем, особенно в условиях распределённой архитектуры и межсистемного взаимодействия. Декларативное описание контрактов позволяет отделить бизнес-логику от валидации и открывает возможности для автоматизации множества задач разработки.</p>
 
                     </main>
@@ -1025,11 +997,11 @@ const calculateDiscountContract = {
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week5.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week5/nodejs-layers-low-coupling-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1039,38 +1011,17 @@ const calculateDiscountContract = {
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week5.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week5/nodejs-layers-low-coupling-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1078,16 +1029,15 @@ const calculateDiscountContract = {
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

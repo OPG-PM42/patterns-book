@@ -1,0 +1,672 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Pattern Observer - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Лекция-2-Паттерн-Наблюдатель-observer--observable"><a class="header" href="#Лекция-2-Паттерн-Наблюдатель-observer--observable">Лекция 2. Паттерн Наблюдатель (Observer / Observable)</a></h1>
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Паттерн Наблюдатель (Observer) — одна из фундаментальных программных абстракций,
+лежащая в основе реактивного программирования. Идея проста:</p>
+<ul>
+<li>Есть <strong>источник событий</strong> (Observable / наблюдаемый) — объект, который порождает данные</li>
+<li>Есть <strong>наблюдатель</strong> (Observer) — объект или функция, которые получают эти данные</li>
+</ul>
+<p>Обе абстракции могут быть реализованы как через функции и замыкания, так и через классы.
+На базе этого паттерна строятся более мощные абстракции, например RxJS.</p>
+<hr />
+<h2 id="21-Простейшая-функциональная-реализация"><a class="header" href="#21-Простейшая-функциональная-реализация">2.1 Простейшая функциональная реализация</a></h2>
+<pre><code class="language-javascript">// Пример 1. Observable и Observer на чистых функциях
+
+// Вспомогательная функция: генерирует случайную строчную букву латинского алфавита
+// Код символа 'a' = 97, 'z' = 122. Итого 26 символов.
+const randomChar = () =&gt;
+  String.fromCharCode(97 + Math.floor(Math.random() * 26));
+
+// subscribe — фабричная функция, создающая Observable
+// Принимает функцию-наблюдатель (observer) и возвращает объект Observable
+const subscribe = (observer) =&gt; {
+  // Запускаем внутренний таймер — источник событий
+  const timer = setInterval(() =&gt; {
+    // Каждые 200 мс вызываем observer с новой случайной буквой
+    observer(randomChar());
+  }, 200);
+
+  // Возвращаем объект Observable — он хранит ссылку на подписку
+  // и позволяет управлять ею (например, отписаться)
+  const observable = {
+    observer,    // ссылка на функцию-наблюдатель
+    timer,       // ссылка на таймер для возможной отписки
+  };
+
+  return observable;
+};
+
+// Создаём observer — функцию, которая будет получать данные
+let count = 0;
+const observer = (char) =&gt; {
+  process.stdout.write(char); // печатаем букву без переноса строки
+  count++;
+  if (count % 50 === 0) {
+    process.stdout.write('\n');
+  }
+  if (count &gt;= 150) {
+    process.exit(0); // выходим после 150 букв
+  }
+};
+
+// Выводим структуры для понимания
+console.log('Тип observer:', typeof observer);       // function
+
+// Подписываемся — запускаем генерацию букв
+const observable = subscribe(observer);
+console.log('Тип observable:', typeof observable);   // object
+// С этого момента каждые 200 мс будет печататься случайная буква
+</code></pre>
+<hr />
+<h2 id="22-Реализация-на-классах-observable-как-класс"><a class="header" href="#22-Реализация-на-классах-observable-как-класс">2.2 Реализация на классах (Observable как класс)</a></h2>
+<pre><code class="language-javascript">// Пример 2. Observable и Observer с использованием классов
+
+const randomDigit = () =&gt; Math.floor(Math.random() * 10);
+
+// Класс Observable (наблюдаемый источник событий)
+class Observable {
+  constructor() {
+    // Храним ссылку на одного подписчика (упрощённая реализация)
+    // В полноценной реализации здесь был бы массив (collection) наблюдателей
+    this.observer = null;
+    this.timer = null;
+  }
+
+  // Метод подписки — сохраняет наблюдателя и запускает генерацию данных
+  subscribe(observer) {
+    this.observer = observer;
+
+    // Запускаем таймер — генерируем случайную цифру каждые 200 мс
+    this.timer = setInterval(() =&gt; {
+      if (this.observer) {
+        // Если есть подписчик — передаём ему данные
+        this.observer(randomDigit());
+      } else {
+        // Если подписчик отсутствует — останавливаем таймер
+        clearInterval(this.timer);
+      }
+    }, 200);
+  }
+
+  // Метод отписки
+  unsubscribe() {
+    this.observer = null;
+    clearInterval(this.timer);
+  }
+}
+
+// Демонстрация использования
+const source = new Observable();
+
+let digitCount = 0;
+const digitObserver = (digit) =&gt; {
+  process.stdout.write(String(digit));
+  digitCount++;
+  if (digitCount % 50 === 0) process.stdout.write('\n');
+  if (digitCount &gt;= 100) {
+    source.unsubscribe();
+    process.exit(0);
+  }
+};
+
+source.subscribe(digitObserver);
+</code></pre>
+<hr />
+<h2 id="23-Полная-реализация-на-классах-с-поддержкой-нескольких-подписчиков"><a class="header" href="#23-Полная-реализация-на-классах-с-поддержкой-нескольких-подписчиков">2.3 Полная реализация на классах с поддержкой нескольких подписчиков</a></h2>
+<pre><code class="language-javascript">// Пример 3. Observable с коллекцией наблюдателей и абстрактными базовыми классами
+
+// Базовый класс Observable (наблюдаемый объект)
+// Содержит абстрактные методы — прямое создание экземпляра запрещено
+class Observable {
+  constructor() {
+    // Коллекция подписчиков — поддерживаем несколько наблюдателей
+    this.observers = [];
+  }
+
+  // Подписываем наблюдателя на поток событий
+  subscribe(observer) {
+    // Сохраняем обратную ссылку: наблюдатель знает, на что он подписан
+    observer.source = this;
+    this.observers.push(observer);
+    return this; // цепочка вызовов
+  }
+
+  // Отписываем наблюдателя
+  unsubscribe(observer) {
+    this.observers = this.observers.filter((o) =&gt; o !== observer);
+    return this;
+  }
+
+  // Уведомляем всех подписчиков о новых данных
+  notify(data) {
+    if (this.observers.length === 0) return;
+    for (const observer of this.observers) {
+      observer.update(data);
+    }
+  }
+
+  // Абстрактный метод — подкласс должен его переопределить
+  // В реальном коде здесь генерируются данные
+  start() {
+    throw new Error('Метод start() должен быть переопределён в подклассе');
+  }
+}
+
+// Базовый класс Observer (наблюдатель)
+class Observer {
+  constructor() {
+    this.source = null; // ссылка на Observable, на который подписан
+  }
+
+  // Абстрактный метод — вызывается при получении нового события
+  update(data) {
+    throw new Error('Метод update() должен быть переопределён в подклассе');
+  }
+}
+
+// Конкретный Observable: генерирует поток случайных букв
+class CharStream extends Observable {
+  constructor() {
+    super();
+    this.timer = null;
+  }
+
+  start() {
+    this.timer = setInterval(() =&gt; {
+      const char = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+      // Уведомляем всех подписчиков о новой букве
+      this.notify(char);
+    }, 200);
+  }
+
+  stop() {
+    clearInterval(this.timer);
+  }
+}
+
+// Конкретный Observer: считает буквы и выводит их на экран
+class CharStreamObserver extends Observer {
+  constructor(charStream) {
+    super();
+    this.source = charStream; // ссылка на поток
+    this.count = 0;           // счётчик полученных символов
+  }
+
+  update(char) {
+    process.stdout.write(char);
+    this.count++;
+    if (this.count % 50 === 0) process.stdout.write('\n');
+    if (this.count &gt;= 100) {
+      this.source.stop();
+      process.exit(0);
+    }
+  }
+}
+
+// Создание и запуск
+const charObserver = new CharStreamObserver(null); // source установим ниже
+const charStream = new CharStream();
+
+// Подписываем наблюдателя на поток
+charStream.subscribe(charObserver);
+charObserver.source = charStream; // устанавливаем обратную ссылку
+
+// Запускаем генерацию символов
+charStream.start();
+</code></pre>
+<hr />
+<h2 id="24-observable-на-базе-eventemitter"><a class="header" href="#24-observable-на-базе-eventemitter">2.4 Observable на базе EventEmitter</a></h2>
+<p>Вместо реализации собственного механизма подписки можно использовать встроенный
+<code>EventEmitter</code> из <code>node:events</code>.</p>
+<pre><code class="language-javascript">// Пример 4. Observable, использующий EventEmitter как механизм подписки
+
+import { EventEmitter } from 'node:events';
+
+const randomChar = () =&gt;
+  String.fromCharCode(97 + Math.floor(Math.random() * 26));
+
+// CharStream — наблюдаемый поток, делегирующий подписку EventEmitter
+class CharStream {
+  constructor(emitter) {
+    // EventEmitter приходит снаружи (Dependency Injection)
+    // CharStream не создаёт его сам — это снижает зацепление
+    this.emitter = emitter;
+    this.timer = null;
+  }
+
+  start() {
+    this.timer = setInterval(() =&gt; {
+      const char = randomChar();
+      // Генерируем событие 'char' через EventEmitter
+      this.emitter.emit('char', char);
+    }, 200);
+  }
+
+  complete() {
+    clearInterval(this.timer);
+    this.emitter.emit('complete');
+  }
+}
+
+// Создаём EventEmitter — механизм подписки
+const emitter = new EventEmitter();
+
+// Создаём CharStream, передавая ему emitter
+const stream = new CharStream(emitter);
+
+// Observer подписывается через EventEmitter
+let count = 0;
+emitter.on('char', (char) =&gt; {
+  process.stdout.write(char);
+  count++;
+  if (count % 50 === 0) process.stdout.write('\n');
+  if (count &gt;= 100) {
+    stream.complete();
+  }
+});
+
+emitter.on('complete', () =&gt; {
+  console.log('\nПоток завершён');
+  process.exit(0);
+});
+
+stream.start();
+</code></pre>
+<hr />
+<h2 id="25-Операторы-filter-и-map-для-потока-событий"><a class="header" href="#25-Операторы-filter-и-map-для-потока-событий">2.5 Операторы: filter и map для потока событий</a></h2>
+<p>Реактивное программирование обогащает паттерн Observer <strong>операторами</strong> — функциями,
+которые преобразуют поток событий, порождая новый Observable.</p>
+<pre><code class="language-javascript">// Пример 5. Observable с операторами filter и map
+
+const randomChar = () =&gt;
+  String.fromCharCode(97 + Math.floor(Math.random() * 26));
+
+// Гласные английского языка
+const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
+
+// Функции-операторы возвращают объекты-дескрипторы операций
+// Это похоже на паттерн Команда — операция представлена как объект
+const filter = (predicate) =&gt; ({ type: 'filter', fn: predicate });
+const map = (transform) =&gt; ({ type: 'map', fn: transform });
+
+class Observable {
+  constructor() {
+    this.observers = [];
+    this.operators = []; // список операторов, применяемых к данным
+  }
+
+  subscribe(observer) {
+    this.observers.push(observer);
+    return this;
+  }
+
+  // Метод pipe — применяет операторы и возвращает новый Observable
+  // Все аргументы — операторы (объекты с type и fn)
+  pipe(...operators) {
+    const destination = new Observable();
+    destination.operators = operators;
+
+    // Подписываем destination на текущий Observable
+    this.subscribe({
+      update: (data) =&gt; destination.notify(data),
+    });
+
+    return destination; // возвращаем преобразованный поток
+  }
+
+  // Уведомляем подписчиков, пропуская данные через все операторы
+  notify(data) {
+    if (this.observers.length === 0) return;
+
+    // Применяем каждый оператор последовательно
+    let value = data;
+    let skip = false;
+
+    for (const operator of this.operators) {
+      if (operator.type === 'filter') {
+        // Если предикат возвращает false — пропускаем это значение
+        if (!operator.fn(value)) {
+          skip = true;
+          break;
+        }
+      } else if (operator.type === 'map') {
+        // Преобразуем значение
+        value = operator.fn(value);
+      }
+    }
+
+    if (!skip) {
+      for (const observer of this.observers) {
+        observer.update(value);
+      }
+    }
+  }
+}
+
+// Источник: поток случайных букв
+const source = new Observable();
+
+// Создаём преобразованный поток:
+// 1. Фильтруем — оставляем только согласные (не гласные)
+// 2. Преобразуем — делаем буквы заглавными
+const consonantsUpperCase = source.pipe(
+  filter((char) =&gt; !VOWELS.has(char)),  // только согласные
+  map((char) =&gt; char.toUpperCase()),    // в верхний регистр
+);
+
+// Observer: считает и печатает согласные заглавные буквы
+let count = 0;
+consonantsUpperCase.subscribe({
+  update(char) {
+    process.stdout.write(char);
+    count++;
+    if (count % 50 === 0) process.stdout.write('\n');
+    if (count &gt;= 100) {
+      console.log('\nГотово!');
+      process.exit(0);
+    }
+  },
+});
+
+// Запускаем генерацию случайных букв
+const timer = setInterval(() =&gt; {
+  const char = randomChar();
+  source.notify(char);
+}, 200);
+</code></pre>
+<hr />
+<h2 id="26-Паттерн-revealing-constructor-в-observable"><a class="header" href="#26-Паттерн-revealing-constructor-в-observable">2.6 Паттерн Revealing Constructor в Observable</a></h2>
+<p>Паттерн "Открытый конструктор" (Revealing Constructor) — это когда в конструктор
+передаётся функция, которой Observable "открывает" свои внутренние возможности.</p>
+<pre><code class="language-javascript">// Пример 6. Observable с паттерном Revealing Constructor
+// Логика генерации событий передаётся прямо в конструктор
+
+const randomChar = () =&gt;
+  String.fromCharCode(97 + Math.floor(Math.random() * 26));
+
+const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
+
+class Observable {
+  constructor(executor) {
+    this.observers = [];
+    this.operators = [];
+
+    // executor — функция, которую мы передаём в конструктор
+    // Она получает функцию next — способ отправить данные в поток
+    // Это позволяет "инжектировать" логику генерации внутрь Observable
+    if (typeof executor === 'function') {
+      executor((data) =&gt; this.notify(data));
+    }
+  }
+
+  subscribe(observer) {
+    this.observers.push(observer);
+    return this;
+  }
+
+  pipe(...operators) {
+    const destination = new Observable();
+    destination.operators = operators;
+    this.subscribe({ update: (data) =&gt; destination.notify(data) });
+    return destination;
+  }
+
+  notify(data) {
+    if (this.observers.length === 0) return;
+    let value = data;
+    for (const op of this.operators) {
+      if (op.type === 'filter') {
+        if (!op.fn(value)) return;
+      } else if (op.type === 'map') {
+        value = op.fn(value);
+      }
+    }
+    for (const observer of this.observers) {
+      observer.update(value);
+    }
+  }
+}
+
+const filter = (predicate) =&gt; ({ type: 'filter', fn: predicate });
+const map = (transform) =&gt; ({ type: 'map', fn: transform });
+
+// Создаём Observable через Revealing Constructor:
+// логика генерации букв "инжектируется" через параметр executor
+const charStream = new Observable((next) =&gt; {
+  // next — функция для отправки данных в поток
+  // Таймер теперь живёт ВНУТРИ Observable
+  setInterval(() =&gt; {
+    next(randomChar());
+  }, 200);
+});
+
+// Применяем операторы и подписываемся
+let count = 0;
+charStream
+  .pipe(
+    filter((char) =&gt; !VOWELS.has(char)),
+    map((char) =&gt; char.toUpperCase()),
+  )
+  .subscribe({
+    update(char) {
+      process.stdout.write(char);
+      count++;
+      if (count % 50 === 0) process.stdout.write('\n');
+      if (count &gt;= 100) process.exit(0);
+    },
+  });
+</code></pre>
+<hr />
+<h2 id="27-Сравнение-реализаций-паттерна-observer"><a class="header" href="#27-Сравнение-реализаций-паттерна-observer">2.7 Сравнение реализаций паттерна Observer</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Подход</th><th>Плюсы</th><th>Минусы</th></tr></thead><tbody>
+<tr><td>Функции и замыкания</td><td>Краткость, простота</td><td>Меньше возможностей для расширения</td></tr>
+<tr><td>Классы (Observer + Observable)</td><td>Явная структура, наследование</td><td>Больше кода, шаблонность</td></tr>
+<tr><td>EventEmitter</td><td>Готовый механизм, не нужно писать самому</td><td>Завязан на Node.js API</td></tr>
+<tr><td>Revealing Constructor</td><td>Логика инкапсулирована, гибко</td><td>Сложнее читать поначалу</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week6/lecture-1-events-eventemitter.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week6/lecture-3-pure-fabrication.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week6/lecture-1-events-eventemitter.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week6/lecture-3-pure-fabrication.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

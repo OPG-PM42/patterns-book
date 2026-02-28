@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,52 +124,47 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="архитектура-приложений-nodejs-слои-и-внедрение-зависимостей"><a class="header" href="#архитектура-приложений-nodejs-слои-и-внедрение-зависимостей">Архитектура приложений Node.js: Слои и внедрение зависимостей</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Архитектура-приложений-nodejs-Слои-и-внедрение-зависимостей"><a class="header" href="#Архитектура-приложений-nodejs-Слои-и-внедрение-зависимостей">Архитектура приложений Node.js: Слои и внедрение зависимостей</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Лекция посвящена построению многоуровневой архитектуры приложений на Node.js с использованием внедрения зависимостей (Dependency Injection). Мы рассмотрим эволюцию архитектуры от простого Express-приложения до чистой архитектуры с разделением на слои.</p>
-<hr>
-<h2 id="1-базовое-express-приложение"><a class="header" href="#1-базовое-express-приложение">1. Базовое Express приложение</a></h2>
-<h3 id="структура-проекта"><a class="header" href="#структура-проекта">Структура проекта</a></h3>
+<hr />
+<h2 id="1-Базовое-express-приложение"><a class="header" href="#1-Базовое-express-приложение">1. Базовое Express приложение</a></h2>
+<h3 id="Структура-проекта"><a class="header" href="#Структура-проекта">Структура проекта</a></h3>
 <p>Начальное приложение представляет собой простой REST API для работы с пользователями, использующий:</p>
 <ul>
 <li><strong>Express</strong> - веб-фреймворк</li>
 <li><strong>body-parser</strong> - парсинг JSON</li>
 <li><strong>PostgreSQL</strong> (библиотека <code>pg</code>) - база данных</li>
 </ul>
-<h3 id="настройка-базы-данных"><a class="header" href="#настройка-базы-данных">Настройка базы данных</a></h3>
+<h3 id="Настройка-базы-данных"><a class="header" href="#Настройка-базы-данных">Настройка базы данных</a></h3>
 <p><strong>Файлы структуры БД:</strong></p>
 <ul>
 <li><code>install.sh</code> - создание пользователя и базы данных</li>
@@ -198,7 +176,7 @@
 -- admin: 123456
 -- marcus: marcus (логин и пароль совпадают)
 </code></pre>
-<h3 id="пример-express-реализации"><a class="header" href="#пример-express-реализации">Пример Express реализации</a></h3>
+<h3 id="Пример-express-реализации"><a class="header" href="#Пример-express-реализации">Пример Express реализации</a></h3>
 <pre><code class="language-javascript">const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
@@ -258,7 +236,7 @@ app.delete('/user/:id', async (req, res) =&gt; {
 
 app.listen(8000);
 </code></pre>
-<h3 id="хеширование-паролей"><a class="header" href="#хеширование-паролей">Хеширование паролей</a></h3>
+<h3 id="Хеширование-паролей"><a class="header" href="#Хеширование-паролей">Хеширование паролей</a></h3>
 <pre><code class="language-javascript">// hash.js
 const crypto = require('crypto');
 
@@ -282,9 +260,9 @@ module.exports = { hash };
 <li>Зависимости: ~3.94 МБ (Express + body-parser + pg)</li>
 <li>Размер кода: 2.6 КБ</li>
 </ul>
-<hr>
-<h2 id="2-отказ-от-express---собственный-роутинг"><a class="header" href="#2-отказ-от-express---собственный-роутинг">2. Отказ от Express - собственный роутинг</a></h2>
-<h3 id="создание-функции-parseargs"><a class="header" href="#создание-функции-parseargs">Создание функции parseArgs</a></h3>
+<hr />
+<h2 id="2-Отказ-от-express---собственный-роутинг"><a class="header" href="#2-Отказ-от-express---собственный-роутинг">2. Отказ от Express - собственный роутинг</a></h2>
+<h3 id="Создание-функции-parseargs"><a class="header" href="#Создание-функции-parseargs">Создание функции parseArgs</a></h3>
 <p>Так как body-parser больше не используется, создаем собственную функцию для парсинга JSON из request body:</p>
 <pre><code class="language-javascript">// args.js
 const parseArgs = async (req) =&gt; {
@@ -304,7 +282,7 @@ const parseArgs = async (req) =&gt; {
 <li>Один раз преобразуем буфер в строку</li>
 <li>Парсим JSON только один раз</li>
 </ul>
-<h3 id="новая-структура-роутинга"><a class="header" href="#новая-структура-роутинга">Новая структура роутинга</a></h3>
+<h3 id="Новая-структура-роутинга"><a class="header" href="#Новая-структура-роутинга">Новая структура роутинга</a></h3>
 <pre><code class="language-javascript">// main.js (второй пример)
 const http = require('http');
 const pg = require('pg');
@@ -339,7 +317,7 @@ const routing = {
 };
 </code></pre>
 <p><strong>Ключевое изменение:</strong> методы теперь принимают параметры предметной области (login, password), а не request/response объекты.</p>
-<h3 id="простой-http-сервер"><a class="header" href="#простой-http-сервер">Простой HTTP сервер</a></h3>
+<h3 id="Простой-http-сервер"><a class="header" href="#Простой-http-сервер">Простой HTTP сервер</a></h3>
 <pre><code class="language-javascript">http.createServer(async (req, res) =&gt; {
   const { method, url } = req;
   const [, entity, id] = url.split('/');
@@ -381,17 +359,17 @@ const routing = {
 <li>Размер кода: 2.3 КБ</li>
 <li>Бизнес-логика начинает отделяться от протокола</li>
 </ul>
-<hr>
-<h2 id="3-паттерн-front-controller"><a class="header" href="#3-паттерн-front-controller">3. Паттерн Front Controller</a></h2>
+<hr />
+<h2 id="3-Паттерн-front-controller"><a class="header" href="#3-Паттерн-front-controller">3. Паттерн Front Controller</a></h2>
 <p>Front Controller - это единая точка входа для всех HTTP-запросов.</p>
-<h3 id="преимущества-паттерна"><a class="header" href="#преимущества-паттерна">Преимущества паттерна</a></h3>
+<h3 id="Преимущества-паттерна"><a class="header" href="#Преимущества-паттерна">Преимущества паттерна</a></h3>
 <ol>
 <li>Централизованная обработка запросов</li>
 <li>Единое место для логирования, аутентификации</li>
 <li>Упрощенный роутинг</li>
 <li>Абстракция от деталей протокола</li>
 </ol>
-<h3 id="реализация-16-строк-кода"><a class="header" href="#реализация-16-строк-кода">Реализация (16 строк кода)</a></h3>
+<h3 id="Реализация-16-строк-кода"><a class="header" href="#Реализация-16-строк-кода">Реализация (16 строк кода)</a></h3>
 <pre><code class="language-javascript">// Простейший front controller
 http.createServer(async (req, res) =&gt; {
   const { method, url } = req;
@@ -420,11 +398,11 @@ http.createServer(async (req, res) =&gt; {
 }).listen(8000);
 </code></pre>
 <p><strong>Важно:</strong> Код больше не работает напрямую с HTTP - он работает с абстракциями (роутинг, сущности, методы).</p>
-<hr>
-<h2 id="4-генератор-crud-операций"><a class="header" href="#4-генератор-crud-операций">4. Генератор CRUD операций</a></h2>
-<h3 id="проблема"><a class="header" href="#проблема">Проблема</a></h3>
+<hr />
+<h2 id="4-Генератор-crud-операций"><a class="header" href="#4-Генератор-crud-операций">4. Генератор CRUD операций</a></h2>
+<h3 id="Проблема"><a class="header" href="#Проблема">Проблема</a></h3>
 <p>Для каждой таблицы писать одинаковый CRUD код - избыточно.</p>
-<h3 id="решение-универсальный-генератор"><a class="header" href="#решение-универсальный-генератор">Решение: универсальный генератор</a></h3>
+<h3 id="Решение-универсальный-генератор"><a class="header" href="#Решение-универсальный-генератор">Решение: универсальный генератор</a></h3>
 <pre><code class="language-javascript">// db.js
 const pg = require('pg');
 
@@ -469,7 +447,7 @@ const crud = (table) =&gt; ({
 
 module.exports = { crud };
 </code></pre>
-<h3 id="использование"><a class="header" href="#использование">Использование</a></h3>
+<h3 id="Использование"><a class="header" href="#Использование">Использование</a></h3>
 <pre><code class="language-javascript">// main.js
 const { crud } = require('./db');
 
@@ -480,11 +458,11 @@ const routing = {
 };
 </code></pre>
 <p><strong>Результат:</strong> Теперь можно создавать CRUD для любой таблицы одной строкой!</p>
-<hr>
-<h2 id="5-кастомизация-crud"><a class="header" href="#5-кастомизация-crud">5. Кастомизация CRUD</a></h2>
-<h3 id="проблема-1"><a class="header" href="#проблема-1">Проблема</a></h3>
+<hr />
+<h2 id="5-Кастомизация-crud"><a class="header" href="#5-Кастомизация-crud">5. Кастомизация CRUD</a></h2>
+<h3 id="Проблема-1"><a class="header" href="#Проблема-1">Проблема</a></h3>
 <p>Для некоторых сущностей нужна специальная обработка (например, хеширование паролей).</p>
-<h3 id="решение-обертки"><a class="header" href="#решение-обертки">Решение: обертки</a></h3>
+<h3 id="Решение-обертки"><a class="header" href="#Решение-обертки">Решение: обертки</a></h3>
 <pre><code class="language-javascript">// user.js
 const { crud } = require('./db');
 const { hash } = require('./hash');
@@ -518,18 +496,18 @@ module.exports = {
   }
 };
 </code></pre>
-<h3 id="роутинг-с-кастомизацией"><a class="header" href="#роутинг-с-кастомизацией">Роутинг с кастомизацией</a></h3>
+<h3 id="Роутинг-с-кастомизацией"><a class="header" href="#Роутинг-с-кастомизацией">Роутинг с кастомизацией</a></h3>
 <pre><code class="language-javascript">const routing = {
   user: require('./user'),
   country: crud('countries'),
   city: crud('cities')
 };
 </code></pre>
-<hr>
-<h2 id="6-абстракция-транспортного-слоя"><a class="header" href="#6-абстракция-транспортного-слоя">6. Абстракция транспортного слоя</a></h2>
-<h3 id="цель"><a class="header" href="#цель">Цель</a></h3>
+<hr />
+<h2 id="6-Абстракция-транспортного-слоя"><a class="header" href="#6-Абстракция-транспортного-слоя">6. Абстракция транспортного слоя</a></h2>
+<h3 id="Цель"><a class="header" href="#Цель">Цель</a></h3>
 <p>Отделить бизнес-логику от протокола передачи данных так, чтобы можно было легко переключаться между HTTP, WebSocket и другими протоколами.</p>
-<h3 id="структура"><a class="header" href="#структура">Структура</a></h3>
+<h3 id="Структура"><a class="header" href="#Структура">Структура</a></h3>
 <pre><code>/lib
   /http.js      - HTTP транспорт
   /ws.js        - WebSocket транспорт
@@ -600,7 +578,7 @@ module.exports = (routing, port) =&gt; {
   });
 };
 </code></pre>
-<h3 id="главный-файл-с-переключением-протокола"><a class="header" href="#главный-файл-с-переключением-протокола">Главный файл с переключением протокола</a></h3>
+<h3 id="Главный-файл-с-переключением-протокола"><a class="header" href="#Главный-файл-с-переключением-протокола">Главный файл с переключением протокола</a></h3>
 <pre><code class="language-javascript">// main.js
 const server = require('./lib/http');  // или require('./lib/ws')
 
@@ -613,11 +591,11 @@ const routing = {
 server(routing, 8000);
 </code></pre>
 <p><strong>Важно:</strong> Чтобы переключиться между протоколами, достаточно изменить одну строку импорта!</p>
-<hr>
-<h2 id="7-автоматическая-загрузка-api"><a class="header" href="#7-автоматическая-загрузка-api">7. Автоматическая загрузка API</a></h2>
-<h3 id="проблема-2"><a class="header" href="#проблема-2">Проблема</a></h3>
+<hr />
+<h2 id="7-Автоматическая-загрузка-api"><a class="header" href="#7-Автоматическая-загрузка-api">7. Автоматическая загрузка API</a></h2>
+<h3 id="Проблема-2"><a class="header" href="#Проблема-2">Проблема</a></h3>
 <p>При добавлении новых сущностей нужно вручную добавлять их в роутинг.</p>
-<h3 id="решение-динамическая-загрузка-из-папки"><a class="header" href="#решение-динамическая-загрузка-из-папки">Решение: динамическая загрузка из папки</a></h3>
+<h3 id="Решение-динамическая-загрузка-из-папки"><a class="header" href="#Решение-динамическая-загрузка-из-папки">Решение: динамическая загрузка из папки</a></h3>
 <pre><code class="language-javascript">// main.js
 const path = require('path');
 const fsp = require('fs').promises;
@@ -645,16 +623,16 @@ const loadRouting = async () =&gt; {
 })();
 </code></pre>
 <p><strong>Результат:</strong> Теперь достаточно создать файл в папке <code>/api</code>, и он автоматически станет доступен через API!</p>
-<hr>
-<h2 id="8-система-логирования"><a class="header" href="#8-система-логирования">8. Система логирования</a></h2>
-<h3 id="требования-к-логгеру"><a class="header" href="#требования-к-логгеру">Требования к логгеру</a></h3>
+<hr />
+<h2 id="8-Система-логирования"><a class="header" href="#8-Система-логирования">8. Система логирования</a></h2>
+<h3 id="Требования-к-логгеру"><a class="header" href="#Требования-к-логгеру">Требования к логгеру</a></h3>
 <ol>
 <li>Запись в файл и на консоль одновременно</li>
 <li>Цветной вывод в консоль</li>
 <li>Разные типы логов (log, error, debug, system, access)</li>
 <li>Форматирование многострочных сообщений</li>
 </ol>
-<h3 id="реализация-логгера"><a class="header" href="#реализация-логгера">Реализация логгера</a></h3>
+<h3 id="Реализация-логгера"><a class="header" href="#Реализация-логгера">Реализация логгера</a></h3>
 <pre><code class="language-javascript">// lib/logger.js
 const fs = require('fs');
 const util = require('util');
@@ -707,24 +685,24 @@ class Logger {
 
 module.exports = (logPath) =&gt; new Logger(logPath);
 </code></pre>
-<h3 id="использование-логгера"><a class="header" href="#использование-логгера">Использование логгера</a></h3>
+<h3 id="Использование-логгера"><a class="header" href="#Использование-логгера">Использование логгера</a></h3>
 <pre><code class="language-javascript">// main.js
 const logger = require('./lib/logger')('./app.log');
 
 // Логгер доступен глобально через Sandbox (см. ниже)
 </code></pre>
-<hr>
-<h2 id="9-внедрение-зависимостей-через-sandbox"><a class="header" href="#9-внедрение-зависимостей-через-sandbox">9. Внедрение зависимостей через Sandbox</a></h2>
-<h3 id="концепция-sandbox"><a class="header" href="#концепция-sandbox">Концепция Sandbox</a></h3>
+<hr />
+<h2 id="9-Внедрение-зависимостей-через-sandbox"><a class="header" href="#9-Внедрение-зависимостей-через-sandbox">9. Внедрение зависимостей через Sandbox</a></h2>
+<h3 id="Концепция-sandbox"><a class="header" href="#Концепция-sandbox">Концепция Sandbox</a></h3>
 <p>Sandbox - это изолированный контекст выполнения, в который внедряются зависимости.</p>
-<h3 id="зачем-нужен-sandbox"><a class="header" href="#зачем-нужен-sandbox">Зачем нужен Sandbox?</a></h3>
+<h3 id="Зачем-нужен-sandbox"><a class="header" href="#Зачем-нужен-sandbox">Зачем нужен Sandbox?</a></h3>
 <ol>
 <li><strong>Изоляция:</strong> модули не имеют доступа к глобальному scope</li>
 <li><strong>Внедрение зависимостей:</strong> можем контролировать, что доступно модулям</li>
 <li><strong>Безопасность:</strong> ограничиваем возможности модулей</li>
 <li><strong>Тестируемость:</strong> легко подменять зависимости</li>
 </ol>
-<h3 id="реализация-простого-загрузчика-модулей"><a class="header" href="#реализация-простого-загрузчика-модулей">Реализация простого загрузчика модулей</a></h3>
+<h3 id="Реализация-простого-загрузчика-модулей"><a class="header" href="#Реализация-простого-загрузчика-модулей">Реализация простого загрузчика модулей</a></h3>
 <pre><code class="language-javascript">// lib/loader.js
 const fs = require('fs');
 const vm = require('vm');
@@ -754,7 +732,7 @@ const loadModule = (filePath, sandbox) =&gt; {
 
 module.exports = { loadModule };
 </code></pre>
-<h3 id="создание-sandbox-с-зависимостями"><a class="header" href="#создание-sandbox-с-зависимостями">Создание Sandbox с зависимостями</a></h3>
+<h3 id="Создание-sandbox-с-зависимостями"><a class="header" href="#Создание-sandbox-с-зависимостями">Создание Sandbox с зависимостями</a></h3>
 <pre><code class="language-javascript">// main.js
 const logger = require('./lib/logger')('./app.log');
 const db = require('./lib/db');
@@ -773,7 +751,7 @@ const sandbox = {
 const { loadModule } = require('./lib/loader');
 const user = loadModule('./api/user.js', sandbox);
 </code></pre>
-<h3 id="использование-в-api-модулях"><a class="header" href="#использование-в-api-модулях">Использование в API модулях</a></h3>
+<h3 id="Использование-в-api-модулях"><a class="header" href="#Использование-в-api-модулях">Использование в API модулях</a></h3>
 <pre><code class="language-javascript">// api/user.js
 // Модуль работает в изолированном контексте
 // Имеет доступ только к тому, что передано в sandbox
@@ -787,11 +765,11 @@ const users = await db.query('SELECT * FROM users');
 // process, require, fs - недоступны!
 // Это обеспечивает безопасность и явное управление зависимостями
 </code></pre>
-<hr>
+<hr />
 <h2 id="10-mapping-http-методов-на-crud"><a class="header" href="#10-mapping-http-методов-на-crud">10. Mapping HTTP методов на CRUD</a></h2>
-<h3 id="проблема-3"><a class="header" href="#проблема-3">Проблема</a></h3>
+<h3 id="Проблема-3"><a class="header" href="#Проблема-3">Проблема</a></h3>
 <p>HTTP методы (GET, POST, PUT, DELETE) не всегда соответствуют желаемым именам методов в API.</p>
-<h3 id="решение-таблица-маппинга"><a class="header" href="#решение-таблица-маппинга">Решение: таблица маппинга</a></h3>
+<h3 id="Решение-таблица-маппинга"><a class="header" href="#Решение-таблица-маппинга">Решение: таблица маппинга</a></h3>
 <pre><code class="language-javascript">// lib/http.js
 const CRUD_MAPPING = {
   get: 'read',
@@ -818,7 +796,7 @@ module.exports = (routing, port) =&gt; {
   }).listen(port);
 };
 </code></pre>
-<h3 id="кастомный-маппинг"><a class="header" href="#кастомный-маппинг">Кастомный маппинг</a></h3>
+<h3 id="Кастомный-маппинг"><a class="header" href="#Кастомный-маппинг">Кастомный маппинг</a></h3>
 <pre><code class="language-javascript">// Можно определить свой маппинг для разных сущностей
 const CUSTOM_MAPPING = {
   user: {
@@ -829,11 +807,11 @@ const CUSTOM_MAPPING = {
   }
 };
 </code></pre>
-<hr>
+<hr />
 <h2 id="11-query-builder-для-sql"><a class="header" href="#11-query-builder-для-sql">11. Query Builder для SQL</a></h2>
-<h3 id="проблема-4"><a class="header" href="#проблема-4">Проблема</a></h3>
+<h3 id="Проблема-4"><a class="header" href="#Проблема-4">Проблема</a></h3>
 <p>Динамическое построение SQL запросов приводит к дублированию кода.</p>
-<h3 id="решение-простой-query-builder"><a class="header" href="#решение-простой-query-builder">Решение: простой Query Builder</a></h3>
+<h3 id="Решение-простой-query-builder"><a class="header" href="#Решение-простой-query-builder">Решение: простой Query Builder</a></h3>
 <pre><code class="language-javascript">// lib/db.js
 const buildSelect = (table, fields = '*', where = {}) =&gt; {
   const keys = Object.keys(where);
@@ -863,7 +841,7 @@ const buildDelete = (table, id) =&gt; {
   return { sql, values: [id] };
 };
 </code></pre>
-<h3 id="использование-query-builder"><a class="header" href="#использование-query-builder">Использование Query Builder</a></h3>
+<h3 id="Использование-query-builder"><a class="header" href="#Использование-query-builder">Использование Query Builder</a></h3>
 <pre><code class="language-javascript">const crud = (table) =&gt; ({
   async read(id) {
     const { sql, values } = buildSelect(table, '*', { id });
@@ -890,11 +868,11 @@ const buildDelete = (table, id) =&gt; {
   }
 });
 </code></pre>
-<hr>
-<h2 id="12-клиентская-часть---rpc-over-websocket"><a class="header" href="#12-клиентская-часть---rpc-over-websocket">12. Клиентская часть - RPC over WebSocket</a></h2>
-<h3 id="проблема-5"><a class="header" href="#проблема-5">Проблема</a></h3>
+<hr />
+<h2 id="12-Клиентская-часть---rpc-over-websocket"><a class="header" href="#12-Клиентская-часть---rpc-over-websocket">12. Клиентская часть - RPC over WebSocket</a></h2>
+<h3 id="Проблема-5"><a class="header" href="#Проблема-5">Проблема</a></h3>
 <p>На клиенте хотим вызывать серверные методы так, как будто они локальные.</p>
-<h3 id="решение-автогенерация-api-proxy"><a class="header" href="#решение-автогенерация-api-proxy">Решение: автогенерация API proxy</a></h3>
+<h3 id="Решение-автогенерация-api-proxy"><a class="header" href="#Решение-автогенерация-api-proxy">Решение: автогенерация API proxy</a></h3>
 <pre><code class="language-javascript">// client.js
 const ws = new WebSocket('ws://localhost:8000');
 
@@ -938,7 +916,7 @@ console.log(user);
 const newUser = await api.user.create('john', 'password123');
 console.log(newUser);
 </code></pre>
-<h3 id="автоматическое-получение-схемы-api"><a class="header" href="#автоматическое-получение-схемы-api">Автоматическое получение схемы API</a></h3>
+<h3 id="Автоматическое-получение-схемы-api"><a class="header" href="#Автоматическое-получение-схемы-api">Автоматическое получение схемы API</a></h3>
 <pre><code class="language-javascript">// Сервер может отдавать метаданные об API
 const getApiSchema = () =&gt; {
   const schema = {};
@@ -954,9 +932,9 @@ ws.on('open', async () =&gt; {
   const dynamicApi = createApi(ws, schema);
 });
 </code></pre>
-<hr>
-<h2 id="13-итоговая-архитектура"><a class="header" href="#13-итоговая-архитектура">13. Итоговая архитектура</a></h2>
-<h3 id="структура-проекта-1"><a class="header" href="#структура-проекта-1">Структура проекта</a></h3>
+<hr />
+<h2 id="13-Итоговая-архитектура"><a class="header" href="#13-Итоговая-архитектура">13. Итоговая архитектура</a></h2>
+<h3 id="Структура-проекта-1"><a class="header" href="#Структура-проекта-1">Структура проекта</a></h3>
 <pre><code>project/
 ├── api/                    # Бизнес-логика (Domain Layer)
 │   ├── user.js            # Методы работы с пользователями
@@ -981,7 +959,7 @@ ws.on('open', async () =&gt; {
 │   └── database.json
 └── main.js               # Точка входа (Application Layer)
 </code></pre>
-<h3 id="слои-архитектуры"><a class="header" href="#слои-архитектуры">Слои архитектуры</a></h3>
+<h3 id="Слои-архитектуры"><a class="header" href="#Слои-архитектуры">Слои архитектуры</a></h3>
 <pre><code>┌─────────────────────────────────────────────┐
 │         Presentation Layer                   │
 │  (HTTP, WebSocket, CLI, etc.)               │
@@ -1006,26 +984,20 @@ ws.on('open', async () =&gt; {
 │  /lib/db.js, /lib/logger.js                │
 └─────────────────────────────────────────────┘
 </code></pre>
-<h3 id="размеры-компонентов-финальная-версия"><a class="header" href="#размеры-компонентов-финальная-версия">Размеры компонентов (финальная версия)</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Компонент</th><th>Размер</th><th>Описание</th></tr>
-</thead>
-<tbody>
+<h3 id="Размеры-компонентов-финальная-версия"><a class="header" href="#Размеры-компонентов-финальная-версия">Размеры компонентов (финальная версия)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Компонент</th><th>Размер</th><th>Описание</th></tr></thead><tbody>
 <tr><td>API (бизнес-логика)</td><td>~0.8 КБ</td><td>Вся доменная логика</td></tr>
 <tr><td>DB (генератор CRUD)</td><td>~1.5 КБ</td><td>Работа с базой данных</td></tr>
 <tr><td>HTTP + WebSocket + Static</td><td>~5.8 КБ</td><td>Транспортный слой</td></tr>
 <tr><td>Logger</td><td>~1.5 КБ</td><td>Система логирования</td></tr>
 <tr><td><strong>Итого фреймворк</strong></td><td><strong>~7.5 КБ</strong></td><td>Вся инфраструктура</td></tr>
 <tr><td><strong>Зависимости</strong></td><td><strong>1 МБ</strong></td><td>pg + ws (только драйверы!)</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
 <p><strong>Для сравнения:</strong> Express приложение занимало ~4 МБ зависимостей и имело меньше функциональности!</p>
-<hr>
-<h2 id="14-ключевые-принципы-реализованной-архитектуры"><a class="header" href="#14-ключевые-принципы-реализованной-архитектуры">14. Ключевые принципы реализованной архитектуры</a></h2>
-<h3 id="1-разделение-ответственности-separation-of-concerns"><a class="header" href="#1-разделение-ответственности-separation-of-concerns">1. Разделение ответственности (Separation of Concerns)</a></h3>
+<hr />
+<h2 id="14-Ключевые-принципы-реализованной-архитектуры"><a class="header" href="#14-Ключевые-принципы-реализованной-архитектуры">14. Ключевые принципы реализованной архитектуры</a></h2>
+<h3 id="1-Разделение-ответственности-separation-of-concerns"><a class="header" href="#1-Разделение-ответственности-separation-of-concerns">1. Разделение ответственности (Separation of Concerns)</a></h3>
 <p><strong>Что отделено:</strong></p>
 <ul>
 <li>Транспортный слой (HTTP, WebSocket) - <code>/lib/http.js</code>, <code>/lib/ws.js</code></li>
@@ -1034,7 +1006,7 @@ ws.on('open', async () =&gt; {
 <li>Логирование - <code>/lib/logger.js</code></li>
 <li>Криптография - <code>/lib/hash.js</code></li>
 </ul>
-<h3 id="2-внедрение-зависимостей-dependency-injection"><a class="header" href="#2-внедрение-зависимостей-dependency-injection">2. Внедрение зависимостей (Dependency Injection)</a></h3>
+<h3 id="2-Внедрение-зависимостей-dependency-injection"><a class="header" href="#2-Внедрение-зависимостей-dependency-injection">2. Внедрение зависимостей (Dependency Injection)</a></h3>
 <p><strong>Как реализовано:</strong></p>
 <pre><code class="language-javascript">// Sandbox содержит все зависимости
 const sandbox = {
@@ -1052,7 +1024,7 @@ const sandbox = {
 <li>Явное управление зависимостями</li>
 <li>Безопасность (ограниченный доступ к системным ресурсам)</li>
 </ul>
-<h3 id="3-инверсия-зависимостей-dependency-inversion"><a class="header" href="#3-инверсия-зависимостей-dependency-inversion">3. Инверсия зависимостей (Dependency Inversion)</a></h3>
+<h3 id="3-Инверсия-зависимостей-dependency-inversion"><a class="header" href="#3-Инверсия-зависимостей-dependency-inversion">3. Инверсия зависимостей (Dependency Inversion)</a></h3>
 <p><strong>Принцип:</strong> Высокоуровневые модули не зависят от низкоуровневых. Оба зависят от абстракций.</p>
 <pre><code class="language-javascript">// Бизнес-логика НЕ знает о HTTP или WebSocket
 // Она работает с абстрактным роутингом
@@ -1066,20 +1038,14 @@ const routing = {
 // Но НЕ знает о бизнес-логике
 const server = (routing, port) =&gt; { /* ... */ };
 </code></pre>
-<h3 id="4-абстракция-от-деталей-реализации"><a class="header" href="#4-абстракция-от-деталей-реализации">4. Абстракция от деталей реализации</a></h3>
+<h3 id="4-Абстракция-от-деталей-реализации"><a class="header" href="#4-Абстракция-от-деталей-реализации">4. Абстракция от деталей реализации</a></h3>
 <p><strong>Что абстрагировано:</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Абстракция</th><th>Детали реализации</th></tr>
-</thead>
-<tbody>
+<div class="table-wrapper"><table><thead><tr><th>Абстракция</th><th>Детали реализации</th></tr></thead><tbody>
 <tr><td>Транспорт</td><td>HTTP, WebSocket, JSON-RPC</td></tr>
 <tr><td>База данных</td><td>PostgreSQL, MySQL, SQLite</td></tr>
 <tr><td>Логирование</td><td>Файл, консоль, удаленный сервер</td></tr>
 <tr><td>Криптография</td><td>scrypt, bcrypt, pbkdf2</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
 <p><strong>Как переключаться:</strong></p>
 <pre><code class="language-javascript">// Изменить транспорт
@@ -1088,7 +1054,7 @@ const server = require('./lib/http');  // или './lib/ws'
 // Изменить БД (если добавить абстракцию)
 const db = require('./lib/db/postgres'); // или './lib/db/mysql'
 </code></pre>
-<h3 id="5-паттерн-front-controller"><a class="header" href="#5-паттерн-front-controller">5. Паттерн Front Controller</a></h3>
+<h3 id="5-Паттерн-front-controller"><a class="header" href="#5-Паттерн-front-controller">5. Паттерн Front Controller</a></h3>
 <p><strong>Реализация:</strong></p>
 <ul>
 <li>Единая точка входа для всех запросов</li>
@@ -1110,9 +1076,9 @@ const db = require('./lib/db/postgres'); // или './lib/db/mysql'
 <li>HTTP POST маппится на метод <code>create</code></li>
 <li>Имя файла = имя сущности = endpoint</li>
 </ul>
-<hr>
-<h2 id="15-практические-примеры-использования"><a class="header" href="#15-практические-примеры-использования">15. Практические примеры использования</a></h2>
-<h3 id="добавление-новой-сущности"><a class="header" href="#добавление-новой-сущности">Добавление новой сущности</a></h3>
+<hr />
+<h2 id="15-Практические-примеры-использования"><a class="header" href="#15-Практические-примеры-использования">15. Практические примеры использования</a></h2>
+<h3 id="Добавление-новой-сущности"><a class="header" href="#Добавление-новой-сущности">Добавление новой сущности</a></h3>
 <p><strong>Задача:</strong> Добавить API для работы с постами.</p>
 <p><strong>Решение:</strong> Создать один файл!</p>
 <pre><code class="language-javascript">// api/post.js
@@ -1158,7 +1124,7 @@ const db = require('./lib/db/postgres'); // или './lib/db/mysql'
 <li><code>DELETE /post/:id</code> - удалить пост</li>
 <li>И метод <code>findByUser</code> через WebSocket/RPC</li>
 </ul>
-<h3 id="переключение-между-http-и-websocket"><a class="header" href="#переключение-между-http-и-websocket">Переключение между HTTP и WebSocket</a></h3>
+<h3 id="Переключение-между-http-и-websocket"><a class="header" href="#Переключение-между-http-и-websocket">Переключение между HTTP и WebSocket</a></h3>
 <pre><code class="language-javascript">// Вариант 1: HTTP
 const server = require('./lib/http');
 server(routing, 8000);
@@ -1171,7 +1137,7 @@ server(routing, 8000);
 require('./lib/http')(routing, 8000);
 require('./lib/ws')(routing, 8001);
 </code></pre>
-<h3 id="логирование-в-бизнес-логике"><a class="header" href="#логирование-в-бизнес-логике">Логирование в бизнес-логике</a></h3>
+<h3 id="Логирование-в-бизнес-логике"><a class="header" href="#Логирование-в-бизнес-логике">Логирование в бизнес-логике</a></h3>
 <pre><code class="language-javascript">// api/user.js
 ({
   async create(login, password) {
@@ -1190,9 +1156,9 @@ require('./lib/ws')(routing, 8001);
   }
 });
 </code></pre>
-<hr>
-<h2 id="16-что-еще-можно-улучшить"><a class="header" href="#16-что-еще-можно-улучшить">16. Что еще можно улучшить</a></h2>
-<h3 id="1-конфигурация"><a class="header" href="#1-конфигурация">1. Конфигурация</a></h3>
+<hr />
+<h2 id="16-Что-еще-можно-улучшить"><a class="header" href="#16-Что-еще-можно-улучшить">16. Что еще можно улучшить</a></h2>
+<h3 id="1-Конфигурация"><a class="header" href="#1-Конфигурация">1. Конфигурация</a></h3>
 <p><strong>Проблема:</strong> Параметры подключения к БД захардкожены.</p>
 <p><strong>Решение:</strong></p>
 <pre><code class="language-javascript">// config/database.json
@@ -1208,7 +1174,7 @@ require('./lib/ws')(routing, 8001);
 const config = require('./config/database.json');
 const pool = new pg.Pool(config);
 </code></pre>
-<h3 id="2-валидация-входных-данных"><a class="header" href="#2-валидация-входных-данных">2. Валидация входных данных</a></h3>
+<h3 id="2-Валидация-входных-данных"><a class="header" href="#2-Валидация-входных-данных">2. Валидация входных данных</a></h3>
 <p><strong>Проблема:</strong> Нет проверки корректности данных.</p>
 <p><strong>Решение:</strong> Добавить валидацию схем.</p>
 <pre><code class="language-javascript">// lib/validator.js
@@ -1236,7 +1202,7 @@ const validateUser = validate(userSchema);
   }
 });
 </code></pre>
-<h3 id="3-аутентификация-и-авторизация"><a class="header" href="#3-аутентификация-и-авторизация">3. Аутентификация и авторизация</a></h3>
+<h3 id="3-Аутентификация-и-авторизация"><a class="header" href="#3-Аутентификация-и-авторизация">3. Аутентификация и авторизация</a></h3>
 <p><strong>Проблема:</strong> Любой может вызывать любые методы.</p>
 <p><strong>Решение:</strong> Middleware для проверки прав.</p>
 <pre><code class="language-javascript">// lib/auth.js
@@ -1266,7 +1232,7 @@ const authorize = (roles) =&gt; (handler) =&gt; {
   })
 });
 </code></pre>
-<h3 id="4-транзакции"><a class="header" href="#4-транзакции">4. Транзакции</a></h3>
+<h3 id="4-Транзакции"><a class="header" href="#4-Транзакции">4. Транзакции</a></h3>
 <p><strong>Проблема:</strong> Нет поддержки транзакций для сложных операций.</p>
 <p><strong>Решение:</strong></p>
 <pre><code class="language-javascript">// lib/db.js
@@ -1291,7 +1257,7 @@ await transaction(async (client) =&gt; {
   await client.query('UPDATE products SET stock = stock - 1 ...');
 });
 </code></pre>
-<h3 id="5-кэширование"><a class="header" href="#5-кэширование">5. Кэширование</a></h3>
+<h3 id="5-Кэширование"><a class="header" href="#5-Кэширование">5. Кэширование</a></h3>
 <p><strong>Проблема:</strong> Каждый запрос идет в БД.</p>
 <p><strong>Решение:</strong> Добавить слой кэширования.</p>
 <pre><code class="language-javascript">// lib/cache.js
@@ -1321,7 +1287,7 @@ const cached = (key, ttl) =&gt; (handler) =&gt; {
   })
 });
 </code></pre>
-<h3 id="6-миграции-бд"><a class="header" href="#6-миграции-бд">6. Миграции БД</a></h3>
+<h3 id="6-Миграции-БД"><a class="header" href="#6-Миграции-БД">6. Миграции БД</a></h3>
 <p><strong>Проблема:</strong> Нет версионирования изменений схемы БД.</p>
 <p><strong>Решение:</strong> Система миграций.</p>
 <pre><code class="language-javascript">// migrations/001_create_users.sql
@@ -1344,15 +1310,10 @@ const runMigrations = async () =&gt; {
   }
 };
 </code></pre>
-<hr>
-<h2 id="17-сравнение-с-популярными-фреймворками"><a class="header" href="#17-сравнение-с-популярными-фреймворками">17. Сравнение с популярными фреймворками</a></h2>
-<h3 id="express-vs-собственный-фреймворк"><a class="header" href="#express-vs-собственный-фреймворк">Express vs. Собственный фреймворк</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Характеристика</th><th>Express</th><th>Наш фреймворк</th></tr>
-</thead>
-<tbody>
+<hr />
+<h2 id="17-Сравнение-с-популярными-фреймворками"><a class="header" href="#17-Сравнение-с-популярными-фреймворками">17. Сравнение с популярными фреймворками</a></h2>
+<h3 id="express-vs-Собственный-фреймворк"><a class="header" href="#express-vs-Собственный-фреймворк">Express vs. Собственный фреймворк</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Характеристика</th><th>Express</th><th>Наш фреймворк</th></tr></thead><tbody>
 <tr><td>Зависимости</td><td>~4 МБ</td><td>~1 МБ</td></tr>
 <tr><td>Размер кода</td><td>~2.6 КБ</td><td>~7.5 КБ</td></tr>
 <tr><td>Абстракция транспорта</td><td>Нет</td><td>Да (HTTP, WS)</td></tr>
@@ -1361,10 +1322,9 @@ const runMigrations = async () =&gt; {
 <tr><td>Логирование</td><td>Внешнее</td><td>Встроенное</td></tr>
 <tr><td>Настройка</td><td>Middleware</td><td>Sandbox + DI</td></tr>
 <tr><td>Производительность</td><td>Хорошая</td><td>Отличная</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="философия-отличий"><a class="header" href="#философия-отличий">Философия отличий</a></h3>
+<h3 id="Философия-отличий"><a class="header" href="#Философия-отличий">Философия отличий</a></h3>
 <p><strong>Express:</strong></p>
 <ul>
 <li>Middleware-based architecture</li>
@@ -1379,9 +1339,9 @@ const runMigrations = async () =&gt; {
 <li>Работа с абстракциями (роутинг как объект)</li>
 <li>Автоматический роутинг через файловую систему</li>
 </ul>
-<hr>
-<h2 id="18-важные-замечания-по-sql"><a class="header" href="#18-важные-замечания-по-sql">18. Важные замечания по SQL</a></h2>
-<h3 id="почему-нельзя-полностью-абстрагироваться-от-sql"><a class="header" href="#почему-нельзя-полностью-абстрагироваться-от-sql">Почему нельзя полностью абстрагироваться от SQL?</a></h3>
+<hr />
+<h2 id="18-Важные-замечания-по-sql"><a class="header" href="#18-Важные-замечания-по-sql">18. Важные замечания по SQL</a></h2>
+<h3 id="Почему-нельзя-полностью-абстрагироваться-от-sql"><a class="header" href="#Почему-нельзя-полностью-абстрагироваться-от-sql">Почему нельзя полностью абстрагироваться от SQL?</a></h3>
 <p><strong>Проблема:</strong> SQL - единственная деталь реализации, которая остается в доменном слое.</p>
 <p><strong>Причины:</strong></p>
 <ol>
@@ -1404,47 +1364,47 @@ const topUsers = await pool.query(`
 `);
 </code></pre>
 <p><strong>Альтернатива:</strong> Использовать универсальный SQL (стандарт SQL-89/92) для переносимости между СУБД, но потерять современные возможности.</p>
-<hr>
-<h2 id="19-преимущества-реализованной-архитектуры"><a class="header" href="#19-преимущества-реализованной-архитектуры">19. Преимущества реализованной архитектуры</a></h2>
-<h3 id="1-минимализм"><a class="header" href="#1-минимализм">1. Минимализм</a></h3>
+<hr />
+<h2 id="19-Преимущества-реализованной-архитектуры"><a class="header" href="#19-Преимущества-реализованной-архитектуры">19. Преимущества реализованной архитектуры</a></h2>
+<h3 id="1-Минимализм"><a class="header" href="#1-Минимализм">1. Минимализм</a></h3>
 <ul>
 <li>Всего ~7.5 КБ инфраструктурного кода</li>
 <li>Только необходимые зависимости</li>
-<li>Нет “магии” фреймворков</li>
+<li>Нет "магии" фреймворков</li>
 </ul>
-<h3 id="2-прозрачность"><a class="header" href="#2-прозрачность">2. Прозрачность</a></h3>
+<h3 id="2-Прозрачность"><a class="header" href="#2-Прозрачность">2. Прозрачность</a></h3>
 <ul>
 <li>Весь код написан явно</li>
 <li>Легко понять, как все работает</li>
 <li>Нет скрытых абстракций</li>
 </ul>
-<h3 id="3-гибкость"><a class="header" href="#3-гибкость">3. Гибкость</a></h3>
+<h3 id="3-Гибкость"><a class="header" href="#3-Гибкость">3. Гибкость</a></h3>
 <ul>
 <li>Легко менять транспортный слой</li>
 <li>Просто добавлять новые сущности</li>
 <li>Кастомизация любой части</li>
 </ul>
-<h3 id="4-производительность"><a class="header" href="#4-производительность">4. Производительность</a></h3>
+<h3 id="4-Производительность"><a class="header" href="#4-Производительность">4. Производительность</a></h3>
 <ul>
 <li>Минимум лишних слоев</li>
 <li>Прямая работа с базовыми API Node.js</li>
 <li>Эффективная работа с буферами и потоками</li>
 </ul>
-<h3 id="5-безопасность"><a class="header" href="#5-безопасность">5. Безопасность</a></h3>
+<h3 id="5-Безопасность"><a class="header" href="#5-Безопасность">5. Безопасность</a></h3>
 <ul>
 <li>Sandbox изолирует код</li>
 <li>Явное управление зависимостями</li>
 <li>Ограниченный доступ к системным ресурсам</li>
 </ul>
-<h3 id="6-тестируемость"><a class="header" href="#6-тестируемость">6. Тестируемость</a></h3>
+<h3 id="6-Тестируемость"><a class="header" href="#6-Тестируемость">6. Тестируемость</a></h3>
 <ul>
 <li>Внедрение зависимостей упрощает моки</li>
 <li>Изолированные модули</li>
 <li>Простота юнит-тестирования</li>
 </ul>
-<hr>
-<h2 id="20-паттерны-проектирования-в-архитектуре"><a class="header" href="#20-паттерны-проектирования-в-архитектуре">20. Паттерны проектирования в архитектуре</a></h2>
-<h3 id="использованные-паттерны"><a class="header" href="#использованные-паттерны">Использованные паттерны</a></h3>
+<hr />
+<h2 id="20-Паттерны-проектирования-в-архитектуре"><a class="header" href="#20-Паттерны-проектирования-в-архитектуре">20. Паттерны проектирования в архитектуре</a></h2>
+<h3 id="Использованные-паттерны"><a class="header" href="#Использованные-паттерны">Использованные паттерны</a></h3>
 <ol>
 <li><strong>Front Controller</strong> - единая точка входа для HTTP запросов</li>
 <li><strong>Dependency Injection</strong> - внедрение зависимостей через Sandbox</li>
@@ -1455,7 +1415,7 @@ const topUsers = await pool.query(`
 <li><strong>Proxy</strong> - клиентский API proxy для RPC</li>
 <li><strong>Template Method</strong> - базовый CRUD с возможностью переопределения</li>
 </ol>
-<h3 id="принципы-solid"><a class="header" href="#принципы-solid">Принципы SOLID</a></h3>
+<h3 id="Принципы-solid"><a class="header" href="#Принципы-solid">Принципы SOLID</a></h3>
 <ol>
 <li>
 <p><strong>S - Single Responsibility:</strong></p>
@@ -1494,9 +1454,9 @@ const topUsers = await pool.query(`
 </ul>
 </li>
 </ol>
-<hr>
-<h2 id="21-дальнейшее-развитие-архитектуры"><a class="header" href="#21-дальнейшее-развитие-архитектуры">21. Дальнейшее развитие архитектуры</a></h2>
-<h3 id="разделение-на-три-слоя"><a class="header" href="#разделение-на-три-слоя">Разделение на три слоя</a></h3>
+<hr />
+<h2 id="21-Дальнейшее-развитие-архитектуры"><a class="header" href="#21-Дальнейшее-развитие-архитектуры">21. Дальнейшее развитие архитектуры</a></h2>
+<h3 id="Разделение-на-три-слоя"><a class="header" href="#Разделение-на-три-слоя">Разделение на три слоя</a></h3>
 <p><strong>Текущее состояние:</strong> 2 слоя (бизнес + инфраструктура)</p>
 <p><strong>Следующий шаг:</strong> 3 слоя</p>
 <pre><code>┌─────────────────────────────────┐
@@ -1514,7 +1474,7 @@ const topUsers = await pool.query(`
 │        (Pure Logic)             │
 └─────────────────────────────────┘
 </code></pre>
-<h3 id="пример-разделения"><a class="header" href="#пример-разделения">Пример разделения</a></h3>
+<h3 id="Пример-разделения"><a class="header" href="#Пример-разделения">Пример разделения</a></h3>
 <pre><code class="language-javascript">// domain/entities/User.js - чистая модель
 class User {
   constructor(id, login, email) {
@@ -1566,9 +1526,9 @@ class RegisterUserUseCase {
   }
 }
 </code></pre>
-<hr>
-<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
-<h3 id="1-эволюция-архитектуры"><a class="header" href="#1-эволюция-архитектуры">1. Эволюция архитектуры</a></h3>
+<hr />
+<h2 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h2>
+<h3 id="1-Эволюция-архитектуры"><a class="header" href="#1-Эволюция-архитектуры">1. Эволюция архитектуры</a></h3>
 <p>Мы прошли путь от монолитного Express приложения до многоуровневой архитектуры:</p>
 <p><strong>Шаг 1:</strong> Express монолит (77 строк, 4 МБ зависимостей)
 ↓
@@ -1589,7 +1549,7 @@ class RegisterUserUseCase {
 <strong>Шаг 9:</strong> Внедрение зависимостей (Sandbox)
 ↓
 <strong>Итог:</strong> Чистая архитектура (7.5 КБ инфраструктуры, 1 МБ зависимостей)</p>
-<h3 id="2-главные-принципы"><a class="header" href="#2-главные-принципы">2. Главные принципы</a></h3>
+<h3 id="2-Главные-принципы"><a class="header" href="#2-Главные-принципы">2. Главные принципы</a></h3>
 <ol>
 <li><strong>Отделяй бизнес-логику от деталей реализации</strong></li>
 <li><strong>Используй внедрение зависимостей</strong></li>
@@ -1599,7 +1559,7 @@ class RegisterUserUseCase {
 <li><strong>Минимизируй зависимости</strong></li>
 <li><strong>Делай код прозрачным и понятным</strong></li>
 </ol>
-<h3 id="3-практические-преимущества"><a class="header" href="#3-практические-преимущества">3. Практические преимущества</a></h3>
+<h3 id="3-Практические-преимущества"><a class="header" href="#3-Практические-преимущества">3. Практические преимущества</a></h3>
 <ul>
 <li>Легко добавлять новые API (один файл)</li>
 <li>Просто переключаться между протоколами (одна строка)</li>
@@ -1607,7 +1567,7 @@ class RegisterUserUseCase {
 <li>Быстрая разработка (меньше boilerplate кода)</li>
 <li>Высокая производительность (минимум абстракций)</li>
 </ul>
-<h3 id="4-что-дальше"><a class="header" href="#4-что-дальше">4. Что дальше?</a></h3>
+<h3 id="4-Что-дальше"><a class="header" href="#4-Что-дальше">4. Что дальше?</a></h3>
 <ul>
 <li>Разделение на Application/Domain/Infrastructure слои</li>
 <li>Добавление аутентификации и авторизации</li>
@@ -1615,21 +1575,21 @@ class RegisterUserUseCase {
 <li>Система миграций БД</li>
 <li>Работа с другими источниками данных (Redis, файлы)</li>
 </ul>
-<hr>
-<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
-<h3 id="рекомендуемая-литература"><a class="header" href="#рекомендуемая-литература">Рекомендуемая литература</a></h3>
+<hr />
+<h2 id="Дополнительные-материалы"><a class="header" href="#Дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="Рекомендуемая-литература"><a class="header" href="#Рекомендуемая-литература">Рекомендуемая литература</a></h3>
 <ol>
 <li><strong>Clean Architecture</strong> (Robert C. Martin) - принципы чистой архитектуры</li>
 <li><strong>Domain-Driven Design</strong> (Eric Evans) - разработка через доменную модель</li>
 <li><strong>Patterns of Enterprise Application Architecture</strong> (Martin Fowler) - паттерны корпоративных приложений</li>
 </ol>
-<h3 id="полезные-ссылки"><a class="header" href="#полезные-ссылки">Полезные ссылки</a></h3>
+<h3 id="Полезные-ссылки"><a class="header" href="#Полезные-ссылки">Полезные ссылки</a></h3>
 <ul>
 <li>Node.js Documentation: https://nodejs.org/docs</li>
 <li>PostgreSQL Documentation: https://postgresql.org/docs</li>
 <li>WebSocket Protocol: https://tools.ietf.org/html/rfc6455</li>
 </ul>
-<h3 id="исходный-код-примеров"><a class="header" href="#исходный-код-примеров">Исходный код примеров</a></h3>
+<h3 id="Исходный-код-примеров"><a class="header" href="#Исходный-код-примеров">Исходный код примеров</a></h3>
 <p>Все примеры из лекции доступны в репозитории. Каждая папка содержит:</p>
 <ul>
 <li>Исходный код</li>
@@ -1638,43 +1598,43 @@ class RegisterUserUseCase {
 <li>README с инструкциями по запуску</li>
 </ul>
 <p><strong>Рекомендация:</strong> Попробуйте запустить все примеры последовательно, чтобы увидеть эволюцию архитектуры своими глазами.</p>
-<hr>
-<h2 id="практические-задания"><a class="header" href="#практические-задания">Практические задания</a></h2>
-<h3 id="задание-1-добавить-новую-сущность"><a class="header" href="#задание-1-добавить-новую-сущность">Задание 1: Добавить новую сущность</a></h3>
+<hr />
+<h2 id="Практические-задания"><a class="header" href="#Практические-задания">Практические задания</a></h2>
+<h3 id="Задание-1-Добавить-новую-сущность"><a class="header" href="#Задание-1-Добавить-новую-сущность">Задание 1: Добавить новую сущность</a></h3>
 <p>Создайте API для работы с комментариями (comments):</p>
 <ul>
 <li>Поля: id, post_id, user_id, content, created_at</li>
 <li>Методы: read, create, update, delete, findByPost</li>
 </ul>
-<h3 id="задание-2-реализовать-валидацию"><a class="header" href="#задание-2-реализовать-валидацию">Задание 2: Реализовать валидацию</a></h3>
+<h3 id="Задание-2-Реализовать-валидацию"><a class="header" href="#Задание-2-Реализовать-валидацию">Задание 2: Реализовать валидацию</a></h3>
 <p>Добавьте валидацию входных данных:</p>
 <ul>
 <li>Проверка типов</li>
 <li>Проверка обязательных полей</li>
 <li>Проверка форматов (email, длина строки)</li>
 </ul>
-<h3 id="задание-3-добавить-аутентификацию"><a class="header" href="#задание-3-добавить-аутентификацию">Задание 3: Добавить аутентификацию</a></h3>
+<h3 id="Задание-3-Добавить-аутентификацию"><a class="header" href="#Задание-3-Добавить-аутентификацию">Задание 3: Добавить аутентификацию</a></h3>
 <p>Реализуйте простую систему аутентификации:</p>
 <ul>
 <li>Создание сессий</li>
 <li>Проверка токенов</li>
 <li>Middleware для защищенных endpoints</li>
 </ul>
-<h3 id="задание-4-кэширование"><a class="header" href="#задание-4-кэширование">Задание 4: Кэширование</a></h3>
+<h3 id="Задание-4-Кэширование"><a class="header" href="#Задание-4-Кэширование">Задание 4: Кэширование</a></h3>
 <p>Реализуйте слой кэширования:</p>
 <ul>
 <li>In-memory кэш</li>
 <li>TTL для записей</li>
 <li>Инвалидация кэша при изменениях</li>
 </ul>
-<h3 id="задание-5-переключение-бд"><a class="header" href="#задание-5-переключение-бд">Задание 5: Переключение БД</a></h3>
+<h3 id="Задание-5-Переключение-БД"><a class="header" href="#Задание-5-Переключение-БД">Задание 5: Переключение БД</a></h3>
 <p>Добавьте поддержку другой СУБД (MySQL или SQLite):</p>
 <ul>
 <li>Создайте адаптер для новой БД</li>
 <li>Реализуйте тот же интерфейс</li>
 <li>Добавьте возможность выбора БД через конфиг</li>
 </ul>
-<hr>
+<hr />
 <p><strong>Конец конспекта</strong></p>
 <p>Эта архитектура демонстрирует, как можно построить мощное и гибкое приложение на Node.js без тяжелых фреймворков, используя простые и понятные абстракции. Главное - следовать принципам разделения ответственности и внедрения зависимостей.</p>
 
@@ -1683,11 +1643,11 @@ class RegisterUserUseCase {
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week4/nodejs-modules-packages-dependencies-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week4/abstract-factory-lecture-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1697,38 +1657,17 @@ class RegisterUserUseCase {
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week4/nodejs-modules-packages-dependencies-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week4/abstract-factory-lecture-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1736,16 +1675,15 @@ class RegisterUserUseCase {
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,41 +124,36 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="подсчет-ссылок-на-ресурс-при-помощи-using-и-disposable-в-javascript"><a class="header" href="#подсчет-ссылок-на-ресурс-при-помощи-using-и-disposable-в-javascript">Подсчет ссылок на ресурс при помощи Using и Disposable в JavaScript</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Подсчет-ссылок-на-ресурс-при-помощи-using-и-disposable-в-javascript"><a class="header" href="#Подсчет-ссылок-на-ресурс-при-помощи-using-и-disposable-в-javascript">Подсчет ссылок на ресурс при помощи Using и Disposable в JavaScript</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p>Данная лекция посвящена реализации паттерна Reference Counter (счетчик ссылок) с использованием новых возможностей JavaScript — <code>using</code> и <code>disposable</code>. Эти механизмы появились недавно (Node.js v24, современные версии Chrome) и позволяют управлять жизненным циклом ресурсов более явно и безопасно, чем традиционные подходы.</p>
 <p><strong>Основные темы:</strong></p>
 <ul>
@@ -185,15 +163,15 @@
 <li>Сравнение с подходом на базе Finalization Registry</li>
 <li>Практические примеры с файловыми дескрипторами и логированием</li>
 </ul>
-<hr>
-<h2 id="введение-в-explicit-resource-management"><a class="header" href="#введение-в-explicit-resource-management">Введение в Explicit Resource Management</a></h2>
-<h3 id="что-такое-explicit-resource-management"><a class="header" href="#что-такое-explicit-resource-management">Что такое Explicit Resource Management?</a></h3>
+<hr />
+<h2 id="Введение-в-explicit-resource-management"><a class="header" href="#Введение-в-explicit-resource-management">Введение в Explicit Resource Management</a></h2>
+<h3 id="Что-такое-explicit-resource-management"><a class="header" href="#Что-такое-explicit-resource-management">Что такое Explicit Resource Management?</a></h3>
 <p><strong>Explicit Resource Management</strong> — это паттерн явного управления ресурсами, который позволяет гарантировать освобождение ресурсов (файлы, соединения, память) при выходе из области видимости.</p>
-<h3 id="ключевые-концепции"><a class="header" href="#ключевые-концепции">Ключевые концепции</a></h3>
+<h3 id="Ключевые-концепции"><a class="header" href="#Ключевые-концепции">Ключевые концепции</a></h3>
 <p><strong><code>using</code> declaration</strong> — специальное объявление переменной, которое автоматически вызывает метод <code>Symbol.dispose</code> при выходе из блока.</p>
 <p><strong><code>Symbol.dispose</code></strong> — специальный символ, определяющий метод очистки ресурса.</p>
 <p><strong>Disposable объект</strong> — объект, имеющий метод <code>[Symbol.dispose]()</code>, который вызывается автоматически.</p>
-<h4 id="базовый-пример-использования"><a class="header" href="#базовый-пример-использования">Базовый пример использования</a></h4>
+<h4 id="Базовый-пример-использования"><a class="header" href="#Базовый-пример-использования">Базовый пример использования</a></h4>
 <pre><code class="language-javascript">// Объект с методом dispose
 const resource = {
   value: 'some data',
@@ -218,11 +196,11 @@ const resource = {
 <li>Работает даже при выбросе исключений</li>
 <li>Более короткий и понятный синтаксис по сравнению с <code>try...finally</code></li>
 </ul>
-<hr>
-<h2 id="reference-counter-базовая-реализация"><a class="header" href="#reference-counter-базовая-реализация">Reference Counter: Базовая реализация</a></h2>
-<h3 id="концепция-reference-counter"><a class="header" href="#концепция-reference-counter">Концепция Reference Counter</a></h3>
+<hr />
+<h2 id="reference-counter-Базовая-реализация"><a class="header" href="#reference-counter-Базовая-реализация">Reference Counter: Базовая реализация</a></h2>
+<h3 id="Концепция-reference-counter"><a class="header" href="#Концепция-reference-counter">Концепция Reference Counter</a></h3>
 <p><strong>Reference Counter (счетчик ссылок)</strong> — паттерн, который отслеживает количество активных ссылок на ресурс и автоматически освобождает ресурс, когда счетчик достигает нуля.</p>
-<h3 id="структура-reference-counter"><a class="header" href="#структура-reference-counter">Структура Reference Counter</a></h3>
+<h3 id="Структура-reference-counter"><a class="header" href="#Структура-reference-counter">Структура Reference Counter</a></h3>
 <pre><code class="language-javascript">class ReferenceCounter {
   #resource = null;      // Сам ресурс (например, консоль)
   #context = null;       // Контекст с данными для финализации
@@ -246,9 +224,9 @@ const resource = {
 <li><code>#create</code> — функция-фабрика для создания ресурса</li>
 <li><code>#dispose</code> — функция для освобождения ресурса</li>
 </ul>
-<hr>
-<h2 id="пример-7-простой-reference-counter-для-логера"><a class="header" href="#пример-7-простой-reference-counter-для-логера">Пример 7: Простой Reference Counter для логера</a></h2>
-<h3 id="постановка-задачи"><a class="header" href="#постановка-задачи">Постановка задачи</a></h3>
+<hr />
+<h2 id="Пример-7-Простой-reference-counter-для-логера"><a class="header" href="#Пример-7-Простой-reference-counter-для-логера">Пример 7: Простой Reference Counter для логера</a></h2>
+<h3 id="Постановка-задачи"><a class="header" href="#Постановка-задачи">Постановка задачи</a></h3>
 <p>Создать логер, который:</p>
 <ol>
 <li>Записывает данные в файл</li>
@@ -256,7 +234,7 @@ const resource = {
 <li>Автоматически закрывает файл, когда все блоки завершены</li>
 <li>Использует Reference Counter для отслеживания активных использований</li>
 </ol>
-<h3 id="реализация-создания-логера"><a class="header" href="#реализация-создания-логера">Реализация создания логера</a></h3>
+<h3 id="Реализация-создания-логера"><a class="header" href="#Реализация-создания-логера">Реализация создания логера</a></h3>
 <pre><code class="language-javascript">import { open } from 'node:fs';
 import { Console } from 'node:console';
 
@@ -294,7 +272,7 @@ const logger = new ReferenceCounter(createLogger, disposeLogger);
 <li><code>context</code> — это данные для финализации (файловый дескриптор)</li>
 <li>Reference Counter универсален — он не привязан к конкретному типу ресурса</li>
 </ul>
-<h3 id="метод-use--создание-disposable"><a class="header" href="#метод-use--создание-disposable">Метод use() — создание Disposable</a></h3>
+<h3 id="Метод-use--создание-disposable"><a class="header" href="#Метод-use--создание-disposable">Метод use() — создание Disposable</a></h3>
 <pre><code class="language-javascript">class ReferenceCounter {
   // ... предыдущий код ...
 
@@ -337,7 +315,7 @@ const logger = new ReferenceCounter(createLogger, disposeLogger);
 <li><strong>Декремент при dispose:</strong> когда блок <code>using</code> завершается, счетчик уменьшается</li>
 <li><strong>Финализация при нуле:</strong> когда счетчик достигает 0, вызывается функция освобождения</li>
 </ol>
-<h3 id="использование-в-коде"><a class="header" href="#использование-в-коде">Использование в коде</a></h3>
+<h3 id="Использование-в-коде"><a class="header" href="#Использование-в-коде">Использование в коде</a></h3>
 <pre><code class="language-javascript">async function main() {
   // Блок 0: первое использование логера
   {
@@ -412,7 +390,7 @@ rf4.log('log 4'); // Тоже НЕ запишется - ресурс освоб�
    - Ссылка существует, но ресурс уже освобожден
    - Попытки записи не дадут результата
 </code></pre>
-<h3 id="результат-выполнения"><a class="header" href="#результат-выполнения">Результат выполнения</a></h3>
+<h3 id="Результат-выполнения"><a class="header" href="#Результат-выполнения">Результат выполнения</a></h3>
 <p><strong>Вывод в консоль:</strong></p>
 <pre><code>open
 use (counter: 1)
@@ -434,9 +412,9 @@ log 2
 <li><code>log 3</code> — ресурс уже освобожден</li>
 <li><code>log 4</code> — ресурс уже освобожден</li>
 </ul>
-<hr>
-<h2 id="пример-8-reference-counter-с-коллекцией-файлов"><a class="header" href="#пример-8-reference-counter-с-коллекцией-файлов">Пример 8: Reference Counter с коллекцией файлов</a></h2>
-<h3 id="постановка-задачи-1"><a class="header" href="#постановка-задачи-1">Постановка задачи</a></h3>
+<hr />
+<h2 id="Пример-8-reference-counter-с-коллекцией-файлов"><a class="header" href="#Пример-8-reference-counter-с-коллекцией-файлов">Пример 8: Reference Counter с коллекцией файлов</a></h2>
+<h3 id="Постановка-задачи-1"><a class="header" href="#Постановка-задачи-1">Постановка задачи</a></h3>
 <p>Создать логер, который может работать с <strong>несколькими файлами одновременно</strong>, где:</p>
 <ul>
 <li>Для каждого файла ведется свой счетчик ссылок</li>
@@ -444,7 +422,7 @@ log 2
 <li>Файл закрывается, когда его счетчик достигает нуля</li>
 <li>Разные блоки могут писать в разные файлы</li>
 </ul>
-<h3 id="структура-данных-для-коллекции-файлов"><a class="header" href="#структура-данных-для-коллекции-файлов">Структура данных для коллекции файлов</a></h3>
+<h3 id="Структура-данных-для-коллекции-файлов"><a class="header" href="#Структура-данных-для-коллекции-файлов">Структура данных для коллекции файлов</a></h3>
 <pre><code class="language-javascript">class MultiFileLogger {
   // Коллекция открытых файлов
   // Ключ: имя файла (строка)
@@ -470,7 +448,7 @@ log 2
   }
 }
 </code></pre>
-<h3 id="метод-open--открытие-файла"><a class="header" href="#метод-open--открытие-файла">Метод open() — открытие файла</a></h3>
+<h3 id="Метод-open--открытие-файла"><a class="header" href="#Метод-open--открытие-файла">Метод open() — открытие файла</a></h3>
 <pre><code class="language-javascript">class MultiFileLogger {
   #files = new Map();
 
@@ -493,7 +471,7 @@ log 2
   }
 }
 </code></pre>
-<h3 id="метод-use--получение-disposable-для-файла"><a class="header" href="#метод-use--получение-disposable-для-файла">Метод use() — получение disposable для файла</a></h3>
+<h3 id="Метод-use--получение-disposable-для-файла"><a class="header" href="#Метод-use--получение-disposable-для-файла">Метод use() — получение disposable для файла</a></h3>
 <pre><code class="language-javascript">class MultiFileLogger {
   #files = new Map();
 
@@ -547,7 +525,7 @@ const logger = new MultiFileLogger();
 <li><strong>Создание disposable:</strong> создаем объект с методом <code>Symbol.dispose</code></li>
 <li><strong>Закрытие при нуле:</strong> когда счетчик файла становится 0, файл закрывается и удаляется из коллекции</li>
 </ol>
-<h3 id="использование-с-несколькими-файлами"><a class="header" href="#использование-с-несколькими-файлами">Использование с несколькими файлами</a></h3>
+<h3 id="Использование-с-несколькими-файлами"><a class="header" href="#Использование-с-несколькими-файлами">Использование с несколькими файлами</a></h3>
 <pre><code class="language-javascript">async function main() {
   // Блок 0: работа с output.log
   {
@@ -593,7 +571,7 @@ const logger = new MultiFileLogger();
   c5.log('log 5');  // НЕ запишется - файл закрыт!
 }
 </code></pre>
-<h3 id="пошаговая-трассировка-выполнения"><a class="header" href="#пошаговая-трассировка-выполнения">Пошаговая трассировка выполнения</a></h3>
+<h3 id="Пошаговая-трассировка-выполнения"><a class="header" href="#Пошаговая-трассировка-выполнения">Пошаговая трассировка выполнения</a></h3>
 <pre><code>=== Начало выполнения ===
 
 1. Вход в блок 0:
@@ -654,7 +632,7 @@ const logger = new MultiFileLogger();
 10. Использование в блоке 5:
     - c5.log('log 5') → НЕ запишется (файл закрыт) ✗
 </code></pre>
-<h3 id="результаты-выполнения"><a class="header" href="#результаты-выполнения">Результаты выполнения</a></h3>
+<h3 id="Результаты-выполнения"><a class="header" href="#Результаты-выполнения">Результаты выполнения</a></h3>
 <p><strong>Вывод в консоль:</strong></p>
 <pre><code>open output.log
 use output.log (counter: 1)
@@ -683,8 +661,8 @@ log 2
 <li><code>log 4</code> — output.log уже закрыт</li>
 <li><code>log 5</code> — output.log уже закрыт</li>
 </ul>
-<hr>
-<h2 id="сравнение-подходов-finalization-registry-vs-usingdisposable"><a class="header" href="#сравнение-подходов-finalization-registry-vs-usingdisposable">Сравнение подходов: Finalization Registry vs Using/Disposable</a></h2>
+<hr />
+<h2 id="Сравнение-подходов-finalization-registry-vs-usingdisposable"><a class="header" href="#Сравнение-подходов-finalization-registry-vs-usingdisposable">Сравнение подходов: Finalization Registry vs Using/Disposable</a></h2>
 <h3 id="finalization-registry"><a class="header" href="#finalization-registry">Finalization Registry</a></h3>
 <p><strong>Принцип работы:</strong></p>
 <ul>
@@ -692,7 +670,7 @@ log 2
 <li>Зависит от работы Garbage Collector</li>
 <li>Недетерминированное время выполнения</li>
 </ul>
-<h4 id="пример-с-finalization-registry"><a class="header" href="#пример-с-finalization-registry">Пример с Finalization Registry</a></h4>
+<h4 id="Пример-с-finalization-registry"><a class="header" href="#Пример-с-finalization-registry">Пример с Finalization Registry</a></h4>
 <pre><code class="language-javascript">// Создаем registry для отслеживания освобождения ресурсов
 const registry = new FinalizationRegistry((context) =&gt; {
   // Этот callback вызовется когда-то в будущем
@@ -764,7 +742,7 @@ process.exit(0); // Файл может остаться незакрытым!
 <li>Вызывается сразу при выходе из блока</li>
 <li>Работает даже при исключениях</li>
 </ul>
-<h4 id="пример-с-usingdisposable"><a class="header" href="#пример-с-usingdisposable">Пример с Using/Disposable</a></h4>
+<h4 id="Пример-с-usingdisposable"><a class="header" href="#Пример-с-usingdisposable">Пример с Using/Disposable</a></h4>
 <pre><code class="language-javascript">class LoggerWithDisposable {
   #fd = null;
 
@@ -822,13 +800,8 @@ fs.readFileSync('output.log'); // Всегда готов для чтения
 </code></pre>
 </li>
 </ol>
-<h3 id="сравнительная-таблица"><a class="header" href="#сравнительная-таблица">Сравнительная таблица</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Характеристика</th><th>Finalization Registry</th><th>Using/Disposable</th></tr>
-</thead>
-<tbody>
+<h3 id="Сравнительная-таблица"><a class="header" href="#Сравнительная-таблица">Сравнительная таблица</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Характеристика</th><th>Finalization Registry</th><th>Using/Disposable</th></tr></thead><tbody>
 <tr><td><strong>Время вызова</strong></td><td>Недетерминированное (зависит от GC)</td><td>Детерминированное (сразу при выходе из блока)</td></tr>
 <tr><td><strong>Гарантия вызова</strong></td><td>Может не вызваться</td><td>Гарантированно вызывается</td></tr>
 <tr><td><strong>Работа с исключениями</strong></td><td>Может не сработать при ранних выходах</td><td>Работает всегда (как <code>finally</code>)</td></tr>
@@ -837,10 +810,9 @@ fs.readFileSync('output.log'); // Всегда готов для чтения
 <tr><td><strong>Использование в продакшене</strong></td><td>Только для некритичных случаев</td><td>Рекомендуется для управления ресурсами</td></tr>
 <tr><td><strong>Задержка освобождения</strong></td><td>От секунд до бесконечности</td><td>Мгновенно</td></tr>
 <tr><td><strong>Контроль памяти</strong></td><td>Слабый</td><td>Полный</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="когда-использовать-каждый-подход"><a class="header" href="#когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
+<h3 id="Когда-использовать-каждый-подход"><a class="header" href="#Когда-использовать-каждый-подход">Когда использовать каждый подход</a></h3>
 <p><strong>Finalization Registry:</strong></p>
 <ul>
 <li>Кеширование, где важна производительность</li>
@@ -878,10 +850,10 @@ async function updateUser(userId, data) {
   }
 }
 </code></pre>
-<hr>
-<h2 id="преимущества-и-ограничения-reference-counter"><a class="header" href="#преимущества-и-ограничения-reference-counter">Преимущества и ограничения Reference Counter</a></h2>
-<h3 id="преимущества"><a class="header" href="#преимущества">Преимущества</a></h3>
-<h4 id="1-автоматическое-управление-жизненным-циклом"><a class="header" href="#1-автоматическое-управление-жизненным-циклом">1. Автоматическое управление жизненным циклом</a></h4>
+<hr />
+<h2 id="Преимущества-и-ограничения-reference-counter"><a class="header" href="#Преимущества-и-ограничения-reference-counter">Преимущества и ограничения Reference Counter</a></h2>
+<h3 id="Преимущества"><a class="header" href="#Преимущества">Преимущества</a></h3>
+<h4 id="1-Автоматическое-управление-жизненным-циклом"><a class="header" href="#1-Автоматическое-управление-жизненным-циклом">1. Автоматическое управление жизненным циклом</a></h4>
 <pre><code class="language-javascript">// БЕЗ Reference Counter - ручное управление
 function withoutRefCounter() {
   const fd = fs.openSync('file.log', 'w');
@@ -920,7 +892,7 @@ function withRefCounter() {
   } // Файл закрывается автоматически
 }
 </code></pre>
-<h4 id="2-безопасность-при-исключениях"><a class="header" href="#2-безопасность-при-исключениях">2. Безопасность при исключениях</a></h4>
+<h4 id="2-Безопасность-при-исключениях"><a class="header" href="#2-Безопасность-при-исключениях">2. Безопасность при исключениях</a></h4>
 <pre><code class="language-javascript">// Даже при ошибках ресурсы освобождаются
 async function processLogs() {
   {
@@ -934,7 +906,7 @@ async function processLogs() {
   } // dispose вызовется ДАЖЕ если riskyOperation бросит ошибку
 }
 </code></pre>
-<h4 id="3-защита-от-утечек-ресурсов"><a class="header" href="#3-защита-от-утечек-ресурсов">3. Защита от утечек ресурсов</a></h4>
+<h4 id="3-Защита-от-утечек-ресурсов"><a class="header" href="#3-Защита-от-утечек-ресурсов">3. Защита от утечек ресурсов</a></h4>
 <pre><code class="language-javascript">// Невозможно забыть закрыть ресурс
 function safeResourceUsage() {
   {
@@ -946,8 +918,8 @@ function safeResourceUsage() {
   }
 }
 </code></pre>
-<h3 id="ограничения-и-проблемы"><a class="header" href="#ограничения-и-проблемы">Ограничения и проблемы</a></h3>
-<h4 id="1-утечшие-ссылки-не-работают"><a class="header" href="#1-утечшие-ссылки-не-работают">1. Утечшие ссылки не работают</a></h4>
+<h3 id="Ограничения-и-проблемы"><a class="header" href="#Ограничения-и-проблемы">Ограничения и проблемы</a></h3>
+<h4 id="1-Утечшие-ссылки-не-работают"><a class="header" href="#1-Утечшие-ссылки-не-работают">1. Утечшие ссылки не работают</a></h4>
 <pre><code class="language-javascript">let leakedReference;
 
 {
@@ -960,7 +932,7 @@ function safeResourceUsage() {
 leakedReference.log('This will not work'); // Файл уже закрыт!
 </code></pre>
 <p><strong>Решение:</strong> не сохранять ссылки на disposable объекты вне блока <code>using</code>.</p>
-<h4 id="2-не-рекомендуется-для-продакшена-пока"><a class="header" href="#2-не-рекомендуется-для-продакшена-пока">2. Не рекомендуется для продакшена (пока)</a></h4>
+<h4 id="2-Не-рекомендуется-для-продакшена-пока"><a class="header" href="#2-Не-рекомендуется-для-продакшена-пока">2. Не рекомендуется для продакшена (пока)</a></h4>
 <pre><code class="language-javascript">// Это прототип, не используйте в продакшене
 // Нужно больше тестирования и доработки
 const logger = new ReferenceCounter(/* ... */);
@@ -971,16 +943,16 @@ const logger = new ReferenceCounter(/* ... */);
 // - Более надежная обработка ошибок
 // - Тестирование edge cases
 </code></pre>
-<h4 id="3-необходима-поддержка-браузеромnodejs"><a class="header" href="#3-необходима-поддержка-браузеромnodejs">3. Необходима поддержка браузером/Node.js</a></h4>
+<h4 id="3-Необходима-поддержка-браузеромnodejs"><a class="header" href="#3-Необходима-поддержка-браузеромnodejs">3. Необходима поддержка браузером/Node.js</a></h4>
 <pre><code class="language-javascript">// Проверка поддержки
 if (typeof Symbol.dispose === 'undefined') {
   console.error('Using/Disposable not supported!');
   // Нужен fallback или polyfill
 }
 </code></pre>
-<hr>
-<h2 id="практические-рекомендации"><a class="header" href="#практические-рекомендации">Практические рекомендации</a></h2>
-<h3 id="1-структура-проекта-с-reference-counter"><a class="header" href="#1-структура-проекта-с-reference-counter">1. Структура проекта с Reference Counter</a></h3>
+<hr />
+<h2 id="Практические-рекомендации"><a class="header" href="#Практические-рекомендации">Практические рекомендации</a></h2>
+<h3 id="1-Структура-проекта-с-reference-counter"><a class="header" href="#1-Структура-проекта-с-reference-counter">1. Структура проекта с Reference Counter</a></h3>
 <pre><code class="language-javascript">// logger.js - модуль логирования
 import { ReferenceCounter } from './reference-counter.js';
 
@@ -1015,7 +987,7 @@ export async function processRequest(request) {
   // dispose вызовется автоматически
 }
 </code></pre>
-<h3 id="2-множественные-ресурсы"><a class="header" href="#2-множественные-ресурсы">2. Множественные ресурсы</a></h3>
+<h3 id="2-Множественные-ресурсы"><a class="header" href="#2-Множественные-ресурсы">2. Множественные ресурсы</a></h3>
 <pre><code class="language-javascript">// Управление несколькими ресурсами одновременно
 async function complexOperation() {
   using dbConnection = connectionPool.use();
@@ -1027,7 +999,7 @@ async function complexOperation() {
 
 } // dispose вызовется для всех трех ресурсов
 </code></pre>
-<h3 id="3-правильная-обработка-ошибок"><a class="header" href="#3-правильная-обработка-ошибок">3. Правильная обработка ошибок</a></h3>
+<h3 id="3-Правильная-обработка-ошибок"><a class="header" href="#3-Правильная-обработка-ошибок">3. Правильная обработка ошибок</a></h3>
 <pre><code class="language-javascript">class ReferenceCounter {
   use() {
     this.#counter++;
@@ -1056,7 +1028,7 @@ async function complexOperation() {
   }
 }
 </code></pre>
-<h3 id="4-паттерн-для-ленивой-инициализации"><a class="header" href="#4-паттерн-для-ленивой-инициализации">4. Паттерн для ленивой инициализации</a></h3>
+<h3 id="4-Паттерн-для-ленивой-инициализации"><a class="header" href="#4-Паттерн-для-ленивой-инициализации">4. Паттерн для ленивой инициализации</a></h3>
 <pre><code class="language-javascript">class ReferenceCounter {
   #initialized = false;
 
@@ -1074,8 +1046,8 @@ async function complexOperation() {
   }
 }
 </code></pre>
-<hr>
-<h2 id="диаграмма-жизненного-цикла-reference-counter"><a class="header" href="#диаграмма-жизненного-цикла-reference-counter">Диаграмма жизненного цикла Reference Counter</a></h2>
+<hr />
+<h2 id="Диаграмма-жизненного-цикла-reference-counter"><a class="header" href="#Диаграмма-жизненного-цикла-reference-counter">Диаграмма жизненного цикла Reference Counter</a></h2>
 <pre><code>Состояние счетчика для output.log:
 
 Блок 0 начало:  counter = 1  [FILE OPENED]
@@ -1097,8 +1069,8 @@ async function complexOperation() {
 │
 └── Блок 3 конец:  counter = 0  [FILE CLOSED, dispose вызван]
 </code></pre>
-<hr>
-<h2 id="полный-код-реализации-reference-counter"><a class="header" href="#полный-код-реализации-reference-counter">Полный код реализации Reference Counter</a></h2>
+<hr />
+<h2 id="Полный-код-реализации-reference-counter"><a class="header" href="#Полный-код-реализации-reference-counter">Полный код реализации Reference Counter</a></h2>
 <h3 id="reference-counterjs"><a class="header" href="#reference-counterjs">reference-counter.js</a></h3>
 <pre><code class="language-javascript">/**
  * Reference Counter для управления жизненным циклом ресурсов
@@ -1352,28 +1324,22 @@ console.log('After main');
   c5.log('log 5'); // Не запишется
 }
 </code></pre>
-<hr>
-<h2 id="ключевые-выводы"><a class="header" href="#ключевые-выводы">Ключевые выводы</a></h2>
+<hr />
+<h2 id="Ключевые-выводы"><a class="header" href="#Ключевые-выводы">Ключевые выводы</a></h2>
 <h3 id="1-reference-counter-решает-важные-проблемы"><a class="header" href="#1-reference-counter-решает-важные-проблемы">1. Reference Counter решает важные проблемы</a></h3>
 <p>✓ <strong>Автоматическое управление ресурсами:</strong> не нужно вручную отслеживать открытие/закрытие
 ✓ <strong>Безопасность при исключениях:</strong> ресурсы освобождаются даже при ошибках
 ✓ <strong>Защита от утечек:</strong> невозможно забыть закрыть ресурс
 ✓ <strong>Детерминированность:</strong> ресурсы освобождаются сразу, а не когда-нибудь</p>
 <h3 id="2-usingdisposable-vs-finalization-registry"><a class="header" href="#2-usingdisposable-vs-finalization-registry">2. Using/Disposable vs Finalization Registry</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Using/Disposable</th><th>Finalization Registry</th></tr>
-</thead>
-<tbody>
+<div class="table-wrapper"><table><thead><tr><th>Using/Disposable</th><th>Finalization Registry</th></tr></thead><tbody>
 <tr><td>Детерминированное освобождение</td><td>Недетерминированное</td></tr>
 <tr><td>Гарантия вызова</td><td>Может не вызваться</td></tr>
 <tr><td>Мгновенное освобождение</td><td>Задержка до GC</td></tr>
 <tr><td>Рекомендуется для критичных ресурсов</td><td>Только для некритичных случаев</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="3-практические-советы"><a class="header" href="#3-практические-советы">3. Практические советы</a></h3>
+<h3 id="3-Практические-советы"><a class="header" href="#3-Практические-советы">3. Практические советы</a></h3>
 <p><strong>Делайте:</strong></p>
 <ul>
 <li>Используйте <code>using</code> для файлов, соединений, транзакций</li>
@@ -1386,7 +1352,7 @@ console.log('After main');
 <li>Не используйте текущую реализацию Reference Counter в продакшене (пока это прототип)</li>
 <li>Не полагайтесь на Finalization Registry для критичных ресурсов</li>
 </ul>
-<h3 id="4-статус-технологии"><a class="header" href="#4-статус-технологии">4. Статус технологии</a></h3>
+<h3 id="4-Статус-технологии"><a class="header" href="#4-Статус-технологии">4. Статус технологии</a></h3>
 <p>⚠️ <strong>Текущий статус:</strong> Прототип, экспериментальная реализация</p>
 <p><strong>Доступность:</strong></p>
 <ul>
@@ -1400,31 +1366,31 @@ console.log('After main');
 <li>Возможное включение в Metarhia technology stack</li>
 <li>Создание библиотеки с готовыми классами</li>
 </ul>
-<hr>
-<h2 id="дополнительные-материалы"><a class="header" href="#дополнительные-материалы">Дополнительные материалы</a></h2>
-<h3 id="полезные-ссылки"><a class="header" href="#полезные-ссылки">Полезные ссылки</a></h3>
+<hr />
+<h2 id="Дополнительные-материалы"><a class="header" href="#Дополнительные-материалы">Дополнительные материалы</a></h2>
+<h3 id="Полезные-ссылки"><a class="header" href="#Полезные-ссылки">Полезные ссылки</a></h3>
 <ul>
 <li><a href="https://github.com/tc39/proposal-explicit-resource-management">TC39 Proposal: Explicit Resource Management</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/dispose">MDN: Symbol.dispose</a></li>
 <li>Исходники примеров под видео лекции</li>
 </ul>
-<h3 id="связанные-темы-для-изучения"><a class="header" href="#связанные-темы-для-изучения">Связанные темы для изучения</a></h3>
+<h3 id="Связанные-темы-для-изучения"><a class="header" href="#Связанные-темы-для-изучения">Связанные темы для изучения</a></h3>
 <ol>
 <li><strong>Finalization Registry</strong> - альтернативный подход к управлению ресурсами</li>
 <li><strong>WeakRef и WeakMap</strong> - слабые ссылки в JavaScript</li>
-<li><strong>Try…finally</strong> - классический подход к освобождению ресурсов</li>
+<li><strong>Try...finally</strong> - классический подход к освобождению ресурсов</li>
 <li><strong>RAII (Resource Acquisition Is Initialization)</strong> - паттерн из C++, вдохновивший using/disposable</li>
 <li><strong>Async Disposable</strong> - асинхронная версия disposable (Symbol.asyncDispose)</li>
 </ol>
-<h3 id="практические-задания"><a class="header" href="#практические-задания">Практические задания</a></h3>
+<h3 id="Практические-задания"><a class="header" href="#Практические-задания">Практические задания</a></h3>
 <ol>
 <li>Реализуйте Reference Counter для пула соединений к базе данных</li>
 <li>Создайте систему блокировок (locks) с автоматическим освобождением</li>
 <li>Реализуйте файловый кеш с автоматической очисткой</li>
 <li>Добавьте поддержку async dispose для асинхронных ресурсов</li>
 </ol>
-<hr>
-<h2 id="заключение"><a class="header" href="#заключение">Заключение</a></h2>
+<hr />
+<h2 id="Заключение"><a class="header" href="#Заключение">Заключение</a></h2>
 <p>Механизм <strong>using/disposable</strong> представляет собой мощный инструмент для управления жизненным циклом ресурсов в JavaScript. В сочетании с паттерном <strong>Reference Counter</strong>, он позволяет создавать надежные и безопасные абстракции для работы с файлами, соединениями и другими критичными ресурсами.</p>
 <p><strong>Основные преимущества подхода:</strong></p>
 <ul>
@@ -1446,11 +1412,11 @@ console.log('After main');
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week2/конспект-using-dispose.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1460,38 +1426,17 @@ console.log('After main');
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week2/конспект-using-dispose.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1499,16 +1444,15 @@ console.log('After main');
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>

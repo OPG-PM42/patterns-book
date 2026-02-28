@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SOLID DIP — Принцип инверсии зависимостей (теория) - Patterns</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Patterns</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Принцип-инверсии-зависимостей-dip--solid"><a class="header" href="#Принцип-инверсии-зависимостей-dip--solid">Принцип инверсии зависимостей (DIP) — SOLID</a></h1>
+<h2 id="Введение"><a class="header" href="#Введение">Введение</a></h2>
+<p>Принцип инверсии зависимостей (Dependency Inversion Principle, DIP) — один из самых сложных, недопонятых и при этом наиболее полезных принципов SOLID. Именно он открывает путь к построению настоящей архитектуры приложений.</p>
+<p>Если остальные четыре принципа SOLID касаются преимущественно структуры отдельных классов и модулей, то DIP выводит нас на уровень выше: он описывает, как должны быть организованы <strong>слои</strong> приложения и как они должны взаимодействовать между собой.</p>
+<p>Цель принципа — сделать логику предметной области (доменный слой) переносимой и независимой: её можно запустить на фронтенде, бэкенде, в мобильном приложении или даже встроить в программу, написанную на другом языке, если тот поддерживает JavaScript-рантайм.</p>
+<hr />
+<h2 id="Принцип-инверсии-зависимостей"><a class="header" href="#Принцип-инверсии-зависимостей">Принцип инверсии зависимостей</a></h2>
+<p>Формулировка принципа состоит из двух частей:</p>
+<ol>
+<li><strong>Модули верхних уровней не должны зависеть от модулей нижних уровней.</strong> Оба должны зависеть от абстракций (интерфейсов).</li>
+<li><strong>Абстракции не должны зависеть от деталей.</strong> Детали (конкретные реализации) должны зависеть от абстракций.</li>
+</ol>
+<h3 id="Что-такое-верхний-и-нижний-уровень"><a class="header" href="#Что-такое-верхний-и-нижний-уровень">Что такое "верхний" и "нижний" уровень?</a></h3>
+<p>В типичном приложении можно выделить несколько слоёв:</p>
+<pre><code>┌─────────────────────────────┐
+│      Доменная модель        │  ← верхний уровень
+│   (Employee, Payroll, ...)  │
+├─────────────────────────────┤
+│     Бизнес-сервисы          │  ← средний уровень
+│  (PayrollService, ...)      │
+├─────────────────────────────┤
+│      Инфраструктура         │  ← нижний уровень
+│  (Logger, Storage, Server)  │
+└─────────────────────────────┘
+</code></pre>
+<p>В архитектуре "луковица" (Onion Architecture) или чистой архитектуре (Clean Architecture) доменная модель находится в центре и <strong>не должна знать ничего</strong> о слоях снаружи: ни о конкретной СУБД, ни о сетевом протоколе, ни о способе логирования, ни об интерфейсе пользователя.</p>
+<h3 id="Почему-это-важно"><a class="header" href="#Почему-это-важно">Почему это важно</a></h3>
+<p>Когда верхний уровень напрямую импортирует нижний — между ними возникает жёсткая связь (tight coupling). Стрелки зависимостей направлены вниз. Если нижний уровень изменится (например, вы переходите с HTTP на HTTP/2 или меняете S3-хранилище на локальный диск), вам придётся менять и верхний уровень.</p>
+<p>DIP предлагает <strong>инвертировать</strong> эти стрелки: пусть нижний уровень <strong>зависит от интерфейса</strong>, который принадлежит верхнему уровню, а не наоборот.</p>
+<blockquote>
+<p>Принцип DIP применим не только в ООП. Он одинаково хорошо работает в процедурном, функциональном, реактивном и мультипарадигменном программировании.</p>
+</blockquote>
+<hr />
+<h2 id="До-и-После"><a class="header" href="#До-и-После">До и После</a></h2>
+<h3 id="Ситуация-до-жёсткая-связь"><a class="header" href="#Ситуация-до-жёсткая-связь">Ситуация "до": жёсткая связь</a></h3>
+<p>Рассмотрим простой файловый сервер на Node.js. Есть три модуля:</p>
+<ul>
+<li><code>logger.js</code> — логирует запросы через <code>console</code></li>
+<li><code>storage.js</code> — читает файлы с диска через <code>ReadableStream</code></li>
+<li><code>server.js</code> — HTTP-сервер, который использует <code>logger</code> и <code>storage</code></li>
+</ul>
+<p>Каждый модуль напрямую импортирует конкретные реализации друг друга. Зависимости выглядят так:</p>
+<pre><code>server.js  →  logger.js  →  console (Node.js)
+           →  storage.js →  ReadableStream (Node.js)
+</code></pre>
+<p>Проблема: <code>server.js</code> намертво привязан к конкретному логеру и конкретному хранилищу. Хотите писать логи в файл? Хотите отдавать файлы из S3? Придётся менять код сервера.</p>
+<h3 id="Ситуация-после-инверсия-через-интерфейсы"><a class="header" href="#Ситуация-после-инверсия-через-интерфейсы">Ситуация "после": инверсия через интерфейсы</a></h3>
+<p>После применения DIP мы вводим <strong>интерфейсы</strong> (контракты). Каждый интерфейс принадлежит тому слою, который его <strong>использует</strong>, а не тому, который его реализует.</p>
+<pre><code>server.js  →  ILogger    ←  logger.js
+           →  IStorage   ←  storage.js
+           →  IStatic    ←  httpServer.js / http2Server.js
+</code></pre>
+<p>Теперь <code>server.js</code> зависит только от абстракций. Конкретные реализации — <code>logger.js</code>, <code>storage.js</code> — сами зависят от этих контрактов. Стрелки инвертированы.</p>
+<hr />
+<h2 id="Реализация"><a class="header" href="#Реализация">Реализация</a></h2>
+<h3 id="Пример-без-dip-нарушение-принципа"><a class="header" href="#Пример-без-dip-нарушение-принципа">Пример без DIP (нарушение принципа)</a></h3>
+<pre><code class="language-javascript">// logger.js — конкретная реализация через console
+class ConsoleLogger {
+  log(message) {
+    console.log(`[LOG] ${message}`);
+  }
+}
+
+module.exports = { ConsoleLogger };
+</code></pre>
+<pre><code class="language-javascript">// storage.js — конкретная реализация через файловую систему
+const fs = require('fs');
+
+class FileStorage {
+  getFile(path) {
+    // Возвращает ReadableStream напрямую
+    return fs.createReadStream(path);
+  }
+}
+
+module.exports = { FileStorage };
+</code></pre>
+<pre><code class="language-javascript">// server.js — жёсткая зависимость от конкретных классов
+const http = require('http');
+const { ConsoleLogger } = require('./logger');   // импорт конкретного класса
+const { FileStorage }   = require('./storage');  // импорт конкретного класса
+
+class StaticServer {
+  constructor() {
+    // Верхний уровень сам создаёт детали реализации — нарушение DIP
+    this.logger  = new ConsoleLogger();
+    this.storage = new FileStorage();
+  }
+
+  serveStatic(req, res) {
+    this.logger.log(`Request: ${req.url}`);
+    const stream = this.storage.getFile(`.${req.url}`);
+    stream.pipe(res);
+  }
+}
+
+const server = new StaticServer();
+http.createServer((req, res) =&gt; server.serveStatic(req, res)).listen(3000);
+</code></pre>
+<p><strong>Проблема:</strong> <code>StaticServer</code> знает про <code>ConsoleLogger</code> и <code>FileStorage</code>. Чтобы заменить логер или хранилище, нужно редактировать класс <code>StaticServer</code>.</p>
+<hr />
+<h3 id="Пример-с-dip-принцип-соблюдён"><a class="header" href="#Пример-с-dip-принцип-соблюдён">Пример с DIP (принцип соблюдён)</a></h3>
+<p>Шаг 1 — определяем интерфейсы (контракты) на уровне того слоя, который их использует.</p>
+<pre><code class="language-javascript">// interfaces.js — контракты принадлежат слою сервера, не реализациям
+
+/**
+ * @typedef {Object} ILogger
+ * @property {(message: string) =&gt; void} log
+ */
+
+/**
+ * @typedef {Object} IFile
+ * @property {() =&gt; NodeJS.ReadableStream} createReadStream
+ */
+
+/**
+ * @typedef {Object} IStorage
+ * @property {(path: string) =&gt; IFile} getFile
+ */
+
+/**
+ * @typedef {Object} IStatic
+ * @property {(req: any, res: any) =&gt; void} serveStatic
+ */
+</code></pre>
+<p>Шаг 2 — реализации зависят от контракта, а не наоборот.</p>
+<pre><code class="language-javascript">// logger-console.js — реализует интерфейс ILogger через console
+class ConsoleLogger {
+  /** @param {string} message */
+  log(message) {
+    console.log(`[LOG] ${message}`);
+  }
+}
+
+// logger-file.js — альтернативная реализация ILogger
+const fs = require('fs');
+
+class FileLogger {
+  constructor(logPath) {
+    this.logPath = logPath;
+  }
+
+  /** @param {string} message */
+  log(message) {
+    fs.appendFileSync(this.logPath, `[LOG] ${message}\n`);
+  }
+}
+
+module.exports = { ConsoleLogger, FileLogger };
+</code></pre>
+<pre><code class="language-javascript">// storage-disk.js — реализует IStorage, читает файлы с диска
+const fs = require('fs');
+
+class DiskStorage {
+  /** @param {string} filePath @returns {IFile} */
+  getFile(filePath) {
+    return {
+      createReadStream: () =&gt; fs.createReadStream(filePath),
+    };
+  }
+}
+
+// storage-s3.js — альтернативная реализация IStorage (псевдокод)
+class S3Storage {
+  constructor(bucket) {
+    this.bucket = bucket;
+  }
+
+  /** @param {string} key @returns {IFile} */
+  getFile(key) {
+    return {
+      // В реальном коде здесь был бы вызов AWS SDK
+      createReadStream: () =&gt; this._downloadFromS3(key),
+    };
+  }
+
+  _downloadFromS3(key) {
+    // ... логика получения потока из S3
+  }
+}
+
+module.exports = { DiskStorage, S3Storage };
+</code></pre>
+<pre><code class="language-javascript">// server.js — зависит только от интерфейсов ILogger и IStorage
+class StaticServer {
+  /**
+   * Зависимости передаются снаружи (Dependency Injection).
+   * StaticServer ничего не знает о конкретных классах.
+   *
+   * @param {ILogger}  logger
+   * @param {IStorage} storage
+   */
+  constructor(logger, storage) {
+    this.logger  = logger;
+    this.storage = storage;
+  }
+
+  /** @param {IStatic} transport */
+  serveStatic(req, res) {
+    this.logger.log(`Request: ${req.url}`);
+    const file = this.storage.getFile(`.${req.url}`);
+    file.createReadStream().pipe(res);
+  }
+}
+
+module.exports = { StaticServer };
+</code></pre>
+<pre><code class="language-javascript">// index.js — точка входа: здесь выбираем конкретные реализации
+const http = require('http');
+const { StaticServer } = require('./server');
+const { ConsoleLogger } = require('./logger-console');
+const { DiskStorage }   = require('./storage-disk');
+
+// Можно легко заменить ConsoleLogger на FileLogger,
+// а DiskStorage на S3Storage — не трогая server.js
+const logger  = new ConsoleLogger();
+const storage = new DiskStorage();
+const app     = new StaticServer(logger, storage);
+
+http.createServer((req, res) =&gt; app.serveStatic(req, res)).listen(3000, () =&gt; {
+  logger.log('Server started on port 3000');
+});
+</code></pre>
+<h3 id="Фабрика-логеров-стратегия"><a class="header" href="#Фабрика-логеров-стратегия">Фабрика логеров (стратегия)</a></h3>
+<p>Принцип DIP хорошо сочетается с паттерном <strong>Стратегия</strong> и фабриками:</p>
+<pre><code class="language-javascript">// logger-factory.js — фабрика создаёт нужную реализацию ILogger
+const { ConsoleLogger } = require('./logger-console');
+const { FileLogger }    = require('./logger-console');
+
+/**
+ * @param {'console' | 'file'} type
+ * @param {Object}             [options]
+ * @returns {ILogger}
+ */
+function createLogger(type, options = {}) {
+  switch (type) {
+    case 'file':
+      return new FileLogger(options.logPath || 'app.log');
+    case 'console':
+    default:
+      return new ConsoleLogger();
+  }
+}
+
+module.exports = { createLogger };
+</code></pre>
+<pre><code class="language-javascript">// Использование фабрики в index.js
+const { createLogger } = require('./logger-factory');
+
+// Переключение реализации — одна строка, server.js не меняется
+const logger = createLogger(process.env.LOG_TARGET || 'console');
+</code></pre>
+<hr />
+<h2 id="Когда-применять"><a class="header" href="#Когда-применять">Когда применять</a></h2>
+<p>DIP стоит применять, когда:</p>
+<ul>
+<li><strong>Логика должна быть переносимой</strong> — один и тот же доменный код нужно запустить в браузере, на сервере или в мобильном приложении.</li>
+<li><strong>Реализации могут меняться</strong> — хранилище данных, способ логирования, сетевой транспорт, провайдер очереди сообщений.</li>
+<li><strong>Нужна тестируемость</strong> — при передаче зависимостей через конструктор (Dependency Injection) легко подменить реальную реализацию на заглушку (mock/stub) в тестах.</li>
+<li><strong>Команда растёт</strong> — разные команды могут независимо разрабатывать разные слои, не мешая друг другу, если между ними есть чёткий контракт (интерфейс).</li>
+</ul>
+<p>DIP <strong>не нужен</strong>, если:</p>
+<ul>
+<li>Приложение очень маленькое и реализации никогда не будут меняться.</li>
+<li>Введение интерфейсов создаёт больше сложности, чем решает проблем.</li>
+</ul>
+<hr />
+<h2 id="Связанные-принципы-и-паттерны"><a class="header" href="#Связанные-принципы-и-паттерны">Связанные принципы и паттерны</a></h2>
+<p>DIP — самый общий из принципов SOLID. Он является основой для:</p>
+<div class="table-wrapper"><table><thead><tr><th>Концепция</th><th>Суть</th></tr></thead><tbody>
+<tr><td><strong>IoC</strong> (Inversion of Control)</td><td>Общий принцип: управление созданием зависимостей передаётся внешнему коду</td></tr>
+<tr><td><strong>DI</strong> (Dependency Injection)</td><td>Конкретный механизм IoC: зависимости передаются в конструктор или метод</td></tr>
+<tr><td><strong>Service Locator</strong></td><td>Альтернативный механизм IoC: зависимости запрашиваются из реестра</td></tr>
+<tr><td><strong>Стратегия</strong></td><td>Паттерн GoF: алгоритм (реализация) заменяется без изменения контекста</td></tr>
+<tr><td><strong>Фабричный метод</strong></td><td>Паттерн GoF: создание объектов делегируется фабрике</td></tr>
+</tbody></table>
+</div>
+<hr />
+<h2 id="Итог"><a class="header" href="#Итог">Итог</a></h2>
+<p>Принцип инверсии зависимостей переворачивает привычное направление зависимостей в коде:</p>
+<ul>
+<li><strong>Без DIP:</strong> высокоуровневый код импортирует низкоуровневые детали напрямую. Смена деталей ломает верхний уровень.</li>
+<li><strong>С DIP:</strong> и верхний, и нижний уровни зависят от абстракции (интерфейса). Интерфейс принадлежит верхнему уровню. Конкретная реализация может быть заменена без изменения бизнес-логики.</li>
+</ul>
+<p>Правило большого пальца: <strong>верхний уровень владеет интерфейсом, нижний — реализует его.</strong></p>
+<p>Именно поэтому DIP является фундаментом чистой и луковичной архитектур, а также основой для Dependency Injection и Inversion of Control — тем, что мы рассмотрим в следующем материале.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../week10.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../week10/lecture-dip-practical.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../week10.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../week10/lecture-dip-practical.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

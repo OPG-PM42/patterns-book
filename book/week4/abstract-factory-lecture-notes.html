@@ -12,52 +12,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
-        <!-- Provide site root and default themes to javascript -->
+        <!-- Provide site root to javascript -->
         <script>
-            const path_to_root = "../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-14213fa4.js";
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d959ff8c.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
-    <div id="mdbook-body-container">
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,8 +59,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -81,59 +68,55 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
-        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
-            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="mdbook-page-wrapper" class="page-wrapper">
+        <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="mdbook-menu-bar-hover-placeholder"></div>
-                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
                         </label>
-                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
                         </button>
-                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
-                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
 
@@ -141,43 +124,38 @@
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
-                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                            <i id="print-button" class="fa fa-print"></i>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="mdbook-search-wrapper" class="hidden">
-                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
-                            </div>
-                        </div>
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
-                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
-                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
-                        <ul id="mdbook-searchresults">
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="mdbook-content" class="content">
+                <div id="content" class="content">
                     <main>
-                        <h1 id="паттерн-abstract-factory-абстрактная-фабрика"><a class="header" href="#паттерн-abstract-factory-абстрактная-фабрика">Паттерн Abstract Factory (Абстрактная фабрика)</a></h1>
-<h2 id="обзор"><a class="header" href="#обзор">Обзор</a></h2>
+                        <h1 id="Паттерн-abstract-factory-Абстрактная-фабрика"><a class="header" href="#Паттерн-abstract-factory-Абстрактная-фабрика">Паттерн Abstract Factory (Абстрактная фабрика)</a></h1>
+<h2 id="Обзор"><a class="header" href="#Обзор">Обзор</a></h2>
 <p><strong>Abstract Factory</strong> (Абстрактная фабрика) — это порождающий паттерн проектирования из «Банды четырёх» (GoF), который предоставляет интерфейс для создания семейств взаимосвязанных или взаимозависимых объектов без указания их конкретных классов.</p>
-<h3 id="основная-задача-паттерна"><a class="header" href="#основная-задача-паттерна">Основная задача паттерна</a></h3>
+<h3 id="Основная-задача-паттерна"><a class="header" href="#Основная-задача-паттерна">Основная задача паттерна</a></h3>
 <p>Создание <strong>семейства объектов</strong> с одинаковым контрактом, где таких семейств может быть много. Паттерн позволяет:</p>
 <ul>
 <li>Создавать несколько классов для доступа к одной базе данных и такое же количество классов с аналогичным контрактом для доступа к другой базе данных</li>
@@ -185,25 +163,25 @@
 <li>Создавать компоненты пользовательского интерфейса для разных платформ</li>
 <li>Абстрагироваться от конкретных реализаций backend-компонентов</li>
 </ul>
-<hr>
-<h2 id="применение-паттерна"><a class="header" href="#применение-паттерна">Применение паттерна</a></h2>
+<hr />
+<h2 id="Применение-паттерна"><a class="header" href="#Применение-паттерна">Применение паттерна</a></h2>
 <p>Abstract Factory применяется в самых разных областях:</p>
 <ul>
 <li><strong>Frontend</strong>: Рендеринг UI-компонентов для разных платформ (Web, Mobile, Desktop)</li>
 <li><strong>Backend</strong>: Работа с различными базами данных, файловыми системами, облачными провайдерами</li>
 <li><strong>Кросс-платформенные решения</strong>: Создание унифицированного API для разных операционных систем</li>
 </ul>
-<hr>
-<h2 id="соблюдение-принципов-solid"><a class="header" href="#соблюдение-принципов-solid">Соблюдение принципов SOLID</a></h2>
+<hr />
+<h2 id="Соблюдение-принципов-solid"><a class="header" href="#Соблюдение-принципов-solid">Соблюдение принципов SOLID</a></h2>
 <p>Паттерн Abstract Factory помогает соблюдать важные принципы проектирования:</p>
 <ol>
 <li><strong>Single Responsibility Principle (SRP)</strong> — каждая фабрика отвечает только за создание своего семейства объектов</li>
 <li><strong>Low Coupling</strong> — слабое зацепление между клиентским кодом и конкретными реализациями</li>
 <li><strong>Dependency Inversion Principle</strong> — зависимость от абстракций, а не от конкретных классов</li>
 </ol>
-<hr>
-<h2 id="структура-паттерна"><a class="header" href="#структура-паттерна">Структура паттерна</a></h2>
-<h3 id="классическая-реализация-для-языков-с-интерфейсами"><a class="header" href="#классическая-реализация-для-языков-с-интерфейсами">Классическая реализация (для языков с интерфейсами)</a></h3>
+<hr />
+<h2 id="Структура-паттерна"><a class="header" href="#Структура-паттерна">Структура паттерна</a></h2>
+<h3 id="Классическая-реализация-для-языков-с-интерфейсами"><a class="header" href="#Классическая-реализация-для-языков-с-интерфейсами">Классическая реализация (для языков с интерфейсами)</a></h3>
 <pre><code>┌─────────────────────────┐
 │  AbstractFactory        │ ◄──── Абстрактная фабрика
 ├─────────────────────────┤
@@ -236,7 +214,7 @@
 │  AbstractProductA   │            │  AbstractProductA   │
 └─────────────────────┘            └─────────────────────┘
 </code></pre>
-<h3 id="две-иерархии-классов"><a class="header" href="#две-иерархии-классов">Две иерархии классов</a></h3>
+<h3 id="Две-иерархии-классов"><a class="header" href="#Две-иерархии-классов">Две иерархии классов</a></h3>
 <p>Паттерн использует <strong>две параллельные иерархии</strong>:</p>
 <ol>
 <li>
@@ -255,11 +233,11 @@
 </ul>
 </li>
 </ol>
-<hr>
-<h2 id="реализация-для-javascripttypescript"><a class="header" href="#реализация-для-javascripttypescript">Реализация для JavaScript/TypeScript</a></h2>
-<h3 id="проблема-с-абстрактными-классами-в-javascript"><a class="header" href="#проблема-с-абстрактными-классами-в-javascript">Проблема с абстрактными классами в JavaScript</a></h3>
+<hr />
+<h2 id="Реализация-для-javascripttypescript"><a class="header" href="#Реализация-для-javascripttypescript">Реализация для JavaScript/TypeScript</a></h2>
+<h3 id="Проблема-с-абстрактными-классами-в-javascript"><a class="header" href="#Проблема-с-абстрактными-классами-в-javascript">Проблема с абстрактными классами в JavaScript</a></h3>
 <p>В JavaScript <strong>нет встроенной поддержки</strong> интерфейсов и абстрактных классов. Поэтому для имитации абстрактности используются следующие подходы:</p>
-<h4 id="имитация-абстрактного-класса"><a class="header" href="#имитация-абстрактного-класса">Имитация абстрактного класса</a></h4>
+<h4 id="Имитация-абстрактного-класса"><a class="header" href="#Имитация-абстрактного-класса">Имитация абстрактного класса</a></h4>
 <pre><code class="language-javascript">class AbstractFactory {
   constructor() {
     // Бросаем исключение при попытке создания экземпляра абстрактного класса
@@ -290,7 +268,7 @@ class AbstractProductA {
   }
 }
 </code></pre>
-<h3 id="упрощённая-реализация-для-javascript"><a class="header" href="#упрощённая-реализация-для-javascript">Упрощённая реализация для JavaScript</a></h3>
+<h3 id="Упрощённая-реализация-для-javascript"><a class="header" href="#Упрощённая-реализация-для-javascript">Упрощённая реализация для JavaScript</a></h3>
 <p>Для JavaScript можно значительно упростить реализацию, <strong>избавившись от абстрактных классов</strong>:</p>
 <pre><code class="language-javascript">// Конкретные классы продуктов (без абстрактных базовых классов)
 class FileStorageDatabase {
@@ -356,11 +334,11 @@ const fsDataAccessLayer = {
 // Экспортируем фабрику
 module.exports = fsDataAccessLayer;
 </code></pre>
-<hr>
-<h2 id="практический-пример-работа-с-базами-данных"><a class="header" href="#практический-пример-работа-с-базами-данных">Практический пример: Работа с базами данных</a></h2>
-<h3 id="полная-реализация-с-файловым-хранилищем"><a class="header" href="#полная-реализация-с-файловым-хранилищем">Полная реализация с файловым хранилищем</a></h3>
+<hr />
+<h2 id="Практический-пример-Работа-с-базами-данных"><a class="header" href="#Практический-пример-Работа-с-базами-данных">Практический пример: Работа с базами данных</a></h2>
+<h3 id="Полная-реализация-с-файловым-хранилищем"><a class="header" href="#Полная-реализация-с-файловым-хранилищем">Полная реализация с файловым хранилищем</a></h3>
 <p>Рассмотрим реальный пример создания абстракции для работы с данными, где одна реализация использует файловую систему, а другая может использовать PostgreSQL или MySQL.</p>
-<h4 id="шаг-1-абстрактная-фабрика-для-языков-с-интерфейсами"><a class="header" href="#шаг-1-абстрактная-фабрика-для-языков-с-интерфейсами">Шаг 1: Абстрактная фабрика (для языков с интерфейсами)</a></h4>
+<h4 id="Шаг-1-Абстрактная-фабрика-для-языков-с-интерфейсами"><a class="header" href="#Шаг-1-Абстрактная-фабрика-для-языков-с-интерфейсами">Шаг 1: Абстрактная фабрика (для языков с интерфейсами)</a></h4>
 <pre><code class="language-javascript">class AbstractDataAccessLayer {
   constructor() {
     if (new.target === AbstractDataAccessLayer) {
@@ -377,7 +355,7 @@ module.exports = fsDataAccessLayer;
   }
 }
 </code></pre>
-<h4 id="шаг-2-абстрактные-продукты"><a class="header" href="#шаг-2-абстрактные-продукты">Шаг 2: Абстрактные продукты</a></h4>
+<h4 id="Шаг-2-Абстрактные-продукты"><a class="header" href="#Шаг-2-Абстрактные-продукты">Шаг 2: Абстрактные продукты</a></h4>
 <pre><code class="language-javascript">// Абстрактная база данных
 class AbstractDatabase {
   constructor() {
@@ -404,7 +382,7 @@ class AbstractCursor {
   }
 }
 </code></pre>
-<h4 id="шаг-3-конкретная-реализация--filestorage"><a class="header" href="#шаг-3-конкретная-реализация--filestorage">Шаг 3: Конкретная реализация — FileStorage</a></h4>
+<h4 id="Шаг-3-Конкретная-реализация--filestorage"><a class="header" href="#Шаг-3-Конкретная-реализация--filestorage">Шаг 3: Конкретная реализация — FileStorage</a></h4>
 <pre><code class="language-javascript">const fs = require('fs');
 const readline = require('readline');
 
@@ -469,7 +447,7 @@ class FileStorageCursor extends AbstractCursor {
   }
 }
 </code></pre>
-<h4 id="шаг-4-конкретная-фабрика"><a class="header" href="#шаг-4-конкретная-фабрика">Шаг 4: Конкретная фабрика</a></h4>
+<h4 id="Шаг-4-Конкретная-фабрика"><a class="header" href="#Шаг-4-Конкретная-фабрика">Шаг 4: Конкретная фабрика</a></h4>
 <pre><code class="language-javascript">// Конкретная фабрика для файлового хранилища
 class FSDataAccessLayer extends AbstractDataAccessLayer {
   createDatabase(filename) {
@@ -483,7 +461,7 @@ class FSDataAccessLayer extends AbstractDataAccessLayer {
 
 module.exports = FSDataAccessLayer;
 </code></pre>
-<h4 id="шаг-5-использование"><a class="header" href="#шаг-5-использование">Шаг 5: Использование</a></h4>
+<h4 id="Шаг-5-Использование"><a class="header" href="#Шаг-5-Использование">Шаг 5: Использование</a></h4>
 <pre><code class="language-javascript">// Создаём экземпляр фабрики
 const fsDAL = new FSDataAccessLayer();
 
@@ -507,10 +485,10 @@ const cursor = db.select({ city: 'Moscow' });
 <li>Данные <strong>фильтруются на лету</strong> во время чтения</li>
 <li>Код легко расширить для работы с другими источниками данных (PostgreSQL, MongoDB, S3)</li>
 </ul>
-<hr>
-<h2 id="упрощённая-реализация-для-javascript-без-абстракций"><a class="header" href="#упрощённая-реализация-для-javascript-без-абстракций">Упрощённая реализация для JavaScript (без абстракций)</a></h2>
+<hr />
+<h2 id="Упрощённая-реализация-для-javascript-без-абстракций"><a class="header" href="#Упрощённая-реализация-для-javascript-без-абстракций">Упрощённая реализация для JavaScript (без абстракций)</a></h2>
 <p>Для JavaScript можно полностью отказаться от абстрактных классов и использовать <strong>простые объекты и функции</strong>:</p>
-<h3 id="вариант-1-объект-с-методами"><a class="header" href="#вариант-1-объект-с-методами">Вариант 1: Объект с методами</a></h3>
+<h3 id="Вариант-1-Объект-с-методами"><a class="header" href="#Вариант-1-Объект-с-методами">Вариант 1: Объект с методами</a></h3>
 <pre><code class="language-javascript">// fs-dal.js — Модуль для файловой системы
 const fs = require('fs');
 const readline = require('readline');
@@ -565,7 +543,7 @@ module.exports = {
   }
 };
 </code></pre>
-<h3 id="коллекция-фабрик-паттерн-strategy"><a class="header" href="#коллекция-фабрик-паттерн-strategy">Коллекция фабрик (паттерн Strategy)</a></h3>
+<h3 id="Коллекция-фабрик-паттерн-strategy"><a class="header" href="#Коллекция-фабрик-паттерн-strategy">Коллекция фабрик (паттерн Strategy)</a></h3>
 <p>Для переключения между различными реализациями используем <strong>коллекцию фабрик</strong>:</p>
 <pre><code class="language-javascript">// data-access-factories.js
 const fsDAL = require('./fs-dal');
@@ -592,7 +570,7 @@ function getFactory(storageType) {
 
 module.exports = { factories, getFactory };
 </code></pre>
-<h3 id="использование-с-выбором-стратегии"><a class="header" href="#использование-с-выбором-стратегии">Использование с выбором стратегии</a></h3>
+<h3 id="Использование-с-выбором-стратегии"><a class="header" href="#Использование-с-выбором-стратегии">Использование с выбором стратегии</a></h3>
 <pre><code class="language-javascript">const { getFactory } = require('./data-access-factories');
 
 // Выбираем стратегию (можно из конфига или переменных окружения)
@@ -617,8 +595,8 @@ const cursor = db.select({ city: 'Moscow' });
 <li><strong>Abstract Factory</strong> — для создания семейства объектов (Database + Cursor)</li>
 <li><strong>Strategy</strong> — для выбора конкретной фабрики из коллекции</li>
 </ul>
-<hr>
-<h2 id="реализация-с-typescript"><a class="header" href="#реализация-с-typescript">Реализация с TypeScript</a></h2>
+<hr />
+<h2 id="Реализация-с-typescript"><a class="header" href="#Реализация-с-typescript">Реализация с TypeScript</a></h2>
 <p>TypeScript позволяет использовать <strong>интерфейсы</strong> для строгой типизации:</p>
 <pre><code class="language-typescript">// Интерфейсы для продуктов
 interface IDatabase {
@@ -708,16 +686,16 @@ const cursor: ICursor = db.select({ city: 'Moscow' });
 <li>✅ <strong>Проверка на этапе компиляции</strong> — ошибки находятся до выполнения</li>
 <li>✅ <strong>Явные контракты</strong> через интерфейсы</li>
 </ul>
-<hr>
-<h2 id="классический-пример-ui-библиотека-для-разных-платформ"><a class="header" href="#классический-пример-ui-библиотека-для-разных-платформ">Классический пример: UI-библиотека для разных платформ</a></h2>
-<h3 id="задача"><a class="header" href="#задача">Задача</a></h3>
+<hr />
+<h2 id="Классический-пример-ui-библиотека-для-разных-платформ"><a class="header" href="#Классический-пример-ui-библиотека-для-разных-платформ">Классический пример: UI-библиотека для разных платформ</a></h2>
+<h3 id="Задача"><a class="header" href="#Задача">Задача</a></h3>
 <p>Создать библиотеку UI-компонентов, которая может рендерить элементы для:</p>
 <ul>
 <li>Web (HTML/CSS)</li>
 <li>Windows (WinAPI)</li>
 <li>macOS (Cocoa)</li>
 </ul>
-<h3 id="реализация"><a class="header" href="#реализация">Реализация</a></h3>
+<h3 id="Реализация"><a class="header" href="#Реализация">Реализация</a></h3>
 <pre><code class="language-typescript">// Интерфейсы продуктов
 interface IButton {
   render(): void;
@@ -854,9 +832,9 @@ function main() {
 
 main();
 </code></pre>
-<hr>
-<h2 id="преимущества-паттерна-abstract-factory"><a class="header" href="#преимущества-паттерна-abstract-factory">Преимущества паттерна Abstract Factory</a></h2>
-<h3 id="-1-изоляция-конкретных-классов"><a class="header" href="#-1-изоляция-конкретных-классов">✅ 1. Изоляция конкретных классов</a></h3>
+<hr />
+<h2 id="Преимущества-паттерна-abstract-factory"><a class="header" href="#Преимущества-паттерна-abstract-factory">Преимущества паттерна Abstract Factory</a></h2>
+<h3 id="-1-Изоляция-конкретных-классов"><a class="header" href="#-1-Изоляция-конкретных-классов">✅ 1. Изоляция конкретных классов</a></h3>
 <p>Клиентский код работает только с интерфейсами, не зная о конкретных реализациях:</p>
 <pre><code class="language-javascript">// Клиент знает только об интерфейсах
 function processData(factory) {
@@ -869,13 +847,13 @@ function processData(factory) {
   }
 }
 </code></pre>
-<h3 id="-2-гарантия-совместимости-продуктов"><a class="header" href="#-2-гарантия-совместимости-продуктов">✅ 2. Гарантия совместимости продуктов</a></h3>
+<h3 id="-2-Гарантия-совместимости-продуктов"><a class="header" href="#-2-Гарантия-совместимости-продуктов">✅ 2. Гарантия совместимости продуктов</a></h3>
 <p>Все продукты одной фабрики <strong>гарантированно совместимы</strong> между собой:</p>
 <pre><code class="language-typescript">// FileStorageDatabase всегда создаёт FileStorageCursor
 // PostgresDatabase всегда создаёт PostgresCursor
 // Нет риска смешать курсор от одной БД с соединением к другой
 </code></pre>
-<h3 id="-3-лёгкость-добавления-новых-семейств"><a class="header" href="#-3-лёгкость-добавления-новых-семейств">✅ 3. Лёгкость добавления новых семейств</a></h3>
+<h3 id="-3-Лёгкость-добавления-новых-семейств"><a class="header" href="#-3-Лёгкость-добавления-новых-семейств">✅ 3. Лёгкость добавления новых семейств</a></h3>
 <p>Для добавления новой реализации (например, MongoDB) нужно:</p>
 <ol>
 <li>Создать классы продуктов (<code>MongoDatabase</code>, <code>MongoCursor</code>)</li>
@@ -883,14 +861,14 @@ function processData(factory) {
 <li>Добавить её в коллекцию</li>
 </ol>
 <p><strong>Существующий код не меняется!</strong></p>
-<h3 id="-4-соответствие-принципу-openclosed"><a class="header" href="#-4-соответствие-принципу-openclosed">✅ 4. Соответствие принципу Open/Closed</a></h3>
+<h3 id="-4-Соответствие-принципу-openclosed"><a class="header" href="#-4-Соответствие-принципу-openclosed">✅ 4. Соответствие принципу Open/Closed</a></h3>
 <ul>
 <li><strong>Open for extension</strong> — легко добавить новую фабрику</li>
 <li><strong>Closed for modification</strong> — не нужно менять существующий код</li>
 </ul>
-<hr>
-<h2 id="недостатки-и-ограничения"><a class="header" href="#недостатки-и-ограничения">Недостатки и ограничения</a></h2>
-<h3 id="-1-сложность-кода"><a class="header" href="#-1-сложность-кода">❌ 1. Сложность кода</a></h3>
+<hr />
+<h2 id="Недостатки-и-ограничения"><a class="header" href="#Недостатки-и-ограничения">Недостатки и ограничения</a></h2>
+<h3 id="-1-Сложность-кода"><a class="header" href="#-1-Сложность-кода">❌ 1. Сложность кода</a></h3>
 <p>Добавление каждого нового типа продукта требует изменений во <strong>всех фабриках</strong>:</p>
 <pre><code class="language-typescript">// Если нужно добавить createIndex(), придётся изменить:
 interface IDataAccessLayer {
@@ -908,24 +886,18 @@ class PostgresDataAccessLayer implements IDataAccessLayer {
   // Нужно реализовать createIndex()
 }
 </code></pre>
-<h3 id="-2-излишняя-абстракция-для-простых-случаев"><a class="header" href="#-2-излишняя-абстракция-для-простых-случаев">❌ 2. Излишняя абстракция для простых случаев</a></h3>
+<h3 id="-2-Излишняя-абстракция-для-простых-случаев"><a class="header" href="#-2-Излишняя-абстракция-для-простых-случаев">❌ 2. Излишняя абстракция для простых случаев</a></h3>
 <p>Если нужно создать только <strong>один класс</strong>, Abstract Factory избыточен. В таких случаях достаточно <strong>Factory Method</strong> или простой функции.</p>
-<hr>
-<h2 id="отличие-от-factory-method"><a class="header" href="#отличие-от-factory-method">Отличие от Factory Method</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Характеристика</th><th>Factory Method</th><th>Abstract Factory</th></tr>
-</thead>
-<tbody>
+<hr />
+<h2 id="Отличие-от-factory-method"><a class="header" href="#Отличие-от-factory-method">Отличие от Factory Method</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Характеристика</th><th>Factory Method</th><th>Abstract Factory</th></tr></thead><tbody>
 <tr><td><strong>Количество продуктов</strong></td><td>Один тип продукта</td><td>Семейство продуктов</td></tr>
 <tr><td><strong>Структура</strong></td><td>Один метод <code>create()</code></td><td>Несколько методов создания</td></tr>
 <tr><td><strong>Применение</strong></td><td>Когда нужна вариативность одного объекта</td><td>Когда нужно создавать взаимосвязанные объекты</td></tr>
 <tr><td><strong>Пример</strong></td><td>Создание логгера (FileLogger, ConsoleLogger)</td><td>Создание UI-компонентов (Button + Checkbox)</td></tr>
-</tbody>
-</table>
+</tbody></table>
 </div>
-<h3 id="пример-factory-method"><a class="header" href="#пример-factory-method">Пример Factory Method</a></h3>
+<h3 id="Пример-factory-method"><a class="header" href="#Пример-factory-method">Пример Factory Method</a></h3>
 <pre><code class="language-javascript">// Простая фабричная функция
 function createLogger(type) {
   switch (type) {
@@ -938,16 +910,16 @@ function createLogger(type) {
   }
 }
 </code></pre>
-<h3 id="пример-abstract-factory"><a class="header" href="#пример-abstract-factory">Пример Abstract Factory</a></h3>
+<h3 id="Пример-abstract-factory"><a class="header" href="#Пример-abstract-factory">Пример Abstract Factory</a></h3>
 <pre><code class="language-javascript">// Фабрика создаёт целое семейство
 const uiFactory = new WebUIFactory();
 const button = uiFactory.createButton('OK');
 const checkbox = uiFactory.createCheckbox('Agree');
 const textbox = uiFactory.createTextbox('Enter name');
 </code></pre>
-<hr>
-<h2 id="когда-использовать-abstract-factory"><a class="header" href="#когда-использовать-abstract-factory">Когда использовать Abstract Factory</a></h2>
-<h3 id="-используйте-когда"><a class="header" href="#-используйте-когда">✅ Используйте, когда:</a></h3>
+<hr />
+<h2 id="Когда-использовать-abstract-factory"><a class="header" href="#Когда-использовать-abstract-factory">Когда использовать Abstract Factory</a></h2>
+<h3 id="-Используйте-когда"><a class="header" href="#-Используйте-когда">✅ Используйте, когда:</a></h3>
 <ol>
 <li>
 <p><strong>Нужно создать семейство взаимосвязанных объектов</strong></p>
@@ -976,14 +948,14 @@ const textbox = uiFactory.createTextbox('Enter name');
 </ul>
 </li>
 </ol>
-<h3 id="-не-используйте-когда"><a class="header" href="#-не-используйте-когда">❌ Не используйте, когда:</a></h3>
+<h3 id="-Не-используйте-когда"><a class="header" href="#-Не-используйте-когда">❌ Не используйте, когда:</a></h3>
 <ol>
 <li>Нужно создать <strong>один объект</strong> — используйте Factory Method</li>
 <li>Объекты <strong>не связаны</strong> между собой — используйте отдельные фабрики</li>
 <li><strong>Простая система</strong> без вариативности реализаций</li>
 </ol>
-<hr>
-<h2 id="комбинация-с-другими-паттернами"><a class="header" href="#комбинация-с-другими-паттернами">Комбинация с другими паттернами</a></h2>
+<hr />
+<h2 id="Комбинация-с-другими-паттернами"><a class="header" href="#Комбинация-с-другими-паттернами">Комбинация с другими паттернами</a></h2>
 <h3 id="1-abstract-factory--strategy"><a class="header" href="#1-abstract-factory--strategy">1. Abstract Factory + Strategy</a></h3>
 <pre><code class="language-javascript">// Коллекция фабрик — это паттерн Strategy
 const factories = {
@@ -1028,9 +1000,9 @@ const query = builder
   .where({ active: true })
   .build();
 </code></pre>
-<hr>
-<h2 id="резюме"><a class="header" href="#резюме">Резюме</a></h2>
-<h3 id="ключевые-моменты"><a class="header" href="#ключевые-моменты">Ключевые моменты</a></h3>
+<hr />
+<h2 id="Резюме"><a class="header" href="#Резюме">Резюме</a></h2>
+<h3 id="Ключевые-моменты"><a class="header" href="#Ключевые-моменты">Ключевые моменты</a></h3>
 <ol>
 <li><strong>Abstract Factory</strong> создаёт <strong>семейства объектов</strong> с общим контрактом</li>
 <li>Использует <strong>две иерархии</strong>: абстрактную и конкретную</li>
@@ -1038,13 +1010,13 @@ const query = builder
 <li>В <strong>TypeScript</strong> лучше использовать интерфейсы для строгой типизации</li>
 <li>Часто комбинируется с паттерном <strong>Strategy</strong> для выбора фабрики</li>
 </ol>
-<h3 id="основные-принципы"><a class="header" href="#основные-принципы">Основные принципы</a></h3>
+<h3 id="Основные-принципы"><a class="header" href="#Основные-принципы">Основные принципы</a></h3>
 <ul>
 <li><strong>Слабое зацепление</strong> (Low Coupling) — клиент не зависит от конкретных классов</li>
 <li><strong>Single Responsibility</strong> — каждая фабрика отвечает за своё семейство</li>
 <li><strong>Open/Closed Principle</strong> — легко добавлять новые фабрики без изменения существующего кода</li>
 </ul>
-<h3 id="практическое-применение"><a class="header" href="#практическое-применение">Практическое применение</a></h3>
+<h3 id="Практическое-применение"><a class="header" href="#Практическое-применение">Практическое применение</a></h3>
 <p>Abstract Factory идеально подходит для:</p>
 <ul>
 <li>Работы с <strong>разными базами данных</strong> (PostgreSQL, MySQL, MongoDB, FileSystem)</li>
@@ -1052,15 +1024,15 @@ const query = builder
 <li>Абстрагирования <strong>облачных провайдеров</strong> (AWS, Azure, GCP)</li>
 <li>Создания <strong>тестовых моков</strong> вместо реальных сервисов</li>
 </ul>
-<hr>
-<h2 id="дополнительные-ресурсы"><a class="header" href="#дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
+<hr />
+<h2 id="Дополнительные-ресурсы"><a class="header" href="#Дополнительные-ресурсы">Дополнительные ресурсы</a></h2>
 <ul>
 <li><a href="https://refactoring.guru/design-patterns/abstract-factory">Refactoring Guru: Abstract Factory</a></li>
 <li><a href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612">GoF Design Patterns Book</a></li>
 <li><a href="https://github.com/refactoringguru/design-patterns-typescript">TypeScript Design Patterns Repository</a></li>
 </ul>
-<hr>
-<h2 id="примеры-кода-из-лекции"><a class="header" href="#примеры-кода-из-лекции">Примеры кода из лекции</a></h2>
+<hr />
+<h2 id="Примеры-кода-из-лекции"><a class="header" href="#Примеры-кода-из-лекции">Примеры кода из лекции</a></h2>
 <p>Все примеры кода из лекции доступны по ссылке в описании видео. Рекомендуется:</p>
 <ol>
 <li><strong>Скачать исходники</strong> и запустить их локально</li>
@@ -1068,7 +1040,7 @@ const query = builder
 <li><strong>Попробовать</strong> реализовать Abstract Factory для своего проекта</li>
 <li><strong>Поэкспериментировать</strong> с комбинацией паттернов (Strategy + Abstract Factory)</li>
 </ol>
-<hr>
+<hr />
 <p><strong>Автор конспекта:</strong> Claude Code
 <strong>Дата создания:</strong> 2025-12-18
 <strong>Источник:</strong> Лекция по паттерну Abstract Factory для JavaScript/TypeScript</p>
@@ -1078,11 +1050,11 @@ const query = builder
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../week4/nodejs-architecture-layers-di-lecture-notes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                                <i class="fa fa-angle-left"></i>
                             </a>
 
                             <a rel="next prefetch" href="../week4/factory-method-pattern-notes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                                <i class="fa fa-angle-right"></i>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1092,38 +1064,17 @@ const query = builder
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../week4/nodejs-architecture-layers-di-lecture-notes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                        <i class="fa fa-angle-left"></i>
                     </a>
 
                     <a rel="next prefetch" href="../week4/factory-method-pattern-notes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
-        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
-        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
-        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
-        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
         <script>
@@ -1131,16 +1082,15 @@ const query = builder
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-
 
 
     </div>
