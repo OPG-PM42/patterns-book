@@ -1,6 +1,6 @@
 #  Week 9 - Semantics: Expressive DSLs and Behavioral Patterns
 
-  - [Command](week9/command-pattern-lecture-notes.md)
-  - [Template Method](week9/template-method-pattern-lecture-notes.md)
-  - [Interpreter](week9/interpreter-pattern-lecture-notes.md)
-  - [Проектирование DSL на JavaScript](week9/dsl-design-lecture-notes.md)
+  - [Паттерн «Команда» — TypeScript (часть 1)](week9/lecture-command-part1.md)
+  - [Паттерн «Команда» — JavaScript (часть 2)](week9/lecture-command-part2.md)
+  - [Паттерн «Интерпретатор» — AST, DSL, LISP (часть 1)](week9/lecture-interpreter-part1.md)
+  - [Паттерн «Интерпретатор» — реализация LISP и AST (часть 2)](week9/lecture-interpreter-part2.md)

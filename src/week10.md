@@ -1,6 +1,5 @@
 #  Week 10 - All-agnostic Strategy: Framework Independence
 
-  - [Bridge](week10/bridge-pattern-lecture-notes.md)
-  - [Visitor](week10/visitor-pattern-lecture-notes.md)
-  - [SOLID: Dependency Inversion Principle (DIP) — Принцип инверсии зависимостей](week10/solid-dip-dependency-inversion-lecture-notes.md)
-  - [Фреймворко-агностичная архитектура](week10/framework-agnostic-architecture-lecture-notes.md)
+  - [SOLID DIP — Принцип инверсии зависимостей (теория)](week10/lecture-dip-intro.md)
+  - [SOLID DIP — Разбор практического примера кода](week10/lecture-dip-practical.md)
+  - [Service Locator — паттерн получения и подмены зависимостей](week10/lecture-service-locator.md)
